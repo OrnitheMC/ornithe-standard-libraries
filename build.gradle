@@ -1,0 +1,77 @@
+plugins {
+	id 'java-library'
+	id 'eclipse'
+	id 'idea'
+	id 'maven-publish'
+	id 'org.quiltmc.loom' version '1.2+' apply false
+	id 'ploceus' version '1.2+' apply false
+}
+
+subprojects {
+	if (!it.hasProperty('mc_version')) {
+		return
+	}
+
+	def doNesting = it.hasProperty('nests_build')
+
+	apply plugin: 'java-library'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	apply plugin: 'org.quiltmc.loom'
+	apply plugin: 'ploceus'
+
+	archivesBaseName = "${project.archives_base_name}"
+	version = "${project.version}+${project.mc_version_range}"
+	group = "${project.maven_group}.${project.archives_base_name}"
+
+	dependencies {
+		minecraft "com.mojang:minecraft:${project.mc_version}"
+		if (doNesting) {
+			mappings loom.layered {
+				mappings "net.ornithemc:feather:${project.mc_version}+build.${project.feather_build}:v2"
+				ploceus.nestedMappings(it)
+			}
+		} else {
+			mappings "net.ornithemc:feather:${project.mc_version}+build.${project.feather_build}:v2"
+		}
+		modApi "org.quiltmc:quilt-loader:${project.loader_version}"
+
+		if (doNesting) {
+			nests "net.ornithemc:nests:${project.mc_version}+build.${project.nests_build}"
+		}
+	}
+
+	processResources {
+		inputs.property 'version', version
+
+		filesMatching('quilt.mod.json') {
+			expand "version": version
+		}
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.release = 8
+	}
+
+	java {
+		// Still required by IDEs such as Eclipse and Visual Studio Code
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+
+		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
+		// If you remove this line, sources will not be generated.
+		withSourcesJar()
+
+		// If this mod is going to be a library, then it should also generate Javadocs in order to aid with development.
+		// Uncomment this line to generate them.
+		withJavadocJar()
+	}
+
+	// If you plan to use a different file for the license, don't forget to change the file name here!
+	jar {
+		from('LICENSE') {
+			rename { "${it}_${archivesBaseName}" }
+		}
+	}
+}

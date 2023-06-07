@@ -1,0 +1,33 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "net.ornithemc.ornithe-standard-libraries",
+		"id": "osl-branding",
+		"version": "${version}",
+		"metadata": {
+			"name": "Branding Patch",
+			"description": "A short description of your mod.",
+			"contributors": {
+				"Your name here": "OrnitheMC"
+			},
+			"contact": {
+				"homepage": "https://ornithemc.net/",
+				"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+				"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+			},
+			"icon": "assets/ornithe-standard-libraries/branding/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.18.3-"
+			},
+			{
+				"id": "minecraft",
+				"versions": "1.3.x"
+			}
+		]
+	},
+	"mixin": "osl.branding.mixins.json"
+}
