@@ -1,4 +1,4 @@
-package net.ornithemc.osl.branding;
+package net.ornithemc.osl.branding.impl;
 
 public class BrandingPatch {
 

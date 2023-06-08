@@ -1,4 +1,4 @@
-package net.ornithemc.osl.branding.mixin;
+package net.ornithemc.osl.branding.impl.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,8 +10,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSpec;
 
 import net.minecraft.client.main.Main;
-
-import net.ornithemc.osl.branding.BrandingPatch;
+import net.ornithemc.osl.branding.impl.BrandingPatch;
 
 @Mixin(Main.class)
 public class MainMixin {

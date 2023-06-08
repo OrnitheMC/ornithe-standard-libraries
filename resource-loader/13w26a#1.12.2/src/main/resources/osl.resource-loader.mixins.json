@@ -1,12 +1,11 @@
 {
 	"required": true,
 	"minVersion": "0.8",
-	"package": "net.ornithemc.osl.branding.impl.mixin",
+	"package": "net.ornithemc.osl.resource.loader.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [],
 	"client": [
-		"MainMixin",
-		"TitleScreenMixin"
+		"MinecraftMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

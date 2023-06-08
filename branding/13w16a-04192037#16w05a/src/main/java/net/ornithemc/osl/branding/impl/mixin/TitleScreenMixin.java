@@ -1,12 +1,11 @@
-package net.ornithemc.osl.branding.mixin;
+package net.ornithemc.osl.branding.impl.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.client.gui.screen.TitleScreen;
-
-import net.ornithemc.osl.branding.BrandingPatch;
+import net.ornithemc.osl.branding.impl.BrandingPatch;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
