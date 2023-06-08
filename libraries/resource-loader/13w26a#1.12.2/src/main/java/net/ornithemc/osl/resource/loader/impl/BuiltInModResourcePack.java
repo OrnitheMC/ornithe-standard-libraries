@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.ModMetadata;
 
@@ -17,7 +19,8 @@ import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.resource.loader.api.ModResourcePack;
-import net.ornithemc.osl.resource.loader.api.ResourceLoaderUtils;
+import net.ornithemc.osl.resource.loader.api.ResourceUtils;
+import net.ornithemc.osl.resource.loader.impl.mixin.CustomResourcePackInvoker;
 
 public class BuiltInModResourcePack implements ModResourcePack {
 
@@ -43,7 +46,7 @@ public class BuiltInModResourcePack implements ModResourcePack {
 				String s = p.getFileName().toString();
 				String namespace = s.replace(separator, "");
 
-				if (ResourceLoaderUtils.isValidNamespace(namespace)) {
+				if (ResourceUtils.isValidNamespace(namespace)) {
 					namespaces.add(namespace);
 				}
 			}
@@ -75,12 +78,14 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	@Override
 	public <T extends ResourceMetadataSection> T getMetadataSection(ResourceMetadataSerializerRegistry metadataSerializers, String name) throws IOException {
-		return null;
+		try (InputStream is = getResource(new Identifier("pack.mcmeta"))) {
+			return CustomResourcePackInvoker.invokeGetMetadataSection(metadataSerializers, is, name);
+		}
 	}
 
 	@Override
 	public BufferedImage getIcon() throws IOException {
-		return null;
+		return ImageIO.read(getResource(new Identifier("pack.png")));
 	}
 
 	@Override
