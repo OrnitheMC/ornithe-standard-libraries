@@ -1,4 +1,4 @@
-package net.ornithemc.osl.resource.loader.mixin;
+package net.ornithemc.osl.resource.loader.impl.mixin;
 
 import java.util.List;
 
