@@ -16,12 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.pack.ResourcePack;
 
+import net.ornithemc.osl.resource.loader.api.ModResourcePack;
+import net.ornithemc.osl.resource.loader.api.ResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.impl.BuiltInModResourcePack;
+import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
-	@Shadow @Final private List<ResourcePack> defaultResourcePacks;
+	@Shadow @Final
+	private List<ResourcePack> defaultResourcePacks;
 
 	@Inject(
 		method = "init",
@@ -30,13 +34,39 @@ public class MinecraftMixin {
 			target = "Lnet/minecraft/client/Minecraft;reloadResources()V"
 		)
 	)
-	private void osl$resource_loader$addModResourcePacks(CallbackInfo ci) {
+	private void osl$resource_loader$addDefaultResourcePacks(CallbackInfo ci) {
 		for (ModContainer mod : QuiltLoader.getAllMods()) {
 			if (mod.getSourceType() == BasicSourceType.BUILTIN) {
 				continue;
 			}
 
-			defaultResourcePacks.add(new BuiltInModResourcePack(mod));
+			ModResourcePack pack = new BuiltInModResourcePack(mod);
+
+			if (ResourceLoader.addDefaultModResourcePack(pack)) {
+				defaultResourcePacks.add(pack);
+			}
 		}
+
+		ResourceLoaderEvents.ADD_DEFAULT_RESOURCE_PACKS.run();
+	}
+
+	@Inject(
+		method = "reloadResources",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$resource_loader$startResourceReload(CallbackInfo ci) {
+		ResourceLoaderEvents.START_RESOURCE_RELOAD.run();
+	}
+
+	@Inject(
+		method = "reloadResources",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$resource_loader$endResourceReload(CallbackInfo ci) {
+		ResourceLoaderEvents.END_RESOURCE_RELOAD.run();
 	}
 }

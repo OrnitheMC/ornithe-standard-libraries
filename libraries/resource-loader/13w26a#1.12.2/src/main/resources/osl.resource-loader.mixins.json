@@ -6,6 +6,7 @@
 	"mixins": [],
 	"client": [
 		"CustomResourcePackInvoker",
+		"MinecraftAccessor",
 		"MinecraftMixin"
 	],
 	"injectors": {
