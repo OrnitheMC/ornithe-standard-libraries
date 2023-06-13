@@ -3,10 +3,13 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.branding.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"mixins": [],
+	"mixins": [
+	],
 	"client": [
-		"MainMixin",
-		"TitleScreenMixin"
+		"client.MainMixin",
+		"client.TitleScreenMixin"
+	],
+	"server": [
 	],
 	"injectors": {
 		"defaultRequire": 1

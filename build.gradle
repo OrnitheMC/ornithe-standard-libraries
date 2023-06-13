@@ -38,7 +38,7 @@ subprojects {
 		}
 	}
 
-	if (!it.hasProperty('mc_version')) {
+	if (!it.hasProperty('last_mc_version') || !it.hasProperty('last_mc_version')) {
 		return
 	}
 

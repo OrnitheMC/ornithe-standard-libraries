@@ -20,7 +20,7 @@ import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.resource.loader.api.ModResourcePack;
 import net.ornithemc.osl.resource.loader.api.ResourceUtils;
-import net.ornithemc.osl.resource.loader.impl.mixin.CustomResourcePackInvoker;
+import net.ornithemc.osl.resource.loader.impl.mixin.client.CustomResourcePackInvoker;
 
 public class BuiltInModResourcePack implements ModResourcePack {
 

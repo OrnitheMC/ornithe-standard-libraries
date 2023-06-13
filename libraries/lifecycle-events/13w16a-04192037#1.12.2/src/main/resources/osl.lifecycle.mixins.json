@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.lifecycle.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.MinecraftServerMixin",
+		"common.ServerWorldMixin"
+	],
+	"client": [
+		"client.ClientWorldMixin",
+		"client.MainMixin",
+		"client.MinecraftMixin"
+	],
+	"server": [
+		"server.MinecraftServerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,4 +1,4 @@
-package net.ornithemc.osl.resource.loader.impl.mixin;
+package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
 import java.util.List;
 
@@ -40,14 +40,10 @@ public class MinecraftMixin {
 				continue;
 			}
 
-			ModResourcePack pack = new BuiltInModResourcePack(mod);
-
-			if (ResourceLoader.addDefaultModResourcePack(pack)) {
-				defaultResourcePacks.add(pack);
-			}
+			osl$resource_loader$addDefaultResourcePack(new BuiltInModResourcePack(mod));
 		}
 
-		ResourceLoaderEvents.ADD_DEFAULT_RESOURCE_PACKS.run();
+		ResourceLoaderEvents.ADD_DEFAULT_RESOURCE_PACKS.invoker().accept(this::osl$resource_loader$addDefaultResourcePack);
 	}
 
 	@Inject(
@@ -57,7 +53,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$startResourceReload(CallbackInfo ci) {
-		ResourceLoaderEvents.START_RESOURCE_RELOAD.run();
+		ResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().run();;
 	}
 
 	@Inject(
@@ -67,6 +63,12 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$endResourceReload(CallbackInfo ci) {
-		ResourceLoaderEvents.END_RESOURCE_RELOAD.run();
+		ResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().run();
+	}
+
+	private void osl$resource_loader$addDefaultResourcePack(ModResourcePack pack) {
+		if (ResourceLoader.addDefaultModResourcePack(pack)) {
+			defaultResourcePacks.add(pack);
+		}
 	}
 }

@@ -2,35 +2,59 @@ package net.ornithemc.osl.events.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class Event<L> {
+public class Event<T> {
 
-	public static <L> Event<L> of(Consumer<List<L>> invoker) {
-		return new Event<>(invoker);
+	public static <T> Event<T> of(Function<List<T>, T> invokerFactory) {
+		return new Event<>(invokerFactory);
 	}
 
-	public static <L> Event<L> simple(Consumer<L> simpleInvoker) {
+	public static Event<Runnable> runnable() {
 		return new Event<>(listeners -> {
-			for (int i = 0; i < listeners.size(); i++) {
-				simpleInvoker.accept(listeners.get(i));
-			}
+			return () -> {
+				for (int i = 0; i < listeners.size(); i++) {
+					listeners.get(i).run();
+				}
+			};
 		});
 	}
 
-	private final List<L> listeners;
-	private final Consumer<List<L>> invoker;
+	public static <T> Event<Consumer<T>> consumer() {
+		return new Event<>(listeners -> {
+			return value -> {
+				for (int i = 0; i < listeners.size(); i++) {
+					listeners.get(i).accept(value);
+				}
+			};
+		});
+	}
 
-	private Event(Consumer<List<L>> invoker) {
+	private final List<T> listeners;
+	private final Function<List<T>, T> invokerFactory;
+
+	private T invoker;
+
+	private Event(Function<List<T>, T> invokerFactory) {
 		this.listeners = new ArrayList<>();
-		this.invoker = invoker;
+		this.invokerFactory = Objects.requireNonNull(invokerFactory);
 	}
 
-	public void register(L listener) {
+	public void register(T listener) {
 		listeners.add(listener);
+
+		if (invoker != null) {
+			invoker = null;
+		}
 	}
 
-	public void run() {
-		invoker.accept(listeners);
+	public T invoker() {
+		if (invoker == null) {
+			invoker = invokerFactory.apply(listeners);
+		}
+
+		return invoker;
 	}
 }

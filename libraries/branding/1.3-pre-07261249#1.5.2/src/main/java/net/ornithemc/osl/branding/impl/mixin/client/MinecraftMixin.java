@@ -1,4 +1,4 @@
-package net.ornithemc.osl.branding.impl.mixin;
+package net.ornithemc.osl.branding.impl.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

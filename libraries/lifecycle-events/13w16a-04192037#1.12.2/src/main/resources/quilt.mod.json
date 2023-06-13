@@ -2,10 +2,10 @@
 	"schema_version": 1,
 	"quilt_loader": {
 		"group": "net.ornithemc.ornithe-standard-libraries",
-		"id": "osl-resource-loader",
+		"id": "osl-lifecycle",
 		"version": "${version}",
 		"metadata": {
-			"name": "Resource Loader",
+			"name": "Lifecycle Events",
 			"description": "A short description of your mod.",
 			"contributors": {
 				"Your name here": "OrnitheMC"
@@ -15,7 +15,7 @@
 				"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
 				"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
 			},
-			"icon": "assets/ornithe-standard-libraries/resource/loader/icon.png"
+			"icon": "assets/ornithe-standard-libraries/lifecycle/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"depends": [
@@ -29,5 +29,5 @@
 			}
 		]
 	},
-	"mixin": "osl.resource-loader.mixins.json"
+	"mixin": "osl.lifecycle.mixins.json"
 }
