@@ -8,8 +8,6 @@ import net.ornithemc.osl.events.api.Event;
 
 public final class MinecraftServerEvents {
 
-	public static final Event<Consumer<String[]>> PRE_START = Event.consumer();
-
 	public static final Event<Consumer<MinecraftServer>> START = Event.consumer();
 	public static final Event<Consumer<MinecraftServer>> READY = Event.consumer();
 	public static final Event<Consumer<MinecraftServer>> STOP  = Event.consumer();
