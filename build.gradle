@@ -48,23 +48,23 @@ subprojects {
 	apply plugin: 'ploceus'
 
 	archivesBaseName = "${project.archives_base_name}"
-	version = "${project.version}+${project.mc_version_range}"
+	version = "${project.version}+${project.first_mc_version}#${project.last_mc_version}"
 	group = "${project.maven_group}.${project.archives_base_name}"
 
 	dependencies {
-		minecraft "com.mojang:minecraft:${project.mc_version}"
+		minecraft "com.mojang:minecraft:${project.last_mc_version}"
 		if (doNesting) {
 			mappings loom.layered {
-				mappings "net.ornithemc:feather:${project.mc_version}+build.${project.feather_build}:v2"
+				mappings "net.ornithemc:feather:${project.last_mc_version}+build.${project.feather_build}:v2"
 				ploceus.nestedMappings(it)
 			}
 		} else {
-			mappings "net.ornithemc:feather:${project.mc_version}+build.${project.feather_build}:v2"
+			mappings "net.ornithemc:feather:${project.last_mc_version}+build.${project.feather_build}:v2"
 		}
 		modApi "org.quiltmc:quilt-loader:${project.loader_version}"
 
 		if (doNesting) {
-			nests "net.ornithemc:nests:${project.mc_version}+build.${project.nests_build}"
+			nests "net.ornithemc:nests:${project.last_mc_version}+build.${project.nests_build}"
 		}
 	}
 
