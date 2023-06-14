@@ -53,7 +53,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$startResourceReload(CallbackInfo ci) {
-		ResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().run();;
+		ResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().run();
 	}
 
 	@Inject(
