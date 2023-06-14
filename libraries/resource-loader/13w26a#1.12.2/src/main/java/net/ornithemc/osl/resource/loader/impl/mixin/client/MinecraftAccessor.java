@@ -11,9 +11,7 @@ import net.minecraft.client.resource.pack.ResourcePack;
 @Mixin(Minecraft.class)
 public interface MinecraftAccessor {
 
-	@Accessor(
-		value = "defaultResourcePacks"
-	)
+	@Accessor("defaultResourcePacks")
 	List<ResourcePack> osl$resource_loader$defaultResourcePacks();
 
 }

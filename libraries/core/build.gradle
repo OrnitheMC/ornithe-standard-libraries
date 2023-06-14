@@ -1,0 +1,11 @@
+archivesBaseName = "${project.archives_base_name}"
+version = "${project.version}"
+group = "${project.maven_group}.${project.archives_base_name}"
+
+processResources {
+	inputs.property 'version', version
+
+	filesMatching('quilt.mod.json') {
+		expand "version": version
+	}
+}

@@ -2,7 +2,7 @@ package net.ornithemc.osl.resource.loader.api;
 
 import java.util.function.Consumer;
 
-import net.ornithemc.osl.events.api.Event;
+import net.ornithemc.osl.core.api.events.Event;
 
 public class ResourceLoaderEvents {
 

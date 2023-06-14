@@ -3,10 +3,9 @@ package net.ornithemc.osl.lifecycle.impl.mixin.client;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
 
 import net.ornithemc.osl.lifecycle.api.client.ClientWorldEvents;
 
@@ -19,7 +18,7 @@ public class ClientWorldMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$startTick(CallbackInfoReturnable<World> cir) {
+	private void osl$lifecycle$startTick(CallbackInfo ci) {
 		ClientWorldEvents.TICK_START.invoker().accept((ClientWorld)(Object)this);
 	}
 
@@ -29,7 +28,7 @@ public class ClientWorldMixin {
 			value = "TAIL"
 		)
 	)
-	private void osl$lifecycle$endTick(CallbackInfoReturnable<World> cir) {
+	private void osl$lifecycle$endTick(CallbackInfo ci) {
 		ClientWorldEvents.TICK_END.invoker().accept((ClientWorld)(Object)this);
 	}
 }

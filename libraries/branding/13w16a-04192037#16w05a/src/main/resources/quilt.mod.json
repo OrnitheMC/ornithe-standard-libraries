@@ -6,9 +6,9 @@
 		"version": "${version}",
 		"metadata": {
 			"name": "Branding Patch",
-			"description": "A short description of your mod.",
+			"description": "A mod that patches the title screen with Loader information.",
 			"contributors": {
-				"Your name here": "OrnitheMC"
+				"Space Walker": "maintainer"
 			},
 			"contact": {
 				"homepage": "https://ornithemc.net/",
@@ -18,6 +18,9 @@
 			"icon": "assets/ornithe-standard-libraries/branding/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"client-init": "net.ornithemc.osl.branding.impl.BrandingPatch"
+		},
 		"depends": [
 			{
 				"id": "quilt_loader",
@@ -25,7 +28,15 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "1.7.x"
+				"versions": ">=1.6.0-alpha.13.16.a+04192037 <=1.9.0-alpha.16.5.a"
+			},
+			{
+				"id": "osl-core",
+				"versions": ">=1.0.0"
+			},
+			{
+				"id": "osl-entrypoints",
+				"versions": ">=1.0.0"
 			}
 		]
 	},

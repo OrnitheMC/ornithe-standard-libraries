@@ -15,23 +15,25 @@ public class MinecraftServerMixin {
 
 	@Inject(
 		method = "run",
+		remap = false,
 		at = @At(
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$startServer(CallbackInfo ci) {
+	private void osl$lifecycle$start(CallbackInfo ci) {
 		MinecraftServerEvents.START.invoker().accept((MinecraftServer)(Object)this);
 	}
 
 	@Inject(
 		method = "run",
+		remap = false,
 		at = @At(
 			value = "INVOKE",
 			shift = Shift.AFTER,
 			target = "Lnet/minecraft/server/MinecraftServer;init()Z"
 		)
 	)
-	private void osl$lifecycle$readyServer(CallbackInfo ci) {
+	private void osl$lifecycle$ready(CallbackInfo ci) {
 		MinecraftServerEvents.READY.invoker().accept((MinecraftServer)(Object)this);
 	}
 
@@ -41,7 +43,7 @@ public class MinecraftServerMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$stopServer(CallbackInfo ci) {
+	private void osl$lifecycle$stop(CallbackInfo ci) {
 		MinecraftServerEvents.STOP.invoker().accept((MinecraftServer)(Object)this);
 	}
 

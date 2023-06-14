@@ -6,16 +6,16 @@
 		"version": "${version}",
 		"metadata": {
 			"name": "Entrypoints",
-			"description": "A short description of your mod.",
+			"description": "Entrypoints API for Minecraft.",
 			"contributors": {
-				"Your name here": "OrnitheMC"
+				"Space Walker": "maintainer"
 			},
 			"contact": {
 				"homepage": "https://ornithemc.net/",
 				"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
 				"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
 			},
-			"icon": "assets/ornithe-standard-libraries/lifecycle/icon.png"
+			"icon": "assets/ornithe-standard-libraries/entrypoints/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"depends": [
@@ -25,7 +25,11 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "1.3.x"
+				"versions": ">=1.6.0-alpha.13.16.a+04192037 <=1.13.2"
+			},
+			{
+				"id": "osl-core",
+				"versions": ">=1.0.0"
 			}
 		]
 	},

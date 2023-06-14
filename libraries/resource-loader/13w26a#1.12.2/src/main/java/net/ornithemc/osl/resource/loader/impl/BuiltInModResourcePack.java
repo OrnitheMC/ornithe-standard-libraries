@@ -1,8 +1,10 @@
 package net.ornithemc.osl.resource.loader.impl;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +15,8 @@ import javax.imageio.ImageIO;
 
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.ModMetadata;
+
+import com.google.gson.JsonObject;
 
 import net.minecraft.client.resource.metadata.ResourceMetadataSection;
 import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
@@ -29,6 +33,8 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	private final Path root;
 	private final String separator;
+
+	private JsonObject generatedPackMetadata;
 
 	public BuiltInModResourcePack(ModContainer mod) {
 		this.mod = mod;
@@ -60,6 +66,13 @@ public class BuiltInModResourcePack implements ModResourcePack {
 		Path path = getPath(location);
 
 		if (!Files.exists(path)) {
+			if ("pack.mcmeta".equals(location.getPath())) {
+				JsonObject metadata = generatePackMetadata();
+				String serializedMetadata = metadata.toString();
+
+				return new ByteArrayInputStream(serializedMetadata.getBytes(StandardCharsets.UTF_8));
+			}
+
 			return null;
 		}
 
@@ -104,5 +117,17 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	private String getPathName(Identifier location) {
 		return String.format("/assets/%s/%s", location.getNamespace(), location.getPath()).replace("/", separator);
+	}
+
+	private JsonObject generatePackMetadata() {
+		if (generatedPackMetadata == null) {
+			generatedPackMetadata = new JsonObject();
+			JsonObject pack = new JsonObject();
+			pack.addProperty("pack_format", ResourceLoader.getPackFormat());
+			pack.addProperty("description", getModMetadata().description());
+			generatedPackMetadata.add("pack", pack);
+		}
+
+		return generatedPackMetadata;
 	}
 }

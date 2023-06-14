@@ -1,40 +1,32 @@
 package net.ornithemc.osl.entrypoints.api.client;
 
-import java.util.function.Consumer;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
-import net.ornithemc.osl.events.api.Event;
+import net.ornithemc.osl.core.api.events.Event;
 
 public class ClientLaunchEvents {
 
-	public static final Event<RunArgsParser>  PARSE_RUN_ARGS = Event.of(listeners -> {
-		return new RunArgsParser() {
+	public static final Event<RunArgsConsumer> PARSE_RUN_ARGS = Event.of(listeners -> {
+		return new RunArgsConsumer() {
 
 			@Override
 			public void defineOptions(OptionParser parser) {
-				forEachListener(listener -> {
-					listener.defineOptions(parser);
-				});
+				for (int i = 0; i < listeners.size(); i++) {
+					listeners.get(i).defineOptions(parser);
+				}
 			}
 
 			@Override
 			public void parseOptions(OptionSet options) {
-				forEachListener(listener -> {
-					listener.parseOptions(options);
-				});
-			}
-
-			private void forEachListener(Consumer<RunArgsParser> action) {
 				for (int i = 0; i < listeners.size(); i++) {
-					action.accept(listeners.get(i));
+					listeners.get(i).parseOptions(options);
 				}
 			}
 		};
 	});
 
-	public static interface RunArgsParser {
+	public static interface RunArgsConsumer {
 
 		void defineOptions(OptionParser parser);
 

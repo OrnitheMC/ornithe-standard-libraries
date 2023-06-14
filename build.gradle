@@ -38,33 +38,39 @@ subprojects {
 		}
 	}
 
-	if (!it.hasProperty('last_mc_version') || !it.hasProperty('last_mc_version')) {
+	if (!project.hasProperty('min_mc_version') || !project.hasProperty('max_mc_version')) {
 		return
 	}
 
-	def doNesting = it.hasProperty('nests_build')
+	def doNesting = project.hasProperty('nests_build')
 
 	apply plugin: 'org.quiltmc.loom'
 	apply plugin: 'ploceus'
 
-	archivesBaseName = "${project.archives_base_name}"
-	version = "${project.version}+${project.first_mc_version}#${project.last_mc_version}"
+	archivesBaseName = "${project.archives_base_name}-mc${project.min_mc_version}#${project.max_mc_version}"
+	version = "${project.parent.version}"
 	group = "${project.maven_group}.${project.archives_base_name}"
 
 	dependencies {
-		minecraft "com.mojang:minecraft:${project.last_mc_version}"
+		minecraft "com.mojang:minecraft:${project.max_mc_version}"
 		if (doNesting) {
 			mappings loom.layered {
-				mappings "net.ornithemc:feather:${project.last_mc_version}+build.${project.feather_build}:v2"
+				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
 				ploceus.nestedMappings(it)
 			}
 		} else {
-			mappings "net.ornithemc:feather:${project.last_mc_version}+build.${project.feather_build}:v2"
+			mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
 		}
 		modApi "org.quiltmc:quilt-loader:${project.loader_version}"
 
 		if (doNesting) {
-			nests "net.ornithemc:nests:${project.last_mc_version}+build.${project.nests_build}"
+			nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
+		}
+
+		implementation project(':libraries:core')
+		if (project.parent.file('src/main/java/').exists()) {
+			implementation project.parent
+			include project.parent
 		}
 	}
 

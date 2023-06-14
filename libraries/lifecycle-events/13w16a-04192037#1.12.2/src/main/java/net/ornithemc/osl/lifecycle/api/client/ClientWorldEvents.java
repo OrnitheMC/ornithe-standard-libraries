@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.world.ClientWorld;
 
-import net.ornithemc.osl.events.api.Event;
+import net.ornithemc.osl.core.api.events.Event;
 
 public class ClientWorldEvents {
 

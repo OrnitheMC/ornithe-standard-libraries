@@ -20,7 +20,7 @@ public class MinecraftMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$startClient(CallbackInfo ci) {
+	private void osl$lifecycle$start(CallbackInfo ci) {
 		MinecraftClientEvents.START.invoker().accept((Minecraft)(Object)this);
 	}
 
@@ -30,7 +30,7 @@ public class MinecraftMixin {
 			value = "TAIL"
 		)
 	)
-	private void osl$lifecycle$readyClient(CallbackInfo ci) {
+	private void osl$lifecycle$ready(CallbackInfo ci) {
 		MinecraftClientEvents.READY.invoker().accept((Minecraft)(Object)this);
 	}
 
@@ -40,7 +40,7 @@ public class MinecraftMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$stopClient(CallbackInfo ci) {
+	private void osl$lifecycle$stop(CallbackInfo ci) {
 		MinecraftClientEvents.STOP.invoker().accept((Minecraft)(Object)this);
 	}
 
