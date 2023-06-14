@@ -4,6 +4,7 @@
 	"package": "net.ornithemc.osl.lifecycle.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.BootstrapMixin",
 		"common.MinecraftServerMixin",
 		"common.ServerWorldMixin"
 	],
