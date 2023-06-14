@@ -28,7 +28,7 @@ include ':libraries:entrypoints:1.3-pre-07261249#1.5.2'
 include ':libraries:entrypoints:13w16a-04192037#1.13.2'
 
 include ':libraries:lifecycle-events'
-include ':libraries:lifecycle-events:13w16a-04192037#1.12.2'
+include ':libraries:lifecycle-events:13w16a-04192037#1.13'
 
 include ':libraries:resource-loader'
 include ':libraries:resource-loader:13w26a#1.12.2'

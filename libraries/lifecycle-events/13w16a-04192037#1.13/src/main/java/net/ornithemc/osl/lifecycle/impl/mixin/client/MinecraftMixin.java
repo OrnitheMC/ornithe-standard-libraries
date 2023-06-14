@@ -6,9 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 
-import net.ornithemc.osl.lifecycle.api.client.ClientWorldEvents;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 
 @Mixin(Minecraft.class)
@@ -62,17 +60,5 @@ public class MinecraftMixin {
 	)
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
 		MinecraftClientEvents.TICK_END.invoker().accept((Minecraft)(Object)this);
-	}
-
-	@Inject(
-		method = "setWorld(Lnet/minecraft/client/world/ClientWorld;Ljava/lang/String;)V",
-		at = @At(
-			value = "TAIL"
-		)
-	)
-	private void osl$lifecycle$readyClientWorld(ClientWorld world, String s, CallbackInfo ci) {
-		if (world != null) {
-			ClientWorldEvents.READY.invoker().accept(world);
-		}
 	}
 }
