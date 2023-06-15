@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.client.gui.screen.TitleScreen;
-
 import net.ornithemc.osl.branding.impl.BrandingPatch;
 
 @Mixin(TitleScreen.class)

@@ -12,6 +12,14 @@ public class BrandingPatch implements ClientModInitializer {
 
 	public static String versionType = "release";
 
+	public static String apply(String s) {
+		if (versionType == null || "release".equals(versionType)) {
+			return s;
+		}
+
+		return s + "/" + versionType;
+	}
+
 	@Override
 	public void initClient() {
 		ClientLaunchEvents.PARSE_RUN_ARGS.register(new RunArgsConsumer() {

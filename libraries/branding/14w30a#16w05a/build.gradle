@@ -1,0 +1,4 @@
+dependencies {
+	implementation project(':libraries:entrypoints')
+	implementation project(':libraries:entrypoints:13w16a-04192037#1.13.2')
+}

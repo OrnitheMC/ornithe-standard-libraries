@@ -6,7 +6,7 @@
 		"version": "${version}",
 		"metadata": {
 			"name": "Branding Patch",
-			"description": "A mod that patches the title screen with mod loader information.",
+			"description": "A mod that patches the title screen and debug overlay with mod loader information.",
 			"contributors": {
 				"Space Walker": "maintainer"
 			},
@@ -28,7 +28,7 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": ">=1.3.0-pre+07261249 <=1.5.2"
+				"versions": ">=1.8.0-alpha.14.30.a <=1.9.0-alpha.16.5.a"
 			},
 			{
 				"id": "osl-core",
