@@ -5,7 +5,7 @@ import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 
 public class BrandingPatch implements ClientModInitializer {
 
-	public static String versionType = "release";
+	private static String versionType = "release";
 
 	public static String apply(String s) {
 		if (versionType == null || "release".equals(versionType)) {
