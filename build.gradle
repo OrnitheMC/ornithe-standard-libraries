@@ -8,9 +8,75 @@ plugins {
 }
 
 subprojects {
+	def hasSource = project.file('src/main/java/').exists();
+	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
+	def hasMcDep = project.hasProperty('min_mc_version') && project.hasProperty('max_mc_version')
+
+	if (!hasSource) {
+		return;
+	}
+
 	apply plugin: 'java-library'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
+	if (hasMcDep) {
+		apply plugin: 'org.quiltmc.loom'
+		apply plugin: 'ploceus'
+	}
+
+	if (hasModJson) {
+		archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
+		if (hasMcDep) {
+			archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
+		}
+		version = "${rootProject.version}"
+		group = "${rootProject.maven_group}.${project.maven_group}"
+	}
+
+	repositories {
+		// needed for quilt loader in subprojects without a mc dep
+		// since in those subprojects loom is not applied
+		maven {
+			name = 'Quilt'
+			url = 'https://maven.quiltmc.org/repository/release'
+		}
+	}
+
+	dependencies {
+		if (hasMcDep) {
+			minecraft "com.mojang:minecraft:${project.max_mc_version}"
+			if (project.hasProperty('nests_build')) {
+				mappings loom.layered {
+					mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+					ploceus.nestedMappings(it)
+				}
+				nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
+			} else {
+				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+			}
+			modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
+		} else {
+			implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
+		}
+
+		if (project != project(':libraries:core')) {
+			implementation project(':libraries:core')
+			if (hasMcDep && project.parent.file('src/main/java/').exists()) {
+				implementation project.parent
+				include project.parent
+			}
+		}
+	}
+
+	processResources {
+		if (hasModJson) {
+			inputs.property 'version', version
+
+			filesMatching('quilt.mod.json') {
+				expand "version": version
+			}
+		}
+	}
 
 	tasks.withType(JavaCompile).configureEach {
 		it.options.encoding = 'UTF-8'
@@ -35,50 +101,6 @@ subprojects {
 	jar {
 		from('LICENSE') {
 			rename { "${it}_${archivesBaseName}" }
-		}
-	}
-
-	if (!project.hasProperty('min_mc_version') || !project.hasProperty('max_mc_version')) {
-		return
-	}
-
-	def doNesting = project.hasProperty('nests_build')
-
-	apply plugin: 'org.quiltmc.loom'
-	apply plugin: 'ploceus'
-
-	archivesBaseName = "${project.archives_base_name}-mc${project.min_mc_version}#${project.max_mc_version}"
-	version = "${project.parent.version}"
-	group = "${project.maven_group}.${project.archives_base_name}"
-
-	dependencies {
-		minecraft "com.mojang:minecraft:${project.max_mc_version}"
-		if (doNesting) {
-			mappings loom.layered {
-				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
-				ploceus.nestedMappings(it)
-			}
-		} else {
-			mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
-		}
-		modApi "org.quiltmc:quilt-loader:${project.loader_version}"
-
-		if (doNesting) {
-			nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
-		}
-
-		implementation project(':libraries:core')
-		if (project.parent.file('src/main/java/').exists()) {
-			implementation project.parent
-			include project.parent
-		}
-	}
-
-	processResources {
-		inputs.property 'version', version
-
-		filesMatching('quilt.mod.json') {
-			expand "version": version
 		}
 	}
 }
