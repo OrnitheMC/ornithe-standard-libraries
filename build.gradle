@@ -57,6 +57,7 @@ subprojects {
 			modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
 		} else {
 			implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
+			implementation "org.quiltmc:quilt-json5:1.0.2"
 		}
 
 		if (project != project(':libraries:core')) {

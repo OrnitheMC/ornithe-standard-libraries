@@ -2,13 +2,13 @@ package net.ornithemc.osl.config.api.config.option;
 
 import java.util.function.Predicate;
 
-public class IntegerOption extends Option<Integer> {
+public class IntegerOption extends BaseOption<Integer> {
 
-	public IntegerOption(String name, Integer defaultValue) {
-		super(name, defaultValue);
+	public IntegerOption(String name, String description, Integer defaultValue) {
+		super(name, description, defaultValue);
 	}
 
-	public IntegerOption(String name, Integer defaultValue, Predicate<Integer> validator) {
-		super(name, defaultValue, validator);
+	public IntegerOption(String name, String description, Integer defaultValue, Predicate<Integer> validator) {
+		super(name, description, defaultValue, validator);
 	}
 }

@@ -10,7 +10,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
-import net.ornithemc.osl.config.api.config.option.Option;
+import net.ornithemc.osl.config.api.config.option.BaseOption;
 import net.ornithemc.osl.config.api.config.option.group.OptionGroup;
 
 public abstract class BaseConfig implements Config {
@@ -93,7 +93,7 @@ public abstract class BaseConfig implements Config {
 		// TODO
 	}
 
-	protected void registerOptions(String group, Option<?>... options) {
+	protected void registerOptions(String group, BaseOption<?>... options) {
 		// TODO
 	}
 }
