@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import net.ornithemc.osl.config.api.config.Config;
-import net.ornithemc.osl.config.api.serdes.SerializationOptions;
+import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 
 public class NetworkConfigSerializer implements ConfigSerializer<ByteBuffer> {
 
 	@Override
-	public void serialize(Config config, SerializationOptions options, ByteBuffer buffer) throws IOException {
+	public void serialize(Config config, SerializationSettings settings, ByteBuffer buffer) throws IOException {
 	}
 
 	@Override
-	public void deserialize(Config config, SerializationOptions options, ByteBuffer buffer) throws IOException {
+	public void deserialize(Config config, SerializationSettings settings, ByteBuffer buffer) throws IOException {
 	}
 }

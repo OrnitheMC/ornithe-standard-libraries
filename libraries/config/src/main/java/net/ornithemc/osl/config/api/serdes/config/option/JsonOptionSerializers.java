@@ -6,7 +6,7 @@ import net.ornithemc.osl.config.api.config.option.BooleanOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.StringOption;
-import net.ornithemc.osl.config.api.serdes.SerializationOptions;
+import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.SerializerTypes;
 import net.ornithemc.osl.core.api.json.JsonFile;
 import net.ornithemc.osl.core.api.registry.Registries;
@@ -19,36 +19,36 @@ public class JsonOptionSerializers {
 	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(BooleanOption.class, new JsonOptionSerializer<BooleanOption>() {
 
 		@Override
-		public void serialize(BooleanOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void serialize(BooleanOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			json.writer.value(option.get());
 		}
 
 		@Override
-		public void deserialize(BooleanOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void deserialize(BooleanOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			option.set(json.reader.nextBoolean());
 		}
 	});
 	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(IntegerOption.class, new JsonOptionSerializer<IntegerOption>() {
 
 		@Override
-		public void serialize(IntegerOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void serialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			json.writer.value(option.get());
 		}
 
 		@Override
-		public void deserialize(IntegerOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void deserialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			option.set(json.reader.nextInt());
 		}
 	});
 	public static final JsonOptionSerializer<StringOption> STRING = register(StringOption.class, new JsonOptionSerializer<StringOption>() {
 
 		@Override
-		public void serialize(StringOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void serialize(StringOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			json.writer.value(option.get());
 		}
 
 		@Override
-		public void deserialize(StringOption option, SerializationOptions options, JsonFile json) throws IOException {
+		public void deserialize(StringOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			option.set(json.reader.nextString());
 		}
 	});

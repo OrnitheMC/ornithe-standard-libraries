@@ -31,12 +31,14 @@ public class JsonFile implements Closeable {
 	public void write() throws IOException {
 		if (canOpen()) {
 			writer = JsonWriter.json(path);
+			writer.beginObject(); // begin document
 		}
 	}
 
 	public void read() throws IOException {
 		if (canOpen()) {
 			reader = JsonReader.json(path);
+			reader.beginObject(); // begin document
 		}
 	}
 
@@ -53,9 +55,11 @@ public class JsonFile implements Closeable {
 	@Override
 	public void close() throws IOException {
 		if (writer != null) {
+			writer.endObject(); // end document
 			writer.close();
 			writer = null;
 		} else if (reader != null) {
+			reader.endObject(); // end document
 			reader.close();
 			reader = null;
 		}

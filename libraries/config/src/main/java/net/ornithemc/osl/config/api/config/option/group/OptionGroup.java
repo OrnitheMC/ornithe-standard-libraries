@@ -24,6 +24,10 @@ public class OptionGroup {
 		return options.values();
 	}
 
+	public Option getOption(String name) {
+		return options.get(name);
+	}
+
 	public void resetAll() {
 		for (Option option : getOptions()) {
 			option.reset();

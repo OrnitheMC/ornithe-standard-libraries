@@ -12,6 +12,8 @@ import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.group.OptionGroup;
+import net.ornithemc.osl.config.api.serdes.FileSerializerType;
+import net.ornithemc.osl.config.api.serdes.SerializerTypes;
 
 public abstract class BaseConfig implements Config {
 
@@ -74,6 +76,11 @@ public abstract class BaseConfig implements Config {
 	@Override
 	public LoadingPhase getLoadingPhase() {
 		return phase;
+	}
+
+	@Override
+	public FileSerializerType<?> getType() {
+		return SerializerTypes.JSON;
 	}
 
 	@Override

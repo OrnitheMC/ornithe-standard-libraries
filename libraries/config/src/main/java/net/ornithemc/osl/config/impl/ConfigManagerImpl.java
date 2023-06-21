@@ -1,6 +1,7 @@
 package net.ornithemc.osl.config.impl;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -8,7 +9,7 @@ import java.util.Map;
 
 import net.ornithemc.osl.config.api.config.Config;
 import net.ornithemc.osl.config.api.serdes.FileSerializerType;
-import net.ornithemc.osl.config.api.serdes.SerializationOptions;
+import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.config.ConfigSerializer;
 import net.ornithemc.osl.config.api.serdes.config.ConfigSerializers;
 import net.ornithemc.osl.config.api.ConfigScope;
@@ -73,20 +74,20 @@ public abstract class ConfigManagerImpl {
 	}
 
 	public void save() {
-		SerializationOptions options = new SerializationOptions(); // TODO
+		SerializationSettings settings = new SerializationSettings(); // TODO
 
 		for (Config config : getConfigs()) {
 			FileSerializerType<?> type = config.getType();
 
 			try {
-				save(config, options, type);
+				save(config, settings, type);
 			} catch (IOException e) {
 				// TODO
 			}
 		}
 	}
 
-	private <M> void save(Config config, SerializationOptions options, FileSerializerType<M> type) throws IOException {
+	private <M> void save(Config config, SerializationSettings settings, FileSerializerType<M> type) throws IOException {
 		ConfigSerializer<M> serializer = ConfigSerializers.get(type);
 
 		if (serializer == null) {
@@ -95,7 +96,11 @@ public abstract class ConfigManagerImpl {
 			Path path = getFilePath(config);
 			M medium = type.open(path);
 
-			serializer.serialize(config, options, medium);
+			if (!Files.exists(path)) {
+				Files.createDirectories(path.getParent());
+			}
+
+			serializer.serialize(config, settings, medium);
 		}
 	}
 

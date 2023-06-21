@@ -29,6 +29,8 @@ public interface Config {
 
 	Collection<OptionGroup> getGroups();
 
+	OptionGroup getGroup(String name);
+
 	void resetAll();
 
 }

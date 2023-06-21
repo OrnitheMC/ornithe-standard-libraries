@@ -40,6 +40,7 @@ subprojects {
 			name = 'Quilt'
 			url = 'https://maven.quiltmc.org/repository/release'
 		}
+		mavenCentral()
 	}
 
 	dependencies {

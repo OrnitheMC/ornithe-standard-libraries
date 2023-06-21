@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import net.ornithemc.osl.config.api.config.option.Option;
-import net.ornithemc.osl.config.api.serdes.SerializationOptions;
+import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 
 public interface NetworkOptionSerializer<O extends Option> extends OptionSerializer<O, ByteBuffer> {
 
 	@Override
-	void serialize(O option, SerializationOptions options, ByteBuffer buffer) throws IOException;
+	void serialize(O option, SerializationSettings settings, ByteBuffer buffer) throws IOException;
 
 	@Override
-	void deserialize(O option, SerializationOptions options, ByteBuffer buffer) throws IOException;
+	void deserialize(O option, SerializationSettings settings, ByteBuffer buffer) throws IOException;
 
 }
