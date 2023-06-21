@@ -2,7 +2,7 @@ package net.ornithemc.osl.config.api;
 
 public enum ConfigScope {
 
-	GLOBAL(".config"),
+	GLOBAL("config"),
 	WORLD ("config");
 
 	private final String path;
