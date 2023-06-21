@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.ornithemc.osl.config.api.config.option.BaseOption;
+import net.ornithemc.osl.config.api.config.option.Option;
 
 public class OptionGroup {
 
 	private final String name;
-	private final Map<String, BaseOption<?>> options;
+	private final Map<String, Option> options;
 
 	public OptionGroup(String name) {
 		this.name = name;
@@ -20,12 +20,12 @@ public class OptionGroup {
 		return name;
 	}
 
-	public Collection<BaseOption<?>> getOptions() {
+	public Collection<Option> getOptions() {
 		return options.values();
 	}
 
 	public void resetAll() {
-		for (BaseOption<?> option : getOptions()) {
+		for (Option option : getOptions()) {
 			option.reset();
 		}
 	}
