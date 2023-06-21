@@ -21,38 +21,34 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 		try {
 			json.write();
 
-			json.writer.name(NAME).value(config.getName());
-			json.writer.name(VERSION).value((Number)config.getVersion());
+			json.writeString(NAME, config.getName());
+			json.writeNumber(VERSION, config.getVersion());
 
-			json.writer.name(OPTIONS).beginObject();
-
-			for (OptionGroup group : config.getGroups()) {
-				writeGroup(group, settings, json);
-			}
-
-			json.writer.endObject();
+			json.writeObject(OPTIONS, _json -> {
+				for (OptionGroup group : config.getGroups()) {
+					json.writeObject(group.getName(), __json -> {
+						serializeGroup(group, settings, json);
+					});
+				}
+			});
 		} finally {
 			json.close();
 		}
 	}
 
-	private void writeGroup(OptionGroup group, SerializationSettings settings, JsonFile json) throws IOException {
-		json.writer.name(group.getName()).beginObject();
-
+	private void serializeGroup(OptionGroup group, SerializationSettings settings, JsonFile json) throws IOException {
 		for (Option option : group.getOptions()) {
-			writeOption(option, settings, json);
+			json.writeName(option.getName());
+			serializeOption(option, settings, json);
 		}
-
-		json.writer.endObject();
 	}
 
-	private <O extends Option> void writeOption(O option, SerializationSettings settings, JsonFile json) throws IOException {
+	private <O extends Option> void serializeOption(O option, SerializationSettings settings, JsonFile json) throws IOException {
 		JsonOptionSerializer<O> serializer = JsonOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
 			throw new IOException("don't know how to serialize option " + option);
 		} else {
-			json.writer.name(option.getName());
 			serializer.serialize(option, settings, json);
 		}
 	}
@@ -62,46 +58,42 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 		try {
 			json.read();
 
-			String name = json.reader.nextString();
-			int version = json.reader.nextInt(); // TODO: versioning, updating config data between versions
+			String name = json.readString(NAME);
+			int version = json.readInt(VERSION); // TODO: versioning, updating config data between versions
 
-			json.reader.beginObject();
+			json.readObject(OPTIONS, _json -> {
+				while (json.hasNext()) {
+					String groupName = json.readName();
+					OptionGroup group = config.getGroup(groupName);
 
-			while (json.reader.hasNext()) {
-				String groupName = json.reader.nextName();
-				OptionGroup group = config.getGroup(groupName);
-
-				if (group == null) {
-					json.reader.skipValue(); // TODO: log this, check if it needs updating from previous config version
-				} else {
-					readGroup(group, settings, json);
+					if (group == null) {
+						json.skipValue(); // TODO: log this, check if it needs updating from previous config version
+					} else {
+						json.readObject(__json -> {
+							deserializeGroup(group, settings, json);
+						});
+					}
 				}
-			}
-
-			json.reader.endObject();
+			});
 		} finally {
 			json.close();
 		}
 	}
 
-	private void readGroup(OptionGroup group, SerializationSettings settings, JsonFile json) throws IOException {
-		json.reader.beginObject();
-
-		while (json.reader.hasNext()) {
-			String optionName = json.reader.nextName();
+	private void deserializeGroup(OptionGroup group, SerializationSettings settings, JsonFile json) throws IOException {
+		while (json.hasNext()) {
+			String optionName = json.readName();
 			Option option = group.getOption(optionName);
 
 			if (option == null) {
-				json.reader.skipValue(); // TODO: log this, check if it needs updating from previous config version
+				json.skipValue(); // TODO: log this, check if it needs updating from previous config version
 			} else {
-				readOption(option, settings, json);
+				deserializeOption(option, settings, json);
 			}
 		}
-
-		json.reader.endObject();
 	}
 
-	private <O extends Option> void readOption(O option, SerializationSettings settings, JsonFile json) throws IOException {
+	private <O extends Option> void deserializeOption(O option, SerializationSettings settings, JsonFile json) throws IOException {
 		JsonOptionSerializer<O> serializer = JsonOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
