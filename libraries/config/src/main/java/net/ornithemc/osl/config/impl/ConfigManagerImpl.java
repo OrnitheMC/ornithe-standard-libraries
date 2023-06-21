@@ -1,11 +1,16 @@
 package net.ornithemc.osl.config.impl;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.ornithemc.osl.config.api.config.Config;
+import net.ornithemc.osl.config.api.serdes.FileSerializerType;
+import net.ornithemc.osl.config.api.serdes.SerializationOptions;
+import net.ornithemc.osl.config.api.serdes.config.ConfigSerializer;
+import net.ornithemc.osl.config.api.serdes.config.ConfigSerializers;
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 
@@ -68,16 +73,38 @@ public abstract class ConfigManagerImpl {
 	}
 
 	public void save() {
+		SerializationOptions options = new SerializationOptions(); // TODO
+
 		for (Config config : getConfigs()) {
+			FileSerializerType<?> type = config.getType();
+
+			try {
+				save(config, options, type);
+			} catch (IOException e) {
+				// TODO
+			}
 		}
 	}
 
-	private Path getSavePath(Config config) {
+	private <M> void save(Config config, SerializationOptions options, FileSerializerType<M> type) throws IOException {
+		ConfigSerializer<M> serializer = ConfigSerializers.get(type);
+
+		if (serializer == null) {
+			throw new IOException("don't know how to serialize " + config + " to file!");
+		} else {
+			Path path = getFilePath(config);
+			M medium = type.open(path);
+
+			serializer.serialize(config, options, medium);
+		}
+	}
+
+	private Path getFilePath(Config config) {
 		Path dir = getConfigDir();
 
 		String namespace = config.getNamespace();
 		String name = config.getSaveName();
 
-		return namespace == null ? dir.resolve(name) : dir.resolve(namespace).resolve(name);
+		return (namespace == null) ? dir.resolve(name) :  dir.resolve(namespace).resolve(name);
 	}
 }

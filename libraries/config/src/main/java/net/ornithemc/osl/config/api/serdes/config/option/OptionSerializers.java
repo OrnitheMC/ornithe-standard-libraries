@@ -9,7 +9,7 @@ import net.ornithemc.osl.core.api.registry.RegistryKey;
 
 public class OptionSerializers {
 
-	public static final Registry<SerializerType<?>, Registry<Class<? extends Option>, ? extends OptionSerializer<? extends Option, ?>>> REGISTRIES = Registries.register(ConfigRegistries.OPTION_SERIALIZER);
+	private static final Registry<SerializerType<?>, Registry<Class<? extends Option>, ? extends OptionSerializer<? extends Option, ?>>> REGISTRIES = Registries.register(ConfigRegistries.OPTION_SERIALIZER);
 
 	public static <M, S extends OptionSerializer<? extends Option, M>> Registry<Class<? extends Option>, S> register(SerializerType<M> type, String name) {
 		return Registries.registerMapping(REGISTRIES, type, Registries.register(RegistryKey.of(ConfigRegistries.OPTION_SERIALIZER, name)));

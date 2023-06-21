@@ -1,5 +1,6 @@
 package net.ornithemc.osl.core.api.json;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -15,7 +16,7 @@ import org.quiltmc.json5.JsonWriter;
  * 
  * @author Space Walker
  */
-public class JsonFile {
+public class JsonFile implements Closeable {
 
 	private final Path path;
 
@@ -49,6 +50,7 @@ public class JsonFile {
 		return true;
 	}
 
+	@Override
 	public void close() throws IOException {
 		if (writer != null) {
 			writer.close();

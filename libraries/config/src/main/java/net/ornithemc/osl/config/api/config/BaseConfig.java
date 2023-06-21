@@ -47,6 +47,11 @@ public abstract class BaseConfig implements Config {
 	}
 
 	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "[" + getName() + "]";
+	}
+
+	@Override
 	public String getNamespace() {
 		return namespace;
 	}

@@ -1,6 +1,7 @@
 package net.ornithemc.osl.config.api.serdes;
 
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 
 import net.ornithemc.osl.config.api.ConfigRegistries;
 import net.ornithemc.osl.core.api.json.JsonFile;
@@ -12,8 +13,14 @@ public final class SerializerTypes {
 
 	private static final Registry<RegistryKey, SerializerType<?>> REGISTRY = Registries.register(ConfigRegistries.SERIALIZER_TYPE);
 
-	public static final SerializerType<JsonFile>   JSON    = register("json"   , new SerializerType<>());
-	public static final SerializerType<ByteBuffer> NETWORK = register("network", new SerializerType<>());
+	public static final FileSerializerType<JsonFile> JSON = register("json" , new FileSerializerType<JsonFile>() {
+
+		@Override
+		public JsonFile open(Path path) {
+			return new JsonFile(path);
+		}
+	});
+	public static final SerializerType<ByteBuffer> NETWORK = register("network", new SerializerType<ByteBuffer>() { });
 
 	public static <T extends SerializerType<?>> T register(String name, T type) {
 		return Registries.registerMapping(REGISTRY, RegistryKey.of(ConfigRegistries.SERIALIZER_TYPE, name), type);

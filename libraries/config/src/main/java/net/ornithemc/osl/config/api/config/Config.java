@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 import net.ornithemc.osl.config.api.config.option.group.OptionGroup;
+import net.ornithemc.osl.config.api.serdes.FileSerializerType;
 
 public interface Config {
 
@@ -17,6 +18,8 @@ public interface Config {
 	ConfigScope getScope();
 
 	LoadingPhase getLoadingPhase();
+
+	FileSerializerType<?> getType();
 
 	int getVersion();
 
