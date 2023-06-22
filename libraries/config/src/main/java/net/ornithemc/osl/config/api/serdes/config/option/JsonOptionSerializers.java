@@ -7,6 +7,7 @@ import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.StringOption;
+import net.ornithemc.osl.config.api.config.option.UuidOption;
 import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.SerializerTypes;
 import net.ornithemc.osl.core.api.json.JsonFile;
@@ -63,6 +64,18 @@ public class JsonOptionSerializers {
 		@Override
 		public void deserialize(StringOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			option.set(json.readString());
+		}
+	});
+	public static final JsonOptionSerializer<UuidOption> UUID = register(UuidOption.class, new JsonOptionSerializer<UuidOption>() {
+
+		@Override
+		public void serialize(UuidOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			json.writeString(option.get().toString());
+		}
+
+		@Override
+		public void deserialize(UuidOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			option.set(java.util.UUID.fromString(json.readString()));
 		}
 	});
 
