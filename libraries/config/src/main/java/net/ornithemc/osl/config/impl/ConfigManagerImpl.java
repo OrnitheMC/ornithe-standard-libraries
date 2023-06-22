@@ -15,7 +15,7 @@ import net.ornithemc.osl.config.api.serdes.config.ConfigSerializers;
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 
-public abstract class ConfigManagerImpl {
+public final class ConfigManagerImpl {
 
 	private final ConfigScope scope;
 	private final Path rootDir;
