@@ -15,4 +15,8 @@ public final class MinecraftServerEvents {
 	public static final Event<Consumer<MinecraftServer>> TICK_START = Event.consumer();
 	public static final Event<Consumer<MinecraftServer>> TICK_END   = Event.consumer();
 
+	public static final Event<Consumer<MinecraftServer>> LOAD_WORLD    = Event.consumer();
+	public static final Event<Consumer<MinecraftServer>> PREPARE_WORLD = Event.consumer();
+	public static final Event<Consumer<MinecraftServer>> READY_WORLD   = Event.consumer();
+
 }
