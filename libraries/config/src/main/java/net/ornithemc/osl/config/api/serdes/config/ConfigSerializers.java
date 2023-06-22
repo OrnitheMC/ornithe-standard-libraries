@@ -10,8 +10,7 @@ public class ConfigSerializers {
 
 	private static final Registry<SerializerType<?>, ConfigSerializer<?>> REGISTRY = Registries.register(ConfigRegistries.CONFIG_SERIALIZER);
 
-	public static final JsonConfigSerializer    JSON    = register(SerializerTypes.JSON   , new JsonConfigSerializer());
-	public static final NetworkConfigSerializer NETWORK = register(SerializerTypes.NETWORK, new NetworkConfigSerializer());
+	public static final JsonConfigSerializer JSON = register(SerializerTypes.JSON , new JsonConfigSerializer());
 
 	public static <M, C extends ConfigSerializer<M>> C register(SerializerType<M> type, C serializer) {
 		return Registries.registerMapping(REGISTRY, type, serializer);
