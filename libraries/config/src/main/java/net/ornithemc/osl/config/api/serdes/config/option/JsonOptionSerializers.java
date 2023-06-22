@@ -3,6 +3,7 @@ package net.ornithemc.osl.config.api.serdes.config.option;
 import java.io.IOException;
 
 import net.ornithemc.osl.config.api.config.option.BooleanOption;
+import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.StringOption;
@@ -28,6 +29,18 @@ public class JsonOptionSerializers {
 			option.set(json.readBoolean());
 		}
 	});
+	public static final JsonOptionSerializer<FloatOption> FLOAT = register(FloatOption.class, new JsonOptionSerializer<FloatOption>() {
+
+		@Override
+		public void serialize(FloatOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			json.writeNumber(option.get());
+		}
+
+		@Override
+		public void deserialize(FloatOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			option.set(json.readNumber().floatValue());
+		}
+	});
 	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(IntegerOption.class, new JsonOptionSerializer<IntegerOption>() {
 
 		@Override
@@ -37,7 +50,7 @@ public class JsonOptionSerializers {
 
 		@Override
 		public void deserialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(json.readInt());
+			option.set(json.readNumber().intValue());
 		}
 	});
 	public static final JsonOptionSerializer<StringOption> STRING = register(StringOption.class, new JsonOptionSerializer<StringOption>() {
