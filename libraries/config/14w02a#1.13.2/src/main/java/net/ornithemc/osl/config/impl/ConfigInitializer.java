@@ -3,7 +3,6 @@ package net.ornithemc.osl.config.impl;
 import net.minecraft.world.storage.WorldStorage;
 import net.minecraft.world.storage.WorldStorageSource;
 
-import net.ornithemc.osl.config.api.ConfigManager;
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
@@ -18,15 +17,15 @@ public class ConfigInitializer implements ModInitializer {
 			WorldStorageSource storageSource = server.getWorldStorageSource();
 			WorldStorage storage = storageSource.get(worldDirName, server);
 
-			ConfigManager.setUp(ConfigScope.WORLD, storage.getDir().toPath());
-			ConfigManager.load(ConfigScope.WORLD, LoadingPhase.START);
+			ConfigManagerImpl.setUp(ConfigScope.WORLD, storage.getDir().toPath());
+			ConfigManagerImpl.load(ConfigScope.WORLD, LoadingPhase.START);
 		});
 		MinecraftServerEvents.READY_WORLD.register(server -> {
-			ConfigManager.load(ConfigScope.WORLD, LoadingPhase.READY);
+			ConfigManagerImpl.load(ConfigScope.WORLD, LoadingPhase.READY);
 		});
 		MinecraftServerEvents.STOP.register(server -> {
-			ConfigManager.unload(ConfigScope.WORLD);
-			ConfigManager.destroy(ConfigScope.WORLD);
+			ConfigManagerImpl.unload(ConfigScope.WORLD);
+			ConfigManagerImpl.destroy(ConfigScope.WORLD);
 		});
 	}
 }

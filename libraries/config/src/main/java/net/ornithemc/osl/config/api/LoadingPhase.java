@@ -1,10 +1,20 @@
 package net.ornithemc.osl.config.api;
 
 /**
- * Different phases in which a scope will load its configs.
+ * A loading phase defines a point in the scope's lifecycle
+ * at which configs are loaded.
  */
 public enum LoadingPhase {
 
-	START, READY
+	/**
+	 * This loading phase is called at the scope's start-up,
+	 * before it is initialized.
+	 */
+	START,
+	/**
+	 * This loading phase is called after the scope is fully
+	 * initialized.
+	 */
+	READY
 
 }
