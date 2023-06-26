@@ -3,86 +3,23 @@ package net.ornithemc.osl.config.api.config;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.api.QuiltLoader;
-
-import net.ornithemc.osl.config.api.ConfigScope;
-import net.ornithemc.osl.config.api.LoadingPhase;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.group.OptionGroup;
-import net.ornithemc.osl.config.api.serdes.FileSerializerType;
-import net.ornithemc.osl.config.api.serdes.SerializerTypes;
 
 public abstract class BaseConfig implements Config {
-
-	protected final String namespace;
-	protected final String name;
-	protected final String saveName;
-	protected final ConfigScope scope;
-	protected final LoadingPhase phase;
 
 	private final Map<String, OptionGroup> groups;
 
 	private boolean loaded;
 
-	public BaseConfig(String name, String saveName, ConfigScope scope, LoadingPhase phase) {
-		this(null, name, saveName, scope, phase);
-	}
-
-	public BaseConfig(String namespace, String name, String saveName, ConfigScope scope, LoadingPhase phase) {
-		if (namespace == null) {
-			Class<? extends BaseConfig> type = getClass();
-			Optional<ModContainer> mod = QuiltLoader.getModContainer(type);
-
-			if (mod.isPresent()) {
-				namespace = mod.get().metadata().id();
-			}
-		}
-
-		this.namespace = namespace;
-		this.name = name;
-		this.saveName = saveName;
-		this.scope = scope;
-		this.phase = phase;
-
+	protected BaseConfig() {
 		this.groups = new LinkedHashMap<>();
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "[" + getName() + "]";
-	}
-
-	@Override
-	public String getNamespace() {
-		return namespace;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getSaveName() {
-		return saveName;
-	}
-
-	@Override
-	public ConfigScope getScope() {
-		return scope;
-	}
-
-	@Override
-	public LoadingPhase getLoadingPhase() {
-		return phase;
-	}
-
-	@Override
-	public FileSerializerType<?> getType() {
-		return SerializerTypes.JSON;
 	}
 
 	@Override
@@ -122,13 +59,13 @@ public abstract class BaseConfig implements Config {
 		loaded = false;
 	}
 
-	public void requireLoaded() {
+	public final void requireLoaded() {
 		if (!loaded) {
 			throw new IllegalStateException("this config is not loaded!");
 		}
 	}
 
-	protected void registerOptions(String group, Option... options) {
+	protected final void registerOptions(String group, Option... options) {
 		if (loaded) {
 			throw new IllegalStateException("cannot register new options while this config is loaded!");
 		}

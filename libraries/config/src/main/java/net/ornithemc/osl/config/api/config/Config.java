@@ -44,6 +44,8 @@ public interface Config {
 
 	/**
 	 * Returns the serializer type used to save this config to file.
+	 * 
+	 * @see net.ornithemc.osl.config.api.serdes.SerializerTypes SerializerTypes
 	 */
 	FileSerializerType<?> getType();
 
