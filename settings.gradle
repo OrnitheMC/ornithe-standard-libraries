@@ -24,6 +24,9 @@ include ':libraries:branding:1.3-pre-07261249#1.5.2'
 include ':libraries:branding:13w16a-04192037#14w29b'
 include ':libraries:branding:14w30a#16w05a'
 
+include ':libraries:config'
+include ':libraries:config:14w02a#1.13.2'
+
 include ':libraries:entrypoints'
 include ':libraries:entrypoints:1.3-pre-07261249#1.5.2'
 include ':libraries:entrypoints:13w16a-04192037#1.13.2'

@@ -66,4 +66,34 @@ public class MinecraftServerMixin {
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
 		MinecraftServerEvents.TICK_END.invoker().accept((MinecraftServer)(Object)this);
 	}
+
+	@Inject(
+		method = "convertWorld",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$lifecycle$loadWorld(CallbackInfo ci) {
+		MinecraftServerEvents.LOAD_WORLD.invoker().accept((MinecraftServer)(Object)this);
+	}
+
+	@Inject(
+		method = "prepareWorlds",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$lifecycle$prepareWorld(CallbackInfo ci) {
+		MinecraftServerEvents.PREPARE_WORLD.invoker().accept((MinecraftServer)(Object)this);
+	}
+
+	@Inject(
+		method = "prepareWorlds",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$lifecycle$readyWorld(CallbackInfo ci) {
+		MinecraftServerEvents.READY_WORLD.invoker().accept((MinecraftServer)(Object)this);
+	}
 }
