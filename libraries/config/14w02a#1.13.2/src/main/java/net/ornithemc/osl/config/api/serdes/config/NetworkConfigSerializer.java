@@ -15,8 +15,10 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 
 	@Override
 	public void serialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
-		buffer.writeString(config.getName());
-		buffer.writeInt(config.getVersion());
+		if (!settings.skipConfigMetadata) {
+			buffer.writeString(config.getName());
+			buffer.writeInt(config.getVersion());
+		}
 
 		buffer.writeInt(config.getGroups().size());
 
@@ -30,8 +32,10 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 		buffer.writeInt(group.getOptions().size());
 
 		for (Option option : group.getOptions()) {
-			buffer.writeString(option.getName());
-			serializeOption(option, settings, buffer);
+			if (!settings.skipDefaultOptions || !option.isDefault()) {
+				buffer.writeString(option.getName());
+				serializeOption(option, settings, buffer);
+			}
 		}
 	}
 
@@ -47,8 +51,10 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 
 	@Override
 	public void deserialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
-		String name = buffer.readString(32767);
-		int version = buffer.readInt();
+		if (!settings.skipConfigMetadata) {
+			String name = buffer.readString(32767);
+			int version = buffer.readInt();
+		}
 
 		int groupCount = buffer.readInt();
 

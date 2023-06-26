@@ -68,31 +68,39 @@ public final class ScopedConfigManager {
 		for (Config config : getConfigs()) {
 			if (config.getLoadingPhase() == phase) {
 				config.load();
+				// ensure that values that are not present in
+				// the config file are reset to default values
+				config.resetAll();
+				guardRead(config);
 			}
 		}
 	}
 
 	public void unload() {
 		for (Config config : getConfigs()) {
+			guardWrite(config);
 			config.unload();
 		}
 	}
 
 	public void save() {
-		SerializationSettings settings = new SerializationSettings(); // TODO
-
 		for (Config config : getConfigs()) {
-			FileSerializerType<?> type = config.getType();
-
-			try {
-				save(config, settings, type);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			guardWrite(config);
 		}
 	}
 
-	private <M> void save(Config config, SerializationSettings settings, FileSerializerType<M> type) throws IOException {
+	private void guardWrite(Config config) {
+		SerializationSettings settings = SerializationSettings.forFile();
+		FileSerializerType<?> type = config.getType();
+
+		try {
+			write(config, settings, type);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private <M> void write(Config config, SerializationSettings settings, FileSerializerType<M> type) throws IOException {
 		ConfigSerializer<M> serializer = ConfigSerializers.get(type);
 
 		if (serializer == null) {
@@ -105,6 +113,31 @@ public final class ScopedConfigManager {
 			}
 
 			serializer.serialize(config, settings, type.open(path));
+		}
+	}
+
+	private void guardRead(Config config) {
+		SerializationSettings settings = SerializationSettings.forFile();
+		FileSerializerType<?> type = config.getType();
+
+		try {
+			read(config, settings, type);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private <M> void read(Config config, SerializationSettings settings, FileSerializerType<M> type) throws IOException {
+		ConfigSerializer<M> serializer = ConfigSerializers.get(type);
+
+		if (serializer == null) {
+			throw new IOException("don't know how to deserialize " + config + " from file!");
+		} else {
+			Path path = getFilePath(config);
+
+			if (Files.exists(path)) {
+				serializer.deserialize(config, settings, type.open(path));
+			}
 		}
 	}
 

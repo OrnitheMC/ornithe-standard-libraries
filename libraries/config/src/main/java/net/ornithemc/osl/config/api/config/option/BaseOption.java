@@ -48,6 +48,11 @@ public abstract class BaseOption<T> implements Option {
 	}
 
 	@Override
+	public boolean isDefault() {
+		return Objects.equals(get(), getDefault());
+	}
+
+	@Override
 	public void reset() {
 		set(getDefault());
 	}

@@ -17,6 +17,11 @@ public interface Option {
 	String getDescription();
 
 	/**
+	 * Returns whether this option is currently set to its default value.
+	 */
+	boolean isDefault();
+
+	/**
 	 * Reset this option to its default value.
 	 */
 	void reset();

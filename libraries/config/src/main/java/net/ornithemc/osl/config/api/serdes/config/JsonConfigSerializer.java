@@ -21,8 +21,10 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 		try {
 			json.write();
 
-			json.writeString(NAME, config.getName());
-			json.writeNumber(VERSION, config.getVersion());
+			if (!settings.skipConfigMetadata) {
+				json.writeString(NAME, config.getName());
+				json.writeNumber(VERSION, config.getVersion());
+			}
 
 			json.writeObject(OPTIONS, _json -> {
 				for (OptionGroup group : config.getGroups()) {
@@ -38,8 +40,10 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 
 	private void serializeGroup(OptionGroup group, SerializationSettings settings, JsonFile json) throws IOException {
 		for (Option option : group.getOptions()) {
-			json.writeName(option.getName());
-			serializeOption(option, settings, json);
+			if (!settings.skipDefaultOptions || !option.isDefault()) {
+				json.writeName(option.getName());
+				serializeOption(option, settings, json);
+			}
 		}
 	}
 
@@ -58,8 +62,10 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 		try {
 			json.read();
 
-			String name = json.readString(NAME);
-			int version = json.readInt(VERSION); // TODO: versioning, updating config data between versions
+			if (!settings.skipConfigMetadata) {
+				String name = json.readString(NAME);
+				int version = json.readInt(VERSION); // TODO: versioning, updating config data between versions
+			}
 
 			json.readObject(OPTIONS, _json -> {
 				while (json.hasNext()) {
