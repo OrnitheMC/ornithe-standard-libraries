@@ -8,4 +8,8 @@ public interface Option {
 
 	void reset();
 
+	void load();
+
+	void unload();
+
 }

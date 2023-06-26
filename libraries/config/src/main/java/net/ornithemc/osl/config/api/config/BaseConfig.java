@@ -25,6 +25,8 @@ public abstract class BaseConfig implements Config {
 
 	private final Map<String, OptionGroup> groups;
 
+	private boolean loaded;
+
 	public BaseConfig(String name, String saveName, ConfigScope scope, LoadingPhase phase) {
 		this(null, name, saveName, scope, phase);
 	}
@@ -90,6 +92,8 @@ public abstract class BaseConfig implements Config {
 
 	@Override
 	public void resetAll() {
+		requireLoaded();
+
 		for (OptionGroup group : getGroups()) {
 			group.resetAll();
 		}
@@ -97,12 +101,26 @@ public abstract class BaseConfig implements Config {
 
 	@Override
 	public void load() {
-		// TODO
+		loaded = true;
+
+		for (OptionGroup group : getGroups()) {
+			group.load();
+		}
 	}
 
 	@Override
 	public void unload() {
-		// TODO
+		for (OptionGroup group : getGroups()) {
+			group.unload();
+		}
+
+		loaded = false;
+	}
+
+	public void requireLoaded() {
+		if (!loaded) {
+			throw new IllegalStateException("this config is not loaded!");
+		}
 	}
 
 	protected void registerOptions(String group, Option... options) {

@@ -11,6 +11,8 @@ public class OptionGroup {
 	private final String name;
 	private final Map<String, Option> options;
 
+	private boolean loaded;
+
 	public OptionGroup(String name) {
 		this.name = name;
 		this.options = new LinkedHashMap<>();
@@ -29,8 +31,32 @@ public class OptionGroup {
 	}
 
 	public void resetAll() {
+		requireLoaded();
+
 		for (Option option : getOptions()) {
 			option.reset();
+		}
+	}
+
+	public void load() {
+		loaded = true;
+
+		for (Option option : getOptions()) {
+			option.load();
+		}
+	}
+
+	public void unload() {
+		for (Option option : getOptions()) {
+			option.unload();
+		}
+
+		loaded = false;
+	}
+
+	public void requireLoaded() {
+		if (!loaded) {
+			throw new IllegalStateException("this option group is not loaded!");
 		}
 	}
 }

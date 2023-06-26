@@ -13,6 +13,7 @@ public abstract class BaseOption<T> implements Option {
 	protected final Predicate<T> validator;
 
 	private T value;
+	private boolean loaded;
 
 	protected BaseOption(String name, String description, T defaultValue) {
 		this(name, description, defaultValue, OptionValidators.nonnull());
@@ -46,21 +47,42 @@ public abstract class BaseOption<T> implements Option {
 		return description;
 	}
 
+	@Override
+	public void reset() {
+		set(getDefault());
+	}
+
+	@Override
+	public void load() {
+		loaded = true;
+	}
+
+	@Override
+	public void unload() {
+		loaded = false;
+	}
+
 	public T getDefault() {
 		return defaultValue;
 	}
 
 	public T get() {
+		requireLoaded();
+
 		return value;
 	}
 
 	public void set(T newValue) {
+		requireLoaded();
+
 		if (!Objects.equals(value, newValue) && validator.test(newValue)) {
 			value = newValue;
 		}
 	}
 
-	public void reset() {
-		set(getDefault());
+	public void requireLoaded() {
+		if (!loaded) {
+			throw new IllegalStateException("this option is not loaded!");
+		}
 	}
 }
