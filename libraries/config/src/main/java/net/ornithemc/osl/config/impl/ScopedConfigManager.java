@@ -41,7 +41,10 @@ public final class ScopedConfigManager {
 
 	public void register(Config config) {
 		configs.compute(key(config.getNamespace(), config.getName()), (key, value) -> {
-			if (value != null) {
+			if (value == null) {
+				config.init();
+				value = config;
+			} else {
 				if (value == config) {
 					return value; // odd thing to register a config multiple times, but okay
 				} else {
@@ -49,7 +52,7 @@ public final class ScopedConfigManager {
 				}
 			}
 
-			return config;
+			return value;
 		});
 	}
 

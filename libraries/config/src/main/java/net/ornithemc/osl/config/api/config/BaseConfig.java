@@ -91,6 +91,11 @@ public abstract class BaseConfig implements Config {
 	}
 
 	@Override
+	public OptionGroup getGroup(String name) {
+		return groups.get(name);
+	}
+
+	@Override
 	public void resetAll() {
 		requireLoaded();
 
@@ -124,6 +129,20 @@ public abstract class BaseConfig implements Config {
 	}
 
 	protected void registerOptions(String group, Option... options) {
-		// TODO
+		if (loaded) {
+			throw new IllegalStateException("cannot register new options while this config is loaded!");
+		}
+		if (options.length == 0) {
+			return; // weird but okay
+		}
+
+		OptionGroup optionGroup = groups.get(group);
+
+		if (optionGroup == null) {
+			optionGroup = new OptionGroup(group);
+			groups.put(group, optionGroup);
+		}
+
+		optionGroup.registerOptions(options);
 	}
 }

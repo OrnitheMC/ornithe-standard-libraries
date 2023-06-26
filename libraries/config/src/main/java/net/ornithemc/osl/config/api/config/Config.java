@@ -49,6 +49,13 @@ public interface Config {
 
 	int getVersion();
 
+	/**
+	 * This method is called after your config has been successfully registered to
+	 * the config manager. Use it to register your options and otherwise initialize
+	 * your config.
+	 */
+	void init();
+
 	void load();
 
 	void unload();
