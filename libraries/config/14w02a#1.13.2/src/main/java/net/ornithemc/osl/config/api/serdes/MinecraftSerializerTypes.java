@@ -1,11 +1,9 @@
 package net.ornithemc.osl.config.api.serdes;
 
-import io.netty.buffer.Unpooled;
-
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.NbtCompound;
 
 public class MinecraftSerializerTypes {
 
-	public static final MemorySerializerType<PacketByteBuf> NETWORK = SerializerTypes.register("network", () -> new PacketByteBuf(Unpooled.buffer()));
+	public static final MemorySerializerType<NbtCompound> NETWORK = SerializerTypes.register("network", () -> new NbtCompound());
 
 }
