@@ -107,7 +107,7 @@ public class CookieOption extends BaseOption<Cookie> {
 ```java
 package com.example;
 
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.nbt.NbtCompound;
 
 import net.ornithemc.osl.config.api.serdes.config.option.JsonOptionSerializer;
 import net.ornithemc.osl.config.api.serdes.config.option.JsonOptionSerializers;
@@ -134,13 +134,13 @@ public class ExampleInitializer implements ModInitializer {
 		NetworkOptionSerializers.register(CookieOption.class, new NetworkOptionSerializer<CookieOption>() {
 
 			@Override
-			public void serialize(IdentifierOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
-				// write value to buffer
+			public void serialize(IdentifierOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+				// write value to nbt
 			}
 
 			@Override
-			public void deserialize(IdentifierOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
-				// read value from buffer
+			public void deserialize(IdentifierOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+				// read value from nbt
 			}
 		});
 
