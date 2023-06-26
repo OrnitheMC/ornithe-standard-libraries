@@ -62,10 +62,20 @@ public interface Config {
 
 	void unload();
 
+	/**
+	 * Returns all option groups in this config.
+	 */
 	Collection<OptionGroup> getGroups();
 
+	/**
+	 * Returns the option group in this config with the given name, or {@code null}
+	 * if it does not exist.
+	 */
 	OptionGroup getGroup(String name);
 
+	/**
+	 * Reset all options in this config to their default values.
+	 */
 	void resetAll();
 
 }
