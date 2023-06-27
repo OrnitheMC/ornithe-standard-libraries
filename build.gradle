@@ -7,12 +7,13 @@ plugins {
 	id 'ploceus' version '1.2+' apply false
 }
 
-subprojects {
+allprojects {
+	def isRoot = (project == rootProject)
 	def hasSource = project.file('src/main/java/').exists();
 	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
 	def hasMcDep = project.hasProperty('min_mc_version') && project.hasProperty('max_mc_version')
 
-	if (!hasSource) {
+	if (!hasSource && !hasModJson) {
 		return;
 	}
 
@@ -25,12 +26,18 @@ subprojects {
 	}
 
 	if (hasModJson) {
-		archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
-		if (hasMcDep) {
-			archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
+		if (isRoot) {
+			archivesBaseName = "${project.root_archives_base_name}"
+			version = "${project.version}"
+			group = "${project.maven_group}"
+		} else {
+			archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
+			if (hasMcDep) {
+				archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
+			}
+			version = "${project.version}"
+			group = "${rootProject.maven_group}.${project.maven_group}"
 		}
-		version = "${rootProject.version}"
-		group = "${rootProject.maven_group}.${project.maven_group}"
 	}
 
 	repositories {
@@ -56,12 +63,12 @@ subprojects {
 				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
 			}
 			modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
-		} else {
+		} else if (!isRoot) {
 			implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
 			implementation "org.quiltmc:quilt-json5:1.0.2"
 		}
 
-		if (project != project(':libraries:core')) {
+		if (!isRoot && project != project(':libraries:core')) {
 			implementation project(':libraries:core')
 			if (hasMcDep && project.parent.file('src/main/java/').exists()) {
 				implementation project.parent
