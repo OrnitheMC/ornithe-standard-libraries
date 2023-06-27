@@ -7,9 +7,19 @@ plugins {
 	id 'ploceus' version '1.2+' apply false
 }
 
-allprojects {
-	def isRoot = (project == rootProject)
+archivesBaseName = "${project.root_archives_base_name}"
+version = "${project.version}"
+group = "${project.maven_group}"
+
+jar {
+	from('LICENSE') {
+		rename { "${it}_${archivesBaseName}" }
+	}
+}
+
+subprojects {
 	def hasSource = project.file('src/main/java/').exists();
+	def hasSourceParent = project.parent.file('src/main/java/').exists();
 	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
 	def hasMcDep = project.hasProperty('min_mc_version') && project.hasProperty('max_mc_version')
 
@@ -26,18 +36,12 @@ allprojects {
 	}
 
 	if (hasModJson) {
-		if (isRoot) {
-			archivesBaseName = "${project.root_archives_base_name}"
-			version = "${project.version}"
-			group = "${project.maven_group}"
-		} else {
-			archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
-			if (hasMcDep) {
-				archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
-			}
-			version = "${project.version}"
-			group = "${rootProject.maven_group}.${project.maven_group}"
+		archivesBaseName = "${rootProject.archives_base_name}-${project.parent.archives_base_name}"
+		if (hasMcDep) {
+			archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
 		}
+		version = "${project.parent.version}"
+		group = "${rootProject.maven_group}.${project.parent.maven_group}"
 	}
 
 	repositories {
@@ -63,33 +67,36 @@ allprojects {
 				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
 			}
 			modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
-		} else if (!isRoot) {
+		} else if (hasSource) {
 			implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
 			implementation "org.quiltmc:quilt-json5:1.0.2"
 		}
 
-		if (isRoot) {
-			for (subproject : project(':libraries').subprojects) {
-				if (subproject.file('src/main/resources/quilt.mod.json').exists()) {
-					include subproject
-				}
-			}
-		} else if (project != project(':libraries:core')) {
+		if (project != project(':libraries:core')) {
 			implementation project(':libraries:core')
-			if (hasMcDep && project.parent.file('src/main/java/').exists()) {
+			if (hasMcDep && hasSourceParent) {
 				implementation project.parent
-				include project.parent
 			}
 		}
 	}
 
-	processResources {
-		if (hasModJson) {
-			inputs.property 'version', version
+	jar {
+		from project.sourceSets.main.output
+		if (hasMcDep && hasSourceParent) {
+			from project.parent.sourceSets.main.output
+		}
+		from(rootProject.file('LICENSE')) {
+			rename { "${it}_${archivesBaseName}" }
+		}
+	}
+}
 
-			filesMatching('quilt.mod.json') {
-				expand "version": version
-			}
+allprojects {
+	processResources {
+		inputs.property 'version', version
+
+		filesMatching('quilt.mod.json') {
+			expand 'version': version
 		}
 	}
 
@@ -110,12 +117,5 @@ allprojects {
 		// If this mod is going to be a library, then it should also generate Javadocs in order to aid with development.
 		// Uncomment this line to generate them.
 		withJavadocJar()
-	}
-
-	// If you plan to use a different file for the license, don't forget to change the file name here!
-	jar {
-		from('LICENSE') {
-			rename { "${it}_${archivesBaseName}" }
-		}
 	}
 }
