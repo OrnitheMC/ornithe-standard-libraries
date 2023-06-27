@@ -68,7 +68,13 @@ allprojects {
 			implementation "org.quiltmc:quilt-json5:1.0.2"
 		}
 
-		if (!isRoot && project != project(':libraries:core')) {
+		if (isRoot) {
+			for (subproject : project(':libraries').subprojects) {
+				if (subproject.file('src/main/resources/quilt.mod.json').exists()) {
+					include subproject
+				}
+			}
+		} else if (project != project(':libraries:core')) {
 			implementation project(':libraries:core')
 			if (hasMcDep && project.parent.file('src/main/java/').exists()) {
 				implementation project.parent
