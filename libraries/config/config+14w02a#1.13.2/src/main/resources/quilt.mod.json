@@ -8,6 +8,7 @@
 			"name": "Config",
 			"description": "A config library.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {

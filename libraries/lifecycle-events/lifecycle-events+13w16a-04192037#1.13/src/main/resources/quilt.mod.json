@@ -8,6 +8,7 @@
 			"name": "Lifecycle Events",
 			"description": "Events to track the lifecycle of Minecraft.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {

@@ -8,6 +8,7 @@
 			"name": "Ornithe Standard Libraries",
 			"description": "Libraries for modding with Ornithe.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {

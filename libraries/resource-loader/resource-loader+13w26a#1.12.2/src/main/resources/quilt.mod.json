@@ -8,6 +8,7 @@
 			"name": "Resource Loader",
 			"description": "Resource loading API and events for Minecraft.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {

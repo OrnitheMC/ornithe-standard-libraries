@@ -8,6 +8,7 @@
 			"name": "Branding Patch",
 			"description": "A mod that patches the title screen with mod loader information.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {

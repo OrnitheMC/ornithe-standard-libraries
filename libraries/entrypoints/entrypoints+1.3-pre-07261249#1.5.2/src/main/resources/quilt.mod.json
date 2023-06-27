@@ -8,6 +8,7 @@
 			"name": "Entrypoints",
 			"description": "Entrypoints API for Minecraft.",
 			"contributors": {
+				"OrnitheMC": "owner",
 				"Space Walker": "maintainer"
 			},
 			"contact": {
