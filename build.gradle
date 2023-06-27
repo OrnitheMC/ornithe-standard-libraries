@@ -7,13 +7,31 @@ plugins {
 	id 'ploceus' version '1.2+' apply false
 }
 
+apply plugin: 'org.quiltmc.loom'
+apply plugin: 'ploceus'
+
 archivesBaseName = "${project.root_archives_base_name}"
 version = "${project.version}"
 group = "${project.maven_group}"
 
+dependencies {
+	// dummy mc dependency to keep loom happy
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings "net.ornithemc:feather:${project.minecraft_version}+build.${project.feather_build}:v2"
+	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
+}
+
 jar {
 	from('LICENSE') {
 		rename { "${it}_${archivesBaseName}" }
+	}
+}
+
+dependencies {
+	subprojects.each {
+		if (it.file('src/main/resources/quilt.mod.json').exists()) {
+			include it
+		}
 	}
 }
 
@@ -92,6 +110,13 @@ subprojects {
 }
 
 allprojects {
+	def hasSource = project.file('src/main/java/').exists();
+	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
+
+	if (!hasSource && !hasModJson) {
+		return;
+	}
+
 	processResources {
 		inputs.property 'version', version
 
