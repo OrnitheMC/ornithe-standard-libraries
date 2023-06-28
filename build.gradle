@@ -3,16 +3,15 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'org.quiltmc.loom' version '1.2+' apply false
-	id 'ploceus' version '1.2+' apply false
+	id 'org.quiltmc.loom' version '1.2+'
+	id 'ploceus' version '1.2+'
 }
 
-apply plugin: 'org.quiltmc.loom'
-apply plugin: 'ploceus'
+import groovy.json.JsonSlurper
 
 archivesBaseName = "${project.root_archives_base_name}"
-version = "${project.version}"
-group = "${project.maven_group}"
+version = "${project.root_version}"
+group = "${project.root_maven_group}"
 
 dependencies {
 	// dummy mc dependency to keep loom happy
@@ -21,48 +20,26 @@ dependencies {
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 }
 
+processResources {
+	inputs.property 'version', version
+
+	filesMatching('quilt.mod.json') {
+		expand 'version': version
+	}
+}
+
 jar {
 	from('LICENSE') {
 		rename { "${it}_${archivesBaseName}" }
 	}
 }
 
-dependencies {
-	subprojects.each {
-		if (it.file('src/main/resources/quilt.mod.json').exists()) {
-			include it
-		}
-	}
-}
+def setUpLibrary(project) {
+	project.apply plugin: 'java-library'
+	project.apply plugin: 'eclipse'
+	project.apply plugin: 'idea'
 
-subprojects {
-	def hasSource = project.file('src/main/java/').exists();
-	def hasSourceParent = project.parent.file('src/main/java/').exists();
-	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
-	def hasMcDep = project.hasProperty('min_mc_version') && project.hasProperty('max_mc_version')
-
-	if (!hasSource && !hasModJson) {
-		return;
-	}
-
-	apply plugin: 'java-library'
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
-	if (hasMcDep) {
-		apply plugin: 'org.quiltmc.loom'
-		apply plugin: 'ploceus'
-	}
-
-	if (hasModJson) {
-		archivesBaseName = "${rootProject.archives_base_name}-${project.parent.archives_base_name}"
-		if (hasMcDep) {
-			archivesBaseName += "-mc${project.min_mc_version}#${project.max_mc_version}"
-		}
-		version = "${project.parent.version}"
-		group = "${rootProject.maven_group}.${project.parent.maven_group}"
-	}
-
-	repositories {
+	project.repositories {
 		// needed for quilt loader in subprojects without a mc dep
 		// since in those subprojects loom is not applied
 		maven {
@@ -72,65 +49,68 @@ subprojects {
 		mavenCentral()
 	}
 
-	dependencies {
-		if (hasMcDep) {
-			minecraft "com.mojang:minecraft:${project.max_mc_version}"
-			if (project.hasProperty('nests_build')) {
-				mappings loom.layered {
-					mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
-					ploceus.nestedMappings(it)
-				}
-				nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
-			} else {
-				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
-			}
-			modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
-		} else if (hasSource) {
-			implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
-			implementation "org.quiltmc:quilt-json5:1.0.2"
-		}
+	project.dependencies {
+		implementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
+		implementation "org.quiltmc:quilt-json5:1.0.2"
 
-		if (project != project(':libraries:core')) {
-			implementation project(':libraries:core')
-			if (hasMcDep && hasSourceParent) {
-				implementation project.parent
-			}
-		}
-	}
-
-	jar {
-		from project.sourceSets.main.output
-		if (hasMcDep && hasSourceParent) {
-			from project.parent.sourceSets.main.output
-		}
-		from(rootProject.file('LICENSE')) {
-			rename { "${it}_${archivesBaseName}" }
-		}
+		implementation project.project(':libraries:core')
 	}
 }
 
-allprojects {
-	def hasSource = project.file('src/main/java/').exists();
-	def hasModJson = project.file('src/main/resources/quilt.mod.json').exists();
+def setUpModule(project, String... dependencies) {
+	project.apply plugin: 'java-library'
+	project.apply plugin: 'eclipse'
+	project.apply plugin: 'idea'
+	project.apply plugin: 'maven-publish'
+	project.apply plugin: 'org.quiltmc.loom'
+	project.apply plugin: 'ploceus'
 
-	if (!hasSource && !hasModJson) {
-		return;
-	}
+	project.archivesBaseName = "${rootProject.archives_base_name}-${project.parent.archives_base_name}"
+	project.version = "${project.parent.version}+mc${project.min_mc_version}#${project.max_mc_version}"
+	project.group = "${rootProject.root_maven_group}.${rootProject.maven_group}"
 
-	processResources {
-		inputs.property 'version', version
+	def libraries = getLibraryDependencies(project, dependencies)
+	def modules = getModuleDependencies(project, dependencies)
 
-		filesMatching('quilt.mod.json') {
-			expand 'version': version
+	project.dependencies {
+		minecraft "com.mojang:minecraft:${project.max_mc_version}"
+		if (project.hasProperty('nests_build')) {
+			mappings project.loom.layered {
+				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+				project.ploceus.nestedMappings(it)
+			}
+			nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
+		} else {
+			mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+		}
+		modImplementation "org.quiltmc:quilt-loader:${rootProject.loader_version}"
+
+		libraries.each { library ->
+			implementation library
+		}
+		modules.each { module ->
+			implementation module
 		}
 	}
 
-	tasks.withType(JavaCompile).configureEach {
+	rootProject.dependencies {
+		include project
+	}
+
+	project.processResources {
+		inputs.property 'version', project.version
+
+		filesMatching('quilt.mod.json') {
+			expand 'version': project.version
+		}
+	}
+
+	project.tasks.withType(JavaCompile).configureEach {
 		it.options.encoding = 'UTF-8'
 		it.options.release = 8
 	}
 
-	java {
+	project.java {
 		// Still required by IDEs such as Eclipse and Visual Studio Code
 		sourceCompatibility = JavaVersion.VERSION_1_8
 		targetCompatibility = JavaVersion.VERSION_1_8
@@ -142,5 +122,98 @@ allprojects {
 		// If this mod is going to be a library, then it should also generate Javadocs in order to aid with development.
 		// Uncomment this line to generate them.
 		withJavadocJar()
+	}
+
+	project.jar {
+		from project.sourceSets.main.output
+		if (project != project.project(':libraries:core')) {
+			from project.parent.sourceSets.main.output
+		}
+		from(rootProject.file('LICENSE')) {
+			rename { "${it}_${project.archivesBaseName}" }
+		}
+	}
+
+	project.publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				artifact(project.remapJar) {
+					builtBy project.remapJar
+				}
+				artifact(project.remapSourcesJar) {
+					builtBy project.remapSourcesJar
+				}
+				artifact project.javadocJar
+			}
+		}
+		repositories {
+			def ENV = System.getenv()
+
+			if (ENV.MAVEN_URL) {
+				maven {
+					url ENV.MAVEN_URL
+
+					credentials {
+						username ENV.MAVEN_USERNAME
+						password ENV.MAVEN_PASSWORD
+					}
+				}
+			} else {
+				mavenLocal()
+			}
+		}
+	}
+
+	project.loom.disableDeprecatedPomGeneration(project.publishing.publications.mavenJava)
+}
+
+def getLibraryDependencies(project, String... moduleNames) {
+	def libraries = new ArrayList<>()
+
+	if (project != project.project(':libraries:core')) {
+		libraries.add(project.parent)
+	}
+
+	for (moduleName : moduleNames) {
+		def i = moduleName.indexOf('-mc')
+		def libraryName = moduleName.substring(0, i)
+
+		libraries.add(project.project(":libraries:${libraryName}"))
+	}
+
+	return libraries
+}
+
+def getModuleDependencies(project, String... moduleNames) {
+	def modules = new ArrayList<>()
+
+	if (project != project.project(':libraries:core')) {
+		modules.add(project.project(':libraries:core'))
+	}
+
+	for (moduleName : moduleNames) {
+		def i = moduleName.indexOf('-mc')
+		def libraryName = moduleName.substring(0, i)
+
+		modules.add(project.project(":libraries:${libraryName}:${moduleName}"))
+	}
+
+	return modules
+}
+
+allprojects {
+	tasks.withType(GenerateModuleMetadata) {
+		enabled = false
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.release = 8
+	}
+	
+	java {
+		// Still required by IDEs such as Eclipse and Visual Studio Code
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
 	}
 }

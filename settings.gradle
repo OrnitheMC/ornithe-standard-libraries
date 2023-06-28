@@ -17,23 +17,25 @@ pluginManagement {
 	}
 }
 
+rootProject.name = 'osl'
+
 include ':libraries:core'
 
 include ':libraries:branding'
-include ':libraries:branding:branding+1.3-pre-07261249#1.5.2'
-include ':libraries:branding:branding+13w16a-04192037#14w29b'
-include ':libraries:branding:branding+14w30a#16w05a'
+include ':libraries:branding:branding-mc1.3-pre-07261249-mc1.5.2'
+include ':libraries:branding:branding-mc13w16a-04192037-mc14w29b'
+include ':libraries:branding:branding-mc14w30a-mc16w05a'
 
 include ':libraries:config'
-include ':libraries:config:config+14w02a#1.13.2'
+include ':libraries:config:config-mc14w02a-mc1.13.2'
 
 include ':libraries:entrypoints'
-include ':libraries:entrypoints:entrypoints+1.3-pre-07261249#1.5.2'
-include ':libraries:entrypoints:entrypoints+13w16a-04192037#1.13.2'
+include ':libraries:entrypoints:entrypoints-mc1.3-pre-07261249-mc1.5.2'
+include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc1.13.2'
 
 include ':libraries:lifecycle-events'
-include ':libraries:lifecycle-events:lifecycle-events+13w16a-04192037#1.13'
-include ':libraries:lifecycle-events:lifecycle-events+18w30a#1.13.2'
+include ':libraries:lifecycle-events:lifecycle-events-mc13w16a-04192037-mc1.13'
+include ':libraries:lifecycle-events:lifecycle-events-mc18w30a-mc1.13.2'
 
 include ':libraries:resource-loader'
-include ':libraries:resource-loader:resource-loader+13w26a#1.12.2'
+include ':libraries:resource-loader:resource-loader-mc13w26a-mc1.12.2'
