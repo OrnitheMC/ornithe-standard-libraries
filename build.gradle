@@ -58,6 +58,11 @@ def setUpLibrary(project) {
 }
 
 def setUpModule(project, String... dependencies) {
+	// normally modules have a 'root' and subprojects
+	// for different mc version ranges
+	// the Core API is the only exception to this
+	def isCore = (project == project.project(':libraries:core'))
+
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
@@ -65,8 +70,13 @@ def setUpModule(project, String... dependencies) {
 	project.apply plugin: 'org.quiltmc.loom'
 	project.apply plugin: 'ploceus'
 
-	project.archivesBaseName = "${rootProject.archives_base_name}-${project.parent.archives_base_name}"
-	project.version = "${project.parent.version}+mc${project.min_mc_version}#${project.max_mc_version}"
+	if (isCore) {
+		project.archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
+		project.version = "${project.version}"
+	} else {
+		project.archivesBaseName = "${rootProject.archives_base_name}-${project.parent.archives_base_name}"
+		project.version = "${project.parent.version}+mc${project.min_mc_version}#${project.max_mc_version}"
+	}
 	project.group = "${rootProject.root_maven_group}.${rootProject.maven_group}"
 
 	def libraries = getLibraryDependencies(project, dependencies)
@@ -137,6 +147,10 @@ def setUpModule(project, String... dependencies) {
 	project.publishing {
 		publications {
 			mavenJava(MavenPublication) {
+				if (!isCore) {
+					artifactId project.parent.name
+				}
+
 				artifact(project.remapJar) {
 					builtBy project.remapJar
 				}

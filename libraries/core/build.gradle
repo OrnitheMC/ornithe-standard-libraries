@@ -1,5 +1,1 @@
 setUpModule(project)
-
-archivesBaseName = "${rootProject.archives_base_name}-${project.archives_base_name}"
-version = "${project.version}"
-group = "${rootProject.maven_group}.${project.maven_group}"
