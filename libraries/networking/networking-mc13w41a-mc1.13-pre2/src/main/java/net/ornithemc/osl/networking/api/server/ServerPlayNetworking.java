@@ -61,6 +61,24 @@ public final class ServerPlayNetworking {
 		ServerPlayNetworkingImpl.send(server, channel, data);
 	}
 
+	/**
+	 * Send a packet to the client without checking if the given channel is open.
+	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
+	 * spam on the client.
+	 */
+	public static void doSend(ServerPlayerEntity player, String channel, Consumer<PacketByteBuf> writer) {
+		ServerPlayNetworkingImpl.doSend(player, channel, writer);
+	}
+
+	/**
+	 * Send a packet to the client without checking if the given channel is open.
+	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
+	 * spam on the client.
+	 */
+	public static void doSend(ServerPlayerEntity player, String channel, PacketByteBuf data) {
+		ServerPlayNetworkingImpl.doSend(player, channel, data);
+	}
+
 	public interface Listener {
 
 		boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, PacketByteBuf data);

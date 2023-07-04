@@ -34,6 +34,24 @@ public final class ClientPlayNetworking {
 		ClientPlayNetworkingImpl.send(channel, data);
 	}
 
+	/**
+	 * Send a packet to the server without checking if the given channel is open.
+	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
+	 * spam on the server.
+	 */
+	public static void doSend(String channel, Consumer<PacketByteBuf> writer) {
+		ClientPlayNetworkingImpl.doSend(channel, writer);
+	}
+
+	/**
+	 * Send a packet to the server without checking if the given channel is open.
+	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
+	 * spam on the server.
+	 */
+	public static void doSend(String channel, PacketByteBuf data) {
+		ClientPlayNetworkingImpl.doSend(channel, data);
+	}
+
 	public interface Listener {
 
 		boolean handle(Minecraft minecraft, ClientPlayNetworkHandler handler, PacketByteBuf data);
