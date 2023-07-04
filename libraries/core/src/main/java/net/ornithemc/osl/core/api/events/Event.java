@@ -32,7 +32,7 @@ public class Event<T> {
 		});
 	}
 
-	public static <T, U> Event<BiConsumer<T, U>> biconsumer() {
+	public static <T, U> Event<BiConsumer<T, U>> biConsumer() {
 		return of(listeners -> {
 			return (t, u) -> {
 				for (int i = 0; i < listeners.size(); i++) {

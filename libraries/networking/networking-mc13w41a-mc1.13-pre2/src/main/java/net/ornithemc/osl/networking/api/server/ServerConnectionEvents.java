@@ -9,7 +9,7 @@ import net.ornithemc.osl.core.api.events.Event;
 
 public class ServerConnectionEvents {
 
-	public static final Event<BiConsumer<MinecraftServer, ServerPlayerEntity>> LOGIN      = Event.biconsumer();
-	public static final Event<BiConsumer<MinecraftServer, ServerPlayerEntity>> DISCONNECT = Event.biconsumer();
+	public static final Event<BiConsumer<MinecraftServer, ServerPlayerEntity>> LOGIN      = Event.biConsumer();
+	public static final Event<BiConsumer<MinecraftServer, ServerPlayerEntity>> DISCONNECT = Event.biConsumer();
 
 }
