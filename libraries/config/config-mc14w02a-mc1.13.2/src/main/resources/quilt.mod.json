@@ -40,6 +40,10 @@
 			{
 				"id": "osl-entrypoints",
 				"versions": ">=0.1.0"
+			},
+			{
+				"id": "osl-lifecycle-events",
+				"versions": ">=0.1.0"
 			}
 		]
 	}
