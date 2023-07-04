@@ -86,7 +86,7 @@ public final class ServerPlayNetworkingImpl {
 					writer.accept(data = new PacketByteBuf(Unpooled.buffer()));
 				}
 
-				doSend(player, channel, writer);
+				doSend(player, channel, data);
 			}
 		}
 	}
