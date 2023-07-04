@@ -37,5 +37,8 @@ include ':libraries:lifecycle-events'
 include ':libraries:lifecycle-events:lifecycle-events-mc13w16a-04192037-mc1.13'
 include ':libraries:lifecycle-events:lifecycle-events-mc18w30a-mc1.13.2'
 
+include ':libraries:networking'
+include ':libraries:networking:networking-mc13w41a-mc1.13-pre2'
+
 include ':libraries:resource-loader'
 include ':libraries:resource-loader:resource-loader-mc13w26a-mc1.12.2'
