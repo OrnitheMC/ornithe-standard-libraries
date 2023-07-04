@@ -40,7 +40,7 @@ public class NetworkingImpl implements ModInitializer, ClientModInitializer {
 		});
 	}
 
-	private static Set<String> readChannels(PacketByteBuf data) {
+	public static Set<String> readChannels(PacketByteBuf data) {
 		Set<String> channels = new LinkedHashSet<>();
 		int channelCount = data.readInt();
 
@@ -51,5 +51,13 @@ public class NetworkingImpl implements ModInitializer, ClientModInitializer {
 		}
 
 		return channels;
+	}
+
+	public static void writeChannels(PacketByteBuf data, Set<String> channels) {
+		data.writeInt(channels.size());
+
+		for (String channel : channels) {
+			data.writeString(channel);
+		}
 	}
 }

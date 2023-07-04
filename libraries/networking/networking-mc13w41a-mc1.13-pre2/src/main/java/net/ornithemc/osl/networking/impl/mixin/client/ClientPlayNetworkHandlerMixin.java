@@ -18,8 +18,8 @@ import net.minecraft.network.packet.s2c.play.LoginS2CPacket;
 import net.minecraft.text.Text;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
 import net.ornithemc.osl.networking.impl.CommonChannels;
+import net.ornithemc.osl.networking.impl.NetworkingImpl;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientPlayNetworkHandler;
 
@@ -40,12 +40,8 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 		)
 	)
 	private void osl$networking$handleCustomPayload(LoginS2CPacket packet, CallbackInfo ci) {
-		ClientPlayNetworking.send(CommonChannels.CHANNELS, data -> {
-			data.writeInt(ClientPlayNetworkingImpl.LISTENERS.size());
-
-			for (String channel : ClientPlayNetworkingImpl.LISTENERS.keySet()) {
-				data.writeString(channel);
-			}
+		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
+			NetworkingImpl.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
 		});
 
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
