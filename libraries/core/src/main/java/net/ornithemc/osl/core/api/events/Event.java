@@ -2,6 +2,7 @@ package net.ornithemc.osl.core.api.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -23,9 +24,19 @@ public class Event<T> {
 
 	public static <T> Event<Consumer<T>> consumer() {
 		return of(listeners -> {
-			return value -> {
+			return t -> {
 				for (int i = 0; i < listeners.size(); i++) {
-					listeners.get(i).accept(value);
+					listeners.get(i).accept(t);
+				}
+			};
+		});
+	}
+
+	public static <T, U> Event<BiConsumer<T, U>> biConsumer() {
+		return of(listeners -> {
+			return (t, u) -> {
+				for (int i = 0; i < listeners.size(); i++) {
+					listeners.get(i).accept(t, u);
 				}
 			};
 		});
