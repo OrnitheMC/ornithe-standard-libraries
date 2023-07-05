@@ -2,7 +2,7 @@ package net.ornithemc.osl.config.api.serdes.config;
 
 import java.io.IOException;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 
 import net.ornithemc.osl.config.api.config.Config;
 import net.ornithemc.osl.config.api.config.option.Option;
@@ -11,92 +11,85 @@ import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializer;
 import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializers;
 
-public class NetworkConfigSerializer implements ConfigSerializer<NbtCompound> {
-
-	private static final String NAME    = "config";
-	private static final String VERSION = "version";
-	private static final String OPTIONS = "options";
+public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> {
 
 	@Override
-	public void serialize(Config config, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	public void serialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		if (!settings.skipConfigMetadata) {
-			nbt.putString(NAME, config.getName());
-			nbt.putInt(VERSION, config.getVersion());
+			buffer.writeString(config.getName());
+			buffer.writeInt(config.getVersion());
 		}
 
-		NbtCompound optionsNbt = new NbtCompound();
-		nbt.put(OPTIONS, optionsNbt);
+		buffer.writeInt(config.getGroups().size());
 
 		for (OptionGroup group : config.getGroups()) {
-			NbtCompound groupNbt = new NbtCompound();
-			optionsNbt.put(group.getName(), groupNbt);
-
-			serializeGroup(group, settings, groupNbt);
+			buffer.writeString(group.getName());
+			serializeGroup(group, settings, buffer);
 		}
 	}
 
-	private void serializeGroup(OptionGroup group, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private void serializeGroup(OptionGroup group, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		for (Option option : group.getOptions()) {
 			if (!settings.skipDefaultOptions || !option.isDefault()) {
-				NbtCompound optionNbt = new NbtCompound();
-				nbt.put(option.getName(), optionNbt);
-
-				serializeOption(option, settings, optionNbt);
+				buffer.writeString(option.getName());
+				serializeOption(option, settings, buffer);
 			}
 		}
 	}
 
-	private <O extends Option> void serializeOption(O option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private <O extends Option> void serializeOption(O option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		NetworkOptionSerializer<O> serializer = NetworkOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
 			throw new IOException("don't know how to serialize option " + option);
 		} else {
-			serializer.serialize(option, settings, nbt);
+			serializer.serialize(option, settings, buffer);
 		}
 	}
 
 	@Override
-	public void deserialize(Config config, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	public void deserialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		if (!settings.skipConfigMetadata) {
-			String name = nbt.getString(NAME);
-			int version = nbt.getInt(VERSION);
+			String name = buffer.readString(32767);
+			int version = buffer.readInt();
 		}
 
-		NbtCompound optionsNbt = nbt.getCompound(OPTIONS);
+		int groupCount = buffer.readInt();
 
-		for (String groupName : nbt.getKeys()) {
+		for (int i = 0; i < groupCount; i++) {
+			String groupName = buffer.readString(32767);
 			OptionGroup group = config.getGroup(groupName);
-			NbtCompound groupNbt = optionsNbt.getCompound(groupName);
 
 			if (group == null) {
 				throw new IOException("unknown group " + groupName);
 			}
 
-			deserializeGroup(group, settings, groupNbt);
+			deserializeGroup(group, settings, buffer);
 		}
 	}
 
-	private void deserializeGroup(OptionGroup group, SerializationSettings settings, NbtCompound nbt) throws IOException {
-		for (String optionName : nbt.getKeys()) {
+	private void deserializeGroup(OptionGroup group, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+		int optionCount = buffer.readInt();
+
+		for (int i = 0; i < optionCount; i++) {
+			String optionName = buffer.readString(32767);
 			Option option = group.getOption(optionName);
-			NbtCompound optionNbt = nbt.getCompound(optionName);
 
 			if (option == null) {
 				throw new IOException("unknown option " + optionName + " in group " + group.getName());
 			}
 
-			deserializeOption(option, settings, optionNbt);
+			deserializeOption(option, settings, buffer);
 		}
 	}
 
-	private <O extends Option> void deserializeOption(O option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private <O extends Option> void deserializeOption(O option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		NetworkOptionSerializer<O> serializer = NetworkOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
 			throw new IOException("don't know how to deserialize option " + option);
 		} else {
-			serializer.deserialize(option, settings, nbt);
+			serializer.deserialize(option, settings, buffer);
 		}
 	}
 }
