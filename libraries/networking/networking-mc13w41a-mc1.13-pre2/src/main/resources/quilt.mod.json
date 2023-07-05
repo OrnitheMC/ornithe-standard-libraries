@@ -34,7 +34,7 @@
 			},
 			{
 				"id": "osl-core",
-				"versions": ">=0.1.0"
+				"versions": ">=0.2.0"
 			},
 			{
 				"id": "osl-entrypoints",
