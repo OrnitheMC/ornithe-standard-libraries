@@ -163,7 +163,7 @@ def setUpModule(project, String... dependencies) {
 		repositories {
 			def ENV = System.getenv()
 
-			if (ENV.MAVEN_URL) {
+			if (ENV.MAVEN_URL && shouldPublish(project, ENV.MAVEN_URL)) {
 				maven {
 					url ENV.MAVEN_URL
 
@@ -213,6 +213,27 @@ def getModuleDependencies(project, String... moduleNames) {
 	}
 
 	return modules
+}
+
+def shouldPublish(project, mavenUrl) {
+	def groupId = project.publishing.publications.mavenJava.groupId
+	def artifactId = project.publishing.publications.mavenJava.artifactId
+	def version = project.publishing.publications.mavenJava.version
+
+	def exists = false
+
+	try {
+		def xml = new URL("${mavenUrl}/${groupId.replace('.', '/')}/${artifactId}/maven-metadata.xml").text
+		def metadata = new XmlSlurper().parseText(xml)
+
+		exists = metadata.versioning.versions.version.stream().filter({
+			return it == version
+		}).findFirst().isPresent()
+	} catch (FileNotFoundException ignored) {
+		// only happens if no publications exist yet
+	}
+
+	return !exists
 }
 
 allprojects {
