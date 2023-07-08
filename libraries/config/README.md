@@ -93,6 +93,10 @@ These serializers should be registered in your mod's entrypoint.
 ```java
 package com.example;
 
+import java.util.function.Predicate;
+
+import net.ornithemc.osl.config.api.config.option.BaseOption;
+
 public class CookieOption extends BaseOption<Cookie> {
 
 	public CookieOption(String name, String description, Cookie defaultValue) {
@@ -107,12 +111,19 @@ public class CookieOption extends BaseOption<Cookie> {
 ```java
 package com.example;
 
-import net.minecraft.nbt.NbtCompound;
+import java.io.IOException;
 
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+
+import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.config.option.JsonOptionSerializer;
 import net.ornithemc.osl.config.api.serdes.config.option.JsonOptionSerializers;
+import net.ornithemc.osl.config.api.serdes.config.option.NbtOptionSerializer;
+import net.ornithemc.osl.config.api.serdes.config.option.NbtOptionSerializers;
 import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializer;
 import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializers;
+import net.ornithemc.osl.core.api.json.JsonFile;
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
 
 public class ExampleInitializer implements ModInitializer {
@@ -122,25 +133,37 @@ public class ExampleInitializer implements ModInitializer {
 		JsonOptionSerializers.register(CookieOption.class, new JsonOptionSerializer<CookieOption>() {
 
 			@Override
-			public void serialize(IdentifierOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			public void serialize(CookieOption option, SerializationSettings settings, JsonFile json) throws IOException {
 				// write value to json
 			}
 
 			@Override
-			public void deserialize(IdentifierOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			public void deserialize(CookieOption option, SerializationSettings settings, JsonFile json) throws IOException {
 				// read value from json
+			}
+		});
+		NbtOptionSerializers.register(CookieOption.class, new NbtOptionSerializer<CookieOption>() {
+
+			@Override
+			public void serialize(CookieOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+				// write value to nbt
+			}
+
+			@Override
+			public void deserialize(CookieOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+				// read value from nbt
 			}
 		});
 		NetworkOptionSerializers.register(CookieOption.class, new NetworkOptionSerializer<CookieOption>() {
 
 			@Override
-			public void serialize(IdentifierOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
-				// write value to nbt
+			public void serialize(CookieOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+				// write value to buffer
 			}
 
 			@Override
-			public void deserialize(IdentifierOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
-				// read value from nbt
+			public void deserialize(CookieOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+				// read value from buffer
 			}
 		});
 
