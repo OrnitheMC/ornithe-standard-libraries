@@ -1,0 +1,50 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "net.ornithemc.ornithe-standard-libraries",
+		"id": "osl-networking",
+		"version": "${version}",
+		"metadata": {
+			"name": "Networking",
+			"description": "A networking library.",
+			"contributors": {
+				"OrnitheMC": "owner",
+				"Space Walker": "maintainer"
+			},
+			"contact": {
+				"homepage": "https://ornithemc.net/",
+				"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+				"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+			},
+			"icon": "assets/ornithe-standard-libraries/networking/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"client-init": "net.ornithemc.osl.networking.impl.NetworkingImpl",
+			"init": "net.ornithemc.osl.networking.impl.NetworkingImpl"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.18.3-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.8.0-alpha.14.21.a <=1.8.0-alpha.14.30.c"
+			},
+			{
+				"id": "osl-core",
+				"versions": ">=0.2.0"
+			},
+			{
+				"id": "osl-entrypoints",
+				"versions": ">=0.1.0"
+			},
+			{
+				"id": "osl-lifecycle-events",
+				"versions": ">=0.1.0"
+			}
+		]
+	},
+	"mixin": "osl.networking.mixins.json"
+}
