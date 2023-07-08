@@ -31,7 +31,8 @@ include ':libraries:config:config-mc14w02a-mc1.13.2'
 
 include ':libraries:entrypoints'
 include ':libraries:entrypoints:entrypoints-mc1.3-pre-07261249-mc1.5.2'
-include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc1.13.2'
+include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc18w30b'
+include ':libraries:entrypoints:entrypoints-mc18w31a-mc1.13.2'
 
 include ':libraries:lifecycle-events'
 include ':libraries:lifecycle-events:lifecycle-events-mc13w16a-04192037-mc1.13'
