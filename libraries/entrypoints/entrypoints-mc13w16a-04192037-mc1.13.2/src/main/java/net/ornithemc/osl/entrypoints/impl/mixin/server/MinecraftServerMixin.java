@@ -44,7 +44,7 @@ public class MinecraftServerMixin {
 			target = "Lnet/minecraft/server/dedicated/DedicatedServer;"
 		)
 	)
-	private void osl$entrypoints$parseRunArgs(String[] args, CallbackInfo ci) {
+	private static void osl$entrypoints$parseRunArgs(String[] args, CallbackInfo ci) {
 		ServerLaunchEvents.PARSE_RUN_ARGS.invoker().accept(args);
 	}
 }
