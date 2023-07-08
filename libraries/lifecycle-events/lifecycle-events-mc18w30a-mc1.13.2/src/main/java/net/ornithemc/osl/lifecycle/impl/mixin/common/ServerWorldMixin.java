@@ -4,10 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 
 import net.ornithemc.osl.lifecycle.api.server.ServerWorldEvents;
 
@@ -15,23 +13,13 @@ import net.ornithemc.osl.lifecycle.api.server.ServerWorldEvents;
 public class ServerWorldMixin {
 
 	@Inject(
-		method = "init",
+		method = "init(Lnet/minecraft/world/WorldSettings;)V",
 		at = @At(
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$load(CallbackInfoReturnable<World> cir) {
-		ServerWorldEvents.LOAD.invoker().accept((ServerWorld)(Object)this);
-	}
-
-	@Inject(
-		method = "init",
-		at = @At(
-			value = "TAIL"
-		)
-	)
-	private void osl$lifecycle$ready(CallbackInfoReturnable<World> cir) {
-		ServerWorldEvents.READY.invoker().accept((ServerWorld)(Object)this);
+	private void osl$lifecycle$init(CallbackInfo ci) {
+		ServerWorldEvents.INIT.invoker().accept((ServerWorld)(Object)this);
 	}
 
 	@Inject(

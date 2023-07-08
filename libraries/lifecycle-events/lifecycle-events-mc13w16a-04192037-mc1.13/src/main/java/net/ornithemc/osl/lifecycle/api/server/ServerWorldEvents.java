@@ -8,8 +8,7 @@ import net.ornithemc.osl.core.api.events.Event;
 
 public class ServerWorldEvents {
 
-	public static final Event<Consumer<ServerWorld>> LOAD  = Event.consumer();
-	public static final Event<Consumer<ServerWorld>> READY = Event.consumer();
+	public static final Event<Consumer<ServerWorld>> INIT = Event.consumer();
 
 	public static final Event<Consumer<ServerWorld>> TICK_START = Event.consumer();
 	public static final Event<Consumer<ServerWorld>> TICK_END   = Event.consumer();
