@@ -21,7 +21,7 @@
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"client-init": "net.ornithemc.osl.networking.impl.NetworkingImpl",
-			"init": "net.ornithemc.osl.networking.impl.NetworkingImpl"
+			"init": "net.ornithemc.osl.networking.impl.NetworkingInitializer"
 		},
 		"depends": [
 			{
