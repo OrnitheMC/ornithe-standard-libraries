@@ -1,0 +1,38 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "net.ornithemc.ornithe-standard-libraries",
+		"id": "osl-lifecycle-events",
+		"version": "${version}",
+		"metadata": {
+			"name": "Lifecycle Events",
+			"description": "Events to track the lifecycle of Minecraft.",
+			"contributors": {
+				"OrnitheMC": "owner",
+				"Space Walker": "maintainer"
+			},
+			"contact": {
+				"homepage": "https://ornithemc.net/",
+				"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+				"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+			},
+			"icon": "assets/ornithe-standard-libraries/lifecycle-events/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.18.3-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.3.0-pre+07261249 <=1.5.2"
+			},
+			{
+				"id": "osl-core",
+				"versions": ">=0.1.0"
+			}
+		]
+	},
+	"mixin": "osl.lifecycle-events.mixins.json"
+}
