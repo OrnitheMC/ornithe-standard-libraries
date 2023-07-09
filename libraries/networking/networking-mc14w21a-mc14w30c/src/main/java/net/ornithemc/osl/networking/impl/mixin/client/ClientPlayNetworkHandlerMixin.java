@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.network.packet.s2c.play.LoginS2CPacket;
-import net.minecraft.text.Text;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
@@ -39,7 +37,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleLogin(LoginS2CPacket packet, CallbackInfo ci) {
+	private void osl$networking$handleLogin(CallbackInfo ci) {
 		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
 			NetworkingInitializer.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
 		});
@@ -53,7 +51,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
+	private void osl$networking$handleDisconnect(CallbackInfo ci) {
 		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
 		serverChannels.clear();
 	}
