@@ -12,19 +12,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.network.packet.s2c.play.LoginS2CPacket;
+import net.minecraft.client.network.handler.ClientNetworkHandler;
+import net.minecraft.network.packet.CustomPayloadPacket;
+import net.minecraft.network.packet.LoginPacket;
 import net.minecraft.text.Text;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
 import net.ornithemc.osl.networking.impl.NetworkingInitializer;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientPlayNetworkHandler;
+import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 
-@Mixin(ClientPlayNetworkHandler.class)
-public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler {
+@Mixin(ClientNetworkHandler.class)
+public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 
 	@Shadow @Final private Minecraft minecraft;
 
@@ -39,7 +39,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleLogin(LoginS2CPacket packet, CallbackInfo ci) {
+	private void osl$networking$handleLogin(LoginPacket packet, CallbackInfo ci) {
 		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
 			NetworkingInitializer.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
 		});
@@ -65,8 +65,8 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
-		if (ClientPlayNetworkingImpl.handle(minecraft, (ClientPlayNetworkHandler)(Object)this, packet)) {
+	private void osl$networking$handleCustomPayload(CustomPayloadPacket packet, CallbackInfo ci) {
+		if (ClientPlayNetworkingImpl.handle(minecraft, (ClientNetworkHandler)(Object)this, packet)) {
 			ci.cancel();
 		}
 	}

@@ -38,6 +38,7 @@ include ':libraries:lifecycle-events:lifecycle-events-mc13w16a-04192037-mc1.13'
 include ':libraries:lifecycle-events:lifecycle-events-mc18w30a-mc1.13.2'
 
 include ':libraries:networking'
+include ':libraries:networking:networking-mc13w16a-04192037-mc13w39b'
 include ':libraries:networking:networking-mc13w41a-mc14w20b'
 include ':libraries:networking:networking-mc14w21a-mc14w30c'
 include ':libraries:networking:networking-mc14w31a-mc1.13-pre2'

@@ -39,7 +39,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleCustomPayload(LoginS2CPacket packet, CallbackInfo ci) {
+	private void osl$networking$handleLogin(LoginS2CPacket packet, CallbackInfo ci) {
 		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
 			NetworkingInitializer.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
 		});
@@ -53,7 +53,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleCustomPayload(Text reason, CallbackInfo ci) {
+	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
 		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
 		serverChannels.clear();
 	}

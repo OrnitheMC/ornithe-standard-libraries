@@ -25,7 +25,7 @@ public class PlayerManagerMixin {
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$login(Connection connection, ServerPlayerEntity player, CallbackInfo ci) {
+	private void osl$networking$handleLogin(Connection connection, ServerPlayerEntity player, CallbackInfo ci) {
 		ServerConnectionEvents.LOGIN.invoker().accept(server, player);
 	}
 }

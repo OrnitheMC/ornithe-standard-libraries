@@ -11,11 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.CustomPayloadPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
-import net.minecraft.text.Text;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
@@ -40,7 +39,7 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
+	private void osl$networking$handleDisconnect(String reason, Object[] args, CallbackInfo ci) {
 		ServerConnectionEvents.DISCONNECT.invoker().accept(server, player);
 		clientChannels.clear();
 	}
@@ -52,7 +51,7 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleCustomPayload(CustomPayloadC2SPacket packet, CallbackInfo ci) {
+	private void osl$networking$handleCustomPayload(CustomPayloadPacket packet, CallbackInfo ci) {
 		if (ServerPlayNetworkingImpl.handle(server, (ServerPlayNetworkHandler)(Object)this, player, packet)) {
 			ci.cancel();
 		}

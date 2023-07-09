@@ -40,7 +40,7 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$disconnect(Text reason, CallbackInfo ci) {
+	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
 		ServerConnectionEvents.DISCONNECT.invoker().accept(server, player);
 		clientChannels.clear();
 	}
