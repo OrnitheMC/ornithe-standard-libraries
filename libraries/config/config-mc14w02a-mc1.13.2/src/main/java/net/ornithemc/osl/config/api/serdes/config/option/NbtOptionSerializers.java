@@ -1,6 +1,7 @@
 package net.ornithemc.osl.config.api.serdes.config.option;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.Identifier;
@@ -12,6 +13,7 @@ import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IdentifierOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
+import net.ornithemc.osl.config.api.config.option.PathOption;
 import net.ornithemc.osl.config.api.config.option.StringOption;
 import net.ornithemc.osl.config.api.config.option.UuidOption;
 import net.ornithemc.osl.config.api.serdes.MinecraftSerializerTypes;
@@ -57,6 +59,18 @@ public class NbtOptionSerializers {
 		@Override
 		public void deserialize(IntegerOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
 			option.set(nbt.getInt(option.getName()));
+		}
+	});
+	public static final NbtOptionSerializer<PathOption> PATH = register(PathOption.class, new NbtOptionSerializer<PathOption>() {
+
+		@Override
+		public void serialize(PathOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+			nbt.putString(option.getName(), option.get().toAbsolutePath().toString());
+		}
+
+		@Override
+		public void deserialize(PathOption option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+			option.set(Paths.get(nbt.getString(option.getName())));
 		}
 	});
 	public static final NbtOptionSerializer<StringOption> STRING = register(StringOption.class, new NbtOptionSerializer<StringOption>() {

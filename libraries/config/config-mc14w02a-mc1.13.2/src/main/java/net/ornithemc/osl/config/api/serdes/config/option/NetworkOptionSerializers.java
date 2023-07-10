@@ -1,6 +1,7 @@
 package net.ornithemc.osl.config.api.serdes.config.option;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import net.minecraft.network.PacketByteBuf;
 
@@ -10,6 +11,7 @@ import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IdentifierOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
+import net.ornithemc.osl.config.api.config.option.PathOption;
 import net.ornithemc.osl.config.api.config.option.StringOption;
 import net.ornithemc.osl.config.api.config.option.UuidOption;
 import net.ornithemc.osl.config.api.serdes.MinecraftSerializerTypes;
@@ -55,6 +57,18 @@ public class NetworkOptionSerializers {
 		@Override
 		public void deserialize(IntegerOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 			option.set(buffer.readInt());
+		}
+	});
+	public static final NetworkOptionSerializer<PathOption> PATH = register(PathOption.class, new NetworkOptionSerializer<PathOption>() {
+
+		@Override
+		public void serialize(PathOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+			buffer.writeString(option.get().toAbsolutePath().toString());
+		}
+
+		@Override
+		public void deserialize(PathOption option, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+			option.set(Paths.get(buffer.readString(32767)));
 		}
 	});
 	public static final NetworkOptionSerializer<StringOption> STRING = register(StringOption.class, new NetworkOptionSerializer<StringOption>() {

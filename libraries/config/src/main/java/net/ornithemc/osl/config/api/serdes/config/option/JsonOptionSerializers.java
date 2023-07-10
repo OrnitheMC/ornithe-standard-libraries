@@ -1,11 +1,13 @@
 package net.ornithemc.osl.config.api.serdes.config.option;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import net.ornithemc.osl.config.api.config.option.BooleanOption;
 import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.Option;
+import net.ornithemc.osl.config.api.config.option.PathOption;
 import net.ornithemc.osl.config.api.config.option.StringOption;
 import net.ornithemc.osl.config.api.config.option.UuidOption;
 import net.ornithemc.osl.config.api.serdes.SerializationSettings;
@@ -52,6 +54,18 @@ public class JsonOptionSerializers {
 		@Override
 		public void deserialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
 			option.set(json.readNumber().intValue());
+		}
+	});
+	public static final JsonOptionSerializer<PathOption> PATH = register(PathOption.class, new JsonOptionSerializer<PathOption>() {
+
+		@Override
+		public void serialize(PathOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			json.writeString(option.get().toAbsolutePath().toString());
+		}
+
+		@Override
+		public void deserialize(PathOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			option.set(Paths.get(json.readString()));
 		}
 	});
 	public static final JsonOptionSerializer<StringOption> STRING = register(StringOption.class, new JsonOptionSerializer<StringOption>() {
