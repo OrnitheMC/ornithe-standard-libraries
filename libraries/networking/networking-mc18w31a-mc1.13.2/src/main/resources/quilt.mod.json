@@ -30,7 +30,7 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": ">=1.8.0-alpha.14.31.a <=1.13.0-pre.2"
+				"versions": ">=1.13.1-alpha.18.31.a <= 1.13.2"
 			},
 			{
 				"id": "osl-core",
