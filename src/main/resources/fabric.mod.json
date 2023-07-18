@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "osl",
+	"version": "${version}",
+	"name": "Ornithe Standard Libraries",
+	"description": "Libraries for modding with Ornithe.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/icon.png",
+	"environment": "*",
+	"entrypoints": {
+	},
+	"depends": {
+		"fabricloader": ">=0.14.21"
+	}
+}

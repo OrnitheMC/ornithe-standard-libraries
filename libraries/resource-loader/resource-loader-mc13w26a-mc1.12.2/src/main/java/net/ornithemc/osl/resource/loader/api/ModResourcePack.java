@@ -1,6 +1,6 @@
 package net.ornithemc.osl.resource.loader.api;
 
-import org.quiltmc.loader.api.ModMetadata;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import net.minecraft.client.resource.pack.ResourcePack;
 

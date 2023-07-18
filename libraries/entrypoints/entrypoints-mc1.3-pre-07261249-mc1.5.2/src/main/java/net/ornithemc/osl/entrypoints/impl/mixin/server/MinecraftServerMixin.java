@@ -1,11 +1,11 @@
 package net.ornithemc.osl.entrypoints.impl.mixin.server;
 
-import org.quiltmc.loader.api.entrypoint.EntrypointUtil;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -18,18 +18,17 @@ public class MinecraftServerMixin {
 
 	@Inject(
 		method = "main",
-		remap = false,
 		at = @At(
 			value = "HEAD"
 		)
 	)
 	private static void osl$entrypoints$init(CallbackInfo ci) {
-		EntrypointUtil.invoke(
+		EntrypointUtils.invoke(
 			ServerModInitializer.ENTRYPOINT_KEY,
 			ServerModInitializer.class,
 			ServerModInitializer::initServer
 		);
-		EntrypointUtil.invoke(
+		EntrypointUtils.invoke(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init
@@ -38,7 +37,6 @@ public class MinecraftServerMixin {
 
 	@Inject(
 		method = "main",
-		remap = false,
 		at = @At(
 			value = "NEW",
 			target = "Lnet/minecraft/server/dedicated/DedicatedServer;"

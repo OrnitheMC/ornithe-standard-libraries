@@ -110,11 +110,11 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	public static void send(DimensionType dimension, Identifier channel, Consumer<PacketByteBuf> writer) {
-		doSend(collectPlayers(p -> p.dimensionId == dimension && canSend(p, channel)), channel, writer);
+		doSend(collectPlayers(p -> p.dimension == dimension && canSend(p, channel)), channel, writer);
 	}
 
 	public static void send(DimensionType dimension, Identifier channel, PacketByteBuf data) {
-		doSend(collectPlayers(p -> p.dimensionId == dimension && canSend(p, channel)),channel, data);
+		doSend(collectPlayers(p -> p.dimension == dimension && canSend(p, channel)),channel, data);
 	}
 
 	public static void send(Identifier channel, Consumer<PacketByteBuf> writer) {
@@ -142,11 +142,11 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	public static void doSend(DimensionType dimension, Identifier channel, Consumer<PacketByteBuf> writer) {
-		doSend(collectPlayers(p -> p.dimensionId == dimension), channel, writer);
+		doSend(collectPlayers(p -> p.dimension == dimension), channel, writer);
 	}
 
 	public static void doSend(DimensionType dimension, Identifier channel, PacketByteBuf data) {
-		doSend(collectPlayers(p -> p.dimensionId == dimension),channel, data);
+		doSend(collectPlayers(p -> p.dimension == dimension),channel, data);
 	}
 
 	public static void doSend(Identifier channel, Consumer<PacketByteBuf> writer) {

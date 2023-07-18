@@ -4,15 +4,15 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.quiltmc.json5.JsonReader;
-import org.quiltmc.json5.JsonToken;
-import org.quiltmc.json5.JsonWriter;
+import org.quiltmc.parsers.json.JsonReader;
+import org.quiltmc.parsers.json.JsonToken;
+import org.quiltmc.parsers.json.JsonWriter;
 
 /**
- * A wrapper for quilt-json5's
- * {@linkplain org.quiltmc.json5.JsonWriter JsonWriter}
+ * A wrapper for quilt-parsers'
+ * {@linkplain org.quiltmc.parsers.json.JsonWriter JsonWriter}
  * and
- * {@linkplain org.quiltmc.json5.JsonReader JsonReader}
+ * {@linkplain org.quiltmc.parsers.json.JsonReader JsonReader}
  * classes.
  * 
  * @author Space Walker
@@ -76,7 +76,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#name(String)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#name(String)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -88,9 +88,9 @@ public class JsonFile implements Closeable {
 
 	/**
 	 * Wraps write operations between calls to
-	 * {@link org.quiltmc.json5.JsonWriter#beginObject()}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#beginObject()}
 	 * and
-	 * {@link org.quiltmc.json5.JsonWriter#endObject()}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#endObject()}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -114,9 +114,9 @@ public class JsonFile implements Closeable {
 
 	/**
 	 * Wraps write operations between calls to
-	 * {@link org.quiltmc.json5.JsonWriter#beginArray()}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#beginArray()}
 	 * and
-	 * {@link org.quiltmc.json5.JsonWriter#endArray()}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#endArray()}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -141,7 +141,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(String)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(String)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -162,7 +162,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(boolean)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(boolean)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -183,7 +183,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(Boolean)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(Boolean)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -204,7 +204,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(Number)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(Number)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -225,7 +225,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(double)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(double)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -246,7 +246,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#value(long)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#value(long)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -267,7 +267,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#nullValue()}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#nullValue()}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -288,7 +288,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonWriter#jsonValue(String)}
+	 * {@link org.quiltmc.parsers.json.JsonWriter#jsonValue(String)}
 	 * 
 	 * @return this json file
 	 * @throws IOException
@@ -317,7 +317,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#hasNext()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#hasNext()}
 	 * 
 	 * @throws IOException
 	 */
@@ -326,7 +326,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#peek()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#peek()}
 	 * 
 	 * @throws IOException
 	 */
@@ -335,7 +335,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextName()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextName()}
 	 * 
 	 * @throws IOException
 	 */
@@ -362,9 +362,9 @@ public class JsonFile implements Closeable {
 
 	/**
 	 * Wraps read operations between calls to
-	 * {@link org.quiltmc.json5.JsonReader#beginObject()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#beginObject()}
 	 * and
-	 * {@link org.quiltmc.json5.JsonReader#endObject()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#endObject()}
 	 * 
 	 * @throws IOException
 	 */
@@ -385,9 +385,9 @@ public class JsonFile implements Closeable {
 
 	/**
 	 * Wraps read operations between calls to
-	 * {@link org.quiltmc.json5.JsonReader#beginArray()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#beginArray()}
 	 * and
-	 * {@link org.quiltmc.json5.JsonReader#endArray()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#endArray()}
 	 * 
 	 * @throws IOException
 	 */
@@ -409,7 +409,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextString()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextString()}
 	 * 
 	 * @throws IOException
 	 */
@@ -427,7 +427,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextBoolean()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextBoolean()}
 	 * 
 	 * @throws IOException
 	 */
@@ -445,7 +445,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextNumber()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextNumber()}
 	 * 
 	 * @throws IOException
 	 */
@@ -463,7 +463,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextDouble()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextDouble()}
 	 * 
 	 * @throws IOException
 	 */
@@ -481,7 +481,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextLong()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextLong()}
 	 * 
 	 * @throws IOException
 	 */
@@ -499,7 +499,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextInt()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextInt()}
 	 * 
 	 * @throws IOException
 	 */
@@ -517,7 +517,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#nextNull()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#nextNull()}
 	 * 
 	 * @throws IOException
 	 */
@@ -535,7 +535,7 @@ public class JsonFile implements Closeable {
 	}
 
 	/**
-	 * {@link org.quiltmc.json5.JsonReader#skipValue()}
+	 * {@link org.quiltmc.parsers.json.JsonReader#skipValue()}
 	 * 
 	 * @throws IOException
 	 */

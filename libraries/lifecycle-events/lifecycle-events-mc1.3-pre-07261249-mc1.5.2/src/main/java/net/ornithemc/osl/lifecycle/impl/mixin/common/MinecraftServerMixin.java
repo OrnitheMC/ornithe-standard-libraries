@@ -18,7 +18,6 @@ public class MinecraftServerMixin {
 
 	@Inject(
 		method = "run",
-		remap = false,
 		at = @At(
 			value = "HEAD"
 		)
@@ -29,7 +28,6 @@ public class MinecraftServerMixin {
 
 	@Inject(
 		method = "run",
-		remap = false,
 		at = @At(
 			value = "INVOKE",
 			shift = Shift.AFTER,

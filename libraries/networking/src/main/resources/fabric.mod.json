@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "osl-networking",
+	"version": "${version}",
+	"name": "Networking",
+	"description": "A networking library for Minecraft.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/networking/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client-init": [
+			"net.ornithemc.osl.networking.impl.NetworkingInitializer"
+		],
+		"init": [
+			"net.ornithemc.osl.networking.impl.NetworkingInitializer"
+		]
+	},
+	"mixins": [
+		"osl.networking.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "${mc_version_range}",
+		"osl-core": ">=0.2.0",
+		"osl-entrypoints": ">=0.1.0",
+		"osl-lifecycle-events": ">=0.1.0"
+	}
+}

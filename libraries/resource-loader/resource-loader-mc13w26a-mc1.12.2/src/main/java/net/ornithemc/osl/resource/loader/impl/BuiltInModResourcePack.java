@@ -9,14 +9,15 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.api.ModMetadata;
-
 import com.google.gson.JsonObject;
+
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import net.minecraft.client.resource.metadata.ResourceMetadataSection;
 import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
@@ -31,8 +32,8 @@ public class BuiltInModResourcePack implements ModResourcePack {
 	private final ModContainer mod;
 	private final Set<String> namespaces;
 
-	private final Path root;
-	private final String separator;
+	private final List<Path> roots;
+	//private final String separator;
 
 	private JsonObject generatedPackMetadata;
 
@@ -40,24 +41,28 @@ public class BuiltInModResourcePack implements ModResourcePack {
 		this.mod = mod;
 		this.namespaces = new HashSet<>();
 
-		this.root = this.mod.rootPath();
-		this.separator = this.root.getFileSystem().getSeparator();
+		this.roots = this.mod.getRootPaths();
 
 		findNamespaces();
 	}
 
 	private void findNamespaces() {
-		try (DirectoryStream<Path> ds = Files.newDirectoryStream(root)) {
-			for (Path p : ds) {
-				String s = p.getFileName().toString();
-				String namespace = s.replace(separator, "");
+		for (Path root : roots) {
+			String separator = root.getFileSystem().getSeparator();
 
-				if (ResourceUtils.isValidNamespace(namespace)) {
-					namespaces.add(namespace);
+			try (DirectoryStream<Path> ds = Files.newDirectoryStream(root)) {
+				for (Path p : ds) {
+					String s = p.getFileName().toString();
+					String namespace = s.replace(separator, "");
+
+					if (ResourceUtils.isValidNamespace(namespace)) {
+						namespaces.add(namespace);
+					}
 				}
+			} catch (IOException e) {
+				System.out.println("failed to parse namespaces for built-in resource pack for mod " + mod.getMetadata().getId());
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			ResourceLoader.LOGGER.warn("failed to parse namespaces for built-in resource pack for mod " + mod.metadata().id(), e);
 		}
 	}
 
@@ -65,7 +70,7 @@ public class BuiltInModResourcePack implements ModResourcePack {
 	public InputStream getResource(Identifier location) throws IOException {
 		Path path = getPath(location);
 
-		if (!Files.exists(path)) {
+		if (path == null || !Files.exists(path)) {
 			if ("pack.mcmeta".equals(location.getPath())) {
 				JsonObject metadata = generatePackMetadata();
 				String serializedMetadata = metadata.toString();
@@ -81,7 +86,8 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	@Override
 	public boolean hasResource(Identifier location) {
-		return Files.exists(getPath(location));
+		Path path = getPath(location);
+		return path != null && Files.exists(path);
 	}
 
 	@Override
@@ -103,20 +109,30 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	@Override
 	public String getName() {
-		return getModMetadata().name();
+		return getModMetadata().getName();
 	}
 
 	@Override
 	public ModMetadata getModMetadata() {
-		return mod.metadata();
+		return mod.getMetadata();
 	}
 
 	private Path getPath(Identifier location) {
-		return root.resolve(getPathName(location));
+		for (Path root : roots) {
+			String separator = root.getFileSystem().getSeparator();
+			String pathName = getPathName(location).replace("/", separator);
+			Path path = root.resolve(pathName);
+
+			if (Files.exists(path)) {
+				return path;
+			}
+		}
+
+		return null;
 	}
 
 	private String getPathName(Identifier location) {
-		return String.format("/assets/%s/%s", location.getNamespace(), location.getPath()).replace("/", separator);
+		return String.format("/assets/%s/%s", location.getNamespace(), location.getPath());
 	}
 
 	private JsonObject generatePackMetadata() {
@@ -124,7 +140,7 @@ public class BuiltInModResourcePack implements ModResourcePack {
 			generatedPackMetadata = new JsonObject();
 			JsonObject pack = new JsonObject();
 			pack.addProperty("pack_format", ResourceLoader.getPackFormat());
-			pack.addProperty("description", getModMetadata().description());
+			pack.addProperty("description", getModMetadata().getDescription());
 			generatedPackMetadata.add("pack", pack);
 		}
 

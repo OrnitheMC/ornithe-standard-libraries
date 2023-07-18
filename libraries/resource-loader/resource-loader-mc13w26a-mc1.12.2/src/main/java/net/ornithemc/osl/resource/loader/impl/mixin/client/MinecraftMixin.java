@@ -2,16 +2,15 @@ package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
 import java.util.List;
 
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.api.ModContainer.BasicSourceType;
-import org.quiltmc.loader.api.QuiltLoader;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.pack.ResourcePack;
@@ -35,8 +34,8 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$addDefaultResourcePacks(CallbackInfo ci) {
-		for (ModContainer mod : QuiltLoader.getAllMods()) {
-			if (mod.getSourceType() == BasicSourceType.BUILTIN) {
+		for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+			if ("builtin".equals(mod.getMetadata().getType())) {
 				continue;
 			}
 

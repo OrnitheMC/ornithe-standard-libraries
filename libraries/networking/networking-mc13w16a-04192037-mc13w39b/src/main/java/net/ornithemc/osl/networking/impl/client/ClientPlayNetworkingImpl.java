@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.network.packet.CustomPayloadPacket;
@@ -21,8 +18,6 @@ import net.ornithemc.osl.networking.impl.NetworkListener;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 
 public final class ClientPlayNetworkingImpl {
-
-	private static final Logger LOGGER = LogManager.getLogger("OSL|Client Play Networking");
 
 	private static Minecraft minecraft;
 
@@ -74,7 +69,8 @@ public final class ClientPlayNetworkingImpl {
 				try {
 					return listener.stream().handle(minecraft, handler, DataStreams.input(packet.data));
 				} catch (IOException e) {
-					LOGGER.info("error handling custom payload on channel \'" + packet.channel + "\'", e);
+					System.out.println("error handling custom payload on channel \'" + packet.channel + "\'");
+					e.printStackTrace();
 				}
 			} else {
 				return listener.array().handle(minecraft, handler, packet.data);
@@ -113,7 +109,9 @@ public final class ClientPlayNetworkingImpl {
 		try {
 			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
 		} catch (IOException e) {
-			LOGGER.info("error writing custom payload to channel \'" + channel + "\'", e);
+			System.out.println("error writing custom payload to channel \'" + channel + "\'");
+			e.printStackTrace();
+
 			return null;
 		}
 	}

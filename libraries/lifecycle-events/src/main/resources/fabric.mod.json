@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "osl-lifecycle-events",
+	"version": "${version}",
+	"name": "Lifecycle Events",
+	"description": "Events to track the lifecycle of Minecraft.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/lifecycle-events/icon.png",
+	"environment": "*",
+	"entrypoints": {
+	},
+	"mixins": [
+		"osl.lifecycle-events.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "${mc_version_range}",
+		"osl-core": ">=0.1.0"
+	}
+}

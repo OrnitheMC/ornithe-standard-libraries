@@ -1,17 +1,16 @@
 pluginManagement {
 	repositories {
 		maven {
-			name = 'Quilt'
-			url = 'https://maven.quiltmc.org/repository/release'
-		}
-		maven {
-			name = 'Ornithe'
-			url = 'https://maven.ornithemc.net/releases'
-		}
-		// Currently needed for Intermediary and other temporary dependencies
-		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			name = 'Ornithe Releases'
+			url = 'https://maven.ornithemc.net/releases'
+		}
+		maven {
+			name = 'Ornithe Snapshots'
+			url = 'https://maven.ornithemc.net/snapshots'
 		}
 		gradlePluginPortal()
 	}
@@ -23,7 +22,10 @@ include ':libraries:core'
 
 include ':libraries:branding'
 include ':libraries:branding:branding-mc1.3-pre-07261249-mc1.5.2'
-include ':libraries:branding:branding-mc13w16a-04192037-mc14w29b'
+include ':libraries:branding:branding-mc13w16a-04192037-mc1.7.9'
+include ':libraries:branding:branding-mc1.7.10-pre1-mc1.7.10-pre2'
+include ':libraries:branding:branding-mc1.7.10-pre3-mc1.7.10'
+include ':libraries:branding:branding-mc14w02a-mc14w29b'
 include ':libraries:branding:branding-mc14w30a-mc16w05a'
 
 include ':libraries:config'

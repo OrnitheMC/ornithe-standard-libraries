@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "osl-core",
+	"version": "${version}",
+	"name": "Core",
+	"description": "The core of Ornithe Standard Libraries.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/core/icon.png",
+	"environment": "*",
+	"depends": {
+		"fabricloader": ">=0.14.21"
+	}
+}
