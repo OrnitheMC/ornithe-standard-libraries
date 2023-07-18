@@ -24,6 +24,6 @@
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": "${mc_version_range}",
-		"osl-core": ">=0.1.0"
+		"osl-core": ">=0.4.0"
 	}
 }
