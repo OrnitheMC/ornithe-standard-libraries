@@ -1,5 +1,7 @@
 package net.ornithemc.osl.entrypoints.impl.mixin.server;
 
+import java.util.Arrays;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +24,7 @@ public class MinecraftServerMixin {
 			value = "HEAD"
 		)
 	)
-	private static void osl$entrypoints$init(CallbackInfo ci) {
+	private static void osl$entrypoints$init(String[] args, CallbackInfo ci) {
 		EntrypointUtils.invoke(
 			ServerModInitializer.ENTRYPOINT_KEY,
 			ServerModInitializer.class,
@@ -33,16 +35,7 @@ public class MinecraftServerMixin {
 			ModInitializer.class,
 			ModInitializer::init
 		);
-	}
 
-	@Inject(
-		method = "main",
-		at = @At(
-			value = "NEW",
-			target = "Lnet/minecraft/server/dedicated/DedicatedServer;"
-		)
-	)
-	private static void osl$entrypoints$parseRunArgs(String[] args, CallbackInfo ci) {
-		ServerLaunchEvents.PARSE_RUN_ARGS.invoker().accept(args);
+		ServerLaunchEvents.PARSE_RUN_ARGS.invoker().accept(Arrays.copyOf(args, args.length));
 	}
 }

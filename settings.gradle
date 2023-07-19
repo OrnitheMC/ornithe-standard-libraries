@@ -38,6 +38,8 @@ include ':libraries:config:config-mc15w40a-mc1.12.2'
 include ':libraries:config:config-mc17w43a-mc1.13.2'
 
 include ':libraries:entrypoints'
+include ':libraries:entrypoints:entrypoints-client-mca1.0.6-mc12w30e'
+include ':libraries:entrypoints:entrypoints-server-mcserver-a0.1.0-mc12w30e'
 include ':libraries:entrypoints:entrypoints-mc1.3-pre-07261249-mc1.5.2'
 include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc1.13.2'
 
