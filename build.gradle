@@ -76,9 +76,31 @@ def setUpModule(project, String... dependencies) {
 		project.base {
 			archivesName = "${project.rootProject.archives_base_name}-${project.parent.archives_base_name}"
 		}
-		project.version = "${project.parent.version}+mc${project.min_mc_version}#${project.max_mc_version}"
+		def mc_version_range = "mc${project.min_mc_version}#${project.max_mc_version}"
+		if ("*".equals(project.environment)) {
+			project.version = "${project.parent.version}+${mc_version_range}"
+		} else {
+			project.version = "${project.parent.version}+${project.environment}-${mc_version_range}"
+		}
 	}
 	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
+
+	project.loom {
+		if ("client".equals(project.environment)) {
+			clientOnlyMinecraftJar()
+		}
+		if ("server".equals(project.environment)) {
+			serverOnlyMinecraftJar()
+		}
+	}
+	project.ploceus {
+		if ("client".equals(project.environment)) {
+			clientOnlyMappings()
+		}
+		if ("server".equals(project.environment)) {
+			serverOnlyMappings()
+		}
+	}
 
 	def libraries = getLibraryDependencies(project, dependencies)
 	def modules = getModuleDependencies(project, dependencies)
@@ -92,15 +114,23 @@ def setUpModule(project, String... dependencies) {
 	}
 
 	project.dependencies {
-		minecraft "com.mojang:minecraft:${project.max_mc_version}"
+		def mc_version = project.max_mc_version
+		def sided_mc_version
+		if ("*".equals(project.environment)) {
+			sided_mc_version = mc_version
+		} else {
+			sided_mc_version = "${mc_version}-${project.environment}"
+		}
+
+		minecraft "com.mojang:minecraft:${mc_version}"
 		if (project.hasProperty('nests_build')) {
 			mappings project.loom.layered {
-				mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+				mappings "net.ornithemc:feather:${sided_mc_version}+build.${project.feather_build}:v2"
 				addLayer project.ploceus.nestedMappings()
 			}
-			nests "net.ornithemc:nests:${project.max_mc_version}+build.${project.nests_build}"
+			nests "net.ornithemc:nests:${sided_mc_version}+build.${project.nests_build}"
 		} else {
-			mappings "net.ornithemc:feather:${project.max_mc_version}+build.${project.feather_build}:v2"
+			mappings "net.ornithemc:feather:${sided_mc_version}+build.${project.feather_build}:v2"
 		}
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 

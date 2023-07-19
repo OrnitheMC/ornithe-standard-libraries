@@ -15,7 +15,7 @@
 	},
 	"license": "Apache-2.0",
 	"icon": "assets/ornithe-standard-libraries/branding/icon.png",
-	"environment": "*",
+	"environment": "${environment}",
 	"entrypoints": {
 		"client-init": [
 			"net.ornithemc.osl.branding.impl.BrandingPatch"
