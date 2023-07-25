@@ -9,7 +9,9 @@ plugins {
 
 import groovy.json.JsonSlurper
 
-archivesBaseName = "${project.root_archives_base_name}"
+base {
+	archivesName = "${project.root_archives_base_name}"
+}
 version = "${project.root_version}"
 group = "${project.root_maven_group}"
 
@@ -32,10 +34,60 @@ jar {
 	}
 }
 
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			pom.withXml {
+				asNode().appendNode("dependencies")
+			}
+		}
+	}
+	repositories {
+		def ENV = System.getenv()
+
+		if (ENV.MAVEN_URL) {
+			maven {
+				url ENV.MAVEN_URL
+
+				credentials {
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
+				}
+			}
+		} else {
+			mavenLocal()
+		}
+	}
+}
+
+def addPomDependency(project) {
+	project.rootProject.publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				pom.withXml {
+					def depsNode = asNode().get("dependencies")[0]
+					def depNode = depsNode.appendNode("dependency")
+
+					depNode.appendNode("groupId", project.group)
+					depNode.appendNode("artifactId", project.name)
+					depNode.appendNode("version", project.version)
+					depNode.appendNode("scope", "compile")
+				}
+			}
+		}
+	}
+}
+
 def setUpLibrary(project) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
+
+	project.base {
+		archivesName = "${project.rootProject.archives_base_name}-${project.archives_base_name}"
+	}
+	project.version = "${project.version}"
+	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
 
 	project.repositories {
 		// needed for loader in subprojects without a mc dep
@@ -52,6 +104,8 @@ def setUpLibrary(project) {
 
 		implementation project.project(':libraries:core')
 	}
+
+	addPomDependency(project)
 }
 
 def setUpModule(project, String... dependencies) {
@@ -76,7 +130,7 @@ def setUpModule(project, String... dependencies) {
 		project.base {
 			archivesName = "${project.rootProject.archives_base_name}-${project.parent.archives_base_name}"
 		}
-		def mc_version_range = "mc${project.min_mc_version}#${project.max_mc_version}"
+		def mc_version_range = "mc${project.min_mc_version}-mc${project.max_mc_version}"
 		if ("*".equals(project.environment)) {
 			project.version = "${project.parent.version}+${mc_version_range}"
 		} else {
@@ -229,6 +283,10 @@ def setUpModule(project, String... dependencies) {
 				mavenLocal()
 			}
 		}
+	}
+
+	if (isCore) {
+		addPomDependency(project)
 	}
 
 	project.loom.disableDeprecatedPomGeneration(project.publishing.publications.mavenJava)
