@@ -348,6 +348,9 @@ def getLibraryDependencies(project, String... moduleNames) {
 
 	for (moduleName : moduleNames) {
 		def i = moduleName.indexOf('-mc')
+		if (!"*".equals(project.environment)) {
+			i -= "-${project.environment}".length()
+		}
 		def libraryName = moduleName.substring(0, i)
 
 		libraries.add(project.project(":libraries:${libraryName}"))
@@ -365,6 +368,9 @@ def getModuleDependencies(project, String... moduleNames) {
 
 	for (moduleName : moduleNames) {
 		def i = moduleName.indexOf('-mc')
+		if (!"*".equals(project.environment)) {
+			i -= "-${project.environment}".length()
+		}
 		def libraryName = moduleName.substring(0, i)
 
 		modules.add(project.project(":libraries:${libraryName}:${moduleName}"))
