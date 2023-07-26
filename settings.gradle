@@ -18,6 +18,9 @@ pluginManagement {
 
 rootProject.name = 'osl'
 
+include ':client'
+include ':server'
+
 include ':libraries:core'
 
 include ':libraries:branding'
