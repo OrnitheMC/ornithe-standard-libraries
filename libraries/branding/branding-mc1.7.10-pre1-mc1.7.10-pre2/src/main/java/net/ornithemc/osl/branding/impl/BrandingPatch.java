@@ -10,10 +10,10 @@ import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 
 public class BrandingPatch implements ClientModInitializer {
 
-	private static String versionType = "release";
+	private static String versionType = Constants.RELEASE;
 
 	public static String apply(String s) {
-		if (versionType == null || "release".equals(versionType)) {
+		if (versionType == null || Constants.RELEASE.equals(versionType)) {
 			return s;
 		}
 
@@ -28,7 +28,7 @@ public class BrandingPatch implements ClientModInitializer {
 
 			@Override
 			public void defineOptions(OptionParser parser) {
-				versionTypeSpec = parser.accepts("versionType").withRequiredArg().defaultsTo("release");
+				versionTypeSpec = parser.accepts(Constants.VERSION_TYPE).withRequiredArg().defaultsTo(Constants.RELEASE);
 			}
 
 			@Override
