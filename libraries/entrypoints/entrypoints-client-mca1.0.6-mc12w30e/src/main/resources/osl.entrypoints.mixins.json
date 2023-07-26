@@ -6,7 +6,7 @@
 	"mixins": [
 	],
 	"client": [
-		"client.MinecraftMixin"
+		"client.MinecraftAppletMixin"
 	],
 	"server": [
 	],

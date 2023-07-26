@@ -1,6 +1,6 @@
 package net.ornithemc.osl.entrypoints.impl.mixin.client;
 
-import java.util.Arrays;
+import java.applet.Applet;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,22 +9,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftApplet;
 
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
 import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
+import net.ornithemc.osl.entrypoints.impl.LaunchUtils;
 
-@Mixin(Minecraft.class)
-public class MinecraftMixin {
+@SuppressWarnings("serial")
+@Mixin(MinecraftApplet.class)
+public class MinecraftAppletMixin extends Applet {
 
 	@Inject(
-		method = "main",
+		method = "init",
 		at = @At(
 			value = "HEAD"
 		)
 	)
-	private static void osl$entrypoints$init(String[] args, CallbackInfo ci) {
+	private void osl$entrypoints$init(CallbackInfo ci) {
 		EntrypointUtils.invoke(
 			ClientModInitializer.ENTRYPOINT_KEY,
 			ClientModInitializer.class,
@@ -36,6 +38,6 @@ public class MinecraftMixin {
 			ModInitializer::init
 		);
 
-		ClientLaunchEvents.PARSE_RUN_ARGS.invoker().accept(Arrays.copyOf(args, args.length));
+		ClientLaunchEvents.PARSE_RUN_ARGS.invoker().accept(LaunchUtils.wrapFabricRunArgs(this::getParameter));
 	}
 }
