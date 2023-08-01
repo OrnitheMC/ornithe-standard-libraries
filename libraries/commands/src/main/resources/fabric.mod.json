@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "osl-commands",
+	"version": "${version}",
+	"name": "Commands",
+	"description": "An API for creating and registering Minecraft commands.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/commands/icon.png",
+	"environment": "${environment}",
+	"entrypoints": {
+	},
+	"mixins": [
+		"osl.commands.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "${mc_version_range}",
+		"osl-core": ">=0.4.0"
+	}
+}

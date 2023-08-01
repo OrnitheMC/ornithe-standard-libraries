@@ -32,6 +32,10 @@ include ':libraries:branding:branding-mc1.7.10-pre3-mc1.7.10'
 include ':libraries:branding:branding-mc14w02a-mc14w29b'
 include ':libraries:branding:branding-mc14w30a-mc16w05a'
 
+include ':libraries:commands'
+include ':libraries:commands:commands-mc1.12.2-mc17w43b'
+include ':libraries:commands:commands-mc17w45a-mc1.13.2'
+
 include ':libraries:config'
 include ':libraries:config:config-mc1.3-pre-07261249-mc1.5.2'
 include ':libraries:config:config-mc13w16a-04192037-mc1.6.4'
