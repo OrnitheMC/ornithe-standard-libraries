@@ -47,6 +47,13 @@ include ':libraries:entrypoints:entrypoints-server-mcserver-a0.1.0-mc12w30e'
 include ':libraries:entrypoints:entrypoints-mc1.3-pre-07261249-mc1.5.2'
 include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc1.13.2'
 
+include ':libraries:keybinds'
+include ':libraries:keybinds:keybinds-mc1.3.1-mc1.5.2'
+include ':libraries:keybinds:keybinds-mc13w16a-04192037-mc1.6.4'
+include ':libraries:keybinds:keybinds-mc13w36a-09051446-mc17w15a'
+include ':libraries:keybinds:keybinds-mc17w16a-mc1.12.2'
+include ':libraries:keybinds:keybinds-mc17w43a-mc1.13.2'
+
 include ':libraries:lifecycle-events'
 include ':libraries:lifecycle-events:lifecycle-events-client-mca1.0.6-mcb1.2_02'
 include ':libraries:lifecycle-events:lifecycle-events-client-mcb1.3-1750-mcb1.7.3'

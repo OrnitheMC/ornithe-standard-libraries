@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.keybinds.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+	],
+	"client": [
+		"client.GameOptionsMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
