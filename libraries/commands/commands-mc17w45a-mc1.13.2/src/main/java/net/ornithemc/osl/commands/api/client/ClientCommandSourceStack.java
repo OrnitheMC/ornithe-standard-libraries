@@ -211,7 +211,7 @@ public class ClientCommandSourceStack implements SuggestionProvider {
 	}
 
 	public void sendSuccess(Text message) {
-		if (this.source.canUseCommand() && !this.silent) {
+		if (this.source.sendCommandSuccess() && !this.silent) {
 			this.source.sendMessage(message);
 		}
 	}

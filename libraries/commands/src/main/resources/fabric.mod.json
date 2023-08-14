@@ -17,6 +17,9 @@
 	"icon": "assets/ornithe-standard-libraries/commands/icon.png",
 	"environment": "${environment}",
 	"entrypoints": {
+		"init": [
+			"net.ornithemc.osl.commands.impl.server.ServerCommandsInitializer"
+		],
 		"client-init": [
 			"net.ornithemc.osl.commands.impl.client.ClientCommandsInitializer"
 		]
@@ -29,6 +32,7 @@
 		"minecraft": "${mc_version_range}",
 		"osl-core": ">=0.4.0",
 		"osl-entrypoints": ">=0.2.0",
+		"osl-lifecycle-events": ">=0.4.0",
 		"osl-networking": ">=0.4.0"
 	}
 }

@@ -75,7 +75,7 @@ public class ClientCommandManagerImpl {
 		return run(source, command, true);
 	}
 
-	public static Integer run(ClientCommandSourceStack source, String command, boolean force) {
+	private static Integer run(ClientCommandSourceStack source, String command, boolean force) {
 		if (dispatcher == null) {
 			throw new IllegalStateException("cannot run client commands because the command dispatcher is not set up!");
 		}

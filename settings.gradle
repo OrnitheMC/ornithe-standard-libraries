@@ -33,7 +33,7 @@ include ':libraries:branding:branding-mc14w02a-mc14w29b'
 include ':libraries:branding:branding-mc14w30a-mc16w05a'
 
 include ':libraries:commands'
-include ':libraries:commands:commands-mc1.12.2-mc17w43b'
+include ':libraries:commands:commands-mc1.12-mc1.12.2'
 include ':libraries:commands:commands-mc17w45a-mc1.13.2'
 
 include ':libraries:config'
