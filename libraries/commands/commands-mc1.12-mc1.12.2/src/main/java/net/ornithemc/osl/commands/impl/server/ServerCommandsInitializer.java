@@ -7,7 +7,7 @@ public class ServerCommandsInitializer implements ModInitializer {
 
 	@Override
 	public void init() {
-		MinecraftServerEvents.READY.register(server -> {
+		MinecraftServerEvents.START.register(server -> {
 			ServerCommandManagerImpl.setUp(server);
 		});
 		MinecraftServerEvents.STOP.register(server -> {
