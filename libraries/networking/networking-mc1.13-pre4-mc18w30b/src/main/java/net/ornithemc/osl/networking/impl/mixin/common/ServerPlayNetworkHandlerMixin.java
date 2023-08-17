@@ -18,8 +18,6 @@ import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.CommonChannels;
-import net.ornithemc.osl.networking.impl.NetworkingInitializer;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IServerPlayNetworkHandler;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
@@ -61,10 +59,6 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 	@Override
 	public void osl$networking$registerClientChannels(Set<Identifier> channels) {
 		clientChannels.addAll(channels);
-
-		ServerPlayNetworkingImpl.doSend(player, CommonChannels.CHANNELS, data -> {
-			NetworkingInitializer.writeChannels(data, ServerPlayNetworkingImpl.LISTENERS.keySet());
-		});
 	}
 
 	@Override

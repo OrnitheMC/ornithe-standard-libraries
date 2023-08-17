@@ -13,11 +13,27 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
+import net.ornithemc.osl.networking.impl.CommonChannels;
+import net.ornithemc.osl.networking.impl.NetworkingInitializer;
+import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
 
 	@Shadow @Final private MinecraftServer server;
+
+	@Inject(
+		method = "onLogin",
+		at = @At(
+			value = "NEW",
+			target = "Lnet/minecraft/network/packet/LoginPacket;"
+		)
+	)
+	private void osl$networking$registerChannels(Connection connection, ServerPlayerEntity player, CallbackInfo ci) {
+		ServerPlayNetworkingImpl.doSend(player, CommonChannels.CHANNELS, data -> {
+			NetworkingInitializer.writeChannels(data, ServerPlayNetworkingImpl.LISTENERS.keySet());
+		});
+	}
 
 	@Inject(
 		method = "onLogin",
