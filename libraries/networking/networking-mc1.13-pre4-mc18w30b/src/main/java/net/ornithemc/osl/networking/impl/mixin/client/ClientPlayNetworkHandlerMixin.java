@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,7 @@ import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
-import net.ornithemc.osl.networking.impl.NetworkingInitializer;
+import net.ornithemc.osl.networking.impl.Networking;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientPlayNetworkHandler;
 
@@ -30,7 +31,22 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 	/**
 	 * Channels that the server is listening to.
 	 */
-	@Unique private final Set<Identifier> serverChannels = new LinkedHashSet<>();
+	@Unique private Set<Identifier> serverChannels;
+
+	@Inject(
+		method = "handleLogin",
+		at = @At(
+			value = "INVOKE",
+			shift = Shift.AFTER,
+			target = "Lnet/minecraft/network/PacketUtils;ensureOnSameThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/handler/PacketHandler;Lnet/minecraft/util/BlockableEventLoop;)V"
+		)
+	)
+	private void osl$networking$registerChannels(CallbackInfo ci) {
+		// send channel registration data as soon as login occurs
+		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
+			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
+		});
+	}
 
 	@Inject(
 		method = "handleLogin",
@@ -39,10 +55,6 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
-		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
-			NetworkingInitializer.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
-		});
-
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}
 
@@ -54,7 +66,7 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 	)
 	private void osl$networking$handleDisconnect(CallbackInfo ci) {
 		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
-		serverChannels.clear();
+		serverChannels = null;
 	}
 
 	@Inject(
@@ -71,8 +83,13 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 	}
 
 	@Override
+	public boolean osl$networking$isPlayReady() {
+		return serverChannels != null;
+	}
+
+	@Override
 	public void osl$networking$registerServerChannels(Set<Identifier> channels) {
-		serverChannels.addAll(channels);
+		serverChannels = new LinkedHashSet<>(channels);
 	}
 
 	@Override

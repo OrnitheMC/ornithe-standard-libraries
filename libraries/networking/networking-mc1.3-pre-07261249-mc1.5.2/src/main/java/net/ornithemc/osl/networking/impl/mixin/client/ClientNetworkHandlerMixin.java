@@ -17,7 +17,7 @@ import net.minecraft.network.packet.CustomPayloadPacket;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
-import net.ornithemc.osl.networking.impl.NetworkingInitializer;
+import net.ornithemc.osl.networking.impl.Networking;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 
@@ -29,7 +29,20 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 	/**
 	 * Channels that the server is listening to.
 	 */
-	@Unique private final Set<String> serverChannels = new LinkedHashSet<>();
+	@Unique private Set<String> serverChannels;
+
+	@Inject(
+		method = "handleLogin",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$networking$registerChannels(CallbackInfo ci) {
+		// send channel registration data as soon as login occurs
+		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
+			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
+		});
+	}
 
 	@Inject(
 		method = "handleLogin",
@@ -38,10 +51,6 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
-		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
-			NetworkingInitializer.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
-		});
-
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}
 
@@ -53,7 +62,7 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 	)
 	private void osl$networking$handleDisconnect(CallbackInfo ci) {
 		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
-		serverChannels.clear();
+		serverChannels = null;
 	}
 
 	@Inject(
@@ -70,8 +79,13 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 	}
 
 	@Override
+	public boolean osl$networking$isPlayReady() {
+		return serverChannels != null;
+	}
+
+	@Override
 	public void osl$networking$registerServerChannels(Set<String> channels) {
-		serverChannels.addAll(channels);
+		serverChannels = new LinkedHashSet<>(channels);
 	}
 
 	@Override

@@ -12,14 +12,16 @@ import net.ornithemc.osl.entrypoints.api.ModInitializer;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 import net.ornithemc.osl.lifecycle.api.server.MinecraftServerEvents;
+import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
+import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IServerPlayNetworkHandler;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
-public class NetworkingInitializer implements ModInitializer, ClientModInitializer {
+public class Networking implements ModInitializer, ClientModInitializer {
 
 	@Override
 	public void init() {
@@ -30,11 +32,8 @@ public class NetworkingInitializer implements ModInitializer, ClientModInitializ
 			ServerPlayNetworkingImpl.destroy(server);
 		});
 		ServerPlayNetworking.registerListener(CommonChannels.CHANNELS, (server, handler, player, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(channels);
-			}
+			((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(readChannels(data));
+			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
 
 			return true;
 		});
@@ -49,11 +48,8 @@ public class NetworkingInitializer implements ModInitializer, ClientModInitializ
 			ClientPlayNetworkingImpl.destroy(minecraft);
 		});
 		ClientPlayNetworking.registerListener(CommonChannels.CHANNELS, (minecraft, handler, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IClientNetworkHandler)handler).osl$networking$registerServerChannels(channels);
-			}
+			((IClientNetworkHandler)handler).osl$networking$registerServerChannels(readChannels(data));
+			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
 
 			return true;
 		});

@@ -1,22 +1,27 @@
 package net.ornithemc.osl.networking.impl;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 import net.ornithemc.osl.lifecycle.api.server.MinecraftServerEvents;
+import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
+import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientPlayNetworkHandler;
+import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IServerPlayNetworkHandler;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
-public class NetworkingInitializer implements ModInitializer, ClientModInitializer {
+public class Networking implements ModInitializer, ClientModInitializer {
 
 	@Override
 	public void init() {
@@ -27,11 +32,8 @@ public class NetworkingInitializer implements ModInitializer, ClientModInitializ
 			ServerPlayNetworkingImpl.destroy(server);
 		});
 		ServerPlayNetworking.registerListener(CommonChannels.CHANNELS, (server, handler, player, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(channels);
-			}
+			((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(readChannels(data));
+			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
 
 			return true;
 		});
@@ -46,34 +48,31 @@ public class NetworkingInitializer implements ModInitializer, ClientModInitializ
 			ClientPlayNetworkingImpl.destroy(minecraft);
 		});
 		ClientPlayNetworking.registerListener(CommonChannels.CHANNELS, (minecraft, handler, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IClientPlayNetworkHandler)handler).osl$networking$registerServerChannels(channels);
-			}
+			((IClientNetworkHandler)handler).osl$networking$registerServerChannels(readChannels(data));
+			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
 
 			return true;
 		});
 	}
 
-	public static Set<String> readChannels(PacketByteBuf data) {
+	public static Set<String> readChannels(DataInput data) throws IOException {
 		Set<String> channels = new LinkedHashSet<>();
 		int channelCount = data.readInt();
 
 		if (channelCount > 0) {
 			for (int i = 0; i < channelCount; i++) {
-				channels.add(data.readString(20));
+				channels.add(Packet.readString(data, 20));
 			}
 		}
 
 		return channels;
 	}
 
-	public static void writeChannels(PacketByteBuf data, Set<String> channels) {
+	public static void writeChannels(DataOutput data, Set<String> channels) throws IOException {
 		data.writeInt(channels.size());
 
 		for (String channel : channels) {
-			data.writeString(channel);
+			Packet.writeString(channel, data);
 		}
 	}
 }

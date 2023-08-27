@@ -5,12 +5,12 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.CustomPayloadC2SPacketMixin",
-		"common.CustomPayloadS2CPacketMixin",
 		"common.PlayerManagerMixin",
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin"
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.CustomPayloadS2CPacketMixin"
 	],
 	"server": [
 	],

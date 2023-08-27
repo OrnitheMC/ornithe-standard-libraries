@@ -6,6 +6,8 @@ import net.minecraft.resource.Identifier;
 
 public interface IServerPlayNetworkHandler {
 
+	boolean osl$networking$isPlayReady();
+
 	void osl$networking$registerClientChannels(Set<Identifier> channels);
 
 	boolean osl$networking$isRegisteredClientChannel(Identifier channel);

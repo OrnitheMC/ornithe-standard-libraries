@@ -37,6 +37,13 @@ public final class ServerPlayNetworking {
 	}
 
 	/**
+	 * Check whether the connection is ready for data to be sent to the client.
+	 */
+	public static boolean isPlayReady(ServerPlayerEntity player) {
+		return ServerPlayNetworkingImpl.isPlayReady(player);
+	}
+
+	/**
 	 * Check whether the given channel is open for data to be sent through it.
 	 * This method will return {@code false} if the client has no listeners for
 	 * the given channel.

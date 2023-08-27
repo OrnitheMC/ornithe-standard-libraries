@@ -29,12 +29,7 @@ public class Networking implements ModInitializer, ClientModInitializer {
 			ServerPlayNetworkingImpl.destroy(server);
 		});
 		ServerPlayNetworking.registerListener(CommonChannels.CHANNELS, (server, handler, player, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(channels);
-			}
-
+			((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(readChannels(data));
 			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
 
 			return true;
@@ -50,12 +45,7 @@ public class Networking implements ModInitializer, ClientModInitializer {
 			ClientPlayNetworkingImpl.destroy(minecraft);
 		});
 		ClientPlayNetworking.registerListener(CommonChannels.CHANNELS, (minecraft, handler, data) -> {
-			Set<String> channels = readChannels(data);
-
-			if (!channels.isEmpty()) {
-				((IClientPlayNetworkHandler)handler).osl$networking$registerServerChannels(channels);
-			}
-
+			((IClientPlayNetworkHandler)handler).osl$networking$registerServerChannels(readChannels(data));
 			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
 
 			return true;
