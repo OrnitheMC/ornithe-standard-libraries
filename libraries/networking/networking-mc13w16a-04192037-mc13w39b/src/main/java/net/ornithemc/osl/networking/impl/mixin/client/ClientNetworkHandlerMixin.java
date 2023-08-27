@@ -82,6 +82,6 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 
 	@Override
 	public boolean osl$networking$isRegisteredServerChannel(String channel) {
-		return serverChannels.contains(channel);
+		return serverChannels != null && serverChannels.contains(channel);
 	}
 }

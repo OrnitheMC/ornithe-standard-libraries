@@ -67,6 +67,6 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 
 	@Override
 	public boolean osl$networking$isRegisteredClientChannel(String channel) {
-		return clientChannels.contains(channel);
+		return clientChannels != null && clientChannels.contains(channel);
 	}
 }

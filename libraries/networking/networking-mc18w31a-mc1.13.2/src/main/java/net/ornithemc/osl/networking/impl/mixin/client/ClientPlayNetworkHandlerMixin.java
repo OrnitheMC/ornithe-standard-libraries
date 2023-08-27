@@ -83,6 +83,6 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 
 	@Override
 	public boolean osl$networking$isRegisteredServerChannel(Identifier channel) {
-		return serverChannels.contains(channel);
+		return serverChannels != null && serverChannels.contains(channel);
 	}
 }
