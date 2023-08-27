@@ -84,8 +84,14 @@ public final class ServerPlayNetworkingImpl {
 		return false;
 	}
 
+	public static boolean isPlayReady(ServerPlayerEntity player) {
+		IServerPlayNetworkHandler handler = (IServerPlayNetworkHandler)player.networkHandler;
+		return handler != null && handler.osl$networking$isPlayReady();
+	}
+
 	public static boolean canSend(ServerPlayerEntity player, Identifier channel) {
-		return ((IServerPlayNetworkHandler)player.networkHandler).osl$networking$isRegisteredClientChannel(channel);
+		IServerPlayNetworkHandler handler = (IServerPlayNetworkHandler)player.networkHandler;
+		return handler != null && handler.osl$networking$isRegisteredClientChannel(channel);
 	}
 
 	public static void send(ServerPlayerEntity player, Identifier channel, Consumer<PacketByteBuf> writer) {

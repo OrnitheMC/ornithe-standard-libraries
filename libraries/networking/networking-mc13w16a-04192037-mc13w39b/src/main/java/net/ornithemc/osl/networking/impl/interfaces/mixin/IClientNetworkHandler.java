@@ -4,6 +4,8 @@ import java.util.Set;
 
 public interface IClientNetworkHandler {
 
+	boolean osl$networking$isPlayReady();
+
 	void osl$networking$registerServerChannels(Set<String> channels);
 
 	boolean osl$networking$isRegisteredServerChannel(String channel);

@@ -30,7 +30,7 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 	/**
 	 * Channels that the client is listening to.
 	 */
-	@Unique private final Set<Identifier> clientChannels = new LinkedHashSet<>();
+	@Unique private Set<Identifier> clientChannels;
 
 	@Inject(
 		method = "onDisconnect",
@@ -40,7 +40,7 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 	)
 	private void osl$networking$handleDisconnect(CallbackInfo ci) {
 		ServerConnectionEvents.DISCONNECT.invoker().accept(server, player);
-		clientChannels.clear();
+		clientChannels = null;
 	}
 
 	@Inject(
@@ -57,12 +57,17 @@ public class ServerPlayNetworkHandlerMixin implements IServerPlayNetworkHandler 
 	}
 
 	@Override
+	public boolean osl$networking$isPlayReady() {
+		return clientChannels != null;
+	}
+
+	@Override
 	public void osl$networking$registerClientChannels(Set<Identifier> channels) {
-		clientChannels.addAll(channels);
+		clientChannels = new LinkedHashSet<>(channels);
 	}
 
 	@Override
 	public boolean osl$networking$isRegisteredClientChannel(Identifier channel) {
-		return clientChannels.contains(channel);
+		return clientChannels != null && clientChannels.contains(channel);
 	}
 }

@@ -18,10 +18,10 @@
 	"environment": "${environment}",
 	"entrypoints": {
 		"client-init": [
-			"net.ornithemc.osl.networking.impl.NetworkingInitializer"
+			"net.ornithemc.osl.networking.impl.Networking"
 		],
 		"init": [
-			"net.ornithemc.osl.networking.impl.NetworkingInitializer"
+			"net.ornithemc.osl.networking.impl.Networking"
 		]
 	},
 	"mixins": [
