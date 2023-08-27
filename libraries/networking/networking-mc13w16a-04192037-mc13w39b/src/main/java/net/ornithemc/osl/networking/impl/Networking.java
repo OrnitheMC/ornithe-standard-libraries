@@ -32,6 +32,11 @@ public class Networking implements ModInitializer, ClientModInitializer {
 			ServerPlayNetworkingImpl.destroy(server);
 		});
 		ServerPlayNetworking.registerListener(CommonChannels.CHANNELS, (server, handler, player, data) -> {
+			// send channel registration data as a response to receiving client channel registration data
+			ServerPlayNetworkingImpl.doSend(player, CommonChannels.CHANNELS, response -> {
+				Networking.writeChannels(response, ServerPlayNetworkingImpl.LISTENERS.keySet());
+			});
+
 			((IServerPlayNetworkHandler)handler).osl$networking$registerClientChannels(readChannels(data));
 			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
 
