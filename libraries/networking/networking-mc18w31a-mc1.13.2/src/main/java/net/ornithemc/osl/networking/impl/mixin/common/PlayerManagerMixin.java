@@ -14,7 +14,7 @@ import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.impl.CommonChannels;
-import net.ornithemc.osl.networking.impl.NetworkingInitializer;
+import net.ornithemc.osl.networking.impl.Networking;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(PlayerManager.class)
@@ -30,8 +30,9 @@ public class PlayerManagerMixin {
 		)
 	)
 	private void osl$networking$registerChannels(Connection connection, ServerPlayerEntity player, CallbackInfo ci) {
+		// send channel registration data as soon as login occurs
 		ServerPlayNetworkingImpl.doSend(player, CommonChannels.CHANNELS, data -> {
-			NetworkingInitializer.writeChannels(data, ServerPlayNetworkingImpl.LISTENERS.keySet());
+			Networking.writeChannels(data, ServerPlayNetworkingImpl.LISTENERS.keySet());
 		});
 	}
 

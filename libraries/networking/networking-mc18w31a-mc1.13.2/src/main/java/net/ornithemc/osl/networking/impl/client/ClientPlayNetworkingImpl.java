@@ -77,6 +77,11 @@ public final class ClientPlayNetworkingImpl {
 		return false;
 	}
 
+	public static boolean isPlayReady() {
+		IClientPlayNetworkHandler handler = (IClientPlayNetworkHandler)minecraft.getNetworkHandler();
+		return handler != null && handler.osl$networking$isPlayReady();
+	}
+
 	public static boolean canSend(Identifier channel) {
 		IClientPlayNetworkHandler handler = (IClientPlayNetworkHandler)minecraft.getNetworkHandler();
 		return handler != null && handler.osl$networking$isRegisteredServerChannel(channel);

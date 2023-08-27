@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
@@ -36,25 +35,15 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 	@Inject(
 		method = "handleLogin",
 		at = @At(
-			value = "INVOKE",
-			shift = Shift.AFTER,
-			target = "Lnet/minecraft/network/PacketUtils;ensureOnSameThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/handler/PacketHandler;Lnet/minecraft/util/BlockableEventLoop;)V"
-		)
-	)
-	private void osl$networking$registerChannels(CallbackInfo ci) {
-		// send channel registration data as soon as login occurs
-		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
-			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
-		});
-	}
-
-	@Inject(
-		method = "handleLogin",
-		at = @At(
 			value = "TAIL"
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
+		// send channel registration data as soon as login occurs
+		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
+			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
+		});
+
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}
 

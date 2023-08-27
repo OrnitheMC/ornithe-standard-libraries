@@ -34,23 +34,15 @@ public class ClientPlayNetworkHandlerMixin implements IClientPlayNetworkHandler 
 	@Inject(
 		method = "handleLogin",
 		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$networking$registerChannels(CallbackInfo ci) {
-		// send channel registration data as soon as login occurs
-		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
-			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
-		});
-	}
-
-	@Inject(
-		method = "handleLogin",
-		at = @At(
 			value = "TAIL"
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
+		// send channel registration data as soon as login occurs
+		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
+			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
+		});
+
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}
 
