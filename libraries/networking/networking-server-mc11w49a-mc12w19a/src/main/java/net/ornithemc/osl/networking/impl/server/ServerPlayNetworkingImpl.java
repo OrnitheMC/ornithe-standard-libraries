@@ -164,7 +164,7 @@ public final class ServerPlayNetworkingImpl {
 
 	@SuppressWarnings("unchecked") // thanks proguard
 	private static Iterable<ServerPlayerEntity> collectPlayers(Predicate<ServerPlayerEntity> filter) {
-		return collectPlayers(server.getPlayerManager().players, filter);
+		return collectPlayers(server.playerManager.players, filter);
 	}
 
 	private static Iterable<ServerPlayerEntity> collectPlayers(Iterable<ServerPlayerEntity> src, Predicate<ServerPlayerEntity> filter) {
