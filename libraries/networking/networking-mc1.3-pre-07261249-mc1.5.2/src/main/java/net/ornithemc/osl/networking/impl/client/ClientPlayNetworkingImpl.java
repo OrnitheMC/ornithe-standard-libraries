@@ -81,7 +81,8 @@ public final class ClientPlayNetworkingImpl {
 			try {
 				return listener.handle(minecraft, handler, packet.data);
 			} catch (IOException e) {
-				minecraft.getLogger().warning("error handling custom payload on channel \'" + packet.channel + "\'", e);
+				System.out.println("error handling custom payload on channel \'" + packet.channel + "\'");
+				e.printStackTrace();
 				return true;
 			}
 		}
@@ -137,7 +138,8 @@ public final class ClientPlayNetworkingImpl {
 		try {
 			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
 		} catch (IOException e) {
-			minecraft.getLogger().warning("error writing custom payload to channel \'" + channel + "\'", e);
+			System.out.println("error writing custom payload to channel \'" + channel + "\'");
+			e.printStackTrace();
 			return null;
 		}
 	}

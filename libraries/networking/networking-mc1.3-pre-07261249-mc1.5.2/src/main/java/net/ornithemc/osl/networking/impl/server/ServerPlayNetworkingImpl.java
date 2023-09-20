@@ -85,7 +85,8 @@ public final class ServerPlayNetworkingImpl {
 			try {
 				return listener.handle(server, handler, player, packet.data);
 			} catch (IOException e) {
-				server.getLogger().warning("error handling custom payload on channel \'" + packet.channel + "\'", e);
+				System.out.println("error handling custom payload on channel \'" + packet.channel + "\'");
+				e.printStackTrace();
 				return true;
 			}
 		}
@@ -230,7 +231,8 @@ public final class ServerPlayNetworkingImpl {
 		try {
 			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
 		} catch (IOException e) {
-			server.getLogger().warning("error writing custom payload to channel \'" + channel + "\'", e);
+			System.out.println("error writing custom payload to channel \'" + channel + "\'");
+			e.printStackTrace();
 			return null;
 		}
 	}

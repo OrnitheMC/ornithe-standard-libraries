@@ -6,9 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.network.packet.CustomPayloadPacket;
@@ -23,8 +20,6 @@ import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.StreamListen
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 
 public final class ClientPlayNetworkingImpl {
-
-	private static final Logger LOGGER = LogManager.getLogger("OSL|Client Play Networking");
 
 	private static Minecraft minecraft;
 
@@ -86,7 +81,8 @@ public final class ClientPlayNetworkingImpl {
 			try {
 				return listener.handle(minecraft, handler, packet.data);
 			} catch (IOException e) {
-				LOGGER.warn("error handling custom payload on channel \'" + packet.channel + "\'", e);
+				System.out.println("error handling custom payload on channel \'" + packet.channel + "\'");
+				e.printStackTrace();
 				return true;
 			}
 		}
@@ -142,7 +138,8 @@ public final class ClientPlayNetworkingImpl {
 		try {
 			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
 		} catch (IOException e) {
-			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
+			System.out.println("error writing custom payload to channel \'" + channel + "\'");
+			e.printStackTrace();
 			return null;
 		}
 	}
