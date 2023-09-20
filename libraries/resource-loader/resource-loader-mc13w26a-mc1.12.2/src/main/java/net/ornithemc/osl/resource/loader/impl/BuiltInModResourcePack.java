@@ -48,20 +48,24 @@ public class BuiltInModResourcePack implements ModResourcePack {
 
 	private void findNamespaces() {
 		for (Path root : roots) {
-			String separator = root.getFileSystem().getSeparator();
+			Path assets = root.resolve("assets");
 
-			try (DirectoryStream<Path> ds = Files.newDirectoryStream(root)) {
-				for (Path p : ds) {
-					String s = p.getFileName().toString();
-					String namespace = s.replace(separator, "");
+			if (Files.isDirectory(assets)) {
+				String separator = root.getFileSystem().getSeparator();
 
-					if (ResourceUtils.isValidNamespace(namespace)) {
-						namespaces.add(namespace);
+				try (DirectoryStream<Path> ds = Files.newDirectoryStream(assets)) {
+					for (Path p : ds) {
+						String s = p.getFileName().toString();
+						String namespace = s.replace(separator, "");
+
+						if (ResourceUtils.isValidNamespace(namespace)) {
+							namespaces.add(namespace);
+						}
 					}
+				} catch (IOException e) {
+					System.out.println("failed to parse namespaces for built-in resource pack for mod " + mod.getMetadata().getId());
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				System.out.println("failed to parse namespaces for built-in resource pack for mod " + mod.getMetadata().getId());
-				e.printStackTrace();
 			}
 		}
 	}

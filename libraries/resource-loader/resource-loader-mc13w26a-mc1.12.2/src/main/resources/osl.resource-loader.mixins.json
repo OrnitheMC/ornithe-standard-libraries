@@ -7,7 +7,6 @@
 	],
 	"client": [
 		"client.CustomResourcePackInvoker",
-		"client.MinecraftAccessor",
 		"client.MinecraftMixin"
 	],
 	"server": [
