@@ -8,8 +8,8 @@
 		"common.MinecraftServerMixin"
 	],
 	"client": [
-		"client.MinecraftAccessor",
-		"client.MinecraftMixin"
+		"client.MinecraftMixin",
+		"client.ResourcePacksMixin"
 	],
 	"server": [
 	],
