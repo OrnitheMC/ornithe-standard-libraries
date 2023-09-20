@@ -26,6 +26,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.metadata.serializer.IResourceMetadataSerializer;
 import net.minecraft.resource.Identifier;
 import net.minecraft.resource.pack.CustomPack;
+import net.minecraft.resource.pack.Pack;
 import net.minecraft.resource.pack.PackType;
 
 import net.ornithemc.osl.resource.loader.api.ModPack;
@@ -94,6 +95,9 @@ public class BuiltInModPack implements ModPack {
 
 				return new ByteArrayInputStream(serializedMetadata.getBytes(StandardCharsets.UTF_8));
 			}
+			if ("pack.png".equals(path)) {
+				return Pack.class.getResourceAsStream("/" + path);
+			}
 
 			return null;
 		}
@@ -111,6 +115,9 @@ public class BuiltInModPack implements ModPack {
 				String serializedMetadata = metadata.toString();
 
 				return new ByteArrayInputStream(serializedMetadata.getBytes(StandardCharsets.UTF_8));
+			}
+			if ("pack.png".equals(location.getPath())) {
+				return Pack.class.getResourceAsStream("/" + location.getPath());
 			}
 
 			return null;

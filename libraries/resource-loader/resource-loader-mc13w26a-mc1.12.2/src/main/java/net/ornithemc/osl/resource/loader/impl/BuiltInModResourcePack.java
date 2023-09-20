@@ -21,6 +21,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import net.minecraft.client.resource.metadata.ResourceMetadataSection;
 import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
+import net.minecraft.client.resource.pack.ResourcePack;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.resource.loader.api.ModResourcePack;
@@ -80,6 +81,9 @@ public class BuiltInModResourcePack implements ModResourcePack {
 				String serializedMetadata = metadata.toString();
 
 				return new ByteArrayInputStream(serializedMetadata.getBytes(StandardCharsets.UTF_8));
+			}
+			if ("pack.png".equals(location.getPath())) {
+				return ResourcePack.class.getResourceAsStream("/" + location.getPath());
 			}
 
 			return null;
