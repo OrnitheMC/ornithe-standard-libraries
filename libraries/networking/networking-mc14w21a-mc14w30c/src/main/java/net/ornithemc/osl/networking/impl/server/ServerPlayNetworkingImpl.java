@@ -1,11 +1,15 @@
 package net.ornithemc.osl.networking.impl.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.PacketUtils;
@@ -16,13 +20,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
+import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.api.PacketByteBufs;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteArrayListener;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteBufListener;
+import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.PayloadListener;
 import net.ornithemc.osl.networking.impl.NetworkListener;
+import net.ornithemc.osl.networking.impl.interfaces.mixin.IPlayerManager;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IServerPlayNetworkHandler;
 
 public final class ServerPlayNetworkingImpl {
+
+	private static final Logger LOGGER = LogManager.getLogger("OSL|Server Play Networking");
 
 	private static MinecraftServer server;
 
@@ -42,31 +52,58 @@ public final class ServerPlayNetworkingImpl {
 		ServerPlayNetworkingImpl.server = null;
 	}
 
-	public static final Map<String, NetworkListener<ByteBufListener, ByteArrayListener>> LISTENERS = new LinkedHashMap<>();
+	public static final Map<String, NetworkListener<Listener>> LISTENERS = new LinkedHashMap<>();
 
-	public static void registerListener(String channel, ByteBufListener listener) {
-		registerListener(channel, listener, null, false);
+	public static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		registerListener(channel, initializer, listener, false);
 	}
 
-	public static void registerListener(String channel, ByteArrayListener listener) {
-		registerListener(channel, null, listener, false);
+	public static <T extends CustomPayload> void registerListenerAsync(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		registerListener(channel, initializer, listener, true);
+	}
+
+	private static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener, boolean async) {
+		registerListenerImpl(channel, (server, handler, player, data) -> {
+			T payload = initializer.get();
+			payload.read(PacketByteBufs.make(data));
+
+			return listener.handle(server, handler, player, payload);
+		}, async);
+	}
+
+	public static void registerListener(String channel, ByteBufListener listener) {
+		registerListener(channel, listener, false);
 	}
 
 	public static void registerListenerAsync(String channel, ByteBufListener listener) {
-		registerListener(channel, listener, null, true);
+		registerListener(channel, listener, true);
 	}
 
-	public static void registerListenerAsync(String channel, ByteArrayListener listener) {
-		registerListener(channel, null, listener, true);
+	private static void registerListener(String channel, ByteBufListener listener, boolean async) {
+		registerListenerImpl(channel, (server, handler, player, data) -> {
+			return listener.handle(server, handler, player, PacketByteBufs.make(data));
+		}, async);
 	}
 
-	private static void registerListener(String channel, ByteBufListener buffer, ByteArrayListener array, boolean async) {
+	public static void registerListenerRaw(String channel, ByteArrayListener listener) {
+		registerListenerRaw(channel, listener, false);
+	}
+
+	public static void registerListenerRawAsync(String channel, ByteArrayListener listener) {
+		registerListenerRaw(channel, listener, true);
+	}
+
+	private static void registerListenerRaw(String channel, ByteArrayListener listener, boolean async) {
+		registerListenerImpl(channel, listener::handle, async);
+	}
+
+	private static void registerListenerImpl(String channel, Listener listener, boolean async) {
 		LISTENERS.compute(channel, (key, value) -> {
 			if (value != null) {
 				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
 			}
 
-			return new NetworkListener<>(buffer, array, async);
+			return new NetworkListener<>(listener, async);
 		});
 	}
 
@@ -76,19 +113,18 @@ public final class ServerPlayNetworkingImpl {
 
 	public static boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, CustomPayloadC2SPacket packet) {
 		String channel = packet.getChannel();
-		NetworkListener<ByteBufListener, ByteArrayListener> listener = LISTENERS.get(channel);
+		NetworkListener<Listener> listener = LISTENERS.get(channel);
 
 		if (listener != null) {
 			if (!listener.isAsync()) {
 				PacketUtils.ensureOnSameThread(packet, handler, server);
 			}
 
-			byte[] data = packet.getData();
-
-			if (listener.isBuffer()) {
-				return listener.buffer().handle(server, handler, player, PacketByteBufs.make(data));
-			} else {
-				return listener.array().handle(server, handler, player, data);
+			try {
+				return listener.get().handle(server, handler, player, packet.getData());
+			} catch (IOException e) {
+				LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+				return true;
 			}
 		}
 
@@ -105,7 +141,13 @@ public final class ServerPlayNetworkingImpl {
 		return handler != null && handler.osl$networking$isRegisteredClientChannel(channel);
 	}
 
-	public static void send(ServerPlayerEntity player, String channel, Consumer<PacketByteBuf> writer) {
+	public static void send(ServerPlayerEntity player, String channel, CustomPayload payload) {
+		if (canSend(player, channel)) {
+			doSend(player, channel, payload);
+		}
+	}
+
+	public static void send(ServerPlayerEntity player, String channel, IOConsumer<PacketByteBuf> writer) {
 		if (canSend(player, channel)) {
 			doSend(player, channel, writer);
 		}
@@ -123,7 +165,11 @@ public final class ServerPlayNetworkingImpl {
 		}
 	}
 
-	public static void send(Iterable<ServerPlayerEntity> players, String channel, Consumer<PacketByteBuf> writer) {
+	public static void send(Iterable<ServerPlayerEntity> players, String channel, CustomPayload payload) {
+		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, payload));
+	}
+
+	public static void send(Iterable<ServerPlayerEntity> players, String channel, IOConsumer<PacketByteBuf> writer) {
 		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, writer));
 	}
 
@@ -135,7 +181,11 @@ public final class ServerPlayNetworkingImpl {
 		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, data));
 	}
 
-	public static void send(int dimension, String channel, Consumer<PacketByteBuf> writer) {
+	public static void send(int dimension, String channel, CustomPayload payload) {
+		doSend(collectPlayers(p -> p.dimensionId == dimension && canSend(p, channel)), channel, payload);
+	}
+
+	public static void send(int dimension, String channel, IOConsumer<PacketByteBuf> writer) {
 		doSend(collectPlayers(p -> p.dimensionId == dimension && canSend(p, channel)), channel, writer);
 	}
 
@@ -147,7 +197,11 @@ public final class ServerPlayNetworkingImpl {
 		doSend(collectPlayers(p -> p.dimensionId == dimension && canSend(p, channel)),channel, data);
 	}
 
-	public static void send(String channel, Consumer<PacketByteBuf> writer) {
+	public static void send(String channel, CustomPayload payload) {
+		doSend(collectPlayers(p -> canSend(p, channel)), channel, payload);
+	}
+
+	public static void send(String channel, IOConsumer<PacketByteBuf> writer) {
 		doSend(collectPlayers(p -> canSend(p, channel)), channel, writer);
 	}
 
@@ -159,7 +213,11 @@ public final class ServerPlayNetworkingImpl {
 		doSend(collectPlayers(p -> canSend(p, channel)), channel, data);
 	}
 
-	public static void doSend(ServerPlayerEntity player, String channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(ServerPlayerEntity player, String channel, CustomPayload payload) {
+		sendPacket(player, makePacket(channel, payload));
+	}
+
+	public static void doSend(ServerPlayerEntity player, String channel, IOConsumer<PacketByteBuf> writer) {
 		sendPacket(player, makePacket(channel, writer));
 	}
 
@@ -171,7 +229,11 @@ public final class ServerPlayNetworkingImpl {
 		sendPacket(player, makePacket(channel, data));
 	}
 
-	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, CustomPayload payload) {
+		sendPacket(players, makePacket(channel, payload));
+	}
+
+	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, IOConsumer<PacketByteBuf> writer) {
 		sendPacket(players, makePacket(channel, writer));
 	}
 
@@ -183,7 +245,11 @@ public final class ServerPlayNetworkingImpl {
 		sendPacket(players, makePacket(channel, data));
 	}
 
-	public static void doSend(int dimension, String channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(int dimension, String channel, CustomPayload payload) {
+		doSend(collectPlayers(p -> p.dimensionId == dimension), channel, payload);
+	}
+
+	public static void doSend(int dimension, String channel, IOConsumer<PacketByteBuf> writer) {
 		doSend(collectPlayers(p -> p.dimensionId == dimension), channel, writer);
 	}
 
@@ -195,7 +261,11 @@ public final class ServerPlayNetworkingImpl {
 		doSend(collectPlayers(p -> p.dimensionId == dimension),channel, data);
 	}
 
-	public static void doSend(String channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(String channel, CustomPayload payload) {
+		doSend(collectPlayers(p -> true), channel, payload);
+	}
+
+	public static void doSend(String channel, IOConsumer<PacketByteBuf> writer) {
 		doSend(collectPlayers(p -> true), channel, writer);
 	}
 
@@ -207,9 +277,8 @@ public final class ServerPlayNetworkingImpl {
 		doSend(collectPlayers(p -> true), channel, data);
 	}
 
-	@SuppressWarnings("unchecked") // thanks proguard
 	private static Iterable<ServerPlayerEntity> collectPlayers(Predicate<ServerPlayerEntity> filter) {
-		return collectPlayers(server.getPlayerManager().players, filter);
+		return collectPlayers(((IPlayerManager)server.getPlayerManager()).osl$networking$getAll(), filter);
 	}
 
 	private static Iterable<ServerPlayerEntity> collectPlayers(Iterable<ServerPlayerEntity> src, Predicate<ServerPlayerEntity> filter) {
@@ -224,8 +293,17 @@ public final class ServerPlayNetworkingImpl {
 		return players;
 	}
 
-	private static Packet makePacket(String channel, Consumer<PacketByteBuf> writer) {
-		return new CustomPayloadS2CPacket(channel, PacketByteBufs.make(writer));
+	private static Packet makePacket(String channel, CustomPayload payload) {
+		return makePacket(channel, payload::write);
+	}
+
+	private static Packet makePacket(String channel, IOConsumer<PacketByteBuf> writer) {
+		try {
+			return new CustomPayloadS2CPacket(channel, PacketByteBufs.make(writer));
+		} catch (IOException e) {
+			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
+			return null;
+		}
 	}
 
 	private static Packet makePacket(String channel, PacketByteBuf data) {
@@ -237,12 +315,22 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	private static void sendPacket(ServerPlayerEntity player, Packet packet) {
-		player.networkHandler.sendPacket(packet);
+		if (packet != null) {
+			player.networkHandler.sendPacket(packet);
+		}
 	}
 
 	private static void sendPacket(Iterable<ServerPlayerEntity> players, Packet packet) {
-		for (ServerPlayerEntity player : players) {
-			sendPacket(player, packet);
+		if (packet != null) {
+			for (ServerPlayerEntity player : players) {
+				sendPacket(player, packet);
+			}
 		}
+	}
+
+	private interface Listener {
+
+		boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, byte[] data) throws IOException;
+
 	}
 }

@@ -1,12 +1,15 @@
 package net.ornithemc.osl.networking.api.client;
 
-import java.util.function.Consumer;
+import java.io.IOException;
+import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Identifier;
 
+import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 
 public final class ClientPlayNetworking {
@@ -15,7 +18,23 @@ public final class ClientPlayNetworking {
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
 	 */
-	public static void registerListener(Identifier channel, Listener listener) {
+	public static <T extends CustomPayload> void registerListener(Identifier channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		ClientPlayNetworkingImpl.registerListener(channel, initializer, listener);
+	}
+
+	/**
+	 * Register a listener to receive data from the server through the given channel.
+	 * This listener may be called off the main thread.
+	 */
+	public static <T extends CustomPayload> void registerListenerAsync(Identifier channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		ClientPlayNetworkingImpl.registerListenerAsync(channel, initializer, listener);
+	}
+
+	/**
+	 * Register a listener to receive data from the server through the given channel.
+	 * This listener will only be called from the main thread.
+	 */
+	public static void registerListener(Identifier channel, ByteBufListener listener) {
 		ClientPlayNetworkingImpl.registerListener(channel, listener);
 	}
 
@@ -23,7 +42,7 @@ public final class ClientPlayNetworking {
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
 	 */
-	public static void registerListenerAsync(Identifier channel, Listener listener) {
+	public static void registerListenerAsync(Identifier channel, ByteBufListener listener) {
 		ClientPlayNetworkingImpl.registerListenerAsync(channel, listener);
 	}
 
@@ -51,10 +70,18 @@ public final class ClientPlayNetworking {
 	}
 
 	/**
+	 * Send a packet to the server through the given channel. The payload will
+	 * only be written if the channel is open.
+	 */
+	public static void send(Identifier channel, CustomPayload payload) {
+		ClientPlayNetworkingImpl.send(channel, payload);
+	}
+
+	/**
 	 * Send a packet to the server through the given channel. The writer will
 	 * only be called if the channel is open.
 	 */
-	public static void send(Identifier channel, Consumer<PacketByteBuf> writer) {
+	public static void send(Identifier channel, IOConsumer<PacketByteBuf> writer) {
 		ClientPlayNetworkingImpl.send(channel, writer);
 	}
 
@@ -71,7 +98,17 @@ public final class ClientPlayNetworking {
 	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
 	 * spam on the server.
 	 */
-	public static void doSend(Identifier channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(Identifier channel, CustomPayload payload) {
+		ClientPlayNetworkingImpl.doSend(channel, payload);
+	}
+
+	/**
+	 * Send a packet to the server through the given channel, without checking
+	 * whether it is open.
+	 * USE WITH CAUTION. Careless use of this method could lead to packet and log
+	 * spam on the server.
+	 */
+	public static void doSend(Identifier channel, IOConsumer<PacketByteBuf> writer) {
 		ClientPlayNetworkingImpl.doSend(channel, writer);
 	}
 
@@ -85,7 +122,7 @@ public final class ClientPlayNetworking {
 		ClientPlayNetworkingImpl.doSend(channel, data);
 	}
 
-	public interface Listener {
+	public interface PayloadListener<T extends CustomPayload> {
 
 		/**
 		 * Receive incoming data from the server.
@@ -94,7 +131,20 @@ public final class ClientPlayNetworking {
 		 *  Whether the data is consumed. Should only return {@code false} if the
 		 *  data is completely ignored.
 		 */
-		boolean handle(Minecraft minecraft, ClientPlayNetworkHandler handler, PacketByteBuf data);
+		boolean handle(Minecraft minecraft, ClientPlayNetworkHandler handler, T payload) throws IOException;
+
+	}
+
+	public interface ByteBufListener {
+
+		/**
+		 * Receive incoming data from the server.
+		 *  
+		 * @return 
+		 *  Whether the data is consumed. Should only return {@code false} if the
+		 *  data is completely ignored.
+		 */
+		boolean handle(Minecraft minecraft, ClientPlayNetworkHandler handler, PacketByteBuf data) throws IOException;
 
 	}
 }

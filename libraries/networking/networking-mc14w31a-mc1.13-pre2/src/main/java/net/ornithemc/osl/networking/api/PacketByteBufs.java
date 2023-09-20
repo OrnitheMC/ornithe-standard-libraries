@@ -1,11 +1,13 @@
 package net.ornithemc.osl.networking.api;
 
-import java.util.function.Consumer;
+import java.io.IOException;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 import net.minecraft.network.PacketByteBuf;
+
+import net.ornithemc.osl.core.api.util.function.IOConsumer;
 
 public final class PacketByteBufs {
 
@@ -21,7 +23,7 @@ public final class PacketByteBufs {
 		return new PacketByteBuf(buf);
 	}
 
-	public static PacketByteBuf make(Consumer<PacketByteBuf> writer) {
+	public static PacketByteBuf make(IOConsumer<PacketByteBuf> writer) throws IOException {
 		PacketByteBuf buffer = make();
 		writer.accept(buffer);
 		return buffer;

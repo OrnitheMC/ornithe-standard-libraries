@@ -15,9 +15,8 @@ import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerLoginNetworkHandler;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.CommonChannels;
 import net.ornithemc.osl.networking.impl.Constants;
-import net.ornithemc.osl.networking.impl.Networking;
+import net.ornithemc.osl.networking.impl.HandshakePayload;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(ServerLoginNetworkHandler.class)
@@ -53,9 +52,7 @@ public class ServerLoginNetworkHandlerMixin {
 		if (player != null) {
 			if (ornithe) {
 				// send channel registration data as soon as login occurs
-				ServerPlayNetworkingImpl.doSend(player, CommonChannels.CHANNELS, data -> {
-					Networking.writeChannels(data, ServerPlayNetworkingImpl.LISTENERS.keySet());
-				});
+				ServerPlayNetworkingImpl.doSend(player, HandshakePayload.CHANNEL, HandshakePayload.server());
 			}
 
 			ServerConnectionEvents.LOGIN.invoker().accept(server, player);

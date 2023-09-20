@@ -16,8 +16,7 @@ import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.network.packet.CustomPayloadPacket;
 
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
-import net.ornithemc.osl.networking.impl.CommonChannels;
-import net.ornithemc.osl.networking.impl.Networking;
+import net.ornithemc.osl.networking.impl.HandshakePayload;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientNetworkHandler;
 
@@ -39,9 +38,7 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
 		// send channel registration data as soon as login occurs
-		ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, data -> {
-			Networking.writeChannels(data, ClientPlayNetworkingImpl.LISTENERS.keySet());
-		});
+		ClientPlayNetworkingImpl.doSend(HandshakePayload.CHANNEL, HandshakePayload.client());
 
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}

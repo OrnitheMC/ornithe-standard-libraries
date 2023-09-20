@@ -1,8 +1,12 @@
 package net.ornithemc.osl.networking.impl.client;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
@@ -12,12 +16,17 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
+import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.api.PacketByteBufs;
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.Listener;
+import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.ByteBufListener;
+import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.PayloadListener;
 import net.ornithemc.osl.networking.impl.NetworkListener;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.IClientPlayNetworkHandler;
 
 public final class ClientPlayNetworkingImpl {
+
+	private static final Logger LOGGER = LogManager.getLogger("OSL|Client Play Networking");
 
 	private static Minecraft minecraft;
 
@@ -39,15 +48,36 @@ public final class ClientPlayNetworkingImpl {
 
 	public static final Map<String, NetworkListener<Listener>> LISTENERS = new LinkedHashMap<>();
 
-	public static void registerListener(String channel, Listener listener) {
+	public static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		registerListener(channel, initializer, listener, false);
+	}
+
+	public static <T extends CustomPayload> void registerListenerAsync(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
+		registerListener(channel, initializer, listener, true);
+	}
+
+	private static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener, boolean async) {
+		registerListenerImpl(channel, (minecraft, handler, data) -> {
+			T payload = initializer.get();
+			payload.read(data);
+
+			return listener.handle(minecraft, handler, payload);
+		}, async);
+	}
+
+	public static void registerListener(String channel, ByteBufListener listener) {
 		registerListener(channel, listener, false);
 	}
 
-	public static void registerListenerAsync(String channel, Listener listener) {
+	public static void registerListenerAsync(String channel, ByteBufListener listener) {
 		registerListener(channel, listener, true);
 	}
 
-	private static void registerListener(String channel, Listener listener, boolean async) {
+	private static void registerListener(String channel, ByteBufListener listener, boolean async) {
+		registerListenerImpl(channel, listener::handle, async);
+	}
+
+	private static void registerListenerImpl(String channel, Listener listener, boolean async) {
 		LISTENERS.compute(channel, (key, value) -> {
 			if (value != null) {
 				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
@@ -70,7 +100,12 @@ public final class ClientPlayNetworkingImpl {
 				PacketUtils.ensureOnSameThread(packet, handler, minecraft);
 			}
 
-			return listener.get().handle(minecraft, handler, packet.getData());
+			try {
+				return listener.get().handle(minecraft, handler, packet.getData());
+			} catch (IOException e) {
+				LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+				return true;
+			}
 		}
 
 		return false;
@@ -86,7 +121,13 @@ public final class ClientPlayNetworkingImpl {
 		return handler != null && handler.osl$networking$isRegisteredServerChannel(channel);
 	}
 
-	public static void send(String channel, Consumer<PacketByteBuf> writer) {
+	public static void send(String channel, CustomPayload payload) {
+		if (canSend(channel)) {
+			doSend(channel, payload);
+		}
+	}
+
+	public static void send(String channel, IOConsumer<PacketByteBuf> writer) {
 		if (canSend(channel)) {
 			doSend(channel, writer);
 		}
@@ -98,7 +139,11 @@ public final class ClientPlayNetworkingImpl {
 		}
 	}
 
-	public static void doSend(String channel, Consumer<PacketByteBuf> writer) {
+	public static void doSend(String channel, CustomPayload payload) {
+		sendPacket(makePacket(channel, payload));
+	}
+
+	public static void doSend(String channel, IOConsumer<PacketByteBuf> writer) {
 		sendPacket(makePacket(channel, writer));
 	}
 
@@ -106,8 +151,17 @@ public final class ClientPlayNetworkingImpl {
 		sendPacket(makePacket(channel, data));
 	}
 
-	private static Packet<?> makePacket(String channel, Consumer<PacketByteBuf> writer) {
-		return new CustomPayloadC2SPacket(channel, PacketByteBufs.make(writer));
+	private static Packet<?> makePacket(String channel, CustomPayload payload) {
+		return makePacket(channel, payload::write);
+	}
+
+	private static Packet<?> makePacket(String channel, IOConsumer<PacketByteBuf> writer) {
+		try {
+			return new CustomPayloadC2SPacket(channel, PacketByteBufs.make(writer));
+		} catch (IOException e) {
+			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
+			return null;
+		}
 	}
 
 	private static Packet<?> makePacket(String channel, PacketByteBuf data) {
@@ -115,6 +169,14 @@ public final class ClientPlayNetworkingImpl {
 	}
 
 	private static void sendPacket(Packet<?> packet) {
-		minecraft.getNetworkHandler().sendPacket(packet);
+		if (packet != null) {
+			minecraft.getNetworkHandler().sendPacket(packet);
+		}
+	}
+
+	private interface Listener {
+
+		boolean handle(Minecraft minecraft, ClientPlayNetworkHandler handler, PacketByteBuf data) throws IOException;
+
 	}
 }

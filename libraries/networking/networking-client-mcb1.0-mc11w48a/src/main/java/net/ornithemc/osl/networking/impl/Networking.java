@@ -1,13 +1,5 @@
 package net.ornithemc.osl.networking.impl;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import net.minecraft.network.packet.Packet;
-
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.lifecycle.api.MinecraftEvents;
@@ -32,37 +24,14 @@ public class Networking implements ModInitializer, ClientModInitializer {
 		MinecraftEvents.STOP.register(minecraft -> {
 			ClientPlayNetworkingImpl.destroy(minecraft);
 		});
-		ClientPlayNetworking.registerListener(CommonChannels.CHANNELS, (minecraft, handler, data) -> {
+		ClientPlayNetworking.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (minecraft, handler, payload) -> {
 			// send channel registration data as a response to receiving server channel registration data
-			ClientPlayNetworkingImpl.doSend(CommonChannels.CHANNELS, response -> {
-				Networking.writeChannels(response, ClientPlayNetworkingImpl.LISTENERS.keySet());
-			});
+			ClientPlayNetworking.doSend(HandshakePayload.CHANNEL, HandshakePayload.client());
 
-			((IClientNetworkHandler)handler).osl$networking$registerServerChannels(readChannels(data));
+			((IClientNetworkHandler)handler).osl$networking$registerServerChannels(payload.channels);
 			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
 
 			return true;
 		});
-	}
-
-	public static Set<String> readChannels(DataInputStream data) throws IOException {
-		Set<String> channels = new LinkedHashSet<>();
-		int channelCount = data.readInt();
-
-		if (channelCount > 0) {
-			for (int i = 0; i < channelCount; i++) {
-				channels.add(Packet.readString(data, 20));
-			}
-		}
-
-		return channels;
-	}
-
-	public static void writeChannels(DataOutputStream data, Set<String> channels) throws IOException {
-		data.writeInt(channels.size());
-
-		for (String channel : channels) {
-			Packet.writeString(channel, data);
-		}
 	}
 }
