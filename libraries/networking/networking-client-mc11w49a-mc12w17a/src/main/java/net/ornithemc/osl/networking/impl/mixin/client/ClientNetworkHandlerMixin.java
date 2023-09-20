@@ -54,17 +54,9 @@ public class ClientNetworkHandlerMixin implements IClientNetworkHandler {
 		serverChannels = null;
 	}
 
-	@Inject(
-		method = "handleCustomPayload",
-		cancellable = true,
-		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$networking$handleCustomPayload(CustomPayloadPacket packet, CallbackInfo ci) {
-		if (ClientPlayNetworkingImpl.handle(minecraft, (ClientNetworkHandler)(Object)this, packet)) {
-			ci.cancel();
-		}
+	@Override
+	public boolean osl$networking$handleCustomPayload(CustomPayloadPacket packet) {
+		return ClientPlayNetworkingImpl.handle(minecraft, (ClientNetworkHandler)(Object)this, packet);
 	}
 
 	@Override

@@ -6,7 +6,8 @@
 	"mixins": [
 	],
 	"client": [
-		"client.ClientNetworkHandlerMixin"
+		"client.ClientNetworkHandlerMixin",
+		"client.PacketHandlerMixin"
 	],
 	"server": [
 	],
