@@ -7,7 +7,7 @@ example `fabric.mod.json`:
 
 ```json
 {
-	entrypoints: {
+	"entrypoints": {
 		"init": [
 			"com.example.ExampleInitializer"
 		],
