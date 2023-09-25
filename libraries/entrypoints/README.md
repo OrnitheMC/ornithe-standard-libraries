@@ -1,7 +1,10 @@
 # Entrypoints API
 
 The Entrypoints API allows mods to submit entrypoints that are called before the game is initialized.
-These entrypoints should be registered in your `mod.json`.
+
+## Entrypoints
+
+Entrypoints should be registered in your `mod.json`.
 
 example `fabric.mod.json`:
 
@@ -73,6 +76,29 @@ public class ExampleServerInitializer implements ServerModInitializer {
 	@Override
 	public void initServer() {
 		// this entrypoint will be called before game start-up, on the dedicated server only
+	}
+}
+```
+
+## Events
+
+The Entrypoints API provides several events to track the launch cycle of the game. `ClientLaunchEvents`
+has events for the game client, whereas `ServerLaunchEvents` has events for the dedicated server.
+You should register these callbacks in your entrypoint(s). For example:
+
+```java
+package com.example;
+
+import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents;
+import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
+
+public class ExampleInitializer implements ClientModInitializer {
+
+	@Override
+	public void initClient() {
+		ClientLaunchEvents.PARSE_RUN_ARGS.register(args -> {
+			// parse custom run args
+		});
 	}
 }
 ```

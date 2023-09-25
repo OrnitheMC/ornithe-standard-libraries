@@ -4,8 +4,8 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+import net.ornithemc.osl.entrypoints.api.RunArgsConsumer;
 import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents;
-import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents.RunArgsConsumer;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 
 public class BrandingPatch implements ClientModInitializer {
