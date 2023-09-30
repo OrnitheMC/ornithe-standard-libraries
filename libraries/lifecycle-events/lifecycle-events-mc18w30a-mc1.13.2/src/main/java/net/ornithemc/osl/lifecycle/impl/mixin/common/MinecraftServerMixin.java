@@ -1,7 +1,7 @@
 package net.ornithemc.osl.lifecycle.impl.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -14,7 +14,7 @@ import net.ornithemc.osl.lifecycle.api.server.MinecraftServerEvents;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
 
-	@Shadow private boolean stopped;
+	@Unique private boolean osl$lifecycle$stopped;
 
 	@Inject(
 		method = "run",
@@ -45,7 +45,8 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$stop(CallbackInfo ci) {
-		if (!stopped) {
+		if (!osl$lifecycle$stopped) {
+			osl$lifecycle$stopped = true;
 			MinecraftServerEvents.STOP.invoker().accept((MinecraftServer)(Object)this);
 		}
 	}
