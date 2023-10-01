@@ -113,6 +113,33 @@ def addPomDependency(project) {
 	}
 }
 
+def setUpJavadoc(project) {
+	project.javadoc {
+		options {
+			source = "8"
+			encoding = "UTF-8"
+			charSet = "UTF-8"
+			memberLevel = JavadocMemberLevel.PACKAGE
+			// Disable the crazy super-strict doclint tool in Java 8
+			addStringOption("Xdoclint:none", "-quiet")
+
+			tags(
+				'apiNote:a:API Note:',
+				'implSpec:a:Implementation Requirements:',
+				'implNote:a:Implementation Note:'
+			)
+		}
+
+		failOnError true
+
+		include {
+			it.file.absolutePath.contains("api")
+		}
+
+		source(project.sourceSets.main.allJava)
+	}
+}
+
 def setUpLibrary(project) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
@@ -141,6 +168,7 @@ def setUpLibrary(project) {
 	}
 
 	addPomDependency(project)
+	setUpJavadoc(project)
 }
 
 def setUpModule(project, String... dependencies) {
@@ -334,6 +362,22 @@ def setUpModule(project, String... dependencies) {
 
 	if (isCore) {
 		addPomDependency(project)
+	}
+
+	setUpJavadoc(project)
+
+	if (!isCore) {
+		project.javadoc {
+			def feather = "*".equals(project.environment)
+				? "https://maven.ornithemc.net/javadoc/releases/net/ornithemc/feather/${project.max_mc_version}+build.${project.feather_build}/"
+				: "https://maven.ornithemc.net/javadoc/releases/net/ornithemc/feather/${project.max_mc_version}-${project.environment}+build.${project.feather_build}/"
+
+			options {
+				links(
+					feather
+				)
+			}
+		}
 	}
 
 	project.loom.disableDeprecatedPomGeneration(project.publishing.publications.mavenJava)
