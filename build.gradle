@@ -132,10 +132,7 @@ def setUpJavadoc(project) {
 
 		failOnError true
 
-		include {
-			it.file.absolutePath.contains("api")
-		}
-
+		include("**/api/**")
 		source(project.sourceSets.main.allJava)
 	}
 }
@@ -365,20 +362,6 @@ def setUpModule(project, String... dependencies) {
 	}
 
 	setUpJavadoc(project)
-
-	if (!isCore) {
-		project.javadoc {
-			def feather = "*".equals(project.environment)
-				? "https://maven.ornithemc.net/javadoc/releases/net/ornithemc/feather/${project.max_mc_version}+build.${project.feather_build}/"
-				: "https://maven.ornithemc.net/javadoc/releases/net/ornithemc/feather/${project.max_mc_version}-${project.environment}+build.${project.feather_build}/"
-
-			options {
-				links(
-					feather
-				)
-			}
-		}
-	}
 
 	project.loom.disableDeprecatedPomGeneration(project.publishing.publications.mavenJava)
 }
