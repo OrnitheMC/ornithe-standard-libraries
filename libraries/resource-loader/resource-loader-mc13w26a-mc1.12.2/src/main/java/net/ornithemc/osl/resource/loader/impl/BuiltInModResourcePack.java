@@ -126,13 +126,17 @@ public class BuiltInModResourcePack implements ModResourcePack {
 	}
 
 	private Path getPath(Identifier location) {
+		return getPath(getPathName(location));
+	}
+
+	private Path getPath(String path) {
 		for (Path root : roots) {
 			String separator = root.getFileSystem().getSeparator();
-			String pathName = getPathName(location).replace("/", separator);
-			Path path = root.resolve(pathName);
+			String pathName = path.replace("/", separator);
+			Path p = root.resolve(pathName);
 
-			if (Files.exists(path)) {
-				return path;
+			if (Files.exists(p)) {
+				return p;
 			}
 		}
 
@@ -140,7 +144,7 @@ public class BuiltInModResourcePack implements ModResourcePack {
 	}
 
 	private String getPathName(Identifier location) {
-		return String.format("/assets/%s/%s", location.getNamespace(), location.getPath());
+		return String.format("assets/%s/%s", location.getNamespace(), location.getPath());
 	}
 
 	private JsonObject generatePackMetadata() {

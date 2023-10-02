@@ -210,7 +210,7 @@ public class BuiltInModPack implements ModPack {
 	}
 
 	private String getPathName(PackType type, Identifier location) {
-		return String.format("/%s/%s/%s", type.getDirectory(), location.getNamespace(), location.getPath());
+		return String.format("%s/%s/%s", type.getDirectory(), location.getNamespace(), location.getPath());
 	}
 
 	private JsonObject generatePackMetadata() {
