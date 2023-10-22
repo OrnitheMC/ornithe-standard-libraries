@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.MinecraftApplet;
 
@@ -27,12 +27,12 @@ public class MinecraftAppletMixin extends Applet {
 		)
 	)
 	private void osl$entrypoints$init(CallbackInfo ci) {
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ClientModInitializer.ENTRYPOINT_KEY,
 			ClientModInitializer.class,
 			ClientModInitializer::initClient
 		);
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init

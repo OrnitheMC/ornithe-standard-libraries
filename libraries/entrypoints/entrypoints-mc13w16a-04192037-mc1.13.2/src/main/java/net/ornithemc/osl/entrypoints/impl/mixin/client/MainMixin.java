@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import joptsimple.OptionParser;
 
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.main.Main;
 
@@ -26,12 +26,12 @@ public class MainMixin {
 		)
 	)
 	private static void osl$entrypoints$init(CallbackInfo ci) {
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ClientModInitializer.ENTRYPOINT_KEY,
 			ClientModInitializer.class,
 			ClientModInitializer::initClient
 		);
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init

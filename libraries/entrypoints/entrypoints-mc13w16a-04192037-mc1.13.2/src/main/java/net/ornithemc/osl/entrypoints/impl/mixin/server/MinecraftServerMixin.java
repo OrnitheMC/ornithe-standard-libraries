@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -25,12 +25,12 @@ public class MinecraftServerMixin {
 		)
 	)
 	private static void osl$entrypoints$init(String[] args, CallbackInfo ci) {
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ServerModInitializer.ENTRYPOINT_KEY,
 			ServerModInitializer.class,
 			ServerModInitializer::initServer
 		);
-		EntrypointUtils.invoke(
+		FabricLoader.getInstance().invokeEntrypoints(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init
