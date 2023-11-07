@@ -136,7 +136,7 @@ public final class ClientPlayNetworkingImpl {
 
 	private static Packet makePacket(String channel, IOConsumer<DataOutputStream> writer) {
 		try {
-			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
+			return makePacket(channel, DataStreams.output(writer).toByteArray());
 		} catch (IOException e) {
 			System.out.println("error writing custom payload to channel \'" + channel + "\'");
 			e.printStackTrace();
@@ -145,7 +145,18 @@ public final class ClientPlayNetworkingImpl {
 	}
 
 	private static Packet makePacket(String channel, byte[] data) {
-		return new CustomPayloadPacket(channel, data);
+		CustomPayloadPacket packet = new CustomPayloadPacket();
+
+		packet.channel = channel;
+		packet.data = data;
+		if (data != null) {
+			packet.size = data.length;
+			if (packet.size > 32767) {
+				throw new IllegalArgumentException("Payload may not be larger than 32k");
+			}
+		}
+
+		return packet;
 	}
 
 	private static void sendPacket(Packet packet) {
