@@ -17,6 +17,12 @@
 	"icon": "assets/ornithe-standard-libraries/resource-loader/icon.png",
 	"environment": "${environment}",
 	"entrypoints": {
+		"client-init": [
+			"net.ornithemc.osl.resource.loader.impl.ResourceLoader"
+		],
+		"init": [
+			"net.ornithemc.osl.resource.loader.impl.ResourceLoader"
+		]
 	},
 	"mixins": [
 		"osl.resource-loader.mixins.json"
@@ -24,6 +30,8 @@
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": "${mc_version_range}",
-		"osl-core": ">=0.4.0"
+		"osl-core": ">=0.4.0",
+		"osl-entrypoints": ">=0.2.0",
+		"osl-lifecycle-events": ">=0.4.0"
 	}
 }

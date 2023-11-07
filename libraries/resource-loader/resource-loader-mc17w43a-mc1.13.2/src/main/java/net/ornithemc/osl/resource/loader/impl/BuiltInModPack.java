@@ -35,6 +35,7 @@ import net.ornithemc.osl.resource.loader.api.ResourceUtils;
 public class BuiltInModPack implements ModPack {
 
 	private final ModContainer mod;
+	private final PackType type;
 	private final Map<PackType, Set<String>> namespaces;
 
 	private final List<Path> roots;
@@ -42,8 +43,9 @@ public class BuiltInModPack implements ModPack {
 
 	private JsonObject generatedPackMetadata;
 
-	public BuiltInModPack(ModContainer mod) {
+	public BuiltInModPack(ModContainer mod, PackType type) {
 		this.mod = mod;
+		this.type = type;
 		this.namespaces = new HashMap<>();
 
 		this.roots = this.mod.getRootPaths();
@@ -217,7 +219,7 @@ public class BuiltInModPack implements ModPack {
 		if (generatedPackMetadata == null) {
 			generatedPackMetadata = new JsonObject();
 			JsonObject pack = new JsonObject();
-			pack.addProperty("pack_format", ResourceLoader.getPackFormat());
+			pack.addProperty("pack_format", ResourceLoader.getPackFormat(type));
 			pack.addProperty("description", getModMetadata().getDescription());
 			generatedPackMetadata.add("pack", pack);
 		}

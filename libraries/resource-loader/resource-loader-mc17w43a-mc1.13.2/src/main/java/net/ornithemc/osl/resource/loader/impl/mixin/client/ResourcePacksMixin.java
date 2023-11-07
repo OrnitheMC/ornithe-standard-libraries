@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.resource.pack.ResourcePacks;
+import net.minecraft.resource.pack.PackType;
 import net.minecraft.resource.pack.repository.UnopenedPack;
 
 import net.ornithemc.osl.resource.loader.api.ModPack;
@@ -32,7 +33,7 @@ public class ResourcePacksMixin {
 				continue;
 			}
 
-			osl$resource_loader$addDefaultResourcePack(packs, factory, new BuiltInModPack(mod));
+			osl$resource_loader$addDefaultResourcePack(packs, factory, new BuiltInModPack(mod, PackType.CLIENT_RESOURCES));
 		}
 
 		ClientResourceLoaderEvents.ADD_DEFAULT_RESOURCE_PACKS.invoker().accept(pack -> osl$resource_loader$addDefaultResourcePack(packs, factory, pack));

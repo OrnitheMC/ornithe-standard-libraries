@@ -9,6 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+
+import net.minecraft.resource.pack.PackType;
 import net.minecraft.resource.pack.repository.UnopenedPack;
 import net.minecraft.server.resource.pack.ServerPackSource;
 
@@ -32,7 +34,7 @@ public class DataPacksMixin {
 				continue;
 			}
 
-			osl$resource_loader$addDefaultDataPack(packs, factory, new BuiltInModPack(mod));
+			osl$resource_loader$addDefaultDataPack(packs, factory, new BuiltInModPack(mod, PackType.SERVER_DATA));
 		}
 
 		ServerResourceLoaderEvents.ADD_DEFAULT_DATA_PACKS.invoker().accept(pack -> osl$resource_loader$addDefaultDataPack(packs, factory, pack));
