@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
-import net.minecraft.client.resource.metadata.serializer.IResourceMetadataSerializer;
+import net.minecraft.client.resource.metadata.serializer.ResourceMetadataSerializer;
 import net.minecraft.resource.Identifier;
 import net.minecraft.resource.pack.CustomPack;
 import net.minecraft.resource.pack.Pack;
@@ -135,7 +135,7 @@ public class BuiltInModPack implements ModPack {
 	}
 
 	@Override
-	public Collection<Identifier> getResources(PackType type, String path, int maxDepth, Predicate<String> filter) {
+	public Collection<Identifier> findResources(PackType type, String path, int maxDepth, Predicate<String> filter) {
 		Collection<Identifier> locations = new LinkedHashSet<>();
 
 		for (String namespace : namespaces.get(type)) {
@@ -177,7 +177,7 @@ public class BuiltInModPack implements ModPack {
 	}
 
 	@Override
-	public <T> T getMetadataSection(IResourceMetadataSerializer<T> serializer) throws IOException {
+	public <T> T getMetadataSection(ResourceMetadataSerializer<T> serializer) throws IOException {
 		try (InputStream is = getRootResource("pack.mcmeta")) {
 			return CustomPack.getMetadataSection(serializer, is);
 		}

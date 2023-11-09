@@ -95,4 +95,4 @@ include ':libraries:networking:networking-mc18w31a-mc1.14.4'
 
 include ':libraries:resource-loader'
 include ':libraries:resource-loader:resource-loader-mc13w26a-mc1.12.2'
-include ':libraries:resource-loader:resource-loader-mc17w43a-mc1.13.2'
+include ':libraries:resource-loader:resource-loader-mc17w43a-mc1.14.4'

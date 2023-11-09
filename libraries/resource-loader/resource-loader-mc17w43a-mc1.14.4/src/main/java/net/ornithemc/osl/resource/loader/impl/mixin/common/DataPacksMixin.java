@@ -12,14 +12,14 @@ import net.fabricmc.loader.api.ModContainer;
 
 import net.minecraft.resource.pack.PackType;
 import net.minecraft.resource.pack.repository.UnopenedPack;
-import net.minecraft.server.resource.pack.ServerPackSource;
+import net.minecraft.server.resource.pack.DataPacks;
 
 import net.ornithemc.osl.resource.loader.api.ModPack;
 import net.ornithemc.osl.resource.loader.api.server.ServerResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.impl.BuiltInModPack;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
-@Mixin(ServerPackSource.class)
+@Mixin(DataPacks.class)
 public class DataPacksMixin {
 
 	@Inject(

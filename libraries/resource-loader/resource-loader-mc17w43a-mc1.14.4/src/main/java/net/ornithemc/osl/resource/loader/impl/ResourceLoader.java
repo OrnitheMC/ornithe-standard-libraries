@@ -34,7 +34,7 @@ public class ResourceLoader implements ModInitializer, ClientModInitializer {
 			try {
 				ResourcePacks resourcePacks = minecraft.getResourcePacks();
 
-				BuiltInPack defaultPack = resourcePacks.m_8018497();
+				BuiltInPack defaultPack = resourcePacks.getDefaultPack();
 				PackMetadataSection metadata = defaultPack.getMetadataSection(PackMetadataSection.SERIALIZER);
 
 				resourcePackFormat = metadata.getFormat();
