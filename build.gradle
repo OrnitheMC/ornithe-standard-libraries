@@ -161,6 +161,9 @@ def setUpLibrary(project) {
 	project.dependencies {
 		implementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
+		implementation "org.apache.logging.log4j:log4j-api:${project.rootProject.log4j_version}"
+		implementation "org.apache.logging.log4j:log4j-core:${project.rootProject.log4j_version}"
+
 		implementation project.project(':libraries:core')
 	}
 
@@ -247,6 +250,15 @@ def setUpModule(project, String... dependencies) {
 			mappings "net.ornithemc:feather:${sided_mc_version}+build.${project.feather_build}:v2"
 		}
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
+
+		// log4j is only needed in 1.6.4 and below, but checking the mc version
+		// is hard if you don't have normalized version ids, so as a workaround
+		// we add log4j if the project uses nests (which coincides with 1.8.2-pre4
+		// and below)
+		if (isCore || project.hasProperty('nests_build')) {
+			implementation "org.apache.logging.log4j:log4j-api:${project.rootProject.log4j_version}"
+			implementation "org.apache.logging.log4j:log4j-core:${project.rootProject.log4j_version}"
+		}
 
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		if (isCore) {

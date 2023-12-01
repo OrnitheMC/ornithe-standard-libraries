@@ -21,7 +21,7 @@ import net.ornithemc.osl.resource.loader.api.ModPack;
 
 public class ResourceLoader implements ModInitializer, ClientModInitializer {
 
-	private static final Logger LOGGER = LogManager.getLogger("OSL|Resource Loader");
+	public static final Logger LOGGER = LogManager.getLogger("OSL|Resource Loader");
 
 	private static final List<ModPack> DEFAULT_MOD_PACKS = new ArrayList<>();
 

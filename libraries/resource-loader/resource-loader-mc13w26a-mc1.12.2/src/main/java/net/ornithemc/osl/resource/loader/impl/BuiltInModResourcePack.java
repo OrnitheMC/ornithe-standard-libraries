@@ -64,8 +64,7 @@ public class BuiltInModResourcePack implements ModResourcePack {
 						}
 					}
 				} catch (IOException e) {
-					System.out.println("failed to parse namespaces for built-in resource pack for mod " + mod.getMetadata().getId());
-					e.printStackTrace();
+					ResourceLoader.LOGGER.warn("failed to parse namespaces for built-in resource pack for mod " + mod.getMetadata().getId(), e);
 				}
 			}
 		}
