@@ -94,5 +94,8 @@ include ':libraries:networking:networking-mc1.13-pre4-mc18w30b'
 include ':libraries:networking:networking-mc18w31a-mc1.14.4'
 
 include ':libraries:resource-loader'
+include ':libraries:resource-loader:resource-loader-client-mca1.2.2-1624-mc12w30e'
+include ':libraries:resource-loader:resource-loader-mc1.3-pre-07261249-mc13w07a'
+include ':libraries:resource-loader:resource-loader-mc13w09a-mc1.5.2'
 include ':libraries:resource-loader:resource-loader-mc13w26a-mc1.12.2'
 include ':libraries:resource-loader:resource-loader-mc17w43a-mc1.14.4'
