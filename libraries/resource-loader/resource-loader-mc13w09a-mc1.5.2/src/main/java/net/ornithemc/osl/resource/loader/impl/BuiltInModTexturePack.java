@@ -11,6 +11,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import net.minecraft.client.resource.pack.AbstractTexturePack;
+import net.minecraft.client.resource.pack.TexturePack;
 
 import net.ornithemc.osl.resource.loader.api.ModTexturePack;
 
@@ -33,6 +34,10 @@ public class BuiltInModTexturePack extends AbstractTexturePack implements ModTex
 		Path path = getPath(location);
 
 		if (path == null || !Files.exists(path)) {
+			if ("/pack.png".equals(location) || "/pack.txt".equals(location)) {
+				return TexturePack.class.getResourceAsStream(location);
+			}
+
 			return null;
 		}
 
@@ -62,13 +67,15 @@ public class BuiltInModTexturePack extends AbstractTexturePack implements ModTex
 	}
 
 	private Path getPath(String location) {
-		for (Path root : roots) {
-			String separator = root.getFileSystem().getSeparator();
-			String pathName = location.replace("/", separator);
-			Path path = root.resolve(pathName);
+		if (!"/pack.png".equals(location) && !"/pack.txt".equals(location)) {
+			for (Path root : roots) {
+				String separator = root.getFileSystem().getSeparator();
+				String pathName = location.replace("/", separator);
+				Path path = root.resolve(pathName);
 
-			if (Files.exists(path)) {
-				return path;
+				if (Files.exists(path)) {
+					return path;
+				}
 			}
 		}
 
