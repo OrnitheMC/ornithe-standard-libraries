@@ -49,9 +49,7 @@ public class AbstractTexturePackMixin {
 		method = "getResource(Ljava/lang/String;)Ljava/io/InputStream;",
 		cancellable = true,
 		at = @At(
-			value = "FIELD",
-			ordinal = 0,
-			target = "Lnet/minecraft/client/resource/pack/AbstractTexturePack;defaultTextures:Lnet/minecraft/client/resource/pack/TexturePack;"
+			value = "HEAD"
 		)
 	)
 	private void osl$resource_loader$getResource(String path, CallbackInfoReturnable<InputStream> cir) {
