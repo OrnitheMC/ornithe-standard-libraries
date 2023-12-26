@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,19 +19,17 @@ import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 @Mixin(LanguageManager.class)
 public class LanguageManagerMixin {
 
-	@Shadow private Properties translations;
-
 	@Inject(
-		method = "<init>",
+		method = "loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V",
 		at = @At(
 			value = "TAIL"
 		)
 	)
-	private void osl$resource_loader$loadModTranslations(CallbackInfo ci) {
+	private void osl$resource_loader$loadModTranslations(Properties translations, String lang, CallbackInfo ci) {
 		for (ModTexturePack pack : ResourceLoader.getDefaultModResourcePacks()) {
 			ModMetadata mod = pack.getModMetadata();
 
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(pack.getResource("/assets/" + mod.getId() + "/lang/en_US.lang")))) {
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(pack.getResource("/assets/" + mod.getId() + "/lang/" + lang + ".lang")))) {
 				String line;
 				while ((line = br.readLine()) != null) {
 					line = line.trim();
