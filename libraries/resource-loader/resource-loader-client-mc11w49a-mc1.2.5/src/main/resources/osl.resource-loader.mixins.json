@@ -6,7 +6,8 @@
 	"mixins": [
 	],
 	"client": [
-		"client.AbstractTexturePackMixin"
+		"client.TexturePackMixin",
+		"client.LanguageManagerMixin"
 	],
 	"server": [
 	],

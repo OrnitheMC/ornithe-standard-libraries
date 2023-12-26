@@ -10,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.resource.pack.AbstractTexturePack;
+import net.minecraft.client.resource.pack.TexturePack;
 
 import net.ornithemc.osl.resource.loader.api.ModTexturePack;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
-@Mixin(AbstractTexturePack.class)
-public class AbstractTexturePackMixin {
+@Mixin(TexturePack.class)
+public class TexturePackMixin {
 
 	private final Set<ModTexturePack> modTextures = new LinkedHashSet<>();
 
@@ -28,7 +28,7 @@ public class AbstractTexturePackMixin {
 		)
 	)
 	private void osl$resource_loader$init(CallbackInfo ci) {
-		if (!(this instanceof ModTexturePack)) {
+		if (!((TexturePack)(Object)this instanceof ModTexturePack)) {
 			modTextures.addAll(ResourceLoader.getDefaultModResourcePacks());
 		}
 	}
