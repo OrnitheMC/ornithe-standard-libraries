@@ -21,10 +21,9 @@ public class TexturePackMixin {
 	private final Set<ModTexturePack> modTextures = new LinkedHashSet<>();
 
 	@Inject(
-		method = "<init>(Ljava/lang/String;Ljava/io/File;Ljava/lang/String;)V",
+		method = "<init>()V",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resource/pack/AbstractTexturePack;loadIcon()V"
+			value = "TAIL"
 		)
 	)
 	private void osl$resource_loader$init(CallbackInfo ci) {
