@@ -10,14 +10,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-
 import net.minecraft.client.resource.pack.AbstractTexturePack;
 
 import net.ornithemc.osl.resource.loader.api.ModTexturePack;
-import net.ornithemc.osl.resource.loader.api.ResourceLoaderEvents;
-import net.ornithemc.osl.resource.loader.impl.BuiltInModTexturePack;
+import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
 @Mixin(AbstractTexturePack.class)
 public class AbstractTexturePackMixin {
@@ -33,15 +29,7 @@ public class AbstractTexturePackMixin {
 	)
 	private void osl$resource_loader$init(CallbackInfo ci) {
 		if (!(this instanceof ModTexturePack)) {
-			for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-				if ("builtin".equals(mod.getMetadata().getType())) {
-					continue;
-				}
-
-				this.modTextures.add(new BuiltInModTexturePack(mod));
-			}
-
-			ResourceLoaderEvents.ADD_DEFAULT_TEXTURE_PACKS.invoker().accept(this.modTextures::add);
+			modTextures.addAll(ResourceLoader.getDefaultModResourcePacks());
 		}
 	}
 
