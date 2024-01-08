@@ -9,7 +9,7 @@ Our [Ploceus gradle plugin](https://github.com/OrnitheMC/ploceus) provides helpe
 ```groovy
 dependencies {
 	...
-	ploceus.dependOsl('0.10.4')
+	ploceus.dependOsl('0.12.0')
 }
 ```
 
@@ -18,7 +18,7 @@ You can also add dependencies on individual OSL modules:
 ```groovy
 dependencies {
 	...
-	ploceus.dependOslModule('core', '0.4.1')
-	ploceus.dependOslModule('entrypoints', '0.4.1')
+	ploceus.dependOslModule('core', '0.5.0')
+	ploceus.dependOslModule('entrypoints', '0.4.2')
 }
 ```
