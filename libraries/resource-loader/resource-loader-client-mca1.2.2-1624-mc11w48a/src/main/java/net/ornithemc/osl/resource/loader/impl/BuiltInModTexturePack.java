@@ -64,7 +64,10 @@ public class BuiltInModTexturePack extends ModTexturePack {
 	}
 
 	private Path getPath(String location) {
-		if (!"/pack.png".equals(location) && !"/pack.txt".equals(location)) {
+		// the game accesses all resources with a leading '/'
+		location = location.substring(1);
+
+		if (!"pack.png".equals(location) && !"pack.txt".equals(location)) {
 			for (Path root : roots) {
 				String separator = root.getFileSystem().getSeparator();
 				String pathName = location.replace("/", separator);
