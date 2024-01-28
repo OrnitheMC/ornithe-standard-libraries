@@ -9,7 +9,8 @@
 	],
 	"client": [
 		"client.MinecraftMixin",
-		"client.ResourcePacksMixin"
+		"client.ResourcePacksMixin",
+    "client.TranslationStorageMixin"
 	],
 	"server": [
 	],

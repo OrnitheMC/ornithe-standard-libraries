@@ -19,6 +19,6 @@
 	"entrypoints": {
 	},
 	"depends": {
-		"fabricloader": ">=0.14.21"
+		"fabricloader": ">=0.15.0"
 	}
 }
