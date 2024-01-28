@@ -7,7 +7,8 @@
 	],
 	"client": [
 		"client.CustomResourcePackInvoker",
-		"client.MinecraftMixin"
+		"client.MinecraftMixin",
+    "client.TranslationStorageMixin"
 	],
 	"server": [
 	],

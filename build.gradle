@@ -52,6 +52,13 @@ def setUpJar(project) {
 	project.version = "${project.rootProject.root_version}"
 	project.group = "${project.rootProject.root_maven_group}"
 
+	project.repositories {
+		maven {
+			name = 'Quilt'
+			url = 'https://maven.quiltmc.org/repository/release'
+		}
+	}
+
 	project.dependencies {
 		// dummy mc dependency to keep loom happy
 		minecraft "com.mojang:minecraft:${project.rootProject.minecraft_version}"
