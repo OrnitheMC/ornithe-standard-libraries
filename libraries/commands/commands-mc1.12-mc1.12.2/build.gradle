@@ -1,0 +1,10 @@
+setUpModule(project,
+	'entrypoints-mc13w16a-04192037-mc1.13.2',
+	'lifecycle-events-mc13w36a-09051446-mc1.13',
+	'networking-mc14w31a-mc1.13-pre2',
+	'resource-loader-mc13w26a-mc1.12.2'
+)
+
+dependencies {
+	include(modImplementation("com.mojang:brigadier:${project.brigadier_version}"))
+}
