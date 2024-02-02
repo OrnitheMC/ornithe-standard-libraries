@@ -10,7 +10,7 @@
 	"client": [
 		"client.MinecraftMixin",
 		"client.ResourcePacksMixin",
-    "client.TranslationStorageMixin"
+		"client.TranslationStorageMixin"
 	],
 	"server": [
 	],

@@ -4,29 +4,31 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.List;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.resource.language.TranslationStorage;
-import net.minecraft.client.resource.manager.ResourceManager;
-import net.minecraft.resource.Identifier;
-import net.minecraft.resource.Resource;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+
+import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.client.resource.manager.ResourceManager;
+import net.minecraft.resource.Identifier;
+import net.minecraft.resource.Resource;
+
 @Mixin(TranslationStorage.class)
-public abstract class TranslationStorageMixin {
+public class TranslationStorageMixin {
 
 	@Final
 	@Shadow
-	protected Map<String, String> translations;
+	private Map<String, String> translations;
 
 	@WrapOperation(
 		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
