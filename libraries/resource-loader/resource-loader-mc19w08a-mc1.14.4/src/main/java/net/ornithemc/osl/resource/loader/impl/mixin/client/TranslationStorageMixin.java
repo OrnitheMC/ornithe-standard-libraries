@@ -47,7 +47,7 @@ public class TranslationStorageMixin {
 			target = "Lnet/minecraft/client/resource/language/TranslationStorage;load(Ljava/util/List;)V"
 		)
 	)
-	private void osl$resource_loader$loadJsonFiles(ResourceManager manager, List<String> languageCodes, CallbackInfo ci, Iterator<String> it, String languageCode, String originalPath, String namespace) throws IOException{
+	private void osl$resource_loader$loadJsonFiles(ResourceManager manager, List<String> languageCodes, CallbackInfo ci, Iterator<String> languageCodesIt, String languageCode, String originalPath, Iterator<String> namespacesIt, String namespace) throws IOException{
 		String[] paths = new String[]{originalPath, String.format("lang/%s.lang", languageCode),
 			String.format("lang/%s.json", languageCode.toLowerCase(Locale.ROOT)),
 			String.format("lang/%s.lang", languageCode.toLowerCase(Locale.ROOT))};
