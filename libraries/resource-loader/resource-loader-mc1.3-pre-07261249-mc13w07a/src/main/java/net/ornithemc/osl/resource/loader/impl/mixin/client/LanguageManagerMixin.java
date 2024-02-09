@@ -31,14 +31,15 @@ public class LanguageManagerMixin {
 		)
 	)
 	private void osl$resource_loader$loadModTranslations(Properties translations, String lang, CallbackInfo ci) throws IOException {
+		String path = "/assets/%s/lang/%s.%s";
+
 		for (ModTexturePack pack : ResourceLoader.getDefaultModResourcePacks()) {
 			ModMetadata mod = pack.getModMetadata();
-			String dir = String.format("/assets/%s/lang", mod.getId());
 
-			loadTranslationsJson(translations, pack.getResource(String.format("/%s.json", dir, lang)));
-			loadTranslationsJson(translations, pack.getResource(String.format("/%s.json", dir, lang.toLowerCase(Locale.ROOT))));
-			loadTranslationsLang(translations, pack.getResource(String.format("/%s.lang", dir, lang)));
-			loadTranslationsLang(translations, pack.getResource(String.format("/%s.lang", dir, lang.toLowerCase(Locale.ROOT))));
+			loadTranslationsJson(translations, pack.getResource(String.format(path, mod.getId(), lang, "json")));
+			loadTranslationsJson(translations, pack.getResource(String.format(path, mod.getId(), lang.toLowerCase(Locale.ROOT), "json")));
+			loadTranslationsLang(translations, pack.getResource(String.format(path, mod.getId(), lang, "lang")));
+			loadTranslationsLang(translations, pack.getResource(String.format(path, mod.getId(), lang.toLowerCase(Locale.ROOT), "lang")));
 		}
 	}
 
