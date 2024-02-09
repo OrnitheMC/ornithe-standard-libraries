@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.quiltmc.parsers.json.JsonReader;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,13 +25,17 @@ import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 @Mixin(LanguageManager.class)
 public class LanguageManagerMixin {
 
+	@Shadow
+	private Properties translations;
+
 	@Inject(
-		method = "loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V",
+		method = "<init>",
 		at = @At(
 			value = "TAIL"
 		)
 	)
-	private void osl$resource_loader$loadModTranslations(Properties translations, String lang, CallbackInfo ci) throws IOException {
+	private void osl$resource_loader$loadModTranslations(CallbackInfo ci) throws IOException {
+		String lang = "en_US";
 		String path = "/assets/%s/lang/%s.%s";
 
 		for (ModTexturePack pack : ResourceLoader.getDefaultModResourcePacks()) {
