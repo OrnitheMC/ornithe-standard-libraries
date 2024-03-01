@@ -277,10 +277,10 @@ def setUpModule(project, String... dependencies) {
 		}
 
 		libraries.each { library ->
-			implementation library
+			compileOnly library
 		}
 		modules.each { module ->
-			implementation module
+			compileOnly module
 		}
 	}
 
@@ -353,13 +353,7 @@ def setUpModule(project, String... dependencies) {
 					artifactId project.parent.name
 				}
 
-				artifact(project.remapJar) {
-					builtBy project.remapJar
-				}
-				artifact(project.remapSourcesJar) {
-					builtBy project.remapSourcesJar
-				}
-				artifact project.javadocJar
+				from project.components.java
 			}
 		}
 		repositories {
@@ -385,8 +379,6 @@ def setUpModule(project, String... dependencies) {
 	}
 
 	setUpJavadoc(project)
-
-	project.loom.disableDeprecatedPomGeneration(project.publishing.publications.mavenJava)
 }
 
 def getLibraryDependencies(project, String... moduleNames) {
