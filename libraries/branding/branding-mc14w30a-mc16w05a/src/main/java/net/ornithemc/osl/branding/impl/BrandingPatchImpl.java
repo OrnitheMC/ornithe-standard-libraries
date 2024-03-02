@@ -1,31 +1,23 @@
 package net.ornithemc.osl.branding.impl;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import net.ornithemc.osl.branding.api.BrandingModifier;
+import net.ornithemc.osl.branding.api.BrandingContext;
 import net.ornithemc.osl.branding.api.BrandingPatchEvents;
+import net.ornithemc.osl.branding.api.Operation;
 import net.ornithemc.osl.entrypoints.api.RunArgsConsumer;
 import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 
-public class BrandingPatch implements ClientModInitializer {
+public class BrandingPatchImpl implements ClientModInitializer {
 
-	private static Set<BrandingModifierImpl> modifiers = new LinkedHashSet<>();
+	private static BrandingModifiers modifiers = new BrandingModifiers();
 
-	public static String apply(String s) {
-		String original = s;
-
-		for (BrandingModifierImpl modifier : modifiers) {
-			s = modifier.apply(original, s);
-		}
-
-		return s;
+	public static String apply(BrandingContext context, String s) {
+		return modifiers.apply(context, s);
 	}
 
 	@Override
@@ -44,18 +36,12 @@ public class BrandingPatch implements ClientModInitializer {
 				String versionType = options.valueOf(versionTypeSpec);
 
 				if (versionType != null && !Constants.RELEASE.equals(versionType)) {
-					registerModifier(BrandingModifier.APPEND, versionType);
+					modifiers.register(BrandingContext.ALL, Constants.VERSION_TYPE_COMPONENT, Operation.APPEND, "/" + versionType);
 				}
 			}
 		});
 		MinecraftClientEvents.START.register(minecraft -> {
-			BrandingPatchEvents.REGISTER_MODIFIER.invoker().accept(BrandingPatch::registerModifier);
+			BrandingPatchEvents.REGISTER_MODIFIER.invoker().accept(modifiers);
 		});
-	}
-
-	private static void registerModifier(BrandingModifier modifier, String value) {
-		if (!modifiers.add(new BrandingModifierImpl(modifier, value))) {
-			throw new IllegalStateException("cannot register multiple REPLACE branding modifiers!");
-		}
 	}
 }

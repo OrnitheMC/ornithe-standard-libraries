@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.gui.overlay.DebugOverlay;
 
-import net.ornithemc.osl.branding.impl.BrandingPatch;
+import net.ornithemc.osl.branding.api.BrandingContext;
+import net.ornithemc.osl.branding.impl.BrandingPatchImpl;
 
 @Mixin(DebugOverlay.class)
 public class DebugOverlayMixin {
@@ -21,6 +22,6 @@ public class DebugOverlayMixin {
 		)
 	)
 	private String osl$branding$modifyVersionString() {
-		return BrandingPatch.apply(ClientBrandRetriever.getClientModName());
+		return BrandingPatchImpl.apply(BrandingContext.DEBUG_OVERLAY, ClientBrandRetriever.getClientModName());
 	}
 }
