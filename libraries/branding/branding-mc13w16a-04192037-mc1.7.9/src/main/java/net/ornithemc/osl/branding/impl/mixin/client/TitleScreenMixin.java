@@ -6,7 +6,8 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.client.gui.screen.TitleScreen;
 
-import net.ornithemc.osl.branding.impl.BrandingPatch;
+import net.ornithemc.osl.branding.api.BrandingContext;
+import net.ornithemc.osl.branding.impl.BrandingPatchImpl;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
@@ -20,6 +21,6 @@ public class TitleScreenMixin {
 		)
 	)
 	public String osl$branding$modifyVersionString(String gameInfo) {
-		return BrandingPatch.apply(gameInfo);
+		return BrandingPatchImpl.apply(BrandingContext.TITLE_SCREEN, gameInfo);
 	}
 }
