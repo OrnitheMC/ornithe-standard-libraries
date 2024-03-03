@@ -4,48 +4,63 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.ornithemc.osl.branding.api.Operation;
 
 public class BrandingModifier {
 
+	private static final Logger LOGGER = LogManager.getLogger("OSL|Branding");
+
 	private final Map<String, Component> components;
 	private final Set<Component> componentsInOrder;
-
-	private int cachedHash;
-	private String cachedPatch;
 
 	public BrandingModifier() {
 		this.components = new HashMap<>();
 		this.componentsInOrder = new TreeSet<>();
 	}
 
-	public void register(String key, Operation operation, String value, int priority) {
-		Component component = new Component(key, operation, value, priority);
-
+	public void register(String key, Operation operation, String value, int priority, boolean required) {
 		if (components.containsKey(key)) {
-			throw new IllegalStateException("modifier component " + key + " already exists");
+			if (required) {
+				throw new IllegalStateException("required modifier component " + key + " already exists");
+			} else {
+				LOGGER.warn("unrequired modifier component " + key + " already exsists");
+			}
 		} else {
-			components.put(key, component);
-			componentsInOrder.add(component);
+			Component conflict = checkConflicts(operation);
+
+			if (conflict != null && conflict.required) {
+				if (required) {
+					throw new IllegalStateException("required modifier component " + key + " conflicts with " + conflict.key);
+				} else {
+					LOGGER.warn("unrequired modifier component " + key + " conflicts with " + conflict.key);
+				}
+			} else {
+				if (conflict != null) {
+					components.remove(conflict.key);
+					componentsInOrder.remove(conflict);
+
+					LOGGER.warn("unrequired modifier component " + conflict.key + " conflicts with " + key);
+				}
+
+				Component component = new Component(key, operation, value, priority, required);
+
+				components.put(key, component);
+				componentsInOrder.add(component);
+			}
 		}
 	}
 
 	public String apply(String s) {
-		int hash = Objects.hash(components, s);
-
-		if (hash == cachedHash) {
-			return cachedPatch;
-		}
-
-		new ArrayList<>().hashCode();
 		List<String> buffer = new ArrayList<>();
-		int original = 0;
 
 		buffer.add(s);
+		int original = 0;
 
 		for (Component component : componentsInOrder) {
 			try {
@@ -55,30 +70,43 @@ public class BrandingModifier {
 			}
 		}
 
-		cachedHash = hash;
-		cachedPatch = String.join("", buffer);
-
-		return cachedPatch;
+		return String.join("", buffer);
 	}
 
+	private Component checkConflicts(Operation operation) {
+		if (operation == Operation.REPLACE || operation == Operation.SET) {
+			for (Component component : componentsInOrder) {
+				if (component.operation == Operation.REPLACE || component.operation == Operation.SET) {
+					return component;
+				}
+			}
+		}
+
+		return null;
+	}
 
 	private class Component implements Comparable<Component> {
 
+		public final int id;
 		public final String key;
 		public final Operation operation;
 		public final String value;
 		public final int priority;
+		public final boolean required;
 
-		public Component(String key, Operation operation, String value, int priority) {
+		public Component(String key, Operation operation, String value, int priority, boolean required) {
+			this.id = components.size();
 			this.key = key;
 			this.operation = operation;
 			this.value = value;
 			this.priority = priority;
+			this.required = required;
 		}
 
 		@Override
 		public int compareTo(Component o) {
-			return Integer.compare(priority, o.priority);
+			int c = Integer.compare(priority, o.priority);
+			return (c == 0) ? Integer.compare(id, o.id) : c;
 		}
 	}
 }

@@ -23,17 +23,22 @@ public class BrandingModifiers implements BrandingModifierRegistry {
 
 	@Override
 	public void register(BrandingContext context, String key, Operation operation, String value) {
-		register(context, key, operation, value, 0);
+		register(context, key, operation, value, 0, true);
 	}
 
 	@Override
 	public void register(BrandingContext context, String key, Operation operation, String value, int priority) {
+		register(context, key, operation, value, priority, true);
+	}
+
+	@Override
+	public void register(BrandingContext context, String key, Operation operation, String value, int priority, boolean required) {
 		if (context == BrandingContext.ALL) {
 			for (BrandingContext c : modifiers.keySet()) {
-				register(c, key, operation, value, priority);
+				register(c, key, operation, value, priority, required);
 			}
 		} else {
-			modifiers.get(context).register(key, operation, value, priority);
+			modifiers.get(context).register(key, operation, value, priority, required);
 		}
 	}
 
