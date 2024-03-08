@@ -16,11 +16,11 @@ public final class PacketByteBufs {
 	}
 
 	public static PacketByteBuf make(byte[] bytes) {
-		return make(Unpooled.wrappedBuffer(bytes));
+		return bytes == null ? make() : make(Unpooled.wrappedBuffer(bytes));
 	}
 
 	public static PacketByteBuf make(ByteBuf buf) {
-		return new PacketByteBuf(buf);
+		return buf == null ? make() : new PacketByteBuf(buf);
 	}
 
 	public static PacketByteBuf make(IOConsumer<PacketByteBuf> writer) throws IOException {

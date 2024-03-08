@@ -12,7 +12,7 @@ import net.ornithemc.osl.core.api.util.function.IOConsumer;
 public final class DataStreams {
 
 	public static DataInputStream input(byte[] bytes) {
-		return new DataInputStream(new ByteArrayInputStream(bytes));
+		return new DataInputStream(new ByteArrayInputStream(bytes == null ? new byte[0] : bytes));
 	}
 
 	public static ByteArrayOutputStream output(IOConsumer<DataOutput> writer) throws IOException {
