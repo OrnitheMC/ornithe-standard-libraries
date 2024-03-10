@@ -18,7 +18,7 @@
 	"environment": "${environment}",
 	"entrypoints": {
 		"client-init": [
-			"net.ornithemc.osl.branding.impl.BrandingPatch"
+			"net.ornithemc.osl.branding.impl.BrandingPatchImpl"
 		]
 	},
 	"mixins": [
