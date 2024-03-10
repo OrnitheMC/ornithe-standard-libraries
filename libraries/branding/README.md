@@ -10,7 +10,7 @@ registered in your mod entrypoint:
 
 ```java
 @Override
-public void clientInit() {
+public void initClient() {
 	BrandingPatchEvents.REGISTER_MODIFIER_COMPONENT.register(registry -> {
 		registry.register(
 			BrandingContext.ALL, // apply to both title screen and debug overlay
