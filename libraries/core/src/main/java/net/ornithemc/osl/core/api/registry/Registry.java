@@ -46,11 +46,13 @@ public class Registry<K, V> {
 		return value;
 	}
 
-	public V get(K key) {
-		return values.get(key);
+	@SuppressWarnings("unchecked")
+	public <T extends V> T get(K key) {
+		return (T)values.get(key);
 	}
 
-	public K getKey(V value) {
-		return keys.get(value);
+	@SuppressWarnings("unchecked")
+	public <T extends K> T getKey(V value) {
+		return (T)keys.get(value);
 	}
 }

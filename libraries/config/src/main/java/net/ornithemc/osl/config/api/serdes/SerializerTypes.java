@@ -20,12 +20,11 @@ public final class SerializerTypes {
 		return get(RegistryKey.of(ConfigRegistries.SERIALIZER_TYPE, name));
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T extends SerializerType<?>> T get(RegistryKey key) {
-		return (T)REGISTRY.get(key);
+		return Registries.getMapping(REGISTRY, key);
 	}
 
 	public static RegistryKey getKey(SerializerType<?> type) {
-		return REGISTRY.getKey(type);
+		return Registries.getKey(REGISTRY, type);
 	}
 }

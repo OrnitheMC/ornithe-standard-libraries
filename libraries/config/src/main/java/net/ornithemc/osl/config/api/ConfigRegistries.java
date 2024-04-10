@@ -7,5 +7,6 @@ public class ConfigRegistries {
 	public static final RegistryKey SERIALIZER_TYPE   = RegistryKey.of("serializer_type");
 	public static final RegistryKey CONFIG_SERIALIZER = RegistryKey.of("config_serializer");
 	public static final RegistryKey OPTION_SERIALIZER = RegistryKey.of("option_serializer");
+	public static final RegistryKey OBJECT_SERIALIZER = RegistryKey.of("object_serializer");
 
 }

@@ -16,13 +16,11 @@ public class ConfigSerializers {
 		return Registries.registerMapping(REGISTRY, type, serializer);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <M, C extends ConfigSerializer<M>> C get(SerializerType<?> type) {
-		return (C)REGISTRY.get(type);
+		return Registries.getMapping(REGISTRY, type);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <M, C extends ConfigSerializer<M>> SerializerType<M> getType(C serializer) {
-		return (SerializerType<M>)REGISTRY.getKey(serializer);
+		return Registries.getKey(REGISTRY, serializer);
 	}
 }

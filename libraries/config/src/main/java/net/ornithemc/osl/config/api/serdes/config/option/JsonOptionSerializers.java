@@ -1,15 +1,24 @@
 package net.ornithemc.osl.config.api.serdes.config.option;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.List;
 
+import net.ornithemc.osl.config.api.config.option.BaseOption;
 import net.ornithemc.osl.config.api.config.option.BooleanOption;
+import net.ornithemc.osl.config.api.config.option.ByteOption;
+import net.ornithemc.osl.config.api.config.option.DoubleOption;
 import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
+import net.ornithemc.osl.config.api.config.option.ListOption;
+import net.ornithemc.osl.config.api.config.option.LongOption;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.PathOption;
+import net.ornithemc.osl.config.api.config.option.ShortOption;
 import net.ornithemc.osl.config.api.config.option.StringOption;
 import net.ornithemc.osl.config.api.config.option.UuidOption;
+import net.ornithemc.osl.config.api.serdes.JsonSerializer;
+import net.ornithemc.osl.config.api.serdes.JsonSerializers;
 import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.SerializerTypes;
 import net.ornithemc.osl.core.api.json.JsonFile;
@@ -20,85 +29,83 @@ public class JsonOptionSerializers {
 
 	private static final Registry<Class<? extends Option>, JsonOptionSerializer<? extends Option>> REGISTRY = OptionSerializers.register(SerializerTypes.JSON, "json");
 
-	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(BooleanOption.class, new JsonOptionSerializer<BooleanOption>() {
+	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(Boolean.class       , BooleanOption.class);
+	public static final JsonOptionSerializer<ByteOption>    BYTE    = register(Byte.class          , ByteOption.class);
+	public static final JsonOptionSerializer<DoubleOption>  DOUBLE  = register(Double.class        , DoubleOption.class);
+	public static final JsonOptionSerializer<FloatOption>   FLOAT   = register(Float.class         , FloatOption.class);
+	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(Integer.class       , IntegerOption.class);
+	public static final JsonOptionSerializer<LongOption>    LONG    = register(Long.class          , LongOption.class);
+	public static final JsonOptionSerializer<ShortOption>   SHORT   = register(Short.class         , ShortOption.class);
+	public static final JsonOptionSerializer<StringOption>  STRING  = register(String.class        , StringOption.class);
+	public static final JsonOptionSerializer<PathOption>    PATH    = register(Path.class          , PathOption.class);
+	public static final JsonOptionSerializer<UuidOption>    UUID    = register(java.util.UUID.class, UuidOption.class);
+
+	@SuppressWarnings("rawtypes")
+	public static final JsonOptionSerializer<ListOption> LIST = register(ListOption.class, new JsonOptionSerializer<ListOption>() {
 
 		@Override
-		public void serialize(BooleanOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeBoolean(option.get());
+		@SuppressWarnings("unchecked")
+		public void serialize(ListOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			Class elementType = option.getElementType();
+			JsonSerializer serializer = JsonSerializers.get(elementType);
+
+			json.writeArray(_json -> {
+				List<?> value = (List<?>)option.get();
+
+				for (int i = 0; i < value.size(); i++) {
+					Object element = value.get(i);
+
+					if (element == null) {
+						json.writeNull();
+					} else {
+						serializer.serialize(element, json);
+					}
+				}
+			});
 		}
 
 		@Override
-		public void deserialize(BooleanOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(json.readBoolean());
-		}
-	});
-	public static final JsonOptionSerializer<FloatOption> FLOAT = register(FloatOption.class, new JsonOptionSerializer<FloatOption>() {
+		@SuppressWarnings("unchecked")
+		public void deserialize(ListOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			Class elementType = option.getElementType();
+			JsonSerializer serializer = JsonSerializers.get(elementType);
 
-		@Override
-		public void serialize(FloatOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeNumber(option.get());
-		}
+			json.readArray(_json -> {
+				while (json.hasNext()) {
+					Object value = serializer.deserialize(json);
 
-		@Override
-		public void deserialize(FloatOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(json.readNumber().floatValue());
-		}
-	});
-	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(IntegerOption.class, new JsonOptionSerializer<IntegerOption>() {
-
-		@Override
-		public void serialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeNumber(option.get());
-		}
-
-		@Override
-		public void deserialize(IntegerOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(json.readNumber().intValue());
-		}
-	});
-	public static final JsonOptionSerializer<PathOption> PATH = register(PathOption.class, new JsonOptionSerializer<PathOption>() {
-
-		@Override
-		public void serialize(PathOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeString(option.get().toAbsolutePath().toString());
-		}
-
-		@Override
-		public void deserialize(PathOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(Paths.get(json.readString()));
-		}
-	});
-	public static final JsonOptionSerializer<StringOption> STRING = register(StringOption.class, new JsonOptionSerializer<StringOption>() {
-
-		@Override
-		public void serialize(StringOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeString(option.get());
-		}
-
-		@Override
-		public void deserialize(StringOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(json.readString());
+					if (value == null) {
+						option.add(null);
+					} else {
+						option.add(value);
+					}
+				}
+			});
 		}
 	});
-	public static final JsonOptionSerializer<UuidOption> UUID = register(UuidOption.class, new JsonOptionSerializer<UuidOption>() {
 
-		@Override
-		public void serialize(UuidOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			json.writeString(option.get().toString());
-		}
+	public static <T, O extends BaseOption<T>> JsonOptionSerializer<O> register(Class<T> valueType, Class<O> optionType) {
+		return register(optionType, new JsonOptionSerializer<O>() {
 
-		@Override
-		public void deserialize(UuidOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			option.set(java.util.UUID.fromString(json.readString()));
-		}
-	});
+			@Override
+			public void serialize(O option, SerializationSettings settings, JsonFile json) throws IOException {
+				JsonSerializer<T> serializer = JsonSerializers.get(valueType);
+				serializer.serialize(option.get(), json);
+			}
+
+			@Override
+			public void deserialize(O option, SerializationSettings settings, JsonFile json) throws IOException {
+				JsonSerializer<T> serializer = JsonSerializers.get(valueType);
+				option.set(serializer.deserialize(json));
+			}
+		});
+	}
 
 	public static <O extends Option, S extends JsonOptionSerializer<O>> S register(Class<O> optionType, S serializer) {
 		return Registries.registerMapping(REGISTRY, optionType, serializer);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <O extends Option> JsonOptionSerializer<O> get(Class<? extends Option> optionType) {
-		return (JsonOptionSerializer<O>)REGISTRY.get(optionType);
+		return Registries.getMapping(REGISTRY, optionType);
 	}
 }
