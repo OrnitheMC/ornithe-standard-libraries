@@ -69,8 +69,8 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	 * @see #modifiable
 	 */
 	@Override
-	public boolean set(T value) {
-		return super.set(modifiable(value));
+	public void set(T value) {
+		super.set(modifiable(value));
 	}
 
 	/**
@@ -120,7 +120,7 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	 * 
 	 * @return whether this option's current value was modified.
 	 */
-	public boolean modify(Consumer<T> modifier) {
+	public void modify(Consumer<T> modifier) {
 		// save the state of the current value
 		// in case the modified value is invalid
 		T current = get();
@@ -134,7 +134,7 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 		// modified, so we must first set the value back
 		// to the saved state
 		set(current);
-		return set(modified);
+		set(modified);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	 * 
 	 * @return whether this option's current value was modified.
 	 */
-	public boolean modifyIO(IOConsumer<T> modifier) throws IOException {
+	public void modifyIO(IOConsumer<T> modifier) throws IOException {
 		// save the state of the current value
 		// in case the modified value is invalid
 		T current = get();
@@ -156,6 +156,6 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 		// modified, so we must first set the value back
 		// to the saved state
 		set(current);
-		return set(modified);
+		set(modified);
 	}
 }

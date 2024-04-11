@@ -1,8 +1,10 @@
 package net.ornithemc.osl.config.api.config.option;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
 
 import net.ornithemc.osl.config.api.config.option.validator.OptionValidators;
@@ -14,16 +16,19 @@ import net.ornithemc.osl.config.api.config.option.validator.OptionValidators;
  * provided when creating a {@code MapOption} instance - it is needed for
  * serialization.
  * <p>
- * To fulfill the contract established in {@code ModifiableOption}, this class
- * provides its own {@code add} and {@code remove} methods. Modifying the map
- * by calling methods on the {@code Map} itself will throw an exception, as
- * {@link #get} returns an unmodifiable {@code Map}.
+ * This class implements the {@code Map} interface to simplify querying and
+ * modifying the value of this option. To fulfill the contract established in
+ * {@code ModifiableOption}, the maps returned by this class'
+ * {@link #getDefault} and {@link #get} methods return unmodifiable views of the
+ * default and current value of this option. Adding and removing elements to the
+ * current value should be done by calling methods from the {@code Map}
+ * interface instead.
  * <p>
  * For convenience, option serializers for this class are built into this API.
  * However, because this class is generic, you must register object serializers
  * for the generic type parameters instead.
  */
-public class MapOption<K, V> extends ModifiableOption<Map<K, V>> {
+public class MapOption<K, V> extends ModifiableOption<Map<K, V>> implements Map<K, V> {
 
 	protected final Class<K> keyType;
 	protected final Class<V> valueType;
@@ -67,37 +72,77 @@ public class MapOption<K, V> extends ModifiableOption<Map<K, V>> {
 		return new LinkedHashMap<>(value);
 	}
 
-	public boolean put(K key, V value) {
-		int size = get().size();
-
-		modify(map -> {
-			if (entryValidator.test(key, value)) {
-				map.put(key, value);
-			}
-		});
-
-		return get().size() != size;
+	@Override
+	public int size() {
+		return get().size();
 	}
 
-	public boolean remove(Object key) {
-		int size = get().size();
+	@Override
+	public boolean isEmpty() {
+		return get().isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return get().containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return get().containsValue(value);
+	}
+
+	@Override
+	public V get(Object key) {
+		return get().get(key);
+	}
+
+	@Override
+	public V put(K key, V value) {
+		V prev = get(key);
+
+		modify(map -> {
+			map.put(key, value);
+		});
+
+		return prev;
+	}
+
+	@Override
+	public V remove(Object key) {
+		V prev = get(key);
 
 		modify(map -> {
 			map.remove(key);
 		});
 
-		return get().size() != size;
+		return prev;
 	}
 
+	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
 		modify(map -> {
-			Map<? extends K, ? extends V> entries = new LinkedHashMap<>(m);
-			entries.entrySet().removeIf(e -> !entryValidator.test(e.getKey(), e.getValue()));
-			map.putAll(entries);
+			map.putAll(m);
 		});
 	}
 
+	@Override
 	public void clear() {
 		modify(Map::clear);
+	}
+
+	@Override
+	public Set<K> keySet() {
+		return get().keySet();
+	}
+
+	@Override
+	public Collection<V> values() {
+		return get().values();
+	}
+
+	@Override
+	public Set<Entry<K, V>> entrySet() {
+		return get().entrySet();
 	}
 }

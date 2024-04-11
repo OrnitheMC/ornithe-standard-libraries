@@ -86,14 +86,11 @@ public abstract class BaseOption<T> implements Option {
 	/**
 	 * @return whether this option's current value has changed
 	 */
-	public boolean set(T newValue) {
+	public void set(T newValue) {
 		requireLoaded();
 
 		if (!Objects.equals(value, newValue) && validator.test(newValue)) {
 			value = newValue;
-			return true;
-		} else {
-			return false;
 		}
 	}
 
