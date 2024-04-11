@@ -30,10 +30,31 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 
 	protected ModifiableOption(String name, String description, T defaultValue) {
 		super(name, description, defaultValue);
+
+		validate();
 	}
 
 	protected ModifiableOption(String name, String description, T defaultValue, Predicate<T> validator) {
 		super(name, description, defaultValue, validator);
+
+		validate();
+	}
+
+	/**
+	 * Validates the {@link #modifiable} and {@link #unmodifiable} methods to make
+	 * sure the returned values are different objects but equal to the given value.
+	 */
+	private void validate() {
+		T value = getDefault();
+		T modifiable = modifiable(value);
+		T unmodifiable = unmodifiable(value);
+
+		if (value == modifiable || !value.equals(modifiable)) {
+			throw new IllegalStateException(getClass().getSimpleName() + "\' \'modifiable\' method does not satisfy the contract!");
+		}
+		if (value == unmodifiable || !value.equals(unmodifiable)) {
+			throw new IllegalStateException(getClass().getSimpleName() + "\' \'unmodifiable\' method does not satisfy the contract!");
+		}
 	}
 
 	/**
@@ -74,27 +95,6 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	}
 
 	/**
-	 * Returns an unmodifiable view of the given value. The return value of this
-	 * method should not be the same object as the given value, but should be equal
-	 * to it. In general, the expression <blockquote>
-	 * 
-	 * <pre>
-	 * unmodifiable(value) != value
-	 * </pre>
-	 * 
-	 * </blockquote> must be true, and the expression: <blockquote>
-	 * 
-	 * <pre>
-	 * unmodifiable(value).equals(value)
-	 * </pre>
-	 * 
-	 * </blockquote> must be true.
-	 * 
-	 * @return an unmodifiable view of the given value
-	 */
-	protected abstract T unmodifiable(T value);
-
-	/**
 	 * Returns a modifiable view of the given value. The return value of this method
 	 * should not be the same object as the given value, but should be equal to it.
 	 * In general, the expression <blockquote>
@@ -114,6 +114,27 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	 * @return a modifiable view of the given value
 	 */
 	protected abstract T modifiable(T value);
+
+	/**
+	 * Returns an unmodifiable view of the given value. The return value of this
+	 * method should not be the same object as the given value, but should be equal
+	 * to it. In general, the expression <blockquote>
+	 * 
+	 * <pre>
+	 * unmodifiable(value) != value
+	 * </pre>
+	 * 
+	 * </blockquote> must be true, and the expression: <blockquote>
+	 * 
+	 * <pre>
+	 * unmodifiable(value).equals(value)
+	 * </pre>
+	 * 
+	 * </blockquote> must be true.
+	 * 
+	 * @return an unmodifiable view of the given value
+	 */
+	protected abstract T unmodifiable(T value);
 
 	/**
 	 * modifies the current value of this option
