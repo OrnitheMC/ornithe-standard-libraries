@@ -202,8 +202,6 @@ public class JsonSerializers {
 
 		public static <K, V> void deserialize(Map<K, V> map, Class<K> keyType, Class<V> valueType, JsonFile json) throws IOException {
 			json.readObject(_json -> {
-				map.clear();
-
 				List<K> keys = new ArrayList<>();
 				List<V> values = new ArrayList<>();
 
@@ -216,6 +214,8 @@ public class JsonSerializers {
 				if (keys.size() != values.size()) {
 					throw new IOException("keys and values arrays should be the same length!");
 				}
+
+				map.clear();
 
 				for (int i = 0; i < keys.size(); i++) {
 					map.put(keys.get(i), values.get(i));
