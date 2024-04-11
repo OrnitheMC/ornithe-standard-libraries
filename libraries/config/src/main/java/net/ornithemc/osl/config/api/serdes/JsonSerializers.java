@@ -139,14 +139,6 @@ public class JsonSerializers {
 		}
 	});
 
-	public static <O, S extends JsonSerializer<O>> S register(Class<O> type, S serializer) {
-		return Registries.registerMapping(REGISTRY, type, serializer);
-	}
-
-	public static <O> JsonSerializer<O> get(Class<?> type) {
-		return Registries.getMapping(REGISTRY, type);
-	}
-
 	public static class Lists {
 
 		public static <T> void serialize(ListOption<T> option, JsonFile json) throws IOException {
@@ -230,5 +222,13 @@ public class JsonSerializers {
 				}
 			});
 		}
+	}
+
+	public static <O, S extends JsonSerializer<O>> S register(Class<O> type, S serializer) {
+		return Registries.registerMapping(REGISTRY, type, serializer);
+	}
+
+	public static <O> JsonSerializer<O> get(Class<O> type) {
+		return Registries.getMapping(REGISTRY, type);
 	}
 }

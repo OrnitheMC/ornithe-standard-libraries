@@ -17,7 +17,6 @@ import net.ornithemc.osl.config.api.config.option.PathOption;
 import net.ornithemc.osl.config.api.config.option.ShortOption;
 import net.ornithemc.osl.config.api.config.option.StringOption;
 import net.ornithemc.osl.config.api.config.option.UuidOption;
-import net.ornithemc.osl.config.api.serdes.JsonSerializer;
 import net.ornithemc.osl.config.api.serdes.JsonSerializers;
 import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.SerializerTypes;
@@ -29,16 +28,16 @@ public class JsonOptionSerializers {
 
 	private static final Registry<Class<? extends Option>, JsonOptionSerializer<? extends Option>> REGISTRY = OptionSerializers.register(SerializerTypes.JSON, "json");
 
-	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(Boolean.class       , BooleanOption.class);
-	public static final JsonOptionSerializer<ByteOption>    BYTE    = register(Byte.class          , ByteOption.class);
-	public static final JsonOptionSerializer<DoubleOption>  DOUBLE  = register(Double.class        , DoubleOption.class);
-	public static final JsonOptionSerializer<FloatOption>   FLOAT   = register(Float.class         , FloatOption.class);
-	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(Integer.class       , IntegerOption.class);
-	public static final JsonOptionSerializer<LongOption>    LONG    = register(Long.class          , LongOption.class);
-	public static final JsonOptionSerializer<ShortOption>   SHORT   = register(Short.class         , ShortOption.class);
-	public static final JsonOptionSerializer<StringOption>  STRING  = register(String.class        , StringOption.class);
-	public static final JsonOptionSerializer<PathOption>    PATH    = register(Path.class          , PathOption.class);
-	public static final JsonOptionSerializer<UuidOption>    UUID    = register(java.util.UUID.class, UuidOption.class);
+	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(BooleanOption.class, Boolean.class);
+	public static final JsonOptionSerializer<ByteOption>    BYTE    = register(ByteOption.class   , Byte.class);
+	public static final JsonOptionSerializer<DoubleOption>  DOUBLE  = register(DoubleOption.class , Double.class);
+	public static final JsonOptionSerializer<FloatOption>   FLOAT   = register(FloatOption.class  , Float.class);
+	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(IntegerOption.class, Integer.class);
+	public static final JsonOptionSerializer<LongOption>    LONG    = register(LongOption.class   , Long.class);
+	public static final JsonOptionSerializer<ShortOption>   SHORT   = register(ShortOption.class  , Short.class);
+	public static final JsonOptionSerializer<StringOption>  STRING  = register(StringOption.class , String.class);
+	public static final JsonOptionSerializer<PathOption>    PATH    = register(PathOption.class   , Path.class);
+	public static final JsonOptionSerializer<UuidOption>    UUID    = register(UuidOption.class   , java.util.UUID.class);
 
 	@SuppressWarnings("rawtypes")
 	public static final JsonOptionSerializer<ListOption> LIST = register(ListOption.class, new JsonOptionSerializer<ListOption>() {
@@ -71,19 +70,17 @@ public class JsonOptionSerializers {
 		}
 	});
 
-	public static <T, O extends BaseOption<T>> JsonOptionSerializer<O> register(Class<T> valueType, Class<O> optionType) {
+	public static <T, O extends BaseOption<T>> JsonOptionSerializer<O> register(Class<O> optionType, Class<T> valueType) {
 		return register(optionType, new JsonOptionSerializer<O>() {
 
 			@Override
 			public void serialize(O option, SerializationSettings settings, JsonFile json) throws IOException {
-				JsonSerializer<T> serializer = JsonSerializers.get(valueType);
-				serializer.serialize(option.get(), json);
+				JsonSerializers.get(valueType).serialize(option.get(), json);
 			}
 
 			@Override
 			public void deserialize(O option, SerializationSettings settings, JsonFile json) throws IOException {
-				JsonSerializer<T> serializer = JsonSerializers.get(valueType);
-				option.set(serializer.deserialize(json));
+				option.set(JsonSerializers.get(valueType).deserialize(json));
 			}
 		});
 	}

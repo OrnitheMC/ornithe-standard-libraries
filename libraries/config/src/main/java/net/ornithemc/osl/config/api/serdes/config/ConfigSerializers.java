@@ -16,7 +16,7 @@ public class ConfigSerializers {
 		return Registries.registerMapping(REGISTRY, type, serializer);
 	}
 
-	public static <M, C extends ConfigSerializer<M>> C get(SerializerType<?> type) {
+	public static <M, C extends ConfigSerializer<M>> C get(SerializerType<M> type) {
 		return Registries.getMapping(REGISTRY, type);
 	}
 
