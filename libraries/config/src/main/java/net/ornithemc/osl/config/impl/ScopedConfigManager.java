@@ -78,15 +78,13 @@ public final class ScopedConfigManager {
 
 	public void unload() {
 		for (Config config : getConfigs()) {
-			guardWrite(config);
+			save(config);
 			config.unload();
 		}
 	}
 
-	public void save() {
-		for (Config config : getConfigs()) {
-			guardWrite(config);
-		}
+	public void save(Config config) {
+		guardWrite(config);
 	}
 
 	private void guardWrite(Config config) {
