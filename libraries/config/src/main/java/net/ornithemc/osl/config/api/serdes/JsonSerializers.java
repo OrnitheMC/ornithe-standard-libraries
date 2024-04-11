@@ -102,6 +102,18 @@ public class JsonSerializers {
 			return json.readNumber().shortValue();
 		}
 	});
+	public static final JsonSerializer<Character> CHARACTER = register(Character.class, new JsonSerializer<Character>() {
+
+		@Override
+		public void serialize(Character value, JsonFile json) throws IOException {
+			json.writeString(value.toString());
+		}
+
+		@Override
+		public Character deserialize(JsonFile json) throws IOException {
+			return json.readString().charAt(0);
+		}
+	});
 	public static final JsonSerializer<String> STRING = register(String.class, new JsonSerializer<String>() {
 
 		@Override

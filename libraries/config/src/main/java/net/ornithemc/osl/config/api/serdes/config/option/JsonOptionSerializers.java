@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import net.ornithemc.osl.config.api.config.option.BaseOption;
 import net.ornithemc.osl.config.api.config.option.BooleanOption;
 import net.ornithemc.osl.config.api.config.option.ByteOption;
+import net.ornithemc.osl.config.api.config.option.CharacterOption;
 import net.ornithemc.osl.config.api.config.option.DoubleOption;
 import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
@@ -28,16 +29,17 @@ public class JsonOptionSerializers {
 
 	private static final Registry<Class<? extends Option>, JsonOptionSerializer<? extends Option>> REGISTRY = OptionSerializers.register(SerializerTypes.JSON, "json");
 
-	public static final JsonOptionSerializer<BooleanOption> BOOLEAN = register(BooleanOption.class, Boolean.class);
-	public static final JsonOptionSerializer<ByteOption>    BYTE    = register(ByteOption.class   , Byte.class);
-	public static final JsonOptionSerializer<DoubleOption>  DOUBLE  = register(DoubleOption.class , Double.class);
-	public static final JsonOptionSerializer<FloatOption>   FLOAT   = register(FloatOption.class  , Float.class);
-	public static final JsonOptionSerializer<IntegerOption> INTEGER = register(IntegerOption.class, Integer.class);
-	public static final JsonOptionSerializer<LongOption>    LONG    = register(LongOption.class   , Long.class);
-	public static final JsonOptionSerializer<ShortOption>   SHORT   = register(ShortOption.class  , Short.class);
-	public static final JsonOptionSerializer<StringOption>  STRING  = register(StringOption.class , String.class);
-	public static final JsonOptionSerializer<PathOption>    PATH    = register(PathOption.class   , Path.class);
-	public static final JsonOptionSerializer<UuidOption>    UUID    = register(UuidOption.class   , java.util.UUID.class);
+	public static final JsonOptionSerializer<BooleanOption>   BOOLEAN   = register(BooleanOption.class  , Boolean.class);
+	public static final JsonOptionSerializer<ByteOption>      BYTE      = register(ByteOption.class     , Byte.class);
+	public static final JsonOptionSerializer<DoubleOption>    DOUBLE    = register(DoubleOption.class   , Double.class);
+	public static final JsonOptionSerializer<FloatOption>     FLOAT     = register(FloatOption.class    , Float.class);
+	public static final JsonOptionSerializer<IntegerOption>   INTEGER   = register(IntegerOption.class  , Integer.class);
+	public static final JsonOptionSerializer<LongOption>      LONG      = register(LongOption.class     , Long.class);
+	public static final JsonOptionSerializer<ShortOption>     SHORT     = register(ShortOption.class    , Short.class);
+	public static final JsonOptionSerializer<CharacterOption> CHARACTER = register(CharacterOption.class, Character.class);
+	public static final JsonOptionSerializer<StringOption>    STRING    = register(StringOption.class   , String.class);
+	public static final JsonOptionSerializer<PathOption>      PATH      = register(PathOption.class     , Path.class);
+	public static final JsonOptionSerializer<UuidOption>      UUID      = register(UuidOption.class     , java.util.UUID.class);
 
 	@SuppressWarnings("rawtypes")
 	public static final JsonOptionSerializer<ListOption> LIST = register(ListOption.class, new JsonOptionSerializer<ListOption>() {
