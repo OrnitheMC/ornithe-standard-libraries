@@ -1,7 +1,10 @@
 package net.ornithemc.osl.config.api.config.option;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import net.ornithemc.osl.core.api.util.function.IOConsumer;
 
 /**
  * This class is the basis for options of custom object types that are intended
@@ -25,11 +28,11 @@ import java.util.function.Predicate;
  */
 public abstract class ModifiableOption<T> extends BaseOption<T> {
 
-	public ModifiableOption(String name, String description, T defaultValue) {
+	protected ModifiableOption(String name, String description, T defaultValue) {
 		super(name, description, defaultValue);
 	}
 
-	public ModifiableOption(String name, String description, T defaultValue, Predicate<T> validator) {
+	protected ModifiableOption(String name, String description, T defaultValue, Predicate<T> validator) {
 		super(name, description, defaultValue, validator);
 	}
 
@@ -118,6 +121,28 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	 * @return whether this option's current value was modified.
 	 */
 	public boolean modify(Consumer<T> modifier) {
+		// save the state of the current value
+		// in case the modified value is invalid
+		T current = get();
+		T modified = super.get();
+
+		modifier.accept(modified);
+
+		// the set method checks if the current and new
+		// values are not equal before it sets the new
+		// value, but we allow the current value to be
+		// modified, so we must first set the value back
+		// to the saved state
+		set(current);
+		return set(modified);
+	}
+
+	/**
+	 * modifies the current value of this option or throws an IO exception
+	 * 
+	 * @return whether this option's current value was modified.
+	 */
+	public boolean modifyIO(IOConsumer<T> modifier) throws IOException {
 		// save the state of the current value
 		// in case the modified value is invalid
 		T current = get();

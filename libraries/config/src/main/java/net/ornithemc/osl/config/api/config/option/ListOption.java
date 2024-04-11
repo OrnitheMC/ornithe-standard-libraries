@@ -26,28 +26,28 @@ import net.ornithemc.osl.config.api.config.option.validator.OptionValidators;
  */
 public class ListOption<T> extends ModifiableOption<List<T>> {
 
-	protected final Class<? super T> elementType;
+	protected final Class<T> elementType;
 	protected final Predicate<T> elementValidator;
 
-	public ListOption(Class<? super T> elementType, String name, String description) {
+	public ListOption(Class<T> elementType, String name, String description) {
 		this(elementType, name, description, Collections.emptyList());
 	}
 
-	public ListOption(Class<? super T> elementType, String name, String description, List<T> defaultValue) {
+	public ListOption(Class<T> elementType, String name, String description, List<T> defaultValue) {
 		super(name, description, defaultValue);
 
 		this.elementType = elementType;
 		this.elementValidator = OptionValidators.nonnull();
 	}
 
-	public ListOption(Class<? super T> elementType, String name, String description, List<T> defaultValue, Predicate<T> elementValidator) {
+	public ListOption(Class<T> elementType, String name, String description, List<T> defaultValue, Predicate<T> elementValidator) {
 		super(name, description, defaultValue, OptionValidators.list(elementValidator));
 
 		this.elementType = elementType;
 		this.elementValidator = elementValidator;
 	}
 
-	public Class<? super T> getElementType() {
+	public Class<T> getElementType() {
 		return elementType;
 	}
 
@@ -64,9 +64,9 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean add(T e) {
 		int size = get().size();
 
-		modify(value -> {
+		modify(list -> {
 			if (elementValidator.test(e)) {
-				value.add(e);
+				list.add(e);
 			}
 		});
 
@@ -76,8 +76,8 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean remove(Object o) {
 		int size = get().size();
 
-		modify(value -> {
-			value.remove(o);
+		modify(list -> {
+			list.remove(o);
 		});
 
 		return get().size() != size;
@@ -86,10 +86,10 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean addAll(Collection<? extends T> c) {
 		int size = get().size();
 
-		modify(value -> {
+		modify(list -> {
 			Collection<? extends T> elements = new ArrayList<>(c);
 			elements.removeIf(elementValidator.negate());
-			value.addAll(elements);
+			list.addAll(elements);
 		});
 
 		return get().size() != size;
@@ -98,10 +98,10 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean addAll(int index, Collection<? extends T> c) {
 		int size = get().size();
 
-		modify(value -> {
+		modify(list -> {
 			Collection<? extends T> elements = new ArrayList<>(c);
 			elements.removeIf(elementValidator.negate());
-			value.addAll(index, elements);
+			list.addAll(index, elements);
 		});
 
 		return get().size() != size;
@@ -110,8 +110,8 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean removeAll(Collection<?> c) {
 		int size = get().size();
 
-		modify(value -> {
-			value.removeAll(c);
+		modify(list -> {
+			list.removeAll(c);
 		});
 
 		return get().size() != size;
@@ -120,8 +120,8 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public boolean retainAll(Collection<?> c) {
 		int size = get().size();
 
-		modify(value -> {
-			value.retainAll(c);
+		modify(list -> {
+			list.retainAll(c);
 		});
 
 		return get().size() != size;
@@ -134,9 +134,9 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	public T set(int index, T element) {
 		T prev = get().get(index);
 
-		modify(value -> {
+		modify(list -> {
 			if (elementValidator.test(element)) {
-				value.set(index, element);
+				list.set(index, element);
 			}
 		});
 
@@ -144,14 +144,14 @@ public class ListOption<T> extends ModifiableOption<List<T>> {
 	}
 
 	public void add(int index, T element) {
-		modify(value -> value.add(index, element));
+		modify(list -> list.add(index, element));
 	}
 
 	public T remove(int index) {
 		T prev = get().get(index);
 
-		modify(value ->{
-			value.remove(index);
+		modify(list ->{
+			list.remove(index);
 		});
 
 		return prev;

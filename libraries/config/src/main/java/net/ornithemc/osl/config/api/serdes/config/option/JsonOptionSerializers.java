@@ -2,7 +2,6 @@ package net.ornithemc.osl.config.api.serdes.config.option;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 import net.ornithemc.osl.config.api.config.option.BaseOption;
 import net.ornithemc.osl.config.api.config.option.BooleanOption;
@@ -12,6 +11,7 @@ import net.ornithemc.osl.config.api.config.option.FloatOption;
 import net.ornithemc.osl.config.api.config.option.IntegerOption;
 import net.ornithemc.osl.config.api.config.option.ListOption;
 import net.ornithemc.osl.config.api.config.option.LongOption;
+import net.ornithemc.osl.config.api.config.option.MapOption;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.PathOption;
 import net.ornithemc.osl.config.api.config.option.ShortOption;
@@ -46,41 +46,28 @@ public class JsonOptionSerializers {
 		@Override
 		@SuppressWarnings("unchecked")
 		public void serialize(ListOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			Class elementType = option.getElementType();
-			JsonSerializer serializer = JsonSerializers.get(elementType);
-
-			json.writeArray(_json -> {
-				List<?> value = (List<?>)option.get();
-
-				for (int i = 0; i < value.size(); i++) {
-					Object element = value.get(i);
-
-					if (element == null) {
-						json.writeNull();
-					} else {
-						serializer.serialize(element, json);
-					}
-				}
-			});
+			JsonSerializers.Lists.serialize(option, json);
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
 		public void deserialize(ListOption option, SerializationSettings settings, JsonFile json) throws IOException {
-			Class elementType = option.getElementType();
-			JsonSerializer serializer = JsonSerializers.get(elementType);
+			JsonSerializers.Lists.deserialize(option, json);
+		}
+	});
+	@SuppressWarnings("rawtypes")
+	public static final JsonOptionSerializer<MapOption> MAP = register(MapOption.class, new JsonOptionSerializer<MapOption>() {
 
-			json.readArray(_json -> {
-				while (json.hasNext()) {
-					Object value = serializer.deserialize(json);
+		@Override
+		@SuppressWarnings("unchecked")
+		public void serialize(MapOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			JsonSerializers.Maps.serialize(option, json);
+		}
 
-					if (value == null) {
-						option.add(null);
-					} else {
-						option.add(value);
-					}
-				}
-			});
+		@Override
+		@SuppressWarnings("unchecked")
+		public void deserialize(MapOption option, SerializationSettings settings, JsonFile json) throws IOException {
+			JsonSerializers.Maps.deserialize(option, json);
 		}
 	});
 

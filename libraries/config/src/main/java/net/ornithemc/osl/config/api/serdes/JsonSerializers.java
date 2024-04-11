@@ -3,8 +3,13 @@ package net.ornithemc.osl.config.api.serdes;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import net.ornithemc.osl.config.api.config.option.ListOption;
+import net.ornithemc.osl.config.api.config.option.MapOption;
 import net.ornithemc.osl.core.api.json.JsonFile;
 import net.ornithemc.osl.core.api.registry.Registries;
 import net.ornithemc.osl.core.api.registry.Registry;
@@ -140,5 +145,90 @@ public class JsonSerializers {
 
 	public static <O> JsonSerializer<O> get(Class<?> type) {
 		return Registries.getMapping(REGISTRY, type);
+	}
+
+	public static class Lists {
+
+		public static <T> void serialize(ListOption<T> option, JsonFile json) throws IOException {
+			serialize(option.get(), option.getElementType(), json);
+		}
+
+		public static <T> void serialize(List<T> list, Class<T> type, JsonFile json) throws IOException {
+			JsonSerializer<T> serializer = JsonSerializers.get(type);
+
+			json.writeArray(_json -> {
+				for (int i = 0; i < list.size(); i++) {
+					serializer.serialize(list.get(i), json);
+				}
+			});
+		}
+
+		public static <T> void deserialize(ListOption<T> option, JsonFile json) throws IOException {
+			deserialize(option.get(), option.getElementType(), json);
+		}
+
+		public static <T> void deserialize(List<T> list, Class<T> type, JsonFile json) throws IOException {
+			JsonSerializer<T> serializer = JsonSerializers.get(type);
+
+			json.readArray(_json -> {
+				list.clear();
+
+				while (json.hasNext()) {
+					list.add(serializer.deserialize(json));
+				}
+			});
+		}
+	}
+
+	public static class Maps {
+
+		public static <K, V> void serialize(MapOption<K, V> option, JsonFile json) throws IOException {
+			serialize(option.get(), option.getKeyType(), option.getValueType(), json);
+		}
+
+		public static <K, V> void serialize(Map<K, V> map, Class<K> keyType, Class<V> valueType, JsonFile json) throws IOException {
+			json.writeObject(_json -> {
+				List<K> keys = new ArrayList<>();
+				List<V> values = new ArrayList<>();
+
+				for (Map.Entry<K, V> entry : map.entrySet()) {
+					keys.add(entry.getKey());
+					values.add(entry.getValue());
+				}
+
+				json.writeName("keys");
+				Lists.serialize(keys, keyType, json);
+
+				json.writeName("values");
+				Lists.serialize(values, valueType, json);
+			});
+		}
+
+		public static <K, V> void deserialize(MapOption<K, V> option, JsonFile json) throws IOException {
+			deserialize(option.get(), option.getKeyType(), option.getValueType(), json);
+		}
+
+		public static <K, V> void deserialize(Map<K, V> map, Class<K> keyType, Class<V> valueType, JsonFile json) throws IOException {
+			json.readObject(_json -> {
+				map.clear();
+
+				List<K> keys = new ArrayList<>();
+				List<V> values = new ArrayList<>();
+
+				json.readName("keys");
+				Lists.deserialize(keys, keyType, json);
+
+				json.readName("values");
+				Lists.deserialize(values, valueType, json);
+
+				if (keys.size() != values.size()) {
+					throw new IOException("keys and values arrays should be the same length!");
+				}
+
+				for (int i = 0; i < keys.size(); i++) {
+					map.put(keys.get(i), values.get(i));
+				}
+			});
+		}
 	}
 }
