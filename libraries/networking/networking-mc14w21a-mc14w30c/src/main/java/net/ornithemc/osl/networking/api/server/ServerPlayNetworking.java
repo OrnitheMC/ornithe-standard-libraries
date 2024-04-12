@@ -17,6 +17,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, initializer, listener);
@@ -25,6 +26,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static <T extends CustomPayload> void registerListenerAsync(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
 		ServerPlayNetworkingImpl.registerListenerAsync(channel, initializer, listener);
@@ -33,6 +35,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static void registerListener(String channel, ByteBufListener listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, listener);
@@ -41,6 +44,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static void registerListenerAsync(String channel, ByteBufListener listener) {
 		ServerPlayNetworkingImpl.registerListenerAsync(channel, listener);
@@ -49,6 +53,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static void registerListenerRaw(String channel, ByteArrayListener listener) {
 		ServerPlayNetworkingImpl.registerListenerRaw(channel, listener);
@@ -57,6 +62,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
+	 * A channel can be any String of length {@value net.ornithemc.osl.networking.api.Channels#MAX_LENGTH} or less.
 	 */
 	public static void registerListenerRawAsync(String channel, ByteArrayListener listener) {
 		ServerPlayNetworkingImpl.registerListenerRawAsync(channel, listener);

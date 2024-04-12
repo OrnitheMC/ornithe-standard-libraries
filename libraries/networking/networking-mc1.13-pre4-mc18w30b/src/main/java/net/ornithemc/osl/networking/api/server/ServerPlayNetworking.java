@@ -18,6 +18,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
+	 * A channel can be any valid {@linkplain net.minecraft.resource.Identifier Identifier}.
 	 */
 	public static <T extends CustomPayload> void registerListener(Identifier channel, Supplier<T> initializer, PayloadListener<T> listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, initializer, listener);
@@ -26,6 +27,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
+	 * A channel can be any valid {@linkplain net.minecraft.resource.Identifier Identifier}.
 	 */
 	public static <T extends CustomPayload> void registerListenerAsync(Identifier channel, Supplier<T> initializer, PayloadListener<T> listener) {
 		ServerPlayNetworkingImpl.registerListenerAsync(channel, initializer, listener);
@@ -34,6 +36,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener will only be called from the main thread.
+	 * A channel can be any valid {@linkplain net.minecraft.resource.Identifier Identifier}.
 	 */
 	public static void registerListener(Identifier channel, ByteBufListener listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, listener);
@@ -42,6 +45,7 @@ public final class ServerPlayNetworking {
 	/**
 	 * Register a listener to receive data from the server through the given channel.
 	 * This listener may be called off the main thread.
+	 * A channel can be any valid {@linkplain net.minecraft.resource.Identifier Identifier}.
 	 */
 	public static void registerListenerAsync(Identifier channel, ByteBufListener listener) {
 		ServerPlayNetworkingImpl.registerListenerAsync(channel, listener);
