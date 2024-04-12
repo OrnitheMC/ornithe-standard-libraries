@@ -7,10 +7,10 @@ import net.ornithemc.osl.config.api.config.option.validator.OptionValidators;
 
 public abstract class BaseOption<T> implements Option {
 
-	protected final String name;
-	protected final String description;
-	protected final T defaultValue;
-	protected final Predicate<T> validator;
+	private final String name;
+	private final String description;
+	private final T defaultValue;
+	private final Predicate<T> validator;
 
 	private T value;
 	private boolean loaded;
