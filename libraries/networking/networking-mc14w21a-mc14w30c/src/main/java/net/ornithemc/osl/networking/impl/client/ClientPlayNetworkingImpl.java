@@ -17,6 +17,7 @@ import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.api.PacketByteBufs;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.ByteArrayListener;
@@ -94,6 +95,8 @@ public final class ClientPlayNetworkingImpl {
 
 	private static void registerListenerImpl(String channel, Listener listener, boolean async) {
 		LISTENERS.compute(channel, (key, value) -> {
+			Channels.validate(channel);
+
 			if (value != null) {
 				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
 			}
