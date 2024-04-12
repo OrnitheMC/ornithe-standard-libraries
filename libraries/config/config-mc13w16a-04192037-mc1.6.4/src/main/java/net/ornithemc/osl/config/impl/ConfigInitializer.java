@@ -16,10 +16,9 @@ public class ConfigInitializer implements ModInitializer {
 	@Override
 	public void init() {
 		MinecraftServerEvents.LOAD_WORLD.register(server -> {
-			String worldDirName = server.getWorldDirName();
+			String worldSaveName = server.getWorldDirName();
 			WorldStorageSource storageSource = server.getWorldStorageSource();
-			WorldStorage storage = storageSource.get(worldDirName, false);
-
+			WorldStorage storage = storageSource.get(worldSaveName, false);
 			File worldDir = ((IWorldStorage)storage).osl$config$getDir();
 
 			ConfigManagerImpl.setUp(ConfigScope.WORLD, worldDir.toPath());

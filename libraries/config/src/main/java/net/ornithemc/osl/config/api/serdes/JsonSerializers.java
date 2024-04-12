@@ -168,7 +168,7 @@ public class JsonSerializers {
 		}
 
 		public static <T> void deserialize(ListOption<T> option, JsonFile json) throws IOException {
-			deserialize(option.get(), option.getElementType(), json);
+			option.modifyIO(list -> deserialize(list, option.getElementType(), json));
 		}
 
 		public static <T> void deserialize(List<T> list, Class<T> type, JsonFile json) throws IOException {
@@ -209,7 +209,7 @@ public class JsonSerializers {
 		}
 
 		public static <K, V> void deserialize(MapOption<K, V> option, JsonFile json) throws IOException {
-			deserialize(option.get(), option.getKeyType(), option.getValueType(), json);
+			option.modifyIO(map -> deserialize(map, option.getKeyType(), option.getValueType(), json));
 		}
 
 		public static <K, V> void deserialize(Map<K, V> map, Class<K> keyType, Class<V> valueType, JsonFile json) throws IOException {

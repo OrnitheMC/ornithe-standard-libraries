@@ -1,6 +1,8 @@
 package net.ornithemc.osl.config.api.serdes.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.network.PacketByteBuf;
 
@@ -12,6 +14,8 @@ import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializer
 import net.ornithemc.osl.config.api.serdes.config.option.NetworkOptionSerializers;
 
 public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> {
+
+	private static final int STRING_MAX_LENGTH = Short.MAX_VALUE;
 
 	@Override
 	public void serialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
@@ -29,11 +33,19 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 	}
 
 	private void serializeGroup(OptionGroup group, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
+		List<Option> options = new ArrayList<>();
+
 		for (Option option : group.getOptions()) {
 			if (!settings.skipDefaultOptions || !option.isDefault()) {
-				buffer.writeString(option.getName());
-				serializeOption(option, settings, buffer);
+				options.add(option);
 			}
+		}
+
+		buffer.writeInt(options.size());
+
+		for (Option option : options) {
+			buffer.writeString(option.getName());
+			serializeOption(option, settings, buffer);
 		}
 	}
 
@@ -50,14 +62,14 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 	@Override
 	public void deserialize(Config config, SerializationSettings settings, PacketByteBuf buffer) throws IOException {
 		if (!settings.skipConfigMetadata) {
-			String name = buffer.readString(32767);
+			String name = buffer.readString(STRING_MAX_LENGTH);
 			int version = buffer.readInt();
 		}
 
 		int groupCount = buffer.readInt();
 
 		for (int i = 0; i < groupCount; i++) {
-			String groupName = buffer.readString(32767);
+			String groupName = buffer.readString(STRING_MAX_LENGTH);
 			OptionGroup group = config.getGroup(groupName);
 
 			if (group == null) {
@@ -72,7 +84,7 @@ public class NetworkConfigSerializer implements ConfigSerializer<PacketByteBuf> 
 		int optionCount = buffer.readInt();
 
 		for (int i = 0; i < optionCount; i++) {
-			String optionName = buffer.readString(32767);
+			String optionName = buffer.readString(STRING_MAX_LENGTH);
 			Option option = group.getOption(optionName);
 
 			if (option == null) {

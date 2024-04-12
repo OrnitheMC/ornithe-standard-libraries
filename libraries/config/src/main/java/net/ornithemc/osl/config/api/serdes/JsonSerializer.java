@@ -10,6 +10,11 @@ public interface JsonSerializer<T> extends Serializer<T, JsonFile> {
 	void serialize(T value, JsonFile json) throws IOException;
 
 	@Override
+	default JsonFile serialize(T value) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	T deserialize(JsonFile json) throws IOException;
 
 }
