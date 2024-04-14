@@ -21,6 +21,7 @@ import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.api.PacketByteBufs;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteBufListener;
@@ -84,6 +85,8 @@ public final class ServerPlayNetworkingImpl {
 
 	private static void registerListenerImpl(String channel, Listener listener, boolean async) {
 		LISTENERS.compute(channel, (key, value) -> {
+			Channels.validate(channel);
+
 			if (value != null) {
 				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
 			}

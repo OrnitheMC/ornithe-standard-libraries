@@ -6,6 +6,7 @@ import java.util.Set;
 
 import net.minecraft.network.PacketByteBuf;
 
+import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
@@ -38,7 +39,7 @@ public class HandshakePayload implements CustomPayload {
 
 		if (channelCount > 0) {
 			for (int i = 0; i < channelCount; i++) {
-				channels.add(buffer.readString(20));
+				channels.add(buffer.readString(Channels.MAX_LENGTH));
 			}
 		}
 	}

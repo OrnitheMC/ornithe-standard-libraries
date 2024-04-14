@@ -4,6 +4,7 @@
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.CustomPayloadPacketMixin"
 	],
 	"client": [
 		"client.ClientNetworkHandlerMixin",

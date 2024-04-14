@@ -8,6 +8,7 @@ import net.minecraft.network.PacketHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
+import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 public class CustomPayloadPacket extends Packet {
@@ -37,7 +38,7 @@ public class CustomPayloadPacket extends Packet {
 	@Override
 	public void read(DataInputStream input) {
 		try {
-			this.channel = readString(input, 16);
+			this.channel = readString(input, Channels.MAX_LENGTH);
 			this.size = input.readShort();
 			if (this.size > 0 && this.size < Short.MAX_VALUE) {
 				this.data = new byte[this.size];

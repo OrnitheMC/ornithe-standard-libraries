@@ -20,6 +20,8 @@ Sending and receiving data is done through the `ClientPlayNetworking` and `Serve
 Mods can register network listeners through the `registerListener` and `registerListenerAsync` methods,
 allowing them to receive data through specific channels. Sending data is done through the `send` methods.
 
+Each custom payload is tied to a channel. Only connections that have listeners on that channel will receive the payload, and on the receiving end, the payload will only be handled by the listener on that channel. In Minecraft versions 1.13-pre2 and below, a channel can be any `String` of length 20 or less. In Minecraft versions 1.13-pre4 and above, a channel can be any valid `Identifier`. For `String` channels, the convention is `<(abbreviated) mod id>|<payload id>` (e.g. `Example|Cookie`), while for `Identifier` channels, the convention is `<mod id>:<payload id>` (e.g. `example:cookie`).
+
 For ease of use data can be wrapped in custom payload objects. These must implement the `CustomPayload` interface
 and must have a public construcor without parameters. An example can be seen below.
 
