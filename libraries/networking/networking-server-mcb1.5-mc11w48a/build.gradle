@@ -1,0 +1,4 @@
+setUpModule(project,
+	'entrypoints-server-mcserver-a0.1.0-mc12w30e',
+	'lifecycle-events-server-mcb1.4-1507-mc11w50a'
+)
