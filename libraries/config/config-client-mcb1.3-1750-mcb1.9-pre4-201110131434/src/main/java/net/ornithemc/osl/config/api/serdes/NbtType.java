@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtEnd;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtIntArray;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
 import net.minecraft.nbt.NbtShort;
@@ -33,7 +32,6 @@ public class NbtType<T extends NbtElement> {
 	public static final NbtType<NbtString>    STRING     = new NbtType<>(8 , "string");
 	public static final NbtType<NbtList>      LIST       = new NbtType<>(9 , "list");
 	public static final NbtType<NbtCompound>  COMPOUND   = new NbtType<>(10, "compound");
-	public static final NbtType<NbtIntArray>  INT_ARRAY  = new NbtType<>(11 , "int array");
 
 	private final int type;
 	private final String name;
@@ -42,7 +40,6 @@ public class NbtType<T extends NbtElement> {
 		BY_TYPE[type] = this;
 
 		this.type = type;
-		// NbtElement.TYPE_NAMES was added in 1.4
 		this.name = name;
 	}
 
