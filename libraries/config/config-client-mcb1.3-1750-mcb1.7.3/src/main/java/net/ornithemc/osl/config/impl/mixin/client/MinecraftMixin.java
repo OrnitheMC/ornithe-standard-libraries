@@ -22,12 +22,12 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$config$closeWorld(World world, String message, PlayerEntity player, CallbackInfo ci) {
-		if (world == null) {
+		if (world == null && osl$config$startGameDepth == 0) {
 			ConfigInitializer.CLOSE_WORLD.invoker().accept((Minecraft)(Object)this);
 		}
 	}
 
-	@Unique private int osl$lifecycle$startGameDepth;
+	@Unique private int osl$config$startGameDepth;
 
 	@Inject(
 		method = "startGame",
@@ -35,8 +35,8 @@ public class MinecraftMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$lifecycle$loadWorld(String name, String saveName, long seed, CallbackInfo ci) {
-		if (osl$lifecycle$startGameDepth++ == 0) {
+	private void osl$config$loadWorld(String name, String saveName, long seed, CallbackInfo ci) {
+		if (osl$config$startGameDepth++ == 0) {
 			// The startGame method recursively calls itself when converting from
 			// older world formats, but we only want to capture the initial call.
 			ConfigInitializer.START_GAME.invoker().accept((Minecraft)(Object)this, saveName);
@@ -49,7 +49,7 @@ public class MinecraftMixin {
 			value = "RETURN"
 		)
 	)
-	private void osl$lifecycle$readyWorld(CallbackInfo ci) {
-		osl$lifecycle$startGameDepth--;
+	private void osl$config$readyWorld(CallbackInfo ci) {
+		osl$config$startGameDepth--;
 	}
 }
