@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.5-SNAPSHOT' apply false
-	id 'ploceus' version '1.5-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.6-SNAPSHOT' apply false
+	id 'ploceus' version '1.6-SNAPSHOT' apply false
 }
 
 setUpJar(project)
@@ -62,7 +62,7 @@ def setUpJar(project) {
 	project.dependencies {
 		// dummy mc dependency to keep loom happy
 		minecraft "com.mojang:minecraft:${project.rootProject.minecraft_version}"
-		mappings "net.ornithemc:feather:${project.rootProject.minecraft_version}+build.${project.rootProject.feather_build}:v2"
+		mappings project.ploceus.featherMappings(project.rootProject.feather_build)
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 	}
 
@@ -234,31 +234,13 @@ def setUpModule(project, String... dependencies) {
 	def modules = getModuleDependencies(project, dependencies)
 
 	project.repositories {
-		maven {
-			name = 'Quilt'
-			url = 'https://maven.quiltmc.org/repository/release'
-		}
-		mavenCentral()
 	}
 
 	project.dependencies {
-		def mc_version = project.max_mc_version
-		def sided_mc_version
-		if ("*".equals(project.environment)) {
-			sided_mc_version = mc_version
-		} else {
-			sided_mc_version = "${mc_version}-${project.environment}"
-		}
-
-		minecraft "com.mojang:minecraft:${mc_version}"
+		minecraft "com.mojang:minecraft:${project.max_mc_version}"
+		mappings project.ploceus.featherMappings(project.feather_build)
 		if (project.hasProperty('nests_build')) {
-			mappings project.loom.layered {
-				mappings "net.ornithemc:feather:${sided_mc_version}+build.${project.feather_build}:v2"
-				addLayer project.ploceus.nestedMappings()
-			}
-			nests "net.ornithemc:nests:${sided_mc_version}+build.${project.nests_build}"
-		} else {
-			mappings "net.ornithemc:feather:${sided_mc_version}+build.${project.feather_build}:v2"
+			nests project.ploceus.nests(project.nests_build)
 		}
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
