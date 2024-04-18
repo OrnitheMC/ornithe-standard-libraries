@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.MinecraftServerMixin",
+		"NbtListMixin",
 		"common.RegionWorldStorageMixin",
 		"common.WorldStorageMixin"
 	],

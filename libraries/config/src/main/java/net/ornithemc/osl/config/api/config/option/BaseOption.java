@@ -7,10 +7,10 @@ import net.ornithemc.osl.config.api.config.option.validator.OptionValidators;
 
 public abstract class BaseOption<T> implements Option {
 
-	protected final String name;
-	protected final String description;
-	protected final T defaultValue;
-	protected final Predicate<T> validator;
+	private final String name;
+	private final String description;
+	private final T defaultValue;
+	private final Predicate<T> validator;
 
 	private T value;
 	private boolean loaded;
@@ -67,16 +67,25 @@ public abstract class BaseOption<T> implements Option {
 		loaded = false;
 	}
 
+	/**
+	 * @return the default value of this option
+	 */
 	public T getDefault() {
 		return defaultValue;
 	}
 
+	/**
+	 * @return the current value of this option
+	 */
 	public T get() {
 		requireLoaded();
 
 		return value;
 	}
 
+	/**
+	 * @return whether this option's current value has changed
+	 */
 	public void set(T newValue) {
 		requireLoaded();
 
@@ -85,6 +94,10 @@ public abstract class BaseOption<T> implements Option {
 		}
 	}
 
+	/**
+	 * Throws an exception if this option is not loaded.
+	 * Options are loaded while their parent config's scope is loaded.
+	 */
 	public void requireLoaded() {
 		if (!loaded) {
 			throw new IllegalStateException("this option is not loaded!");

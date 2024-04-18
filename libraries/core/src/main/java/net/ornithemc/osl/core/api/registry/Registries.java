@@ -11,4 +11,12 @@ public final class Registries {
 	public static <K, V> V registerMapping(Registry<? super K, ? super V> registry, K key, V value) {
 		return registry.register(key, value);
 	}
+
+	public static <K, V> V getMapping(Registry<? super K, ? super V> registry, K key) {
+		return registry.get(key);
+	}
+
+	public static <K, V> K getKey(Registry<? super K, ? super V> registry, V value) {
+		return registry.getKey(value);
+	}
 }

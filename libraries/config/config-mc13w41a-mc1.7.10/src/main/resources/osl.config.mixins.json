@@ -4,7 +4,8 @@
 	"package": "net.ornithemc.osl.config.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"common.MinecraftServerMixin"
+		"common.MinecraftServerMixin",
+		"common.NbtListMixin"
 	],
 	"client": [
 	],

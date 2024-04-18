@@ -27,14 +27,18 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 			}
 
 			json.writeObject(OPTIONS, _json -> {
-				for (OptionGroup group : config.getGroups()) {
-					json.writeObject(group.getName(), __json -> {
-						serializeGroup(group, settings, json);
-					});
-				}
+				serializeOptions(config, settings, json);
 			});
 		} finally {
 			json.close();
+		}
+	}
+
+	private void serializeOptions(Config config, SerializationSettings settings, JsonFile json) throws IOException {
+		for (OptionGroup group : config.getGroups()) {
+			json.writeObject(group.getName(), __json -> {
+				serializeGroup(group, settings, json);
+			});
 		}
 	}
 
@@ -68,21 +72,25 @@ public class JsonConfigSerializer implements ConfigSerializer<JsonFile> {
 			}
 
 			json.readObject(OPTIONS, _json -> {
-				while (json.hasNext()) {
-					String groupName = json.readName();
-					OptionGroup group = config.getGroup(groupName);
-
-					if (group == null) {
-						json.skipValue(); // TODO: log this, check if it needs updating from previous config version
-					} else {
-						json.readObject(__json -> {
-							deserializeGroup(group, settings, json);
-						});
-					}
-				}
+				deserializeOptions(config, settings, json);
 			});
 		} finally {
 			json.close();
+		}
+	}
+
+	private void deserializeOptions(Config config, SerializationSettings settings, JsonFile json) throws IOException {
+		while (json.hasNext()) {
+			String groupName = json.readName();
+			OptionGroup group = config.getGroup(groupName);
+
+			if (group == null) {
+				json.skipValue(); // TODO: log this, check if it needs updating from previous config version
+			} else {
+				json.readObject(__json -> {
+					deserializeGroup(group, settings, json);
+				});
+			}
 		}
 	}
 

@@ -23,8 +23,8 @@ public final class ConfigManagerImpl {
 		forInstance(scope, manager -> manager.unload());
 	}
 
-	public static void save(ConfigScope scope) {
-		forInstance(scope, manager -> manager.save());
+	public static void save(Config config) {
+		forInstance(config.getScope(), manager -> manager.save(config));
 	}
 
 	private static void forInstance(ConfigScope scope, Consumer<ScopedConfigManager> action) {

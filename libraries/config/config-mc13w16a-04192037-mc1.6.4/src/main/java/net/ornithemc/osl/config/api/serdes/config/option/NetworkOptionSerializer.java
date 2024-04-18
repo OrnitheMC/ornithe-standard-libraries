@@ -8,8 +8,15 @@ import net.ornithemc.osl.core.api.io.DataStream;
 
 public interface NetworkOptionSerializer<O extends Option> extends OptionSerializer<O, DataStream> {
 
-	void serialize(O option, SerializationSettings settings, DataStream ds) throws IOException;
+	@Override
+	default DataStream serialize(O option, SerializationSettings settings) throws IOException {
+		throw new UnsupportedOperationException();
+	}
 
-	void deserialize(O option, SerializationSettings settings, DataStream ds) throws IOException;
+	@Override
+	void serialize(O option, SerializationSettings settings, DataStream data) throws IOException;
+
+	@Override
+	void deserialize(O option, SerializationSettings settings, DataStream data) throws IOException;
 
 }

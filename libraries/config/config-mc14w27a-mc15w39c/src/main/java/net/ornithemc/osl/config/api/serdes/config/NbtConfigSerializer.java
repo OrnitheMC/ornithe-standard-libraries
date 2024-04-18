@@ -3,65 +3,79 @@ package net.ornithemc.osl.config.api.serdes.config;
 import java.io.IOException;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 import net.ornithemc.osl.config.api.config.Config;
 import net.ornithemc.osl.config.api.config.option.Option;
 import net.ornithemc.osl.config.api.config.option.group.OptionGroup;
+import net.ornithemc.osl.config.api.serdes.NbtType;
 import net.ornithemc.osl.config.api.serdes.SerializationSettings;
 import net.ornithemc.osl.config.api.serdes.config.option.NbtOptionSerializer;
 import net.ornithemc.osl.config.api.serdes.config.option.NbtOptionSerializers;
 
-public class NbtConfigSerializer implements ConfigSerializer<NbtCompound> {
+public class NbtConfigSerializer implements ConfigSerializer<NbtElement> {
 
 	private static final String NAME    = "config";
 	private static final String VERSION = "version";
 	private static final String OPTIONS = "options";
 
 	@Override
-	public void serialize(Config config, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	public void serialize(Config config, SerializationSettings settings, NbtElement nbt) throws IOException {
+		NbtCompound configNbt = NbtType.COMPOUND.cast(nbt);
+
 		if (!settings.skipConfigMetadata) {
-			nbt.putString(NAME, config.getName());
-			nbt.putInt(VERSION, config.getVersion());
+			configNbt.putString(NAME, config.getName());
+			configNbt.putInt(VERSION, config.getVersion());
 		}
 
+		configNbt.put(OPTIONS, serializeOptions(config, settings));
+	}
+
+	private NbtElement serializeOptions(Config config, SerializationSettings settings) throws IOException {
 		NbtCompound optionsNbt = new NbtCompound();
-		nbt.put(OPTIONS, optionsNbt);
 
 		for (OptionGroup group : config.getGroups()) {
-			NbtCompound groupNbt = new NbtCompound();
-			optionsNbt.put(group.getName(), groupNbt);
-
-			serializeGroup(group, settings, groupNbt);
+			optionsNbt.put(group.getName(), serializeGroup(group, settings));
 		}
+
+		return optionsNbt;
 	}
 
-	private void serializeGroup(OptionGroup group, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private NbtElement serializeGroup(OptionGroup group, SerializationSettings settings) throws IOException {
+		NbtCompound groupNbt = new NbtCompound();
+
 		for (Option option : group.getOptions()) {
 			if (!settings.skipDefaultOptions || !option.isDefault()) {
-				serializeOption(option, settings, nbt);
+				groupNbt.put(option.getName(), serializeOption(option, settings));
 			}
 		}
+
+		return groupNbt;
 	}
 
-	private <O extends Option> void serializeOption(O option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private <O extends Option> NbtElement serializeOption(O option, SerializationSettings settings) throws IOException {
 		NbtOptionSerializer<O> serializer = NbtOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
 			throw new IOException("don't know how to serialize option " + option);
 		} else {
-			serializer.serialize(option, settings, nbt);
+			return serializer.serialize(option, settings);
 		}
 	}
 
 	@Override
-	public void deserialize(Config config, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	public void deserialize(Config config, SerializationSettings settings, NbtElement nbt) throws IOException {
+		NbtCompound configNbt = NbtType.COMPOUND.cast(nbt);
+
 		if (!settings.skipConfigMetadata) {
-			String name = nbt.getString(NAME);
-			int version = nbt.getInt(VERSION);
+			String name = configNbt.getString(NAME);
+			int version = configNbt.getInt(VERSION);
 		}
 
-		NbtCompound optionsNbt = nbt.getCompound(OPTIONS);
+		deserializeOptions(config, settings, configNbt.getCompound(OPTIONS));
+	}
 
+	private void deserializeOptions(Config config, SerializationSettings settings, NbtCompound optionsNbt) throws IOException {
 		for (String groupName : optionsNbt.getKeys()) {
 			OptionGroup group = config.getGroup(groupName);
 			NbtCompound groupNbt = optionsNbt.getCompound(groupName);
@@ -74,19 +88,19 @@ public class NbtConfigSerializer implements ConfigSerializer<NbtCompound> {
 		}
 	}
 
-	private void deserializeGroup(OptionGroup group, SerializationSettings settings, NbtCompound nbt) throws IOException {
-		for (String optionName : nbt.getKeys()) {
+	private void deserializeGroup(OptionGroup group, SerializationSettings settings, NbtCompound groupNbt) throws IOException {
+		for (String optionName : groupNbt.getKeys()) {
 			Option option = group.getOption(optionName);
 
 			if (option == null) {
 				throw new IOException("unknown option " + optionName + " in group " + group.getName());
 			}
 
-			deserializeOption(option, settings, nbt);
+			deserializeOption(option, settings, groupNbt.get(optionName));
 		}
 	}
 
-	private <O extends Option> void deserializeOption(O option, SerializationSettings settings, NbtCompound nbt) throws IOException {
+	private <O extends Option> void deserializeOption(O option, SerializationSettings settings, NbtElement nbt) throws IOException {
 		NbtOptionSerializer<O> serializer = NbtOptionSerializers.get(option.getClass());
 
 		if (serializer == null) {
