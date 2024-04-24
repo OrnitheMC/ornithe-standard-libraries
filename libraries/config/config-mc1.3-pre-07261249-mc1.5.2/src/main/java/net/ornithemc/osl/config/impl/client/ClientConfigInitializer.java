@@ -1,5 +1,7 @@
 package net.ornithemc.osl.config.impl.client;
 
+import net.minecraft.client.Minecraft;
+
 import net.ornithemc.osl.config.api.ConfigScope;
 import net.ornithemc.osl.config.api.LoadingPhase;
 import net.ornithemc.osl.config.impl.ConfigManagerImpl;
@@ -11,7 +13,7 @@ public class ClientConfigInitializer implements ClientModInitializer {
 	@Override
 	public void initClient() {
 		MinecraftClientEvents.START.register(minecraft -> {
-			ConfigManagerImpl.setUp(ConfigScope.GLOBAL, minecraft.runDir.toPath());
+			ConfigManagerImpl.setUp(ConfigScope.GLOBAL, Minecraft.getRunDirectory().toPath());
 			ConfigManagerImpl.load(ConfigScope.GLOBAL, LoadingPhase.START);
 		});
 		MinecraftClientEvents.READY.register(minecraft -> {
