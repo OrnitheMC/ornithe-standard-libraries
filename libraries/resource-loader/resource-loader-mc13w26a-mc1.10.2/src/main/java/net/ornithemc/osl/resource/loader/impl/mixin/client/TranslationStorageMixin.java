@@ -20,6 +20,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.client.resource.Resource;
+import net.minecraft.client.resource.SimpleResource;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.manager.ResourceManager;
 import net.minecraft.resource.Identifier;
@@ -57,10 +58,20 @@ public class TranslationStorageMixin {
 		)
 	)
 	private void osl$resource_loader$loadTranslationFiles(TranslationStorage instance, InputStream is, Operation<Void> original, @Local Resource resource) throws IOException{
-		if (resource.getLocation().getPath().endsWith(".lang")){
-			original.call(instance, is); // load .lang
-		} else {
+		boolean loadAsJson = false;
+
+		if (resource instanceof SimpleResource) {
+			Identifier location = ((SimpleResourceAccessor)resource).osl$resource_loader$getLocation();
+
+			if (location.getPath().endsWith(".json")) {
+				loadAsJson = true;
+			}
+		}
+
+		if (loadAsJson){
 			loadJson(is);
+		} else {
+			original.call(instance, is); // load .lang
 		}
 	}
 
