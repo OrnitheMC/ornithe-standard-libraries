@@ -22,29 +22,40 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.manager.ResourceManager;
 import net.minecraft.resource.Identifier;
 import net.minecraft.resource.Resource;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TranslationStorage.class)
-public class TranslationStorageMixin {
+public abstract class TranslationStorageMixin {
 
 	@Final
 	@Shadow
 	private Map<String, String> translations;
 
-	@WrapOperation(
+	@Shadow
+	protected abstract void load(List<?> resources);
+
+	@Inject(
 		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resource/language/TranslationStorage;load(Ljava/util/List;)V"
+			target = "Lnet/minecraft/client/resource/manager/ResourceManager;getResources(Lnet/minecraft/resource/Identifier;)Ljava/util/List;"
 		)
 	)
-	private void osl$resource_loader$loadTranslationFiles(TranslationStorage instance, List<Resource> resources, Operation<Void> original,
-														  @Local(argsOnly = true) ResourceManager resourceManager, @Local(ordinal = 0) String languageCode,
-														  @Local(ordinal = 1) String originalPath, @Local(ordinal = 2) String namespace) throws IOException {
-		String[] paths = new String[]{originalPath, String.format("lang/%s.lang", languageCode),
+	private void osl$resource_loader$loadTranslationFiles(CallbackInfo ci,
+														  @Local(argsOnly = true) ResourceManager resourceManager,
+														  @Local(ordinal = 0) String languageCode,
+														  @Local(ordinal = 2) String namespace) {
+		String[] paths = new String[] {
+			String.format("lang/%s.lang", languageCode),
 			String.format("lang/%s.json", languageCode.toLowerCase(Locale.ROOT)),
-			String.format("lang/%s.lang", languageCode.toLowerCase(Locale.ROOT))};
-		for (String path : paths){
-			original.call(instance, resourceManager.getResources(new Identifier(namespace, path)));
+			String.format("lang/%s.lang", languageCode.toLowerCase(Locale.ROOT))
+		};
+		for (String path : paths) {
+			try {
+				this.load(resourceManager.getResources(new Identifier(namespace, path)));
+			} catch (IOException ignored) {
+			}
 		}
 	}
 
