@@ -33,7 +33,7 @@ public abstract class TranslationStorageMixin {
 	private Map<String, String> translations;
 
 	@Shadow
-	protected abstract void load(List<?> resources);
+	protected abstract void load(List<Resource> resources);
 
 	@Inject(
 		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
