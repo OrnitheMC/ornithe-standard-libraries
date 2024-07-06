@@ -1,6 +1,7 @@
 package net.ornithemc.osl.config.impl.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,8 @@ import net.ornithemc.osl.config.impl.ConfigInitializer;
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
+	@Shadow private World world;
+
 	@Inject(
 		method = "setWorld(Lnet/minecraft/world/World;Ljava/lang/String;Lnet/minecraft/entity/living/player/PlayerEntity;)V",
 		at = @At(
@@ -22,7 +25,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$config$closeWorld(World world, String message, PlayerEntity player, CallbackInfo ci) {
-		if (world == null && osl$config$startGameDepth == 0) {
+		if (this.world != null && world == null && osl$config$startGameDepth == 0) {
 			ConfigInitializer.CLOSE_WORLD.invoker().accept((Minecraft)(Object)this);
 		}
 	}
