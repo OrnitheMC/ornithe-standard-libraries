@@ -17,6 +17,7 @@ import net.ornithemc.osl.lifecycle.api.MinecraftEvents;
 
 public class ConfigInitializer implements ModInitializer {
 
+	// keep this here until Lifecycle Events has the saveName parameter in its event
 	public static final Event<BiConsumer<Minecraft, String>> START_GAME = Event.biConsumer();
 	// keep this here until Lifecycle Events has this...
 	public static final Event<Consumer<Minecraft>> CLOSE_WORLD = Event.consumer();

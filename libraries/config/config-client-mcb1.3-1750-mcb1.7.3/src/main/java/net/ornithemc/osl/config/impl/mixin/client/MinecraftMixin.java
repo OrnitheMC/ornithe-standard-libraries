@@ -25,7 +25,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$config$closeWorld(World world, String message, PlayerEntity player, CallbackInfo ci) {
-		if (this.world != null && world == null && osl$config$startGameDepth == 0) {
+		if (this.world != null && !this.world.isMultiplayer && world == null && osl$config$startGameDepth == 0) {
 			ConfigInitializer.CLOSE_WORLD.invoker().accept((Minecraft)(Object)this);
 		}
 	}
