@@ -181,6 +181,14 @@ def setUpModule(project, String... dependencies) {
 	}
 	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
 
+	project.loom {
+		if (!isCore && project.environment == 'client') {
+			clientOnlyMinecraftJar()
+		}
+		if (!isCore && project.environment == 'server') {
+			serverOnlyMinecraftJar()
+		}
+	}
 	project.ploceus {
 		setGeneration(2)
 	}
@@ -192,7 +200,7 @@ def setUpModule(project, String... dependencies) {
 	}
 
 	project.dependencies {
-		minecraft "com.mojang:minecraft:${project.max_mc_version}"
+		minecraft "com.mojang:minecraft:${project.minecraft_version}"
 		mappings project.ploceus.featherMappings(project.feather_build)
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
