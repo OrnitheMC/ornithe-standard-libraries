@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.6-SNAPSHOT' apply false
-	id 'ploceus' version '1.6-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.7-SNAPSHOT' apply false
+	id 'ploceus' version '1.7-SNAPSHOT' apply false
 }
 
 setUpJar(project)
@@ -43,11 +43,7 @@ def setUpJar(project) {
 	project.apply plugin: 'ploceus'
 
 	project.base {
-		def archives_name = "${project.rootProject.root_archives_base_name}"
-		if (!"*".equals(project.environment)) {
-			archives_name += "-${project.environment}"
-		}
-		archivesName = archives_name
+		archivesName = "${project.rootProject.root_archives_base_name}"
 	}
 	project.version = "${project.rootProject.root_version}"
 	project.group = "${project.rootProject.root_maven_group}"
@@ -66,16 +62,6 @@ def setUpJar(project) {
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 	}
 
-	project.sourceSets {
-		main {
-			resources {
-				if (!"*".equals(project.environment)) {
-					srcDirs += project.rootProject.sourceSets.main.resources.srcDirs
-				}
-			}
-		}
-	}
-
 	project.processResources {
 		filesMatching('fabric.mod.json') {
 			expand project.properties
@@ -87,19 +73,6 @@ def setUpJar(project) {
 			rename { "${it}_${project.base.archivesName.get()}" }
 		}
 	}
-}
-
-def getJar(String environment) {
-	if ("client".equals(environment)) {
-		return project(':client')
-	}
-	if ("server".equals(environment)) {
-		return project(':server')
-	}
-	if ("*".equals(environment)) {
-		return project(':')
-	}
-	throw new RuntimeException("unknown environment ${environment}")
 }
 
 def addPomDependency(project) {
@@ -172,10 +145,10 @@ def setUpLibrary(project) {
 	project.dependencies {
 		implementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
-		implementation "org.apache.logging.log4j:log4j-api:${project.rootProject.log4j_version}"
-		implementation "org.apache.logging.log4j:log4j-core:${project.rootProject.log4j_version}"
+		implementation "org.apache.logging.log4j:log4j-api:2.19.0"
+		implementation "org.apache.logging.log4j:log4j-core:2.19.0"
 
-		implementation project.project(':libraries:core')
+		implementation project.dependencies.project(path: ':libraries:core', configuration: 'namedElements')
 	}
 
 	addPomDependency(project)
@@ -186,7 +159,7 @@ def setUpModule(project, String... dependencies) {
 	// normally modules have a 'root' and subprojects
 	// for different mc version ranges
 	// the Core API is the only exception to this
-	def isCore = (project == project.project(':libraries:core'))
+	def isCore = (project.path == ':libraries:core')
 
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
@@ -204,30 +177,12 @@ def setUpModule(project, String... dependencies) {
 		project.base {
 			archivesName = "${project.rootProject.archives_base_name}-${project.parent.archives_base_name}"
 		}
-		def mc_version_range = "mc${project.min_mc_version}-mc${project.max_mc_version}"
-		if ("*".equals(project.environment)) {
-			project.version = "${project.parent.version}+${mc_version_range}"
-		} else {
-			project.version = "${project.parent.version}+${project.environment}-${mc_version_range}"
-		}
+		project.version = "${project.parent.version}+mc${project.min_mc_version}-mc${project.max_mc_version}"
 	}
 	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
 
-	project.loom {
-		if ("client".equals(project.environment)) {
-			clientOnlyMinecraftJar()
-		}
-		if ("server".equals(project.environment)) {
-			serverOnlyMinecraftJar()
-		}
-	}
 	project.ploceus {
-		if ("client".equals(project.environment)) {
-			clientOnlyMappings()
-		}
-		if ("server".equals(project.environment)) {
-			serverOnlyMappings()
-		}
+		setGeneration(2)
 	}
 
 	def libraries = getLibraryDependencies(project, dependencies)
@@ -239,47 +194,53 @@ def setUpModule(project, String... dependencies) {
 	project.dependencies {
 		minecraft "com.mojang:minecraft:${project.max_mc_version}"
 		mappings project.ploceus.featherMappings(project.feather_build)
+		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
+
+		if (project.hasProperty('raven_build')) {
+			exceptions project.ploceus.raven(project.raven_build)
+		}
+		if (project.hasProperty('client_raven_build')) {
+			clientExceptions project.ploceus.raven(project.client_raven_build, 'client')
+		}
+		if (project.hasProperty('server_raven_build')) {
+			serverExceptions project.ploceus.raven(project.server_raven_build, 'server')
+		}
+		if (project.hasProperty('sparrow_build')) {
+			signatures project.ploceus.sparrow(project.sparrow_build)
+		}
+		if (project.hasProperty('client_sparrow_build')) {
+			clientSignatures project.ploceus.sparrow(project.client_sparrow_build, 'client')
+		}
+		if (project.hasProperty('server_sparrow_build')) {
+			serverSignatures project.ploceus.sparrow(project.server_sparrow_build, 'server')
+		}
 		if (project.hasProperty('nests_build')) {
 			nests project.ploceus.nests(project.nests_build)
 		}
-		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
-
-		// log4j is only needed in 1.6.4 and below, but checking the mc version
-		// is hard if you don't have normalized version ids, so as a workaround
-		// we add log4j if the project uses nests (which coincides with 1.8.2-pre4
-		// and below)
-		if (isCore || project.hasProperty('nests_build')) {
-			implementation "org.apache.logging.log4j:log4j-api:${project.rootProject.log4j_version}"
-			implementation "org.apache.logging.log4j:log4j-core:${project.rootProject.log4j_version}"
+		if (project.hasProperty('client_nests_build')) {
+			clientNests project.ploceus.nests(project.client_nests_build, 'client')
 		}
+		if (project.hasProperty('server_nests_build')) {
+			serverNests project.ploceus.nests(project.server_nests_build, 'server')
+		}
+
+		project.ploceus.addCommonLibraries()
 
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		if (isCore) {
 			include "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		}
 
-		libraries.each { library ->
-			compileOnly library
+		libraries.each { libraryPath ->
+			implementation project.dependencies.project(path: libraryPath)
 		}
-		modules.each { module ->
-			compileOnly module
+		modules.each { modulePath ->
+			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
 		}
 	}
 
-	if (isCore) {
-		getJar('*').dependencies {
-			include project
-		}
-		getJar('client').dependencies {
-			include project
-		}
-		getJar('server').dependencies {
-			include project
-		}
-	} else {
-		getJar(project.environment).dependencies {
-			include project
-		}
+	project.rootProject.dependencies {
+		include project.dependencies.project(path: project.path, configuration: 'namedElements')
 	}
 
 	project.sourceSets {
@@ -309,10 +270,6 @@ def setUpModule(project, String... dependencies) {
 	}
 
 	project.java {
-		// Still required by IDEs such as Eclipse and Visual Studio Code
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
-
 		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
 		// If you remove this line, sources will not be generated.
 		withSourcesJar()
@@ -366,18 +323,15 @@ def setUpModule(project, String... dependencies) {
 def getLibraryDependencies(project, String... moduleNames) {
 	def libraries = new ArrayList<>()
 
-	if (project != project.project(':libraries:core')) {
-		libraries.add(project.parent)
+	if (project.path != ':libraries:core') {
+		libraries.add(project.parent.path)
 	}
 
 	for (moduleName : moduleNames) {
 		def i = moduleName.indexOf('-mc')
-		if (!"*".equals(project.environment)) {
-			i -= "-${project.environment}".length()
-		}
 		def libraryName = moduleName.substring(0, i)
 
-		libraries.add(project.project(":libraries:${libraryName}"))
+		libraries.add(":libraries:${libraryName}")
 	}
 
 	return libraries
@@ -386,18 +340,15 @@ def getLibraryDependencies(project, String... moduleNames) {
 def getModuleDependencies(project, String... moduleNames) {
 	def modules = new ArrayList<>()
 
-	if (project != project.project(':libraries:core')) {
-		modules.add(project.project(':libraries:core'))
+	if (project.path != ':libraries:core') {
+		modules.add(':libraries:core')
 	}
 
 	for (moduleName : moduleNames) {
 		def i = moduleName.indexOf('-mc')
-		if (!"*".equals(project.environment)) {
-			i -= "-${project.environment}".length()
-		}
 		def libraryName = moduleName.substring(0, i)
 
-		modules.add(project.project(":libraries:${libraryName}:${moduleName}"))
+		modules.add(":libraries:${libraryName}:${moduleName}")
 	}
 
 	return modules
@@ -432,11 +383,5 @@ allprojects {
 	tasks.withType(JavaCompile).configureEach {
 		it.options.encoding = 'UTF-8'
 		it.options.release = 8
-	}
-
-	java {
-		// Still required by IDEs such as Eclipse and Visual Studio Code
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
 	}
 }
