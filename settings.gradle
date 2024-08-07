@@ -21,5 +21,5 @@ rootProject.name = 'osl'
 include ':libraries:core'
 
 include ':libraries:entrypoints'
-include ':libraries:entrypoints:entrypoints-mc1.3-pre-07261249-mc1.5.2'
+include ':libraries:entrypoints:entrypoints-mcin-20091223-1459-mc1.5.2'
 include ':libraries:entrypoints:entrypoints-mc13w16a-04192037-mc1.14.4'
