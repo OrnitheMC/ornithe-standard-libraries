@@ -70,3 +70,13 @@ include ':libraries:networking:networking-mc14w31a-mc1.13-pre2'
 include ':libraries:networking:networking-mc1.13-pre4-mc18w30b'
 include ':libraries:networking:networking-mc18w31a-mc1.14.4'
 
+include ':libraries:resource-loader'
+include ':libraries:resource-loader:resource-loader-mca1.2.2-1624-mc11w48a'
+include ':libraries:resource-loader:resource-loader-mc11w49a-mc1.2.5'
+include ':libraries:resource-loader:resource-loader-mc12w15a-mc13w07a'
+include ':libraries:resource-loader:resource-loader-mc13w09a-mc1.5.2'
+include ':libraries:resource-loader:resource-loader-mc13w26a-mc1.10.2'
+include ':libraries:resource-loader:resource-loader-mc16w32a-mc1.12.2'
+include ':libraries:resource-loader:resource-loader-mc17w43a-mc19w07a'
+include ':libraries:resource-loader:resource-loader-mc19w08a-mc1.14.4'
+
