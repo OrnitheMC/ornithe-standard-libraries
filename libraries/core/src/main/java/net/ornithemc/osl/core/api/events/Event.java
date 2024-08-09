@@ -1,8 +1,5 @@
 package net.ornithemc.osl.core.api.events;
 
-import net.ornithemc.osl.core.api.function.TriConsumer;
-import net.ornithemc.osl.core.api.function.TriFunction;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +8,9 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import net.ornithemc.osl.core.api.util.function.TriConsumer;
+import net.ornithemc.osl.core.api.util.function.TriFunction;
 
 public class Event<T> {
 

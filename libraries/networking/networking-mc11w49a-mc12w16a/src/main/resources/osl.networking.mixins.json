@@ -1,0 +1,20 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.networking.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.CustomPayloadPacketMixin",
+		"common.PacketHandlerMixin"
+	],
+	"client": [
+		"client.ClientNetworkHandlerMixin"
+	],
+	"server": [
+		"server.ServerLoginNetworkHandlerMixin",
+		"server.ServerPlayNetworkHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

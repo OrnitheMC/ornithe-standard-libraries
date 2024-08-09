@@ -1,0 +1,4 @@
+setUpModule(project,
+	'entrypoints-mcin-20091223-1459-mc1.5.2',
+	'lifecycle-events-mcb1.4-1507-mcb1.7.3'
+)
