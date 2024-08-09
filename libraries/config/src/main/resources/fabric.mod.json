@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "osl-config",
+	"version": "${version}",
+	"name": "Config",
+	"description": "A config library.",
+	"authors": [
+		"OrnitheMC",
+		"Space Walker"
+	],
+	"contact": {
+		"homepage": "https://ornithemc.net/",
+		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ornithe-standard-libraries/config/icon.png",
+	"environment": "${environment}",
+	"entrypoints": {
+		"client-init": [
+			"net.ornithemc.osl.config.impl.client.ClientConfigInitializer"
+		],
+		"server-init": [
+			"net.ornithemc.osl.config.impl.server.ServerConfigInitializer"
+		],
+		"init": [
+			"net.ornithemc.osl.config.impl.ConfigInitializer"
+		]
+	},
+	"mixins": [
+		"osl.config.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "${mc_version_range}",
+		"osl-core": ">=0.6.0",
+		"osl-entrypoints": ">=0.2.0",
+		"osl-lifecycle-events": ">=0.4.0"
+	}
+}
