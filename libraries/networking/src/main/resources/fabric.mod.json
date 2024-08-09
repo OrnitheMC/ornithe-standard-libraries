@@ -31,7 +31,7 @@
 		"osl.networking.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.21",
+		"fabricloader": ">=0.16.0",
 		"minecraft": "${mc_version_range}",
 		"osl-core": ">=0.4.0",
 		"osl-entrypoints": ">=0.2.0",
