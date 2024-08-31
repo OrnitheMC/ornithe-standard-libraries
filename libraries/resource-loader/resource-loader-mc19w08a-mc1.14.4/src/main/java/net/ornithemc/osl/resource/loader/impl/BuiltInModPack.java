@@ -151,14 +151,15 @@ public class BuiltInModPack implements ModPack {
 		List<Identifier> locations = new ArrayList<>();
 
 		for (Path root : roots) {
-			Path start = root.resolve(type.getDirectory()).resolve(namespace).resolve(path);
+			Path dir = root.resolve(type.getDirectory()).resolve(namespace);
+			Path start = dir.resolve(path);
 			Iterator<Path> it = Files.walk(start).iterator();
 
 			while (it.hasNext()) {
 				Path p = it.next();
 
 				if (!p.endsWith(".mcmeta") && Files.isRegularFile(p) && filter.test(p.getFileName().toString())) {
-					locations.add(new Identifier(namespace, start.relativize(p).toString().replaceAll("\\\\", "/")));
+					locations.add(new Identifier(namespace, dir.relativize(p).toString().replaceAll("\\\\", "/")));
 				}
 			}
 		}
