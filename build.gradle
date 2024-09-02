@@ -48,6 +48,10 @@ def setUpJar(project) {
 	project.version = "${project.rootProject.root_version}"
 	project.group = "${project.rootProject.root_maven_group}"
 
+	project.ploceus {
+		setGeneration(2)
+	}
+
 	project.repositories {
 		maven {
 			name = 'Quilt'
