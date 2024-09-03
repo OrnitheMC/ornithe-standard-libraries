@@ -19,7 +19,7 @@ public class MinecraftMixin {
 	@Shadow private World world;
 
 	@Inject(
-		method = "setWorld(Lnet/minecraft/world/World;Ljava/lang/String;Lnet/minecraft/entity/living/player/PlayerEntity;)V",
+		method = "setWorld(Lnet/minecraft/world/World;Ljava/lang/String;Lnet/minecraft/entity/mob/player/PlayerEntity;)V",
 		at = @At(
 			value = "HEAD"
 		)
