@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.7-SNAPSHOT' apply false
-	id 'ploceus' version '1.7-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.9-SNAPSHOT' apply false
+	id 'ploceus' version '1.9-SNAPSHOT' apply false
 }
 
 setUpJar(project)
@@ -235,8 +235,6 @@ def setUpModule(project, String... dependencies) {
 		if (project.hasProperty('server_nests_build')) {
 			serverNests project.ploceus.nests(project.server_nests_build, 'server')
 		}
-
-		project.ploceus.addCommonLibraries()
 
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		if (isCore) {
