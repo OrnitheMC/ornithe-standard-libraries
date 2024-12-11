@@ -16,11 +16,11 @@ public class ClientConfigInitializer implements ClientModInitializer {
 	public void initClient() {
 		MinecraftClientEvents.START.register(minecraft -> {
 			// this is one hell of a hack to make this code compatible with 1.5 as well as 1.6
-			// the code is compiled against 1.5.2, so that the Minecraft.getGameDirectory method exists
-			// in 1.5.2 gameDir is null at this time, so it will call Minecraft.getGameDirectory
-			// in 1.6.4 gameDir is not null so it will not have to call Minecraft.getGameDirectory,
+			// the code is compiled against 1.5.2, so that the Minecraft.getWorkingDirectory method exists
+			// in 1.5.2 gameDir is null at this time, so it will call Minecraft.getWorkingDirectory
+			// in 1.6.4 gameDir is not null so it will not have to call Minecraft.getWorkingDirectory,
 			// which does not exist in that version anyway
-			File gameDir = (minecraft.gameDir == null) ? Minecraft.getGameDirectory() : minecraft.gameDir;
+			File gameDir = (minecraft.gameDir == null) ? Minecraft.getWorkingDirectory() : minecraft.gameDir;
 			ConfigManagerImpl.setUp(ConfigScope.GLOBAL, gameDir.toPath());
 			ConfigManagerImpl.load(ConfigScope.GLOBAL, LoadingPhase.START);
 		});
