@@ -137,9 +137,7 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	protected abstract T unmodifiable(T value);
 
 	/**
-	 * modifies the current value of this option
-	 * 
-	 * @return whether this option's current value was modified.
+	 * Modifies the current value of this option.
 	 */
 	public void modify(Consumer<T> modifier) {
 		// save the state of the current value
@@ -159,9 +157,7 @@ public abstract class ModifiableOption<T> extends BaseOption<T> {
 	}
 
 	/**
-	 * modifies the current value of this option or throws an IO exception
-	 * 
-	 * @return whether this option's current value was modified.
+	 * Modifies the current value of this option or throws an IO exception.
 	 */
 	public void modifyIO(IOConsumer<T> modifier) throws IOException {
 		// save the state of the current value

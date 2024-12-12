@@ -84,7 +84,7 @@ public abstract class BaseOption<T> implements Option {
 	}
 
 	/**
-	 * @return whether this option's current value has changed
+	 * Sets this option to the given value.
 	 */
 	public void set(T newValue) {
 		requireLoaded();
