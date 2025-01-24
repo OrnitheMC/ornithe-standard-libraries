@@ -85,9 +85,8 @@ public class MinecraftServerMixin {
 		method = "loadWorld",
 		at = @At(
 			value = "INVOKE",
-			remap = false,
-			ordinal = 0,
-			target = "Ljava/lang/System;currentTimeMillis()J"
+			shift = Shift.AFTER,
+			target = "Lnet/minecraft/server/PlayerManager;setWorld(Lnet/minecraft/server/world/ServerWorld;)V"
 		)
 	)
 	private void osl$lifecycle$prepareWorld(CallbackInfo ci) {
