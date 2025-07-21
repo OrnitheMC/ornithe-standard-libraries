@@ -56,7 +56,7 @@ public class MinecraftMixin {
 	@Inject(
 		method = "tick",
 		at = @At(
-			value = "RETURN"
+			value = "TAIL"
 		)
 	)
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
