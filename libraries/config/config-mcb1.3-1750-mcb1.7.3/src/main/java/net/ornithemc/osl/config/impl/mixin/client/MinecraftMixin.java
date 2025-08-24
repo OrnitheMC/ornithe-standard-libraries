@@ -12,6 +12,7 @@ import net.minecraft.entity.mob.player.PlayerEntity;
 import net.minecraft.world.World;
 
 import net.ornithemc.osl.config.impl.ConfigInitializer;
+import net.ornithemc.osl.lifecycle.impl.client.MinecraftAccess;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -26,7 +27,7 @@ public class MinecraftMixin {
 	)
 	private void osl$config$closeWorld(World world, String message, PlayerEntity player, CallbackInfo ci) {
 		if (this.world != null && !this.world.isMultiplayer && world == null && osl$config$startGameDepth == 0) {
-			ConfigInitializer.CLOSE_WORLD.invoker().accept((Minecraft)(Object)this);
+			ConfigInitializer.CLOSE_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
 		}
 	}
 
@@ -42,7 +43,7 @@ public class MinecraftMixin {
 		if (osl$config$startGameDepth++ == 0) {
 			// The startGame method recursively calls itself when converting from
 			// older world formats, but we only want to capture the initial call.
-			ConfigInitializer.START_GAME.invoker().accept((Minecraft)(Object)this, saveName);
+			ConfigInitializer.START_GAME.invoker().accept(MinecraftAccess.INSTANCE, saveName);
 		}
 	}
 

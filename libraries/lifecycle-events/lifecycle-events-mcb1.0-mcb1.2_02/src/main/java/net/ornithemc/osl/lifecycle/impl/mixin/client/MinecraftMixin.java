@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
+import net.ornithemc.osl.lifecycle.impl.client.MinecraftAccess;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -20,7 +21,8 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$start(CallbackInfo ci) {
-		MinecraftClientEvents.START.invoker().accept((Minecraft)(Object)this);
+		MinecraftAccess.INSTANCE = (Minecraft)(Object)this;
+		MinecraftClientEvents.START.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -30,7 +32,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$ready(CallbackInfo ci) {
-		MinecraftClientEvents.READY.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.READY.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -40,7 +42,17 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$stop(CallbackInfo ci) {
-		MinecraftClientEvents.STOP.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.STOP.invoker().accept(MinecraftAccess.INSTANCE);
+	}
+
+	@Inject(
+		method = "shutdown",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$lifecycle$stopped(CallbackInfo ci) {
+		MinecraftAccess.INSTANCE = null;
 	}
 
 	@Inject(
@@ -50,7 +62,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$startTick(CallbackInfo ci) {
-		MinecraftClientEvents.TICK_START.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.TICK_START.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -60,7 +72,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
-		MinecraftClientEvents.TICK_END.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.TICK_END.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Unique private int osl$lifecycle$startGameDepth;
@@ -75,7 +87,7 @@ public class MinecraftMixin {
 		// The startGame method recursively calls itself when converting from
 		// older world formats, but we only want to capture the initial call.
 		if (osl$lifecycle$startGameDepth++ == 0) {
-			MinecraftClientEvents.LOAD_WORLD.invoker().accept((Minecraft)(Object)this);
+			MinecraftClientEvents.LOAD_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
 		}
 	}
 
@@ -87,7 +99,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$prepareWorld(CallbackInfo ci) {
-		MinecraftClientEvents.PREPARE_WORLD.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.PREPARE_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -100,7 +112,7 @@ public class MinecraftMixin {
 		// The startGame method recursively calls itself when converting from
 		// older world formats, but we only want to capture the initial call.
 		if (--osl$lifecycle$startGameDepth == 0) {
-			MinecraftClientEvents.READY_WORLD.invoker().accept((Minecraft)(Object)this);
+			MinecraftClientEvents.READY_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
 		}
 	}
 }
