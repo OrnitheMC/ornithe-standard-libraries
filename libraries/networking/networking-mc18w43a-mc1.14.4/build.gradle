@@ -1,0 +1,5 @@
+setUpModule(project,
+	'entrypoints-mc13w16a-04192037-mc1.14.4',
+	'lifecycle-events-mc19w04a-mc1.14.4',
+	'networking-common-mc18w31a-mc1.14.4'
+)

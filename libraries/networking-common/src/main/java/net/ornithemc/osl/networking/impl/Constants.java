@@ -13,6 +13,6 @@ public class Constants {
 	 */
 	public static final String OSL_HANDSHAKE_KEY = "\0OrnitheMC";
 
-	public static final int DEFAULT_MAX_STRING_LENGTH = 32767;
+	public static final int DEFAULT_MAX_STRING_LENGTH = Short.MAX_VALUE;
 
 }

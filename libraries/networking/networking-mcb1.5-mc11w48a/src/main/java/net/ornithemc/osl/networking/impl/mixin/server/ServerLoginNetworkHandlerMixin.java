@@ -52,7 +52,7 @@ public class ServerLoginNetworkHandlerMixin {
 		if (player != null) {
 			if (ornithe) {
 				// send channel registration data as soon as login occurs
-				ServerPlayNetworkingImpl.doSend(player, HandshakePayload.CHANNEL, HandshakePayload.server());
+				ServerPlayNetworkingImpl.sendNoCheck(player, HandshakePayload.CHANNEL, HandshakePayload.server());
 			}
 
 			ServerConnectionEvents.LOGIN.invoker().accept(server, player);
