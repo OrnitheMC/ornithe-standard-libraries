@@ -35,6 +35,7 @@
 		"minecraft": "${mc_version_range}",
 		"osl-core": ">=0.4.0",
 		"osl-entrypoints": ">=0.2.0",
-		"osl-lifecycle-events": ">=0.4.0"
+		"osl-lifecycle-events": ">=0.4.0",
+		"osl-networking-common": ">=0.1.0"
 	}
 }
