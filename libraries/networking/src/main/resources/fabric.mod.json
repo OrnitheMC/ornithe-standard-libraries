@@ -17,18 +17,8 @@
 	"icon": "assets/ornithe-standard-libraries/networking/icon.png",
 	"environment": "${environment}",
 	"entrypoints": {
-		"init": [
-			"net.ornithemc.osl.networking.impl.Networking"
-		],
-		"client-init": [
-			"net.ornithemc.osl.networking.impl.Networking"
-		],
-		"server-init": [
-			"net.ornithemc.osl.networking.impl.Networking"
-		]
 	},
 	"mixins": [
-		"osl.networking.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.0",

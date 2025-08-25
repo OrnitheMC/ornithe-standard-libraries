@@ -1,0 +1,87 @@
+package net.ornithemc.osl.networking.impl;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
+import net.minecraft.network.PacketHandler;
+import net.minecraft.network.packet.Packet;
+
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.networking.api.StringChannelIdentifierParser;
+import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
+import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+
+public class CustomPayloadPacket extends Packet implements CustomPayloadPacketAccess {
+
+	private String channel;
+	private int size;
+	private byte[] data;
+
+	public CustomPayloadPacket() {
+	}
+
+	public CustomPayloadPacket(NamespacedIdentifier channel, byte[] data) {
+		this.channel = StringChannelIdentifierParser.toString(channel);
+		this.data = data;
+		this.size = data.length;
+
+		if (this.data != null && this.size > Short.MAX_VALUE) {
+			throw new IllegalArgumentException("Payload may not be larger than 32k");
+		}
+	}
+
+	// the IOException has been stripped from the read/write methods
+	// by the obfuscator, thus we catch it and re-throw it as a
+	// runtime exception - it will be caught in Connection#read anyhow
+
+	@Override
+	public void read(DataInputStream input) {
+		try {
+			this.channel = readString(input, StringChannelIdentifierParser.MAX_LENGTH);
+			this.size = input.readShort();
+			if (this.size > 0 && this.size < Short.MAX_VALUE) {
+				this.data = new byte[this.size];
+				input.readFully(this.data);
+			}
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	@Override
+	public void write(DataOutputStream output) {
+		try {
+			writeString(this.channel, output);
+			output.writeShort(this.size);
+			if (this.data != null) {
+				output.write(this.data);
+			}
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	@Override
+	public void handle(PacketHandler handler) {
+		if (handler instanceof INetworkHandler) {
+			((INetworkHandler)handler).osl$networking$handleCustomPayload(this);
+		}
+	}
+
+	@Override
+	public int getSize() {
+		return 2 + this.channel.length() * 2 + 2 + this.data.length;
+	}
+
+	@Override
+	public NamespacedIdentifier osl$networking$getChannel() {
+		return StringChannelIdentifierParser.fromString(this.channel);
+	}
+
+	@Override
+	public byte[] osl$networking$getData() {
+		return this.data;
+	}
+}

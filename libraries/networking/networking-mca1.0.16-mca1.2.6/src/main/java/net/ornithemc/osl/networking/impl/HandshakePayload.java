@@ -1,53 +1,56 @@
 package net.ornithemc.osl.networking.impl;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.ornithemc.osl.networking.api.CustomPayload;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.networking.api.ChannelIdentifiers;
+import net.ornithemc.osl.networking.api.PacketBuffer;
+import net.ornithemc.osl.networking.api.PacketPayload;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 
-public class HandshakePayload implements CustomPayload {
+public class HandshakePayload implements PacketPayload {
 
-	public static final String CHANNEL = "OSL|Handshake";
+	public static final NamespacedIdentifier CHANNEL = Constants.OSL_HANDSHAKE_CHANNEL;
 
-	public Set<String> channels;
+	public byte protocol;
+	public Set<NamespacedIdentifier> channels;
 
 	public HandshakePayload() {
 	}
 
-	public HandshakePayload(Set<String> channels) {
-		this.channels = channels;
+	public HandshakePayload(Set<NamespacedIdentifier> channels) {
+		this.protocol = Constants.OSL_HANDSHAKE_PROTOCOL;
+		// we allow registering listeners on channels that do not conform to OSL spec
+		// but payloads sent over these channels aren't sent via OSL so we can ignore
+		// them for the OSL handshake.
+		this.channels = ChannelIdentifiers.dropInvalid(channels);
 	}
 
 	public static HandshakePayload client() {
-		return new HandshakePayload(ClientPlayNetworkingImpl.LISTENERS.keySet());
-	}
-
-	public static HandshakePayload server() {
-		throw new UnsupportedOperationException();
+		return new HandshakePayload(ClientPlayNetworkingImpl.CHANNEL_LISTENERS.keySet());
 	}
 
 	@Override
-	public void read(DataInputStream input) throws IOException {
+	public void read(PacketBuffer buffer) throws IOException {
+		protocol = buffer.readByte();
 		channels = new LinkedHashSet<>();
-		int channelCount = input.readInt();
 
-		if (channelCount > 0) {
-			for (int i = 0; i < channelCount; i++) {
-				channels.add(input.readUTF());
-			}
+		int channelCount = buffer.readInt();
+
+		for (int i = 0; i < channelCount; i++) {
+			channels.add(buffer.readNamespacedIdentifier());
 		}
 	}
 
 	@Override
-	public void write(DataOutputStream output) throws IOException {
-		output.writeInt(channels.size());
+	public void write(PacketBuffer buffer) throws IOException {
+		buffer.writeByte(protocol);
+		buffer.writeInt(channels.size());
 
-		for (String channel : channels) {
-			output.writeUTF(channel);
+		for (NamespacedIdentifier channel : channels) {
+			buffer.writeNamespacedIdentifier(channel);
 		}
 	}
 }

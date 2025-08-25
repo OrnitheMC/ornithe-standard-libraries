@@ -19,6 +19,10 @@ public class ClientConnectionEvents {
 	 * and until then data cannot safely be sent to the server.
 	 * 
 	 * <p>
+	 * This applies to connections to dedicated servers as
+	 * well as connections to integrated servers.
+	 * 
+	 * <p>
 	 * Callbacks to this event should be registered in your mod's entrypoint,
 	 * and can be done as follows:
 	 * 
@@ -38,6 +42,10 @@ public class ClientConnectionEvents {
 	 * This marks the moment data can safely be sent to the server.
 	 * 
 	 * <p>
+	 * This applies to connections to dedicated servers as
+	 * well as connections to integrated servers.
+	 * 
+	 * <p>
 	 * Callbacks to this event should be registered in your mod's entrypoint,
 	 * and can be done as follows:
 	 * 
@@ -52,6 +60,10 @@ public class ClientConnectionEvents {
 	public static final Event<Consumer<Minecraft>> PLAY_READY = Event.consumer();
 	/**
 	 * This event is fired when the client disconnects from the server.
+	 * 
+	 * <p>
+	 * This applies to connections to dedicated servers as
+	 * well as connections to integrated servers.
 	 * 
 	 * <p>
 	 * Callbacks to this event should be registered in your mod's entrypoint,

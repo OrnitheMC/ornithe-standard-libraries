@@ -1,6 +1,5 @@
 package net.ornithemc.osl.networking.impl.client;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,68 +9,134 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.mob.player.LocalClientPlayerEntity;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.network.packet.Packet;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
-import net.ornithemc.osl.networking.api.Channels;
-import net.ornithemc.osl.networking.api.CustomPayload;
-import net.ornithemc.osl.networking.api.DataStreams;
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.ByteArrayListener;
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.PayloadListener;
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.StreamListener;
-import net.ornithemc.osl.networking.impl.CustomPayloadPacket;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
-import net.ornithemc.osl.networking.impl.mixin.client.LocalClientPlayerEntityAccessor;
+import net.ornithemc.osl.networking.api.PacketBuffer;
+import net.ornithemc.osl.networking.api.PacketBuffers;
+import net.ornithemc.osl.networking.api.PacketPayload;
+import net.ornithemc.osl.networking.api.client.ClientPacketListener;
+import net.ornithemc.osl.networking.impl.PacketFactory;
+import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
+import net.ornithemc.osl.networking.impl.access.LocalClientPlayerAccess;
+import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ClientPlayNetworkingImpl {
 
 	private static final Logger LOGGER = LogManager.getLogger("OSL|Client Play Networking");
 
+	private static PacketFactory packetFactory;
 	private static Minecraft minecraft;
+	private static Thread thread;
+
+	public static void setUpPacketFactory(PacketFactory factory) {
+		if (ClientPlayNetworkingImpl.packetFactory != null) {
+			throw new IllegalStateException("tried to set up client custom payload packet factory when it was already set up!");
+		}
+
+		ClientPlayNetworkingImpl.packetFactory = factory;
+	}
 
 	public static void setUp(Minecraft minecraft) {
 		if (ClientPlayNetworkingImpl.minecraft == minecraft) {
-			throw new IllegalStateException("tried to set up client networking when it was already set up!");
+			throw new IllegalStateException("tried to set up client play networking when it was already set up!");
+		}
+		if (ClientPlayNetworkingImpl.packetFactory == null) {
+			throw new IllegalStateException("tried to set up client play networking when no custom payload packet factory was set up!");
 		}
 
 		ClientPlayNetworkingImpl.minecraft = minecraft;
+		ClientPlayNetworkingImpl.thread = Thread.currentThread();
 	}
 
 	public static void destroy(Minecraft minecraft) {
 		if (ClientPlayNetworkingImpl.minecraft != minecraft) {
-			throw new IllegalStateException("tried to destroy client networking when it was not set up!");
+			throw new IllegalStateException("tried to destroy client play networking when it was not set up!");
 		}
 
 		ClientPlayNetworkingImpl.minecraft = null;
+		ClientPlayNetworkingImpl.thread = null;
 	}
 
-	public static final Map<String, Listener> LISTENERS = new LinkedHashMap<>();
+	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
-	public static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
-		registerListenerImpl(channel, (minecraft, handler, data) -> {
-			T payload = initializer.get();
-			payload.read(DataStreams.input(data));
+	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener) {
+		registerListener(channel, initializer, listener, false);
+	}
 
-			return listener.handle(minecraft, handler, payload);
+	public static <T extends PacketPayload> void registerListenerAsync(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener) {
+		registerListener(channel, initializer, listener, true);
+	}
+
+	private static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener, boolean async) {
+		registerListenerImpl(channel, new ChannelListener() {
+
+			@Override
+			public boolean isAsync() {
+				return async;
+			}
+
+			@Override
+			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
+				T payload = initializer.get();
+				payload.read(PacketBuffers.wrap(bytes));
+
+				return listener.handle(minecraft, handler, payload);
+			}
 		});
 	}
 
-	public static void registerListener(String channel, StreamListener listener) {
-		registerListenerImpl(channel, (minecraft, handler, data) -> {
-			return listener.handle(minecraft, handler, DataStreams.input(data));
+	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Buffer listener) {
+		registerListener(channel, listener, false);
+	}
+
+	public static void registerListenerAsync(NamespacedIdentifier channel, ClientPacketListener.Buffer listener) {
+		registerListener(channel, listener, true);
+	}
+
+	private static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Buffer listener, boolean async) {
+		registerListenerImpl(channel, new ChannelListener() {
+
+			@Override
+			public boolean isAsync() {
+				return async;
+			}
+
+			@Override
+			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
+				return listener.handle(minecraft, handler, PacketBuffers.wrap(bytes));
+			}
 		});
 	}
 
-	public static void registerListenerRaw(String channel, ByteArrayListener listener) {
-		registerListenerImpl(channel, listener::handle);
+	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Bytes listener) {
+		registerListener(channel, listener, false);
 	}
 
-	private static void registerListenerImpl(String channel, Listener listener) {
-		LISTENERS.compute(channel, (key, value) -> {
-			Channels.validate(channel);
+	public static void registerListenerAsync(NamespacedIdentifier channel, ClientPacketListener.Bytes listener) {
+		registerListener(channel, listener, true);
+	}
 
+	private static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Bytes listener, boolean async) {
+		registerListenerImpl(channel, new ChannelListener() {
+
+			@Override
+			public boolean isAsync() {
+				return async;
+			}
+
+			@Override
+			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
+				return listener.handle(minecraft, handler, bytes);
+			}
+		});
+	}
+
+	private static void registerListenerImpl(NamespacedIdentifier channel, ChannelListener listener) {
+		CHANNEL_LISTENERS.compute(channel, (key, value) -> {
 			if (value != null) {
 				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
 			}
@@ -80,96 +145,127 @@ public final class ClientPlayNetworkingImpl {
 		});
 	}
 
-	public static void unregisterListener(String channel) {
-		LISTENERS.remove(channel);
+	public static void unregisterListener(NamespacedIdentifier channel) {
+		CHANNEL_LISTENERS.remove(channel);
 	}
 
-	public static boolean handle(Minecraft minecraft, ClientNetworkHandler handler, CustomPayloadPacket packet) {
-		Listener listener = LISTENERS.get(packet.channel);
+	public static boolean handlePacket(Minecraft minecraft, ClientNetworkHandler handler, Packet packet) {
+		CustomPayloadPacketAccess p = (CustomPayloadPacketAccess)packet;
+
+		NamespacedIdentifier channel = p.osl$networking$getChannel();
+		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
 
 		if (listener != null) {
-			try {
-				return listener.handle(minecraft, handler, packet.data);
-			} catch (IOException e) {
-				LOGGER.warn("error handling custom payload on channel \'" + packet.channel + "\'", e);
-				return true;
+			byte[] data = p.osl$networking$getData();
+
+			if (Thread.currentThread() == thread || listener.isAsync()) {
+				return handlePayload(minecraft, handler, listener, channel, data);
+			} else {
+				return ((TaskRunnerAccess) minecraft).osl$networking$submit(() -> handlePayload(minecraft, handler, listener, channel, data));
 			}
 		}
 
 		return false;
 	}
 
-	private static ClientNetworkHandler getNetworkHandler() {
-		LocalClientPlayerEntity player = ((LocalClientPlayerEntity)minecraft.player);
-		return player != null ? ((LocalClientPlayerEntityAccessor)player).getNetworkHandler() : null;
+	private static boolean handlePayload(Minecraft minecraft, ClientNetworkHandler handler, ChannelListener listener, NamespacedIdentifier channel, byte[] data) {
+		try {
+			return listener.handle(minecraft, handler, data);
+		} catch (IOException e) {
+			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		}
+
+		return true;
+	}
+
+	private static ClientNetworkHandler networkHandler() {
+		LocalClientPlayerAccess player = (LocalClientPlayerAccess) minecraft.player;
+		return player != null ? player.osl$networking$getNetworkHandler() : null;
 	}
 
 	public static boolean isPlayReady() {
-		INetworkHandler handler = (INetworkHandler)ClientPlayNetworkingImpl.getNetworkHandler();
+		NetworkHandlerAccess handler = (NetworkHandlerAccess) networkHandler();
 		return handler != null && handler.osl$networking$isPlayReady();
 	}
 
-	public static boolean canSend(String channel) {
-		INetworkHandler handler = (INetworkHandler)ClientPlayNetworkingImpl.getNetworkHandler();
-		return handler != null && handler.osl$networking$isRegisteredChannel(channel);
+	public static boolean isPlayReady(NamespacedIdentifier channel) {
+		NetworkHandlerAccess handler = (NetworkHandlerAccess) networkHandler();
+		return handler != null && handler.osl$networking$isPlayReady(channel);
 	}
 
-	public static void send(String channel, CustomPayload payload) {
-		if (canSend(channel)) {
-			doSend(channel, payload);
+	public static void send(NamespacedIdentifier channel, PacketPayload payload) {
+		if (isPlayReady(channel)) {
+			sendInternal(channel, payload);
 		}
 	}
 
-	public static void send(String channel, IOConsumer<DataOutputStream> writer) {
-		if (canSend(channel)) {
-			doSend(channel, writer);
+	public static void send(NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		if (isPlayReady(channel)) {
+			sendInternal(channel, writer);
 		}
 	}
 
-	public static void send(String channel, byte[] data) {
-		if (canSend(channel)) {
-			doSend(channel, data);
+	public static void send(NamespacedIdentifier channel, PacketBuffer buffer) {
+		if (isPlayReady(channel)) {
+			sendInternal(channel, buffer);
 		}
 	}
 
-	public static void doSend(String channel, CustomPayload payload) {
-		sendPacket(makePacket(channel, payload));
+	public static void send(NamespacedIdentifier channel, byte[] bytes) {
+		if (isPlayReady(channel)) {
+			sendInternal(channel, bytes);
+		}
 	}
 
-	public static void doSend(String channel, IOConsumer<DataOutputStream> writer) {
-		sendPacket(makePacket(channel, writer));
+	public static void sendNoCheck(NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(channel, payload);
 	}
 
-	public static void doSend(String channel, byte[] data) {
-		sendPacket(makePacket(channel, data));
+	public static void sendNoCheck(NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(channel, writer);
 	}
 
-	private static Packet makePacket(String channel, CustomPayload payload) {
-		return makePacket(channel, payload::write);
+	public static void sendNoCheck(NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(channel, buffer);
 	}
 
-	private static Packet makePacket(String channel, IOConsumer<DataOutputStream> writer) {
+	public static void sendNoCheck(NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(channel, bytes);
+	}
+
+	private static void sendInternal(NamespacedIdentifier channel, PacketPayload payload) {
 		try {
-			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
+			sendPacket(channel, PacketBuffers.unwrap(PacketBuffers.make(payload::write)));
 		} catch (IOException e) {
-			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
-			return null;
+			LOGGER.warn("error writing packet payload to channel \'" + channel + "\'", e);
 		}
 	}
 
-	private static Packet makePacket(String channel, byte[] data) {
-		return new CustomPayloadPacket(channel, data);
-	}
-
-	private static void sendPacket(Packet packet) {
-		if (packet != null) {
-			ClientPlayNetworkingImpl.getNetworkHandler().sendPacket(packet);
+	private static void sendInternal(NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		try {
+			sendPacket(channel, PacketBuffers.unwrap(PacketBuffers.make(writer)));
+		} catch (IOException e) {
+			LOGGER.warn("error writing buffer to channel \'" + channel + "\'", e);
 		}
 	}
 
-	private interface Listener {
+	private static void sendInternal(NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendPacket(channel, PacketBuffers.unwrap(buffer));
+	}
 
-		boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] data) throws IOException;
+	private static void sendInternal(NamespacedIdentifier channel, byte[] bytes) {
+		sendPacket(channel, bytes);
+	}
+
+	private static void sendPacket(NamespacedIdentifier channel, byte[] data) {
+		networkHandler().sendPacket(packetFactory.create(channel, data));
+	}
+
+	private interface ChannelListener {
+
+		boolean isAsync();
+
+		boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException;
 
 	}
 }
