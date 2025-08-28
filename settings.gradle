@@ -77,6 +77,13 @@ include ':libraries:networking:networking-mc14w31a-mc1.13-pre2'
 include ':libraries:networking:networking-mc1.13-pre4-mc18w30b'
 include ':libraries:networking:networking-mc18w31a-mc1.14.4'
 
+include ':libraries:networking-common'
+include ':libraries:networking-common:networking-common-mca1.0.16-mca1.2.6'
+include ':libraries:networking-common:networking-common-mcserver-a0.1.0-mcserver-a0.2.8'
+include ':libraries:networking-common:networking-common-mcb1.0-mc13w39b'
+include ':libraries:networking-common:networking-common-mc13w41a-mc1.13-pre2'
+include ':libraries:networking-common:networking-common-mc1.13-pre4-mc1.14.4'
+
 include ':libraries:resource-loader'
 include ':libraries:resource-loader:resource-loader-mca1.2.2-1624-mc11w48a'
 include ':libraries:resource-loader:resource-loader-mc11w49a-mc1.2.5'

@@ -23,7 +23,7 @@ import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
 import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.api.CustomPayload;
-import net.ornithemc.osl.networking.api.PacketByteBufs;
+import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteArrayListener;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteBufListener;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.PayloadListener;
@@ -66,7 +66,7 @@ public final class ServerPlayNetworkingImpl {
 	private static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener, boolean async) {
 		registerListenerImpl(channel, (server, handler, player, data) -> {
 			T payload = initializer.get();
-			payload.read(PacketByteBufs.make(data));
+			payload.read(PacketBuffers.make(data));
 
 			return listener.handle(server, handler, player, payload);
 		}, async);
@@ -82,7 +82,7 @@ public final class ServerPlayNetworkingImpl {
 
 	private static void registerListener(String channel, ByteBufListener listener, boolean async) {
 		registerListenerImpl(channel, (server, handler, player, data) -> {
-			return listener.handle(server, handler, player, PacketByteBufs.make(data));
+			return listener.handle(server, handler, player, PacketBuffers.make(data));
 		}, async);
 	}
 
@@ -302,7 +302,7 @@ public final class ServerPlayNetworkingImpl {
 
 	private static Packet makePacket(String channel, IOConsumer<PacketByteBuf> writer) {
 		try {
-			return new CustomPayloadS2CPacket(channel, PacketByteBufs.make(writer));
+			return new CustomPayloadS2CPacket(channel, PacketBuffers.make(writer));
 		} catch (IOException e) {
 			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
 			return null;

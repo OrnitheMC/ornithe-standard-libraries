@@ -24,7 +24,7 @@ import net.minecraft.world.dimension.DimensionType;
 
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
 import net.ornithemc.osl.networking.api.CustomPayload;
-import net.ornithemc.osl.networking.api.PacketByteBufs;
+import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteBufListener;
 import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.PayloadListener;
 import net.ornithemc.osl.networking.impl.NetworkListener;
@@ -254,7 +254,7 @@ public final class ServerPlayNetworkingImpl {
 
 	private static Packet<?> makePacket(Identifier channel, IOConsumer<PacketByteBuf> writer) {
 		try {
-			return new CustomPayloadS2CPacket(channel, PacketByteBufs.make(writer));
+			return new CustomPayloadS2CPacket(channel, PacketBuffers.make(writer));
 		} catch (IOException e) {
 			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
 			return null;

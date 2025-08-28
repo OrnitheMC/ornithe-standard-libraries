@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.function.Supplier;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.entity.living.player.ServerPlayerEntity;
+import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.core.api.util.function.IOConsumer;

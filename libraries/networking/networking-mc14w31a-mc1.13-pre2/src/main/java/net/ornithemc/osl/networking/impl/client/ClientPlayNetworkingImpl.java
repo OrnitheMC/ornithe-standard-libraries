@@ -19,7 +19,7 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
 import net.ornithemc.osl.networking.api.Channels;
 import net.ornithemc.osl.networking.api.CustomPayload;
-import net.ornithemc.osl.networking.api.PacketByteBufs;
+import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.ByteBufListener;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking.PayloadListener;
 import net.ornithemc.osl.networking.impl.NetworkListener;
@@ -160,7 +160,7 @@ public final class ClientPlayNetworkingImpl {
 
 	private static Packet<?> makePacket(String channel, IOConsumer<PacketByteBuf> writer) {
 		try {
-			return new CustomPayloadC2SPacket(channel, PacketByteBufs.make(writer));
+			return new CustomPayloadC2SPacket(channel, PacketBuffers.make(writer));
 		} catch (IOException e) {
 			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
 			return null;
