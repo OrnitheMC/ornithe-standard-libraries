@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
+import net.ornithemc.osl.lifecycle.impl.client.MinecraftAccess;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -19,7 +20,8 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$start(CallbackInfo ci) {
-		MinecraftClientEvents.START.invoker().accept((Minecraft)(Object)this);
+		MinecraftAccess.INSTANCE = (Minecraft)(Object)this;
+		MinecraftClientEvents.START.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -29,7 +31,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$ready(CallbackInfo ci) {
-		MinecraftClientEvents.READY.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.READY.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -39,7 +41,17 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$stop(CallbackInfo ci) {
-		MinecraftClientEvents.STOP.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.STOP.invoker().accept(MinecraftAccess.INSTANCE);
+	}
+
+	@Inject(
+		method = "shutdown",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$lifecycle$stopped(CallbackInfo ci) {
+		MinecraftAccess.INSTANCE = null;
 	}
 
 	@Inject(
@@ -49,7 +61,7 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$startTick(CallbackInfo ci) {
-		MinecraftClientEvents.TICK_START.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.TICK_START.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -59,6 +71,6 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
-		MinecraftClientEvents.TICK_END.invoker().accept((Minecraft)(Object)this);
+		MinecraftClientEvents.TICK_END.invoker().accept(MinecraftAccess.INSTANCE);
 	}
 }
