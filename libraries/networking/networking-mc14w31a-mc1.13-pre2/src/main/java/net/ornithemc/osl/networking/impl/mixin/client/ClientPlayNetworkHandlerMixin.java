@@ -15,20 +15,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
+import net.ornithemc.osl.networking.api.Channel;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.HandshakePayload;
+import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class ClientPlayNetworkHandlerMixin implements INetworkHandler {
+public class ClientPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 
 	@Shadow @Final private Minecraft minecraft;
 
 	/**
 	 * Channels that the server is listening to.
 	 */
-	@Unique private Set<String> serverChannels;
+	@Unique private Set<Channel> serverChannels;
 
 	@Inject(
 		method = "handleLogin",
@@ -38,7 +39,7 @@ public class ClientPlayNetworkHandlerMixin implements INetworkHandler {
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
 		// send channel registration data as soon as login occurs
-		ClientPlayNetworkingImpl.doSend(HandshakePayload.CHANNEL, HandshakePayload.client());
+		ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 
 		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
 	}
@@ -73,12 +74,12 @@ public class ClientPlayNetworkHandlerMixin implements INetworkHandler {
 	}
 
 	@Override
-	public void osl$networking$registerChannels(Set<String> channels) {
-		serverChannels = new LinkedHashSet<>(channels);
+	public boolean osl$networking$isPlayReady(Channel channel) {
+		return serverChannels != null && serverChannels.contains(channel);
 	}
 
 	@Override
-	public boolean osl$networking$isRegisteredChannel(String channel) {
-		return serverChannels != null && serverChannels.contains(channel);
+	public void osl$networking$registerChannels(Set<Channel> channels) {
+		serverChannels = new LinkedHashSet<>(channels);
 	}
 }

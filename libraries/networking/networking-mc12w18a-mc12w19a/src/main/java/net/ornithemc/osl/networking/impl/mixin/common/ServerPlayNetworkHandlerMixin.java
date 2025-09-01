@@ -3,7 +3,6 @@ package net.ornithemc.osl.networking.impl.mixin.common;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,20 +15,21 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
+import net.ornithemc.osl.networking.api.Channel;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin implements INetworkHandler {
+public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 
-	@Shadow @Final private MinecraftServer server;
-	@Shadow @Final private ServerPlayerEntity player;
+	@Shadow private MinecraftServer server;
+	@Shadow private ServerPlayerEntity player;
 
 	/**
 	 * Channels that the client is listening to.
 	 */
-	@Unique private Set<String> clientChannels;
+	@Unique private Set<Channel> clientChannels;
 
 	@Inject(
 		method = "onDisconnect",
@@ -56,17 +56,22 @@ public class ServerPlayNetworkHandlerMixin implements INetworkHandler {
 	}
 
 	@Override
+	public boolean osl$networking$canRunOffMainThread() {
+		return true;
+	}
+
+	@Override
 	public boolean osl$networking$isPlayReady() {
 		return clientChannels != null;
 	}
 
 	@Override
-	public void osl$networking$registerChannels(Set<String> channels) {
-		clientChannels = new LinkedHashSet<>(channels);
+	public boolean osl$networking$isPlayReady(Channel channel) {
+		return clientChannels != null && clientChannels.contains(channel);
 	}
 
 	@Override
-	public boolean osl$networking$isRegisteredChannel(String channel) {
-		return clientChannels != null && clientChannels.contains(channel);
+	public void osl$networking$registerChannels(Set<Channel> channels) {
+		clientChannels = new LinkedHashSet<>(channels);
 	}
 }

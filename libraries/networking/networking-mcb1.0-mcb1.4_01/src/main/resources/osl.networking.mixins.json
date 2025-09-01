@@ -4,13 +4,16 @@
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.ConnectionMixin",
 		"common.PacketAccessor"
 	],
 	"client": [
 		"client.ClientNetworkHandlerMixin",
-		"client.HandshakePacketMixin"
+		"client.HandshakePacketMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
+		"server.MinecraftServerMixin",
 		"server.ServerLoginNetworkHandlerMixin",
 		"server.ServerPlayNetworkHandlerMixin"
 	],

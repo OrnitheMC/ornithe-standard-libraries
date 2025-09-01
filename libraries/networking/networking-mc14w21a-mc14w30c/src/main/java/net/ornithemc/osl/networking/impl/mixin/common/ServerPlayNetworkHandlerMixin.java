@@ -16,12 +16,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
+import net.ornithemc.osl.networking.api.Channel;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin implements INetworkHandler {
+public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 
 	@Shadow @Final private MinecraftServer server;
 	@Shadow @Final private ServerPlayerEntity player;
@@ -29,7 +30,7 @@ public class ServerPlayNetworkHandlerMixin implements INetworkHandler {
 	/**
 	 * Channels that the client is listening to.
 	 */
-	@Unique private Set<String> clientChannels;
+	@Unique private Set<Channel> clientChannels;
 
 	@Inject(
 		method = "onDisconnect",
@@ -61,12 +62,12 @@ public class ServerPlayNetworkHandlerMixin implements INetworkHandler {
 	}
 
 	@Override
-	public void osl$networking$registerChannels(Set<String> channels) {
-		clientChannels = new LinkedHashSet<>(channels);
+	public boolean osl$networking$isPlayReady(Channel channel) {
+		return clientChannels != null && clientChannels.contains(channel);
 	}
 
 	@Override
-	public boolean osl$networking$isRegisteredChannel(String channel) {
-		return clientChannels != null && clientChannels.contains(channel);
+	public void osl$networking$registerChannels(Set<Channel> channels) {
+		clientChannels = new LinkedHashSet<>(channels);
 	}
 }

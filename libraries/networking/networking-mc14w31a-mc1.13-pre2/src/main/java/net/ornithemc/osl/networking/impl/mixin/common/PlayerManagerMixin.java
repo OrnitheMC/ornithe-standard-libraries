@@ -15,10 +15,10 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.IPlayerManager;
+import net.ornithemc.osl.networking.impl.access.PlayerManagerAccess;
 
 @Mixin(PlayerManager.class)
-public class PlayerManagerMixin implements IPlayerManager {
+public class PlayerManagerMixin implements PlayerManagerAccess {
 
 	@Shadow @Final private MinecraftServer server;
 	@Shadow @Final private List<ServerPlayerEntity> players;

@@ -8,26 +8,27 @@ import java.io.UncheckedIOException;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.network.packet.Packet;
 
-import net.ornithemc.osl.networking.api.Channels;
+import net.ornithemc.osl.networking.api.Channel;
+import net.ornithemc.osl.networking.api.StringChannelParser;
+import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
 
-public class CustomPayloadPacket extends Packet {
+public class CustomPayloadPacket extends Packet implements CustomPayloadPacketAccess {
 
-	public String channel;
-	public int size;
-	public byte[] data;
+	private String channel;
+	private int size;
+	private byte[] data;
 
 	public CustomPayloadPacket() {
 	}
 
-	public CustomPayloadPacket(String channel, byte[] data) {
-		this.channel = channel;
+	public CustomPayloadPacket(Channel channel, byte[] data) {
+		this.channel = StringChannelParser.toString(channel);
 		this.data = data;
-		if (data != null) {
-			this.size = data.length;
-			if (this.size > Short.MAX_VALUE) {
-				throw new IllegalArgumentException("Payload may not be larger than 32k");
-			}
+		this.size = data.length;
+
+		if (this.data != null && this.size > Short.MAX_VALUE) {
+			throw new IllegalArgumentException("Payload may not be larger than 32k");
 		}
 	}
 
@@ -38,7 +39,7 @@ public class CustomPayloadPacket extends Packet {
 	@Override
 	public void read(DataInputStream input) {
 		try {
-			this.channel = readString(input, Channels.MAX_LENGTH);
+			this.channel = readString(input, StringChannelParser.MAX_LENGTH);
 			this.size = input.readShort();
 			if (this.size > 0 && this.size < Short.MAX_VALUE) {
 				this.data = new byte[this.size];
@@ -71,6 +72,16 @@ public class CustomPayloadPacket extends Packet {
 
 	@Override
 	public int getSize() {
-		return 2 + this.channel.length() * 2 + 2 + this.size;
+		return 2 + this.channel.length() * 2 + 2 + this.data.length;
+	}
+
+	@Override
+	public Channel osl$networking$getChannel() {
+		return StringChannelParser.fromString(this.channel);
+	}
+
+	@Override
+	public byte[] osl$networking$getData() {
+		return this.data;
 	}
 }
