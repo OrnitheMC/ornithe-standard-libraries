@@ -58,7 +58,7 @@ public class AbstractTexturePackMixin {
 	}
 
 	@Inject(
-		method = "getResource(Ljava/lang/String;Z)Ljava/io/InputStream;",
+		method = "hasResource(Ljava/lang/String;Z)Z",
 		cancellable = true,
 		at = @At(
 			value = "FIELD",
