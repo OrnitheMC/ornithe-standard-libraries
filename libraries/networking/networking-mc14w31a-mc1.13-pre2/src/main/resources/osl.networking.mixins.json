@@ -4,11 +4,15 @@
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.CustomPayloadC2SPacketMixin",
+		"common.CustomPayloadS2CPacketMixin",
+		"common.MinecraftServerMixin",
 		"common.PlayerManagerMixin",
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin"
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
 	],
