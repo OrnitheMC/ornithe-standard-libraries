@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.network.packet.CustomPayloadPacket;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.entity.living.player.ServerPlayerEntity;
+import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
