@@ -4,18 +4,12 @@ import java.util.Objects;
 
 public final class NamespacedIdentifier {
 
-	public static NamespacedIdentifier fromMinecraft(String identifier) {
-		return new NamespacedIdentifier("minecraft", identifier);
-	}
-
-	public static NamespacedIdentifier from(String namespace, String identifier) {
-		return new NamespacedIdentifier(namespace, identifier);
-	}
+	public static final char SEPARATOR = ':';
 
 	private final String namespace;
 	private final String identifier;
 
-	private NamespacedIdentifier(String namespace, String identifier) {
+	NamespacedIdentifier(String namespace, String identifier) {
 		this.namespace = namespace;
 		this.identifier = identifier;
 	}
@@ -39,7 +33,7 @@ public final class NamespacedIdentifier {
 
 	@Override
 	public String toString() {
-		return namespace + ":" + identifier;
+		return namespace + SEPARATOR + identifier;
 	}
 
 	public String getNamespace() {
