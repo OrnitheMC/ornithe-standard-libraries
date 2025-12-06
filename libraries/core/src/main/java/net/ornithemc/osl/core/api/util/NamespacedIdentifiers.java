@@ -2,6 +2,7 @@ package net.ornithemc.osl.core.api.util;
 
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierException;
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierParseException;
+import net.ornithemc.osl.core.impl.util.NamespacedIdentifierImpl;
 
 /**
  * Utility methods for creating and validating {@link NamespacedIdentifier}s.
@@ -28,15 +29,6 @@ public final class NamespacedIdentifiers {
 	public static final int MAX_LENGTH_IDENTIFIER = Integer.MAX_VALUE;
 
 	/**
-	 * Construct a {@code NamespacedIdentifier} without validating it.
-	 *
-	 * @deprecated use {@link #from(String, String)} instead
-	 */
-	public static NamespacedIdentifier of(String namespace, String identifier) {
-		return new NamespacedIdentifier(namespace, identifier);
-	}
-
-	/**
 	 * Construct and validate a {@code NamespacedIdentifier} with the default namespace and the given identifier.
 	 * 
 	 * @return a {@code NamespacedIdentifier} with the default namespace and the given identifier.
@@ -55,7 +47,7 @@ public final class NamespacedIdentifiers {
 	 *   if the given namespace or identifier is invalid.
 	 */
 	public static NamespacedIdentifier from(String namespace, String identifier) {
-		return new NamespacedIdentifier(
+		return new NamespacedIdentifierImpl(
 			validateNamespace(namespace),
 			validateIdentifier(identifier)
 		);
@@ -91,8 +83,8 @@ public final class NamespacedIdentifiers {
 	 */
 	public static NamespacedIdentifier validate(NamespacedIdentifier id) {
 		try {
-			validateNamespace(id.getNamespace());
-			validateIdentifier(id.getIdentifier());
+			validateNamespace(id.namespace());
+			validateIdentifier(id.identifier());
 
 			return id;
 		} catch (NamespacedIdentifierException e) {
@@ -132,5 +124,9 @@ public final class NamespacedIdentifiers {
 		}
 
 		return identifier;
+	}
+
+	public static boolean equals(NamespacedIdentifier a, NamespacedIdentifier b) {
+		return a.namespace().equals(b.namespace()) && a.identifier().equals(b.identifier());
 	}
 }
