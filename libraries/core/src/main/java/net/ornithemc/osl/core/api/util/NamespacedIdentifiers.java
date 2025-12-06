@@ -1,5 +1,7 @@
 package net.ornithemc.osl.core.api.util;
 
+import java.util.Comparator;
+
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierException;
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierParseException;
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierImpl;
@@ -27,6 +29,18 @@ public final class NamespacedIdentifiers {
 	 * The maximum length of a {@code NamespacedIdentifier} identifier string.
 	 */
 	public static final int MAX_LENGTH_IDENTIFIER = Integer.MAX_VALUE;
+
+	/**
+	 * A comparator for {@code NamespacedIdentifier}s, comparing first by identifier, then by namespace.
+	 */
+	public static final Comparator<NamespacedIdentifier> COMPARATOR = (a, b) -> {
+		int c = a.identifier().compareTo(b.identifier());
+		if (c == 0) {
+			c = a.namespace().compareTo(b.namespace());
+		}
+
+		return c;
+	};
 
 	/**
 	 * Construct and validate a {@code NamespacedIdentifier} with the default namespace and the given identifier.
