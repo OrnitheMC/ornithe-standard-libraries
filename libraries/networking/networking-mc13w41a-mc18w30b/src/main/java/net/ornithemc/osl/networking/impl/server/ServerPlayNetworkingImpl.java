@@ -22,6 +22,7 @@ import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.PacketPayload;
 import net.ornithemc.osl.networking.api.server.ServerPacketListener;
+import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
@@ -68,75 +69,20 @@ public final class ServerPlayNetworkingImpl {
 	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, initializer, listener, false);
-	}
+		registerListenerImpl(channel, (context, buffer) -> {
+			T payload = initializer.get();
+			payload.read(buffer);
 
-	public static <T extends PacketPayload> void registerListenerAsync(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, initializer, listener, true);
-	}
-
-	private static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, PacketBuffer buffer) throws IOException {
-				T payload = initializer.get();
-				payload.read(buffer);
-
-				return listener.handle(server, handler, player, payload);
-			}
+			listener.handle(context, payload);
 		});
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, listener, false);
-	}
-
-	public static void registerListenerAsync(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, listener, true);
-	}
-
-	private static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, PacketBuffer buffer) throws IOException {
-				return listener.handle(server, handler, player, buffer);
-			}
-		});
+		registerListenerImpl(channel, listener::handle);
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, listener, false);
-	}
-
-	public static void registerListenerAsync(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
-		ServerPlayNetworkingImpl.registerListener(channel, listener, true);
-	}
-
-	private static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, PacketBuffer buffer) throws IOException {
-				return listener.handle(server, handler, player, buffer.readByteArray());
-			}
-		});
+		registerListenerImpl(channel, (context, buffer) -> listener.handle(context, buffer.readByteArray()));
 	}
 
 	private static void registerListenerImpl(NamespacedIdentifier channel, ChannelListener listener) {
@@ -162,26 +108,27 @@ public final class ServerPlayNetworkingImpl {
 		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
 
 		if (listener != null) {
+			ChannelListener.Context ctx = new ChannelListener.Context(player);
 			PacketBuffer data = p.osl$networking$getData();
 
-			if (Thread.currentThread() == thread || listener.isAsync()) {
-				return handlePayload(server, handler, player, listener, channel, data);
-			} else {
-				return ((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(server, handler, player, listener, channel, data));
+			try {
+				handlePayload(channel, listener, ctx, data);
+			} catch (NotOnMainThreadException e) {
+				((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
 			}
+
+			return true;
 		}
 
 		return false;
 	}
 
-	private static boolean handlePayload(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, ChannelListener listener, NamespacedIdentifier channel, PacketBuffer data) {
+	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
 		try {
-			return listener.handle(server, handler, player, data);
+			listener.handle(ctx, data);
 		} catch (IOException e) {
 			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
 		}
-
-		return true;
 	}
 
 	public static boolean isPlayReady(ServerPlayerEntity player) {
@@ -412,9 +359,37 @@ public final class ServerPlayNetworkingImpl {
 
 	private interface ChannelListener {
 
-		boolean isAsync();
+		void handle(Context context, PacketBuffer buffer) throws IOException;
 
-		boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, PacketBuffer buffer) throws IOException;
+		class Context implements ServerPacketListener.Context {
 
+			private final ServerPlayerEntity player;
+
+			Context(ServerPlayerEntity player) {
+				this.player = player;
+			}
+
+			@Override
+			public MinecraftServer server() {
+				return server;
+			}
+
+			@Override
+			public ServerPlayNetworkHandler networkHandler() {
+				return player.networkHandler;
+			}
+
+			@Override
+			public ServerPlayerEntity player() {
+				return player;
+			}
+
+			@Override
+			public void ensureOnMainThread() {
+				if (Thread.currentThread() != thread) {
+					throw NotOnMainThreadException.INSTANCE;
+				}
+			}
+		}
 	}
 }

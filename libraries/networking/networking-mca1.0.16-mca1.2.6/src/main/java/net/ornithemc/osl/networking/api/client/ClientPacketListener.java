@@ -10,22 +10,37 @@ public interface ClientPacketListener<T> {
 
 	/**
 	 * Receive incoming data from the server.
-	 *  
-	 * @return 
-	 *  Whether the data is consumed. Should only return {@code false} if the
-	 *  data is completely ignored.
 	 */
-	boolean handle(Minecraft minecraft, ClientNetworkHandler handler, T data);
+	void handle(Context ctx, T data);
 
 	@FunctionalInterface
-	public interface Payload<T extends PacketPayload> extends ClientPacketListener<T> {
+	interface Payload<T extends PacketPayload> extends ClientPacketListener<T> {
 	}
 
 	@FunctionalInterface
-	public interface Buffer extends ClientPacketListener<PacketBuffer> {
+	interface Buffer extends ClientPacketListener<PacketBuffer> {
 	}
 
 	@FunctionalInterface
-	public interface Bytes extends ClientPacketListener<byte[]> {
+	interface Bytes extends ClientPacketListener<byte[]> {
+	}
+
+	interface Context {
+
+		/**
+		 * @return the current Minecraft game instance.
+		 */
+		Minecraft minecraft();
+
+		/**
+		 * @return the network handler that received the packet.
+		 */
+		ClientNetworkHandler networkHandler();
+
+		/**
+		 * Ensure the packet listener is running on the main thread.
+		 */
+		void ensureOnMainThread();
+
 	}
 }

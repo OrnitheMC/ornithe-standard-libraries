@@ -23,14 +23,12 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftClientEvents.START.register(ClientPlayNetworkingImpl::setUp);
 		MinecraftClientEvents.STOP.register(ClientPlayNetworkingImpl::destroy);
 		ClientPlayNetworkingImpl.setUpPacketFactory(CustomPayloadPacket::new);
-		ClientPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (minecraft, handler, payload) -> {
+		ClientPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
 			// send channel registration data as a response to receiving server channel registration data
 			ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 
-			((NetworkHandlerAccess)handler).osl$networking$registerChannels(payload.channels);
-			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
-
-			return true;
+			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
+			ClientConnectionEvents.PLAY_READY.invoker().accept(context.minecraft());
 		});
 	}
 
@@ -39,11 +37,9 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftServerEvents.START.register(ServerPlayNetworkingImpl::setUp);
 		MinecraftServerEvents.STOP.register(ServerPlayNetworkingImpl::destroy);
 		ServerPlayNetworkingImpl.setUpPacketFactory(CustomPayloadPacket::new);
-		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (server, handler, player, payload) -> {
-			((NetworkHandlerAccess)handler).osl$networking$registerChannels(payload.channels);
-			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
-
-			return true;
+		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
+			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
+			ServerConnectionEvents.PLAY_READY.invoker().accept(context.server(), context.player());
 		});
 	}
 }

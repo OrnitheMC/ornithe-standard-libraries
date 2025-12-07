@@ -25,11 +25,9 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftServerEvents.START.register(ServerPlayNetworkingImpl::setUp);
 		MinecraftServerEvents.STOP.register(ServerPlayNetworkingImpl::destroy);
 		ServerPlayNetworkingImpl.setUpPacketFactory(CustomPayloadPacket::new);
-		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (server, handler, player, payload) -> {
-			((NetworkHandlerAccess)handler).osl$networking$registerChannels(payload.channels);
-			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
-
-			return true;
+		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
+			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
+			ServerConnectionEvents.PLAY_READY.invoker().accept(context.server(), context.player());
 		});
 	}
 }

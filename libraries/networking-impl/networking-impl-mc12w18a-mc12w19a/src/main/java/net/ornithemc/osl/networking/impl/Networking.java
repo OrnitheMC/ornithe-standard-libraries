@@ -22,14 +22,12 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftServerEvents.START.register(ServerPlayNetworkingImpl::setUp);
 		MinecraftServerEvents.STOP.register(ServerPlayNetworkingImpl::destroy);
 		ServerPlayNetworkingImpl.setUpPacketFactory(Networking::newCustomPayloadPacket);
-		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (server, handler, player, payload) -> {
+		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
 			// send channel registration data as a response to receiving client channel registration data
-			ServerPlayNetworkingImpl.sendNoCheck(player, HandshakePayload.CHANNEL, HandshakePayload.server());
+			ServerPlayNetworkingImpl.sendNoCheck(context.player(), HandshakePayload.CHANNEL, HandshakePayload.server());
 
-			((NetworkHandlerAccess)handler).osl$networking$registerChannels(payload.channels);
-			ServerConnectionEvents.PLAY_READY.invoker().accept(server, player);
-
-			return true;
+			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
+			ServerConnectionEvents.PLAY_READY.invoker().accept(context.server(), context.player());
 		});
 	}
 
@@ -38,11 +36,9 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftClientEvents.START.register(ClientPlayNetworkingImpl::setUp);
 		MinecraftClientEvents.STOP.register(ClientPlayNetworkingImpl::destroy);
 		ClientPlayNetworkingImpl.setUpPacketFactory(Networking::newCustomPayloadPacket);
-		ClientPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (minecraft, handler, payload) -> {
-			((NetworkHandlerAccess)handler).osl$networking$registerChannels(payload.channels);
-			ClientConnectionEvents.PLAY_READY.invoker().accept(minecraft);
-
-			return true;
+		ClientPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
+			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
+			ClientConnectionEvents.PLAY_READY.invoker().accept(context.minecraft());
 		});
 	}
 

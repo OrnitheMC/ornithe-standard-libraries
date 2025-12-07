@@ -15,7 +15,7 @@ public final class ServerPlayNetworking {
 
 	/**
 	 * Register a listener to receive data from the server through the given channel.
-	 * This listener will only be called from the main thread.
+	 * The data will be deserialized into a {@code CustomPayload} object of the given type.
 	 */
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, initializer, listener);
@@ -23,15 +23,7 @@ public final class ServerPlayNetworking {
 
 	/**
 	 * Register a listener to receive data from the server through the given channel.
-	 * This listener may be called off the main thread.
-	 */
-	public static <T extends PacketPayload> void registerListenerAsync(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
-		ServerPlayNetworkingImpl.registerListenerAsync(channel, initializer, listener);
-	}
-
-	/**
-	 * Register a listener to receive data from the server through the given channel.
-	 * This listener will only be called from the main thread.
+	 * The data will be wrapped in a {@link PacketBuffer} from which it can be read.
 	 */
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, listener);
@@ -39,26 +31,10 @@ public final class ServerPlayNetworking {
 
 	/**
 	 * Register a listener to receive data from the server through the given channel.
-	 * This listener may be called off the main thread.
+	 * The data will be given as a raw {@code byte[]}.
 	 */
-	public static void registerListenerAsync(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
-		ServerPlayNetworkingImpl.registerListenerAsync(channel, listener);
-	}
-
-	/**
-	 * Register a listener to receive data from the server through the given channel.
-	 * This listener will only be called from the main thread.
-	 */
-	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
+	public static void registerLegacyListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
 		ServerPlayNetworkingImpl.registerListener(channel, listener);
-	}
-
-	/**
-	 * Register a listener to receive data from the server through the given channel.
-	 * This listener may be called off the main thread.
-	 */
-	public static void registerListenerAsync(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
-		ServerPlayNetworkingImpl.registerListenerAsync(channel, listener);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.PacketPayload;
 import net.ornithemc.osl.networking.api.client.ClientPacketListener;
+import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.LocalClientPlayerAccess;
@@ -64,75 +65,20 @@ public final class ClientPlayNetworkingImpl {
 	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener) {
-		registerListener(channel, initializer, listener, false);
-	}
+		registerListenerImpl(channel, (context,  bytes) -> {
+			T payload = initializer.get();
+			payload.read(PacketBuffers.wrap(bytes));
 
-	public static <T extends PacketPayload> void registerListenerAsync(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener) {
-		registerListener(channel, initializer, listener, true);
-	}
-
-	private static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
-				T payload = initializer.get();
-				payload.read(PacketBuffers.wrap(bytes));
-
-				return listener.handle(minecraft, handler, payload);
-			}
+			listener.handle(context, payload);
 		});
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Buffer listener) {
-		registerListener(channel, listener, false);
-	}
-
-	public static void registerListenerAsync(NamespacedIdentifier channel, ClientPacketListener.Buffer listener) {
-		registerListener(channel, listener, true);
-	}
-
-	private static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Buffer listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
-				return listener.handle(minecraft, handler, PacketBuffers.wrap(bytes));
-			}
-		});
+		registerListenerImpl(channel, (context, bytes) -> listener.handle(context, PacketBuffers.wrap(bytes)));
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Bytes listener) {
-		registerListener(channel, listener, false);
-	}
-
-	public static void registerListenerAsync(NamespacedIdentifier channel, ClientPacketListener.Bytes listener) {
-		registerListener(channel, listener, true);
-	}
-
-	private static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Bytes listener, boolean async) {
-		registerListenerImpl(channel, new ChannelListener() {
-
-			@Override
-			public boolean isAsync() {
-				return async;
-			}
-
-			@Override
-			public boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException {
-				return listener.handle(minecraft, handler, bytes);
-			}
-		});
+		registerListenerImpl(channel, listener::handle);
 	}
 
 	private static void registerListenerImpl(NamespacedIdentifier channel, ChannelListener listener) {
@@ -156,26 +102,27 @@ public final class ClientPlayNetworkingImpl {
 		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
 
 		if (listener != null) {
+			ChannelListener.Context ctx = new ChannelListener.Context();
 			byte[] data = p.osl$networking$getData();
 
-			if (Thread.currentThread() == thread || listener.isAsync()) {
-				return handlePayload(minecraft, handler, listener, channel, data);
-			} else {
-				return ((TaskRunnerAccess) minecraft).osl$networking$submit(() -> handlePayload(minecraft, handler, listener, channel, data));
+			try {
+				handlePayload(channel, listener, ctx, data);
+			} catch (NotOnMainThreadException e) {
+				((TaskRunnerAccess) minecraft).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
 			}
+
+			return true;
 		}
 
 		return false;
 	}
 
-	private static boolean handlePayload(Minecraft minecraft, ClientNetworkHandler handler, ChannelListener listener, NamespacedIdentifier channel, byte[] data) {
+	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, byte[] data) {
 		try {
-			return listener.handle(minecraft, handler, data);
+			listener.handle(ctx, data);
 		} catch (IOException e) {
 			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
 		}
-
-		return true;
 	}
 
 	private static ClientNetworkHandler networkHandler() {
@@ -261,11 +208,29 @@ public final class ClientPlayNetworkingImpl {
 		networkHandler().sendPacket(packetFactory.create(channel, data));
 	}
 
+	@FunctionalInterface
 	private interface ChannelListener {
 
-		boolean isAsync();
+		void handle(Context context, byte[] bytes) throws IOException;
 
-		boolean handle(Minecraft minecraft, ClientNetworkHandler handler, byte[] bytes) throws IOException;
+		class Context implements ClientPacketListener.Context {
 
+			@Override
+			public Minecraft minecraft() {
+				return minecraft;
+			}
+
+			@Override
+			public ClientNetworkHandler networkHandler() {
+				return ClientPlayNetworkingImpl.networkHandler();
+			}
+
+			@Override
+			public void ensureOnMainThread() {
+				if (Thread.currentThread() != thread) {
+					throw NotOnMainThreadException.INSTANCE;
+				}
+			}
+		}
 	}
 }
