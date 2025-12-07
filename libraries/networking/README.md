@@ -17,22 +17,39 @@ are also fired for connections to integrated servers.
 ## Networking
 
 Sending and receiving data is done through the `ClientPlayNetworking` and `ServerPlayNetworking` classes.
-Mods can register network listeners through the `registerListener` and `registerListenerAsync` methods,
-allowing them to receive data through specific channels. Sending data is done through the `send` methods.
+Mods can register packet listeners through the `registerListener` methods, and send data through the `send` methods.
 
-Each custom payload is tied to a channel. Only connections that have listeners on that channel will receive the payload, and on the receiving end, the payload will only be handled by the listener on that channel. In Minecraft versions 1.13-pre2 and below, a channel can be any `String` of length 20 or less. In Minecraft versions 1.13-pre4 and above, a channel can be any valid `Identifier`. For `String` channels, the convention is `<(abbreviated) mod id>|<payload id>` (e.g. `Example|Cookie`), while for `Identifier` channels, the convention is `<mod id>:<payload id>` (e.g. `example:cookie`).
+Custom payloads are sent over specific channels. Channels are namespaced identifiers, used to identify the payload being sent or received.
+Channels identifiers should be constructed through the `ChannelIdentifieres` class. The convention is to use your mod id as the namespace,
+and snake case for the identifier.
 
-For ease of use data can be wrapped in custom payload objects. These must implement the `CustomPayload` interface
-and must have a public construcor without parameters. An example can be seen below.
+```java
+public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.from("example", "cookie");
+```
+
+You are expected to register your channels through the `ChannelRegistry`.
+
+```java
+ChannelRegistry.register(COOKIE_CHANNEL);
+```
+
+You are expected to register your packet listeners in your mod initializer through `ClientPlayNetworking` and `ServerPlayNetworking`.
+
+```java
+ClientPlayNetworking.registerListener(COOKIE_CHANNEL, (context, buffer) -> { });
+```
+
+For ease of use data can be wrapped in custom payload objects.
+These must implement the `CustomPayload` interface and must have a public constructor without parameters.
+An example can be seen below.
 
 ```java
 package com.example;
 
 import java.io.IOException;
 
-import net.minecraft.network.PacketByteBuf;
-
 import net.ornithemc.osl.networking.api.CustomPayload;
+import net.ornithemc.osl.networking.api.PacketBuffer;
 
 public class CookiePayload implements CustomPayload {
 
@@ -46,30 +63,43 @@ public class CookiePayload implements CustomPayload {
 	}
 
 	@Override
-	public void read(PacketByteBuf buffer) throws IOException {
+	public void read(PacketBuffer buffer) throws IOException {
 		// deserialize data
 	}
 
 	@Override
-	public void write(PacketByteBuf buffer) throws IOException {
+	public void write(PacketBuffer buffer) throws IOException {
 		// serialize data
 	}
 }
 ```
 
-Listeners for these custom payload objects can be registered as follows:
+A basic networking setup might look as follows.
+
 
 ```java
 package com.example;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
+import net.ornithemc.osl.networking.api.ChannelIdentifiers;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
 
 public class ExampleInitializer implements ModInitializer {
 
+	public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.from("example", "cookie");
+
 	@Override
 	public void init() {
-		ClientPlayNetworking.registerListener("Example|Cookie", CookiePayload::new, (minecraft, handler, payload) -> {
+		ChannelRegistry.register(COOKIE_CHANNEL, true, false);
+	}
+
+	@Override
+	public void initClient() {
+		ClientPlayNetworking.registerListener(COOKIE_CHANNEL, CookiePayload::new, (context, payload) -> {
+			// ensure this listener is running on the main thread
+			context.ensureOnMainThread();
+
 			// handle custom payload
 		});
 	}
