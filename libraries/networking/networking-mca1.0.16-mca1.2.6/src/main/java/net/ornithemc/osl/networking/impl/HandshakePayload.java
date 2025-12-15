@@ -6,13 +6,14 @@ import java.util.Set;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.networking.api.ChannelIdentifiers;
+import net.ornithemc.osl.networking.api.ChannelRegistry;
 import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketPayload;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 
 public class HandshakePayload implements PacketPayload {
 
-	public static final NamespacedIdentifier CHANNEL = Constants.OSL_HANDSHAKE_CHANNEL;
+	public static final NamespacedIdentifier CHANNEL = ChannelRegistry.register(Constants.OSL_HANDSHAKE_CHANNEL);
 
 	public byte protocol;
 	public Set<NamespacedIdentifier> channels;

@@ -22,6 +22,8 @@ import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.PacketPayload;
 import net.ornithemc.osl.networking.api.server.ServerPacketListener;
+import net.ornithemc.osl.networking.impl.ChannelRegistryImpl;
+import net.ornithemc.osl.networking.impl.ChannelSettings;
 import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
@@ -68,7 +70,7 @@ public final class ServerPlayNetworkingImpl {
 	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
-		registerListenerImpl(channel, (context, bytes) -> {
+		registerListenerInternal(channel, (context, bytes) -> {
 			T payload = initializer.get();
 			payload.read(PacketBuffers.wrap(bytes));
 
@@ -77,17 +79,23 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
-		registerListenerImpl(channel, (context, bytes) -> listener.handle(context, PacketBuffers.wrap(bytes)));
+		registerListenerInternal(channel, (context, bytes) -> listener.handle(context, PacketBuffers.wrap(bytes)));
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
-		registerListenerImpl(channel, listener::handle);
+		registerListenerInternal(channel, listener::handle);
 	}
 
-	private static void registerListenerImpl(NamespacedIdentifier channel, ChannelListener listener) {
+	private static void registerListenerInternal(NamespacedIdentifier channel, ChannelListener listener) {
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
+
+		if (settings == null || !settings.isServerbound()) {
+			throw new IllegalArgumentException("channel \'" + channel + "\' is not server-bound - did you register it with the wrong settings?");
+		}
+
 		CHANNEL_LISTENERS.compute(channel, (key, value) -> {
 			if (value != null) {
-				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
+				throw new IllegalArgumentException("there is already a listener on channel \'" + channel + "\'");
 			}
 
 			return listener;
@@ -311,14 +319,22 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	private static void sendPacket(ServerPlayerEntity player, NamespacedIdentifier channel, byte[] data) {
-		player.networkHandler.sendPacket(packetFactory.create(channel, data));
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
+
+		if (settings != null && settings.isClientbound()) {
+			player.networkHandler.sendPacket(packetFactory.create(channel, data));
+		}
 	}
 
 	private static void sendPacket(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, byte[] data) {
-		Packet packet = packetFactory.create(channel, data);
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
-		for (ServerPlayerEntity player : players) {
-			player.networkHandler.sendPacket(packet);
+		if (settings != null && settings.isClientbound()) {
+			Packet packet = packetFactory.create(channel, data);
+
+			for (ServerPlayerEntity player : players) {
+				player.networkHandler.sendPacket(packet);
+			}
 		}
 	}
 
