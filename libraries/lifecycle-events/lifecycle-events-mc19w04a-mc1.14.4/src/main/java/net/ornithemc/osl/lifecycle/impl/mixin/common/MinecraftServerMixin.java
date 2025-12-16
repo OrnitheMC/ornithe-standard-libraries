@@ -3,18 +3,19 @@ package net.ornithemc.osl.lifecycle.impl.mixin.common;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.MinecraftServer;
 
 import net.ornithemc.osl.lifecycle.api.server.MinecraftServerEvents;
+import net.ornithemc.osl.lifecycle.impl.server.MinecraftServerAccess;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
 
-	@Unique private boolean osl$lifecycle$stopped;
+	@Unique private int osl$lifecycle$shutdownDepth;
 
 	@Inject(
 		method = "run",
@@ -23,7 +24,8 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$start(CallbackInfo ci) {
-		MinecraftServerEvents.START.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerAccess.INSTANCE = (MinecraftServer)(Object)this;
+		MinecraftServerEvents.START.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -35,7 +37,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$ready(CallbackInfo ci) {
-		MinecraftServerEvents.READY.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.READY.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -45,9 +47,20 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$stop(CallbackInfo ci) {
-		if (!osl$lifecycle$stopped) {
-			osl$lifecycle$stopped = true;
-			MinecraftServerEvents.STOP.invoker().accept((MinecraftServer)(Object)this);
+		if (osl$lifecycle$shutdownDepth++ == 0) {
+			MinecraftServerEvents.STOP.invoker().accept(MinecraftServerAccess.INSTANCE);
+		}
+	}
+
+	@Inject(
+		method = "shutdown",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$lifecycle$stopped(CallbackInfo ci) {
+		if (--osl$lifecycle$shutdownDepth == 0) {
+			MinecraftServerAccess.INSTANCE = null;
 		}
 	}
 
@@ -58,7 +71,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$startTick(CallbackInfo ci) {
-		MinecraftServerEvents.TICK_START.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.TICK_START.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -68,7 +81,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$endTick(CallbackInfo ci) {
-		MinecraftServerEvents.TICK_END.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.TICK_END.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -78,7 +91,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$loadWorld(CallbackInfo ci) {
-		MinecraftServerEvents.LOAD_WORLD.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.LOAD_WORLD.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -88,7 +101,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$prepareWorld(CallbackInfo ci) {
-		MinecraftServerEvents.PREPARE_WORLD.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.PREPARE_WORLD.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 
 	@Inject(
@@ -98,6 +111,6 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$readyWorld(CallbackInfo ci) {
-		MinecraftServerEvents.READY_WORLD.invoker().accept((MinecraftServer)(Object)this);
+		MinecraftServerEvents.READY_WORLD.invoker().accept(MinecraftServerAccess.INSTANCE);
 	}
 }
