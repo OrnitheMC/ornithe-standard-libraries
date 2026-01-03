@@ -1,6 +1,5 @@
 package net.ornithemc.osl.networking.impl.server;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,205 +16,326 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
-import net.ornithemc.osl.networking.api.Channels;
-import net.ornithemc.osl.networking.api.CustomPayload;
-import net.ornithemc.osl.networking.api.DataStreams;
-import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.ByteArrayListener;
-import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.PayloadListener;
-import net.ornithemc.osl.networking.api.server.ServerPlayNetworking.StreamListener;
-import net.ornithemc.osl.networking.impl.CustomPayloadPacket;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.api.PacketBuffer;
+import net.ornithemc.osl.networking.api.PacketBuffers;
+import net.ornithemc.osl.networking.api.PacketPayload;
+import net.ornithemc.osl.networking.api.server.ServerPacketListener;
+import net.ornithemc.osl.networking.impl.ChannelRegistryImpl;
+import net.ornithemc.osl.networking.impl.ChannelSettings;
+import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
+import net.ornithemc.osl.networking.impl.PacketFactory;
+import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
+import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ServerPlayNetworkingImpl {
 
 	private static final Logger LOGGER = LogManager.getLogger("OSL|Server Play Networking");
 
+	private static PacketFactory packetFactory;
 	private static MinecraftServer server;
+	private static Thread thread;
+
+	public static void setUpPacketFactory(PacketFactory factory) {
+		if (ServerPlayNetworkingImpl.packetFactory != null) {
+			throw new IllegalStateException("tried to set up server custom payload packet factory when it was already set up!");
+		}
+
+		ServerPlayNetworkingImpl.packetFactory = factory;
+	}
 
 	public static void setUp(MinecraftServer server) {
 		if (ServerPlayNetworkingImpl.server == server) {
-			throw new IllegalStateException("tried to set up server networking when it was already set up!");
+			throw new IllegalStateException("tried to set up server play networking when it was already set up!");
+		}
+		if (ServerPlayNetworkingImpl.packetFactory == null) {
+			throw new IllegalStateException("tried to set up server play networking when no custom payload packet factory was set up!");
 		}
 
 		ServerPlayNetworkingImpl.server = server;
+		ServerPlayNetworkingImpl.thread = Thread.currentThread();
 	}
 
 	public static void destroy(MinecraftServer server) {
 		if (ServerPlayNetworkingImpl.server != server) {
-			throw new IllegalStateException("tried to destroy server networking when it was not set up!");
+			throw new IllegalStateException("tried to destroy server play networking when it was not set up!");
 		}
 
 		ServerPlayNetworkingImpl.server = null;
+		ServerPlayNetworkingImpl.thread = null;
 	}
 
-	public static final Map<String, Listener> LISTENERS = new LinkedHashMap<>();
+	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
-	public static <T extends CustomPayload> void registerListener(String channel, Supplier<T> initializer, PayloadListener<T> listener) {
-		registerListenerImpl(channel, (server, handler, player, data) -> {
+	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
+		registerListenerInternal(channel, (context, bytes) -> {
 			T payload = initializer.get();
-			payload.read(DataStreams.input(data));
+			payload.read(PacketBuffers.wrap(bytes));
 
-			return listener.handle(server, handler, player, payload);
+			listener.handle(context, payload);
 		});
 	}
 
-	public static void registerListener(String channel, StreamListener listener) {
-		registerListenerImpl(channel, (server, handler, player, data) -> {
-			return listener.handle(server, handler, player, DataStreams.input(data));
-		});
+	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
+		registerListenerInternal(channel, (context, bytes) -> listener.handle(context, PacketBuffers.wrap(bytes)));
 	}
 
-	public static void registerListenerRaw(String channel, ByteArrayListener listener) {
-		registerListenerImpl(channel, listener::handle);
+	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
+		registerListenerInternal(channel, listener::handle);
 	}
 
-	private static void registerListenerImpl(String channel, Listener listener) {
-		LISTENERS.compute(channel, (key, value) -> {
-			Channels.validate(channel);
+	private static void registerListenerInternal(NamespacedIdentifier channel, ChannelListener listener) {
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
+		if (settings == null || !settings.isServerbound()) {
+			throw new IllegalArgumentException("channel \'" + channel + "\' is not server-bound - did you register it with the wrong settings?");
+		}
+
+		CHANNEL_LISTENERS.compute(channel, (key, value) -> {
 			if (value != null) {
-				throw new IllegalStateException("there is already a listener on channel \'" + channel + "\'");
+				throw new IllegalArgumentException("there is already a listener on channel \'" + channel + "\'");
 			}
 
 			return listener;
 		});
 	}
 
-	public static void unregisterListener(String channel) {
-		LISTENERS.remove(channel);
+	public static void unregisterListener(NamespacedIdentifier channel) {
+		CHANNEL_LISTENERS.remove(channel);
 	}
 
-	public static boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, CustomPayloadPacket packet) {
-		Listener listener = LISTENERS.get(packet.channel);
+	public static boolean handlePacket(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, Packet packet) {
+		CustomPayloadPacketAccess p = (CustomPayloadPacketAccess)packet;
+
+		NamespacedIdentifier channel = p.osl$networking$getChannel();
+		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
 
 		if (listener != null) {
+			ChannelListener.Context ctx = new ChannelListener.Context(player);
+			byte[] data = p.osl$networking$getData();
+
 			try {
-				return listener.handle(server, handler, player, packet.data);
-			} catch (IOException e) {
-				LOGGER.warn("error handling custom payload on channel \'" + packet.channel + "\'", e);
-				return true;
+				handlePayload(channel, listener, ctx, data);
+			} catch (NotOnMainThreadException e) {
+				((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
 			}
+
+			return true;
 		}
 
 		return false;
 	}
 
+	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, byte[] data) {
+		try {
+			listener.handle(ctx, data);
+		} catch (IOException e) {
+			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		}
+	}
+
 	public static boolean isPlayReady(ServerPlayerEntity player) {
-		INetworkHandler handler = (INetworkHandler)player.networkHandler;
+		NetworkHandlerAccess handler = (NetworkHandlerAccess)player.networkHandler;
 		return handler != null && handler.osl$networking$isPlayReady();
 	}
 
-	public static boolean canSend(ServerPlayerEntity player, String channel) {
-		INetworkHandler handler = (INetworkHandler)player.networkHandler;
-		return handler != null && handler.osl$networking$isRegisteredChannel(channel);
+	public static boolean isPlayReady(ServerPlayerEntity player, NamespacedIdentifier channel) {
+		NetworkHandlerAccess handler = (NetworkHandlerAccess)player.networkHandler;
+		return handler != null && handler.osl$networking$isPlayReady(channel);
 	}
 
-	public static void send(ServerPlayerEntity player, String channel, CustomPayload payload) {
-		if (canSend(player, channel)) {
-			doSend(player, channel, payload);
+	public static void send(ServerPlayerEntity player, NamespacedIdentifier channel, PacketPayload payload) {
+		if (isPlayReady(player, channel)) {
+			sendInternal(player, channel, payload);
 		}
 	}
 
-	public static void send(ServerPlayerEntity player, String channel, IOConsumer<DataOutputStream> writer) {
-		if (canSend(player, channel)) {
-			doSend(player, channel, writer);
+	public static void send(ServerPlayerEntity player, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		if (isPlayReady(player, channel)) {
+			sendInternal(player, channel, writer);
 		}
 	}
 
-	public static void send(ServerPlayerEntity player, String channel, byte[] data) {
-		if (canSend(player, channel)) {
-			doSend(player, channel, data);
+	public static void send(ServerPlayerEntity player, NamespacedIdentifier channel, PacketBuffer buffer) {
+		if (isPlayReady(player, channel)) {
+			sendInternal(player, channel, buffer);
 		}
 	}
 
-	public static void send(Iterable<ServerPlayerEntity> players, String channel, CustomPayload payload) {
-		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, payload));
+	public static void send(ServerPlayerEntity player, NamespacedIdentifier channel, byte[] bytes) {
+		if (isPlayReady(player, channel)) {
+			sendInternal(player, channel, bytes);
+		}
 	}
 
-	public static void send(Iterable<ServerPlayerEntity> players, String channel, IOConsumer<DataOutputStream> writer) {
-		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, writer));
+	public static void send(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(collectPlayers(players, p -> isPlayReady(p, channel)), channel, payload);
 	}
 
-	public static void send(Iterable<ServerPlayerEntity> players, String channel, byte[] data) {
-		sendPacket(collectPlayers(players, p -> canSend(p, channel)), makePacket(channel, data));
+	public static void send(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(collectPlayers(players, p -> isPlayReady(p, channel)), channel, writer);
 	}
 
-	public static void send(int dimension, String channel, CustomPayload payload) {
-		doSend(collectPlayers(p -> p.dimension == dimension && canSend(p, channel)), channel, payload);
+	public static void send(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(collectPlayers(players, p -> isPlayReady(p, channel)), channel, buffer);
 	}
 
-	public static void send(int dimension, String channel, IOConsumer<DataOutputStream> writer) {
-		doSend(collectPlayers(p -> p.dimension == dimension && canSend(p, channel)), channel, writer);
+	public static void send(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(collectPlayers(players, p -> isPlayReady(p, channel)), channel, bytes);
 	}
 
-	public static void send(int dimension, String channel, byte[] data) {
-		doSend(collectPlayers(p -> p.dimension == dimension && canSend(p, channel)),channel, data);
+	public static void send(int dimension, NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension && isPlayReady(p, channel)), channel, payload);
 	}
 
-	public static void send(String channel, CustomPayload payload) {
-		doSend(collectPlayers(p -> canSend(p, channel)), channel, payload);
+	public static void send(int dimension, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension && isPlayReady(p, channel)), channel, writer);
 	}
 
-	public static void send(String channel, IOConsumer<DataOutputStream> writer) {
-		doSend(collectPlayers(p -> canSend(p, channel)), channel, writer);
+	public static void send(int dimension, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension && isPlayReady(p, channel)),channel, buffer);
 	}
 
-	public static void send(String channel, byte[] data) {
-		doSend(collectPlayers(p -> canSend(p, channel)), channel, data);
+	public static void send(int dimension, NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension && isPlayReady(p, channel)),channel, bytes);
 	}
 
-	public static void doSend(ServerPlayerEntity player, String channel, CustomPayload payload) {
-		sendPacket(player, makePacket(channel, payload));
+	public static void send(NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(collectPlayers(p -> isPlayReady(p, channel)), channel, payload);
 	}
 
-	public static void doSend(ServerPlayerEntity player, String channel, IOConsumer<DataOutputStream> writer) {
-		sendPacket(player, makePacket(channel, writer));
+	public static void send(NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(collectPlayers(p -> isPlayReady(p, channel)), channel, writer);
 	}
 
-	public static void doSend(ServerPlayerEntity player, String channel, byte[] data) {
-		sendPacket(player, makePacket(channel, data));
+	public static void send(NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(collectPlayers(p -> isPlayReady(p, channel)), channel, buffer);
 	}
 
-	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, CustomPayload payload) {
-		sendPacket(players, makePacket(channel, payload));
+	public static void send(NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(collectPlayers(p -> isPlayReady(p, channel)), channel, bytes);
 	}
 
-	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, IOConsumer<DataOutputStream> writer) {
-		sendPacket(players, makePacket(channel, writer));
+	public static void sendNoCheck(ServerPlayerEntity player, NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(player, channel, payload);
 	}
 
-	public static void doSend(Iterable<ServerPlayerEntity> players, String channel, byte[] data) {
-		sendPacket(players, makePacket(channel, data));
+	public static void sendNoCheck(ServerPlayerEntity player, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(player, channel, writer);
 	}
 
-	public static void doSend(int dimension, String channel, CustomPayload payload) {
-		doSend(collectPlayers(p -> p.dimension == dimension), channel, payload);
+	public static void sendNoCheck(ServerPlayerEntity player, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(player, channel, buffer);
 	}
 
-	public static void doSend(int dimension, String channel, IOConsumer<DataOutputStream> writer) {
-		doSend(collectPlayers(p -> p.dimension == dimension), channel, writer);
+	public static void sendNoCheck(ServerPlayerEntity player, NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(player, channel, bytes);
 	}
 
-	public static void doSend(int dimension, String channel, byte[] data) {
-		doSend(collectPlayers(p -> p.dimension == dimension),channel, data);
+	public static void sendNoCheck(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(players, channel, payload);
 	}
 
-	public static void doSend(String channel, CustomPayload payload) {
-		doSend(collectPlayers(p -> true), channel, payload);
+	public static void sendNoCheck(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(players, channel, writer);
 	}
 
-	public static void doSend(String channel, IOConsumer<DataOutputStream> writer) {
-		doSend(collectPlayers(p -> true), channel, writer);
+	public static void sendNoCheck(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(players, channel, buffer);
 	}
 
-	public static void doSend(String channel, byte[] data) {
-		doSend(collectPlayers(p -> true), channel, data);
+	public static void sendNoCheck(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(players, channel, bytes);
 	}
 
-	@SuppressWarnings("unchecked") // thanks proguard
+	public static void sendNoCheck(int dimension, NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension), channel, payload);
+	}
+
+	public static void sendNoCheck(int dimension, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension), channel, writer);
+	}
+
+	public static void sendNoCheck(int dimension, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension),channel, buffer);
+	}
+
+	public static void sendNoCheck(int dimension, NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(collectPlayers(p -> p.dimension == dimension),channel, bytes);
+	}
+
+	public static void sendNoCheck(NamespacedIdentifier channel, PacketPayload payload) {
+		sendInternal(allPlayers(), channel, payload);
+	}
+
+	public static void sendNoCheck(NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		sendInternal(allPlayers(), channel, writer);
+	}
+
+	public static void sendNoCheck(NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendInternal(allPlayers(), channel, buffer);
+	}
+
+	public static void sendNoCheck(NamespacedIdentifier channel, byte[] bytes) {
+		sendInternal(allPlayers(), channel, bytes);
+	}
+
+	private static void sendInternal(ServerPlayerEntity player, NamespacedIdentifier channel, PacketPayload payload) {
+		try {
+			sendPacket(player, channel, PacketBuffers.unwrap(PacketBuffers.make(payload::write)));
+		} catch (IOException e) {
+			LOGGER.warn("error writing packet payload to channel \'" + channel + "\'", e);
+		}
+	}
+	
+	private static void sendInternal(ServerPlayerEntity player, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		try {
+			sendPacket(player, channel, PacketBuffers.unwrap(PacketBuffers.make(writer)));
+		} catch (IOException e) {
+			LOGGER.warn("error writing buffer to channel \'" + channel + "\'", e);
+		}
+	}
+	
+	private static void sendInternal(ServerPlayerEntity player, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendPacket(player, channel, PacketBuffers.unwrap(buffer));
+	}
+	
+	private static void sendInternal(ServerPlayerEntity player, NamespacedIdentifier channel, byte[] bytes) {
+		sendPacket(player, channel, bytes);
+	}
+
+	private static void sendInternal(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketPayload payload) {
+		try {
+			sendPacket(players, channel, PacketBuffers.unwrap(PacketBuffers.make(payload::write)));
+		} catch (IOException e) {
+			LOGGER.warn("error writing packet payload to channel \'" + channel + "\'", e);
+		}
+	}
+
+	private static void sendInternal(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, IOConsumer<PacketBuffer> writer) {
+		try {
+			sendPacket(players, channel, PacketBuffers.unwrap(PacketBuffers.make(writer)));
+		} catch (IOException e) {
+			LOGGER.warn("error writing buffer to channel \'" + channel + "\'", e);
+		}
+	}
+
+	private static void sendInternal(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, PacketBuffer buffer) {
+		sendPacket(players, channel, PacketBuffers.unwrap(buffer));
+	}
+
+	private static void sendInternal(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, byte[] bytes) {
+		sendPacket(players, channel, bytes);
+	}
+
+	private static Iterable<ServerPlayerEntity> allPlayers() {
+		return server.playerManager.players;
+	}
+
 	private static Iterable<ServerPlayerEntity> collectPlayers(Predicate<ServerPlayerEntity> filter) {
-		return collectPlayers(server.playerManager.players, filter);
+		return collectPlayers(allPlayers(), filter);
 	}
 
 	private static Iterable<ServerPlayerEntity> collectPlayers(Iterable<ServerPlayerEntity> src, Predicate<ServerPlayerEntity> filter) {
@@ -230,40 +350,59 @@ public final class ServerPlayNetworkingImpl {
 		return players;
 	}
 
-	private static Packet makePacket(String channel, CustomPayload payload) {
-		return makePacket(channel, payload::write);
-	}
+	private static void sendPacket(ServerPlayerEntity player, NamespacedIdentifier channel, byte[] data) {
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
-	private static Packet makePacket(String channel, IOConsumer<DataOutputStream> writer) {
-		try {
-			return new CustomPayloadPacket(channel, DataStreams.output(writer).toByteArray());
-		} catch (IOException e) {
-			LOGGER.warn("error writing custom payload to channel \'" + channel + "\'", e);
-			return null;
+		if (settings != null && settings.isClientbound()) {
+			player.networkHandler.sendPacket(packetFactory.create(channel, data));
 		}
 	}
 
-	private static Packet makePacket(String channel, byte[] data) {
-		return new CustomPayloadPacket(channel, data);
-	}
+	private static void sendPacket(Iterable<ServerPlayerEntity> players, NamespacedIdentifier channel, byte[] data) {
+		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
-	private static void sendPacket(ServerPlayerEntity player, Packet packet) {
-		if (packet != null) {
-			player.networkHandler.sendPacket(packet);
-		}
-	}
+		if (settings != null && settings.isClientbound()) {
+			Packet packet = packetFactory.create(channel, data);
 
-	private static void sendPacket(Iterable<ServerPlayerEntity> players, Packet packet) {
-		if (packet != null) {
 			for (ServerPlayerEntity player : players) {
-				sendPacket(player, packet);
+				player.networkHandler.sendPacket(packet);
 			}
 		}
 	}
 
-	private interface Listener {
+	private interface ChannelListener {
 
-		boolean handle(MinecraftServer server, ServerPlayNetworkHandler handler, ServerPlayerEntity player, byte[] data) throws IOException;
+		void handle(Context context, byte[] bytes) throws IOException;
 
+		class Context implements ServerPacketListener.Context {
+
+			private final ServerPlayerEntity player;
+
+			Context(ServerPlayerEntity player) {
+				this.player = player;
+			}
+
+			@Override
+			public MinecraftServer server() {
+				return server;
+			}
+
+			@Override
+			public ServerPlayNetworkHandler networkHandler() {
+				return player.networkHandler;
+			}
+
+			@Override
+			public ServerPlayerEntity player() {
+				return player;
+			}
+
+			@Override
+			public void ensureOnMainThread() {
+				if (Thread.currentThread() != thread) {
+					throw NotOnMainThreadException.INSTANCE;
+				}
+			}
+		}
 	}
 }

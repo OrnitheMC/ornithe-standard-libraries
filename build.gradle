@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.10-SNAPSHOT' apply false
-	id 'ploceus' version '1.10-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.12-SNAPSHOT' apply false
+	id 'ploceus' version '1.12-SNAPSHOT' apply false
 }
 
 setUpJar(project)
@@ -49,7 +49,7 @@ def setUpJar(project) {
 	project.group = "${project.rootProject.root_maven_group}"
 
 	project.ploceus {
-		setGeneration(2)
+		setIntermediaryGeneration(2)
 	}
 
 	project.repositories {
@@ -194,7 +194,7 @@ def setUpModule(project, String... dependencies) {
 		}
 	}
 	project.ploceus {
-		setGeneration(2)
+		setIntermediaryGeneration(2)
 	}
 
 	def libraries = getLibraryDependencies(project, dependencies)
