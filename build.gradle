@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.12-SNAPSHOT' apply false
-	id 'ploceus' version '1.12-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.14-SNAPSHOT' apply false
+	id 'ploceus' version '1.14-SNAPSHOT' apply false
 }
 
 setUpJar(project)
