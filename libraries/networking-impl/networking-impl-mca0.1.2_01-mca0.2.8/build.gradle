@@ -1,0 +1,5 @@
+setUpModule(project,
+	'entrypoints-mcin-20091223-1459-mc1.5.2',
+	'lifecycle-events-mca0.2.0-mca0.2.8',
+	'networking-mca0.2.2-mca0.2.8'
+)

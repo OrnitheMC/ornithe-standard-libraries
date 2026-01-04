@@ -20,9 +20,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.client.resource.language.Locale;
-import net.minecraft.client.resource.manager.ResourceManager;
 import net.minecraft.resource.Identifier;
 import net.minecraft.resource.Resource;
+import net.minecraft.resource.manager.ResourceManager;
 
 @Mixin(Locale.class)
 public abstract class LocaleMixin {
@@ -35,10 +35,10 @@ public abstract class LocaleMixin {
 	protected abstract void load(List<Resource> resources);
 
 	@Inject(
-		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
+		method = "load(Lnet/minecraft/resource/manager/ResourceManager;Ljava/util/List;)V",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resource/manager/ResourceManager;getResources(Lnet/minecraft/resource/Identifier;)Ljava/util/List;"
+			target = "Lnet/minecraft/resource/manager/ResourceManager;getResources(Lnet/minecraft/resource/Identifier;)Ljava/util/List;"
 		)
 	)
 	private void osl$resource_loader$loadTranslationFiles(CallbackInfo ci,
