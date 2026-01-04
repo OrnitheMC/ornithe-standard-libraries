@@ -373,7 +373,7 @@ def shouldPublish(project, mavenUrl) {
 
 	try {
 		def xml = new URL("${mavenUrl}/${groupId.replace('.', '/')}/${artifactId}/maven-metadata.xml").text
-		def metadata = new XmlSlurper().parseText(xml)
+		def metadata = new groovy.xml.XmlSlurper().parseText(xml)
 
 		exists = metadata.versioning.versions.version.stream().filter({
 			return it == version
