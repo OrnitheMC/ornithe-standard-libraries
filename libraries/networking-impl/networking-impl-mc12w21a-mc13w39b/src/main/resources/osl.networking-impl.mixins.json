@@ -12,7 +12,7 @@
 	],
 	"client": [
 		"client.ClientNetworkHandlerMixin",
-		"common.LocalConnectionMixin",
+		"client.LocalConnectionMixin",
 		"client.MinecraftMixin"
 	],
 	"server": [
