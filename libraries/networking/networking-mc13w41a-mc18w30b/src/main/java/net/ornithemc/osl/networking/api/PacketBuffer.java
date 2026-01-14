@@ -52,7 +52,21 @@ public class PacketBuffer extends ByteBuf {
 	}
 
 	public int readVarInt() {
-		return this.delegate.readVarInt();
+		int value = 0;
+
+		byte bytes = 0;
+		byte nextByte = 0;
+
+		do {
+			nextByte = this.readByte();
+			value |= (nextByte & VAR_VALUE_MASK) << bytes++ * VAR_VALUE_BITS;
+
+			if (bytes > VAR_INT_MAX_BYTES) {
+				throw new RuntimeException("VarInt too big");
+			}
+		} while ((nextByte & VAR_PARITY_VALUE) == VAR_PARITY_VALUE);
+
+		return value;
 	}
 
 	public long readVarLong() {
@@ -201,7 +215,14 @@ public class PacketBuffer extends ByteBuf {
 	}
 
 	public ByteBuf writeVarInt(int value) {
-		return this.delegate.writeVarInt(value);
+		while ((value & -128) != 0) {
+			this.writeByte(value & VAR_VALUE_MASK | VAR_PARITY_VALUE);
+			value >>>= VAR_VALUE_BITS;
+		}
+
+		this.writeByte(value);
+
+		return this;
 	}
 
 	public ByteBuf writeVarLong(long value) {
