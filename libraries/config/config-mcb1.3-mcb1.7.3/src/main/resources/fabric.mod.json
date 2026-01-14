@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-config",
+  "version": "0.5.2+mcb1.3-mcb1.7.3",
+  "environment": "client",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.config.impl.ConfigInitializer"
+    ],
+    "client-init": [
+      "net.ornithemc.osl.config.impl.client.ClientConfigInitializer"
+    ],
+    "server-init": [
+      "net.ornithemc.osl.config.impl.server.ServerConfigInitializer"
+    ]
+  },
+  "mixins": [
+    "osl.config.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.0",
+    "minecraft": "\u003e\u003d1.0.0-beta.3 \u003c\u003d1.0.0-beta.7.3",
+    "osl-core": "\u003e\u003d0.6.0",
+    "osl-entrypoints": "\u003e\u003d0.2.0",
+    "osl-lifecycle-events": "\u003e\u003d0.4.0"
+  },
+  "name": "OSL Config",
+  "description": "A config library.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/ornithe-standard-libraries/config/icon.png"
+}

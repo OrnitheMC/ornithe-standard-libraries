@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-networking",
+  "version": "0.8.0+mca1.0.16-mca1.2.6",
+  "environment": "client",
+  "mixins": [
+    "osl.networking.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.0",
+    "minecraft": "\u003e\u003d1.0.0-alpha.0.16 \u003c\u003d1.0.0-alpha.2.6",
+    "osl-core": "\u003e\u003d0.4.0",
+    "osl-entrypoints": "\u003e\u003d0.2.0",
+    "osl-lifecycle-events": "\u003e\u003d0.4.0"
+  },
+  "name": "OSL Networking",
+  "description": "Client-server networking API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/ornithe-standard-libraries/networking/icon.png"
+}
