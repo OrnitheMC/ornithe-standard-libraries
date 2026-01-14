@@ -24,7 +24,7 @@ public class CustomPayloadC2SPacketMixin implements CustomPayloadPacketAccess {
 	@Shadow private PacketByteBuf data;
 
 	@Inject(
-		method = "m_9429910",
+		method = "handle(Lnet/minecraft/server/network/handler/ServerPlayPacketHandler;)V",
 		cancellable = true,
 		at = @At(
 			value = "INVOKE",
