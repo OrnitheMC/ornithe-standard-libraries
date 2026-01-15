@@ -39,7 +39,8 @@ public class PacketBuffer extends ByteBuf {
 	private static final int TEXT_JSON_MAX_LENGTH = 0x40000;
 
 	// this module spans 13w41a-18w30b but BlockPos to long packing was added in 14w03a
-	private static final boolean SUPPORT_BLOCKPOS_PACKING = (BlockPos.class.getSuperclass() == Vec3i.class);
+	// BlockPos did not have Vec3i as super class until 14w04a, which is close enough
+	private static final boolean SUPPORT_BLOCKPOS_PACKING = (BlockPos.class.getSuperclass() != Object.class);
 
 	final PacketByteBuf delegate;
 
