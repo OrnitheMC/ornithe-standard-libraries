@@ -7,12 +7,13 @@ import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
+import net.ornithemc.osl.networking.impl.mixin.common.PacketAccessor;
 
 public class Networking implements ModInitializer, ClientModInitializer, ServerModInitializer {
 
 	@Override
 	public void init() {
-		// no-op
+		PacketAccessor.register(Constants.CUSTOM_PAYLOAD_PACKET_ID, CustomPayloadPacket.class);
 	}
 
 	@Override

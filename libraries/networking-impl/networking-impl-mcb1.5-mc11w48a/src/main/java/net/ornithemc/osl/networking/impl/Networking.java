@@ -9,13 +9,14 @@ import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
+import net.ornithemc.osl.networking.impl.mixin.common.PacketAccessor;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 public class Networking implements ModInitializer, ClientModInitializer, ServerModInitializer {
 
 	@Override
 	public void init() {
-		// no-op
+		PacketAccessor.register(Constants.CUSTOM_PAYLOAD_PACKET_ID, true, true, CustomPayloadPacket.class);
 	}
 
 	@Override
