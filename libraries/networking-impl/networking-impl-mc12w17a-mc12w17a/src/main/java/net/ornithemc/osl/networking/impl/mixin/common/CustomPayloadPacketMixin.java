@@ -20,7 +20,7 @@ public class CustomPayloadPacketMixin implements CustomPayloadPacketAccess {
 	@ModifyConstant(
 		method = "read",
 		constant = @Constant(
-			intValue = 20
+			intValue = 16
 		)
 	)
 	private int osl$networking$modifyMaxChannelLength(int maxLength) {
