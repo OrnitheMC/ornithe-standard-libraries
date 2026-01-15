@@ -19,7 +19,7 @@
   ],
   "depends": {
     "fabricloader": "\u003e\u003d0.16.0",
-    "minecraft": "\u003e\u003d1.7.2-alpha.13.41.a \u003c\u003d1.8-alpha.14.20.b",
+    "minecraft": "\u003e\u003d1.7-alpha.13.41.a \u003c\u003d1.8-alpha.14.20.b",
     "osl-core": "\u003e\u003d0.4.0",
     "osl-entrypoints": "\u003e\u003d0.2.0",
     "osl-lifecycle-events": "\u003e\u003d0.4.0",
