@@ -25,8 +25,8 @@ public class ConnectionMixin {
 			target = "Ljava/util/List;add(Ljava/lang/Object;)Z"
 		)
 	)
-	private void osl$networking$handlePacketsAsync(Packet packet, CallbackInfoReturnable<Boolean> cir) {
-		if (Connections.checkAsyncHandling(packet, listener)) {
+	private void osl$networking$asyncCustomPayloads(Packet packet, CallbackInfoReturnable<Boolean> cir) {
+		if (Connections.handleAsyncPacket(packet, listener)) {
 			cir.setReturnValue(true);
 		}
 	}

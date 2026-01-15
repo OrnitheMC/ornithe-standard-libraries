@@ -1,6 +1,6 @@
 package net.ornithemc.osl.networking.impl;
 
-import net.minecraft.network.PacketHandler;
+import net.minecraft.network.handler.PacketHandler;
 import net.minecraft.network.packet.Packet;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -14,9 +14,6 @@ public final class Connections {
 			return false;
 		}
 		if (!(listener instanceof NetworkHandlerAccess)) {
-			return false;
-		}
-		if (!!((NetworkHandlerAccess) listener).osl$networking$canRunOffMainThread()) {
 			return false;
 		}
 

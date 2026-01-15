@@ -24,8 +24,8 @@ public class LocalConnectionMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handlePacketsAsync(Packet packet, CallbackInfo ci) {
-		if (Connections.checkAsyncHandling(packet, listener)) {
+	private void osl$networking$asyncCustomPayloads(Packet packet, CallbackInfo ci) {
+		if (Connections.handleAsyncPacket(packet, listener)) {
 			ci.cancel();
 		}
 	}
