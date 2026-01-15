@@ -31,7 +31,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 public class PacketBuffer extends ByteBuf {
 
 	private static final int VAR_VALUE_BITS = 7;
-	private static final int VAR_VALUE_MASK = 1 << VAR_VALUE_BITS - 1;
+	private static final int VAR_VALUE_MASK = (1 << VAR_VALUE_BITS) - 1;
 	private static final int VAR_PARITY_VALUE = 1 << VAR_VALUE_BITS;
 	private static final int VAR_INT_MAX_BYTES = 5;
 	private static final int VAR_LONG_MAX_BYTES = 10;
@@ -277,7 +277,8 @@ public class PacketBuffer extends ByteBuf {
 			throw new RuntimeException("String too big (was " + bytes.length + " bytes encoded, max " + maxLength + ")");
 		}
 
-		this.writeByteArray(bytes);
+		this.writeVarInt(bytes.length);
+		this.writeBytes(bytes);
 
 		return this;
 	}
