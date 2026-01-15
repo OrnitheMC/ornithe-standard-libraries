@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.network.packet.HandshakePacket;
 import net.minecraft.server.MinecraftServer;
@@ -43,12 +44,11 @@ public class ServerLoginNetworkHandlerMixin {
 
 	@Inject(
 		method = "acceptLogin",
-		locals = LocalCapture.CAPTURE_FAILHARD,
 		at = @At(
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleLogin(CallbackInfo ci, ServerPlayerEntity player) {
+	private void osl$networking$handleLogin(CallbackInfo ci, @Local ServerPlayerEntity player) {
 		if (player != null) {
 			if (ornithe) {
 				// send channel registration data as soon as login occurs
