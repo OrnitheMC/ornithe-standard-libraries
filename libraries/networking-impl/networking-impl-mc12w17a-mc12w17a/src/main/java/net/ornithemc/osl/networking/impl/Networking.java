@@ -48,6 +48,9 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 	}
 
 	private static CustomPayloadPacket newCustomPayloadPacket(NamespacedIdentifier channel, byte[] data) {
-		return new CustomPayloadPacket(StringChannelIdentifierParser.toString(channel), data);
+		CustomPayloadPacket p = new CustomPayloadPacket();
+		p.channel = StringChannelIdentifierParser.toString(channel);
+		p.data = data;
+		return p;
 	}
 }
