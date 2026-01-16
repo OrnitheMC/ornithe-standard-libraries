@@ -43,7 +43,7 @@ public class MainMixin {
 		method = "main",
 		at = @At(
 			value = "INVOKE",
-			target = "Ljoptsimple/OptionParser;nonOptions()Ljoptsimple/NonOptionArgumentSpec;"
+			target = "Ljoptsimple/OptionParser;parse([Ljava/lang/String;)Ljoptsimple/OptionSet;"
 		)
 	)
 	private static void osl$entrypoints$defineOptions(String[] args, CallbackInfo ci, @Local OptionParser parser) {
