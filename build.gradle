@@ -308,7 +308,6 @@ def setUpModule(project, String... dependencies) {
 			name = "${project.rootProject.mod_name_short} ${library.library_name}"
 			description = "${library.library_description}"
 
-			icon "assets/${project.rootProject.mod_id_long}/${library.library_id}/icon.png"
 			mixin "${project.rootProject.mod_id_short}.${library.library_id}.mixins.json"
 
 			if (library.hasProperty('entrypoint_init')) {
