@@ -96,9 +96,9 @@ def addPomDependency(project) {
 					def depsNode = asNode().get("dependencies")[0]
 					def depNode = depsNode.appendNode("dependency")
 
-					depNode.appendNode("groupId", project.mod_maven_group)
-					depNode.appendNode("artifactId", project.mod_artifact_id)
-					depNode.appendNode("version", project.mod_version)
+					depNode.appendNode("groupId", project.rootProject.library_maven_group)
+					depNode.appendNode("artifactId", project.library_id)
+					depNode.appendNode("version", project.library_version)
 					depNode.appendNode("scope", "compile")
 				}
 			}
