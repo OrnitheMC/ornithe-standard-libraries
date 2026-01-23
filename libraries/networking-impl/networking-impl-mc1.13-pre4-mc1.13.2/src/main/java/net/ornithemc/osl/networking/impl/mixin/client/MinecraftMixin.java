@@ -12,7 +12,7 @@ public abstract class MinecraftMixin implements BlockableEventLoop, TaskRunnerAc
 
 	@Override
 	public boolean osl$networking$submit(Runnable task) {
-		this.execute(task);
+		this.executeTask(task);
 		return true;
 	}
 }
