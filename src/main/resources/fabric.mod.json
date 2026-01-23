@@ -1,24 +1,22 @@
 {
-	"schemaVersion": 1,
-	"id": "osl",
-	"version": "${version}",
-	"name": "Ornithe Standard Libraries",
-	"description": "Libraries for modding with Ornithe.",
-	"authors": [
-		"OrnitheMC",
-		"Space Walker"
-	],
-	"contact": {
-		"homepage": "https://ornithemc.net/",
-		"issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
-		"sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
-	},
-	"license": "Apache-2.0",
-	"icon": "assets/ornithe-standard-libraries/icon.png",
-	"environment": "*",
-	"entrypoints": {
-	},
-	"depends": {
-		"fabricloader": ">=0.15.0"
-	}
+  "schemaVersion": 1,
+  "id": "osl",
+  "version": "0.16.1",
+  "environment": "*",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.0",
+    "minecraft": "*"
+  },
+  "name": "Ornithe Standard Libraries",
+  "description": "Libraries and APIs for modding with Ornithe.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/ornithe-standard-libraries/icon.png"
 }

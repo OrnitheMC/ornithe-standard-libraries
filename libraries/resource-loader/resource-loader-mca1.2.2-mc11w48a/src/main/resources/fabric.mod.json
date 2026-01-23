@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-resource-loader",
+  "version": "0.5.4+mca1.2.2-mc11w48a",
+  "environment": "client",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.resource.loader.impl.ResourceLoader"
+    ],
+    "client-init": [
+      "net.ornithemc.osl.resource.loader.impl.ResourceLoader"
+    ]
+  },
+  "mixins": [
+    "osl.resource-loader.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.0",
+    "minecraft": "\u003e\u003d1.0.0-alpha.2.2 \u003c\u003d1.1-alpha.11.48.a",
+    "osl-core": "\u003e\u003d0.4.0",
+    "osl-entrypoints": "\u003e\u003d0.2.0",
+    "osl-lifecycle-events": "\u003e\u003d0.4.0"
+  },
+  "name": "OSL Resource Loader",
+  "description": "Resource loading API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/ornithe-standard-libraries/resource-loader/icon.png"
+}

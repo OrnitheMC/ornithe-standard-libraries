@@ -43,10 +43,10 @@ def setUpJar(project) {
 	project.apply plugin: 'ploceus'
 
 	project.base {
-		archivesName = "${project.rootProject.root_archives_base_name}"
+		archivesName = "${project.rootProject.mod_id_long}"
 	}
-	project.version = "${project.rootProject.root_version}"
-	project.group = "${project.rootProject.root_maven_group}"
+	project.version = "${project.rootProject.mod_version}"
+	project.group = "${project.rootProject.mod_maven_group}"
 
 	project.ploceus {
 		setIntermediaryGeneration(2)
@@ -66,9 +66,18 @@ def setUpJar(project) {
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 	}
 
-	project.processResources {
-		filesMatching('fabric.mod.json') {
-			expand project.properties
+	project.tasks.register('generateModJson', net.fabricmc.loom.task.FabricModJsonV1Task) {
+		fillModJson(project, it)
+
+		json {
+			modId = "${project.rootProject.mod_id_short}" // use short id for backwards compat
+			name = "${project.rootProject.mod_name_long}"
+			description = "${project.rootProject.mod_description}"
+
+			icon "assets/${project.rootProject.mod_id_long}/icon.png"
+
+			environment = "*"
+			depends "minecraft", "*"
 		}
 	}
 
@@ -87,9 +96,9 @@ def addPomDependency(project) {
 					def depsNode = asNode().get("dependencies")[0]
 					def depNode = depsNode.appendNode("dependency")
 
-					depNode.appendNode("groupId", project.group)
-					depNode.appendNode("artifactId", project.name)
-					depNode.appendNode("version", project.version)
+					depNode.appendNode("groupId", project.mod_maven_group)
+					depNode.appendNode("artifactId", project.mod_artifact_id)
+					depNode.appendNode("version", project.mod_version)
 					depNode.appendNode("scope", "compile")
 				}
 			}
@@ -121,16 +130,41 @@ def setUpJavadoc(project) {
 	}
 }
 
+// fill common elements of mod.json like authors, contact info, license
+def fillModJson(project, task) {
+	task.outputFile = project.file("src/main/resources/fabric.mod.json")
+
+	task.json {
+		version = "${project.version}"
+
+		contactInformation = [
+			"homepage": "${project.rootProject.mod_contact_homepage}",
+			"issues": "${project.rootProject.mod_contact_issues}",
+			"sources": "${project.rootProject.mod_contact_sources}"
+		]
+
+		author "OrnitheMC"
+
+		licenses = [
+			"${project.rootProject.mod_license}"
+		]
+
+		depends "fabricloader", "${project.rootProject.mod_loader_dependency}"
+	}
+
+	project.tasks.build.dependsOn task
+}
+
 def setUpLibrary(project) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
 
 	project.base {
-		archivesName = "${project.rootProject.archives_base_name}-${project.archives_base_name}"
+		archivesName = "${project.rootProject.mod_id_short}-${project.library_id}"
 	}
-	project.version = "${project.version}"
-	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
+	project.version = "${project.library_version}"
+	project.group = "${project.rootProject.library_maven_group}"
 
 	project.repositories {
 		// needed for loader in subprojects without a mc dep
@@ -164,6 +198,7 @@ def setUpModule(project, String... dependencies) {
 	// for different mc version ranges
 	// the Core API is the only exception to this
 	def isCore = (project.path == ':libraries:core')
+	def library = (isCore) ? project : project.parent
 
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
@@ -172,24 +207,21 @@ def setUpModule(project, String... dependencies) {
 	project.apply plugin: 'fabric-loom'
 	project.apply plugin: 'ploceus'
 
-	if (isCore) {
-		project.base {
-			archivesName = "${project.rootProject.archives_base_name}-${project.archives_base_name}"
-		}
-		project.version = "${project.version}"
-	} else {
-		project.base {
-			archivesName = "${project.rootProject.archives_base_name}-${project.parent.archives_base_name}"
-		}
-		project.version = "${project.parent.version}+mc${project.min_mc_version}-mc${project.max_mc_version}"
+	project.base {
+		archivesName = "${project.rootProject.mod_id_short}-${library.library_id}"
 	}
-	project.group = "${project.rootProject.root_maven_group}.${project.rootProject.maven_group}"
+	project.version = "${library.library_version}"
+	project.group = "${project.rootProject.library_maven_group}"
+
+	if (!isCore) {
+		project.version += "+mc${project.min_mc_version}-mc${project.max_mc_version}"
+	}
 
 	project.loom {
-		if (!isCore && project.environment == 'client') {
+		if (project.hasProperty('environment') && project.environment == 'client') {
 			clientOnlyMinecraftJar()
 		}
-		if (!isCore && project.environment == 'server') {
+		if (project.hasProperty('environment') && project.environment == 'server') {
 			serverOnlyMinecraftJar()
 		}
 	}
@@ -268,9 +300,52 @@ def setUpModule(project, String... dependencies) {
 		}
 	}
 
-	project.processResources {
-		filesMatching('fabric.mod.json') {
-			expand project.properties
+	project.tasks.register('generateModJson', net.fabricmc.loom.task.FabricModJsonV1Task) {
+		fillModJson(project, it)
+
+		json {
+			modId = "${project.rootProject.mod_id_short}-${library.library_id}"
+			name = "${project.rootProject.mod_name_short} ${library.library_name}"
+			description = "${library.library_description}"
+
+			icon "assets/${project.rootProject.mod_id_long}/${library.library_id}/icon.png"
+			mixin "${project.rootProject.mod_id_short}.${library.library_id}.mixins.json"
+
+			if (library.hasProperty('entrypoint_init')) {
+				entrypoint 'init', library.entrypoint_init
+			} else if (project.hasProperty('entrypoint_init')) {
+				entrypoint 'init', project.entrypoint_init
+			}
+			if (library.hasProperty('entrypoint_client_init')) {
+				entrypoint 'client-init', library.entrypoint_client_init
+			} else if (project.hasProperty('entrypoint_client_init')) {
+				entrypoint 'client-init', project.entrypoint_client_init
+			}
+			if (library.hasProperty('entrypoint_server_init')) {
+				entrypoint 'server-init', library.entrypoint_server_init
+			} else if (project.hasProperty('entrypoint_server_init')) {
+				entrypoint 'server-init', project.entrypoint_server_init
+			}
+
+			if (project.hasProperty('environment')) {
+				environment = "${project.environment}"
+			} else {
+				environment = '*'
+			}
+
+			if (!isCore) {
+				depends "minecraft", "${project.minecraft_dependency}"
+			}
+
+			if (!isCore && library.hasProperty('osl_dependencies')) {
+				for (def dependency : library.osl_dependencies.split(',')) {
+					def parts = dependency.split(':')
+					def library_id = parts[0]
+					def library_versions = parts[1]
+
+					depends "${project.rootProject.mod_id_short}-${library_id}", library_versions
+				}
+			}
 		}
 	}
 

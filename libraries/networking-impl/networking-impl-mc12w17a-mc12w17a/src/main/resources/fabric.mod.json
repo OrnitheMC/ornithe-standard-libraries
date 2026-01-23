@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-networking-impl",
+  "version": "0.1.0+mc12w17a-mc12w17a",
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.networking.impl.Networking"
+    ],
+    "client-init": [
+      "net.ornithemc.osl.networking.impl.Networking"
+    ],
+    "server-init": [
+      "net.ornithemc.osl.networking.impl.Networking"
+    ]
+  },
+  "mixins": [
+    "osl.networking-impl.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.0",
+    "minecraft": "\u003e\u003d1.3.1-alpha.12.17.a \u003c\u003d1.3.1-alpha.12.17.a",
+    "osl-core": "\u003e\u003d0.4.0",
+    "osl-entrypoints": "\u003e\u003d0.2.0",
+    "osl-lifecycle-events": "\u003e\u003d0.4.0",
+    "osl-networking": "\u003e\u003d0.8.0"
+  },
+  "name": "OSL Networking Implementation",
+  "description": "Implementation details of the Networking API.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/ornithe-standard-libraries/networking-impl/icon.png"
+}
