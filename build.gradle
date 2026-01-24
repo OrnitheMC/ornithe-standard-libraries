@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.6-SNAPSHOT' apply false
-	id 'ploceus' version '1.6-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.15-SNAPSHOT' apply false
+	id 'ploceus' version '1.15-SNAPSHOT' apply false
 }
 
 setUpJar(project)
@@ -412,7 +412,7 @@ def shouldPublish(project, mavenUrl) {
 
 	try {
 		def xml = new URL("${mavenUrl}/${groupId.replace('.', '/')}/${artifactId}/maven-metadata.xml").text
-		def metadata = new XmlSlurper().parseText(xml)
+		def metadata = new groovy.xml.XmlSlurper().parseText(xml)
 
 		exists = metadata.versioning.versions.version.stream().filter({
 			return it == version
