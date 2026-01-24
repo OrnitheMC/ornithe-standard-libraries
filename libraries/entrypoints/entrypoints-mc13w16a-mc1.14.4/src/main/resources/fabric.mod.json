@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "id": "osl-entrypoints",
-  "version": "0.4.3+mc13w16a-mc1.14.4",
+  "version": "0.5.0-alpha.1+mc13w16a-mc1.14.4",
   "environment": "*",
   "mixins": [
     "osl.entrypoints.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.16.0",
+    "fabricloader": "\u003e\u003d0.17.3",
     "minecraft": "\u003e\u003d1.6-alpha.13.16.a \u003c\u003d1.14.4",
-    "osl-core": "\u003e\u003d0.4.0"
+    "osl-core": "\u003e\u003d0.7.0-"
   },
   "name": "OSL Entrypoints",
   "description": "Game entrypoints API and events.",
@@ -21,6 +21,5 @@
     "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
     "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
   },
-  "license": "Apache-2.0",
-  "icon": "assets/ornithe-standard-libraries/entrypoints/icon.png"
+  "license": "Apache-2.0"
 }

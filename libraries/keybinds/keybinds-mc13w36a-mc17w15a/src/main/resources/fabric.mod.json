@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "id": "osl-keybinds",
-  "version": "0.1.3+mc13w36a-mc17w15a",
+  "version": "0.2.0-alpha.1+mc13w36a-mc17w15a",
   "environment": "client",
   "mixins": [
     "osl.keybinds.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.16.0",
+    "fabricloader": "\u003e\u003d0.17.3",
     "minecraft": "\u003e\u003d1.7-alpha.13.36.a \u003c\u003d1.12-alpha.17.15.a",
-    "osl-core": "\u003e\u003d0.4.0"
+    "osl-core": "\u003e\u003d0.7.0-"
   },
   "name": "OSL Keybinds",
   "description": "Keybinds API and events.",
@@ -21,6 +21,5 @@
     "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
     "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
   },
-  "license": "Apache-2.0",
-  "icon": "assets/ornithe-standard-libraries/keybinds/icon.png"
+  "license": "Apache-2.0"
 }

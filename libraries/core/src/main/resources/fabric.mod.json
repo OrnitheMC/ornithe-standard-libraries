@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "id": "osl-core",
-  "version": "0.6.0",
+  "version": "0.7.0-alpha.1",
   "environment": "*",
   "mixins": [
     "osl.core.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.16.0"
+    "fabricloader": "\u003e\u003d0.17.3"
   },
   "name": "OSL Core",
   "description": "The core of Ornithe Standard Libraries.",
@@ -19,6 +19,5 @@
     "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
     "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
   },
-  "license": "Apache-2.0",
-  "icon": "assets/ornithe-standard-libraries/core/icon.png"
+  "license": "Apache-2.0"
 }

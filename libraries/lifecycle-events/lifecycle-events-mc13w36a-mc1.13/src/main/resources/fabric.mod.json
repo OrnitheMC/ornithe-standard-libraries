@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "id": "osl-lifecycle-events",
-  "version": "0.5.4+mc13w36a-mc1.13",
+  "version": "0.6.0-alpha.1+mc13w36a-mc1.13",
   "environment": "*",
   "mixins": [
     "osl.lifecycle-events.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.16.0",
+    "fabricloader": "\u003e\u003d0.17.3",
     "minecraft": "\u003e\u003d1.7-alpha.13.36.a \u003c\u003d1.13",
-    "osl-core": "\u003e\u003d0.4.0",
-    "osl-entrypoints": "\u003e\u003d0.4.0"
+    "osl-core": "\u003e\u003d0.7.0-",
+    "osl-entrypoints": "\u003e\u003d0.5.0-"
   },
   "name": "OSL Lifecycle Events",
   "description": "Game and world lifecycle events.",
@@ -22,6 +22,5 @@
     "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
     "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
   },
-  "license": "Apache-2.0",
-  "icon": "assets/ornithe-standard-libraries/lifecycle-events/icon.png"
+  "license": "Apache-2.0"
 }
