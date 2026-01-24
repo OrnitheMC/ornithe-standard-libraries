@@ -9,32 +9,6 @@ plugins {
 
 setUpJar(project)
 
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			pom.withXml {
-				asNode().appendNode('dependencies')
-			}
-		}
-	}
-	repositories {
-		def ENV = System.getenv()
-
-		if (ENV.MAVEN_URL) {
-			maven {
-				url ENV.MAVEN_URL
-
-				credentials {
-					username ENV.MAVEN_USERNAME
-					password ENV.MAVEN_PASSWORD
-				}
-			}
-		} else {
-			mavenLocal()
-		}
-	}
-}
-
 def setUpJar(project) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
@@ -84,6 +58,34 @@ def setUpJar(project) {
 	project.jar {
 		from(project.rootProject.file('LICENSE')) {
 			rename { "${it}_${project.base.archivesName.get()}" }
+		}
+	}
+
+	project.publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				artifactId project.mod_artifact_id
+	
+				pom.withXml {
+					asNode().appendNode('dependencies')
+				}
+			}
+		}
+		repositories {
+			def ENV = System.getenv()
+	
+			if (ENV.MAVEN_URL) {
+				maven {
+					url ENV.MAVEN_URL
+	
+					credentials {
+						username ENV.MAVEN_USERNAME
+						password ENV.MAVEN_PASSWORD
+					}
+				}
+			} else {
+				mavenLocal()
+			}
 		}
 	}
 }
