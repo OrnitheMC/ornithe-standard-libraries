@@ -1,5 +1,7 @@
 package net.ornithemc.osl.networking.api.server;
 
+import java.io.IOException;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
@@ -12,7 +14,7 @@ public interface ServerPacketListener<T> {
 	/**
 	 * Receive incoming data from the client.
 	 */
-	void handle(Context ctx, T data);
+	void handle(Context ctx, T data) throws IOException;
 
 	@FunctionalInterface
 	interface Payload<T extends PacketPayload> extends ServerPacketListener<T> {
