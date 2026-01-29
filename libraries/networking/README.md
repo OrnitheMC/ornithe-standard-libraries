@@ -48,10 +48,15 @@ package com.example;
 
 import java.io.IOException;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.networking.api.ChannelIdentifiers;
+import net.ornithemc.osl.networking.api.ChannelRegistry;
 import net.ornithemc.osl.networking.api.CustomPayload;
 import net.ornithemc.osl.networking.api.PacketBuffer;
 
 public class CookiePayload implements CustomPayload {
+
+	public static final NamespacedIdentifier CHANNEL = ChannelRegistry.register(ChannelIdentifiers.from("example", "cookie"));
 
 	public Cookie cookie;
 
@@ -80,23 +85,14 @@ A basic networking setup might look as follows.
 ```java
 package com.example;
 
-import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.entrypoints.api.ModInitializer;
-import net.ornithemc.osl.networking.api.ChannelIdentifiers;
+import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
 
-public class ExampleInitializer implements ModInitializer {
-
-	public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.from("example", "cookie");
-
-	@Override
-	public void init() {
-		ChannelRegistry.register(COOKIE_CHANNEL, true, false);
-	}
+public class ExampleInitializer implements ClientModInitializer {
 
 	@Override
 	public void initClient() {
-		ClientPlayNetworking.registerListener(COOKIE_CHANNEL, CookiePayload::new, (context, payload) -> {
+		ClientPlayNetworking.registerListener(CookiePayload.CHANNEL, CookiePayload::new, (context, payload) -> {
 			// ensure this listener is running on the main thread
 			context.ensureOnMainThread();
 
