@@ -7,8 +7,8 @@ import joptsimple.OptionSpec;
 import net.ornithemc.osl.branding.api.BrandingContext;
 import net.ornithemc.osl.branding.api.BrandingPatchEvents;
 import net.ornithemc.osl.branding.api.Operation;
-import net.ornithemc.osl.entrypoints.api.client.ClientLaunchEvents;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
+import net.ornithemc.osl.entrypoints.api.launch.LaunchEvents;
 import net.ornithemc.osl.entrypoints.api.launch.OptionsConsumer;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 
@@ -22,7 +22,7 @@ public class BrandingPatchImpl implements ClientModInitializer {
 
 	@Override
 	public void initClient() {
-		ClientLaunchEvents.PARSE_RUN_ARGS.register(new OptionsConsumer() {
+		LaunchEvents.PARSE_RUN_ARGS.register(new OptionsConsumer() {
 
 			private OptionSpec<String> versionTypeSpec;
 
