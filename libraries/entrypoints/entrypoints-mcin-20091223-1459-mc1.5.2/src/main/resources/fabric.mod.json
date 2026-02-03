@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-entrypoints",
-  "version": "0.5.0-alpha.1+mcin-20091223-1459-mc1.5.2",
+  "version": "0.5.0-alpha.2+mcin-20091223-1459-mc1.5.2",
   "environment": "*",
   "mixins": [
     "osl.entrypoints.mixins.json"
