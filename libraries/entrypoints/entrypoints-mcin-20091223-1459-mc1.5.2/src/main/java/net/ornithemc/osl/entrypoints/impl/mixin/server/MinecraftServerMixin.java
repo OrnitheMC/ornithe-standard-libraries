@@ -1,7 +1,5 @@
 package net.ornithemc.osl.entrypoints.impl.mixin.server;
 
-import java.util.Arrays;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,8 +10,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
-import net.ornithemc.osl.entrypoints.api.server.ServerLaunchEvents;
 import net.ornithemc.osl.entrypoints.api.server.ServerModInitializer;
+import net.ornithemc.osl.entrypoints.impl.launch.LaunchUtils;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
@@ -36,6 +34,6 @@ public class MinecraftServerMixin {
 			ModInitializer::init
 		);
 
-		ServerLaunchEvents.PARSE_RUN_ARGS.invoker().accept(Arrays.copyOf(args, args.length));
+		LaunchUtils.triggerLaunchEvents(args);
 	}
 }
