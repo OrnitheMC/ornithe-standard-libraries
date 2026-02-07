@@ -24,10 +24,12 @@ public class BrandingPatchImpl implements ClientModInitializer {
 	public void initClient() {
 		LaunchEvents.PARSE_RUN_ARGS.register(new OptionsConsumer() {
 
+			private OptionSpec<String> versionSpec; // needed so that --version is not covered by --versionType
 			private OptionSpec<String> versionTypeSpec;
 
 			@Override
 			public void defineOptions(OptionParser parser) {
+				versionSpec = parser.accepts(Constants.VERSION).withRequiredArg();
 				versionTypeSpec = parser.accepts(Constants.VERSION_TYPE).withRequiredArg().defaultsTo(Constants.RELEASE);
 			}
 
