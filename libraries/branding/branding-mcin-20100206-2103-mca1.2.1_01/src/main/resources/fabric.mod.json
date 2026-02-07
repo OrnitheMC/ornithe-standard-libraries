@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-branding",
-  "version": "0.4.0-alpha.2+mcin-20100206-2103-mca1.2.1_01",
+  "version": "0.4.0-alpha.3+mcin-20100206-2103-mca1.2.1_01",
   "environment": "client",
   "entrypoints": {
     "client-init": [
