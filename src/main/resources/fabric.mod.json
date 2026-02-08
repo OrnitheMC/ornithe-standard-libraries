@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl",
-  "version": "0.17.0-alpha.5",
+  "version": "0.17.0-alpha.6",
   "environment": "*",
   "depends": {
     "fabricloader": "\u003e\u003d0.17.3",
