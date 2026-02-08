@@ -19,7 +19,7 @@ public class DebugOverlayMixin {
 		method = "getGameInfo",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/Minecraft;m_5774562()Ljava/lang/String;"
+			target = "Lnet/minecraft/client/Minecraft;getVersionType()Ljava/lang/String;"
 		)
 	)
 	private String osl$branding$modifyVersionType(Minecraft minecraft) {
