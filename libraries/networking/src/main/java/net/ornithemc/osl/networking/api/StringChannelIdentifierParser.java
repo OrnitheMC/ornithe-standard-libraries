@@ -28,7 +28,7 @@ public final class StringChannelIdentifierParser {
 		if (i < 1) {
 			// allow null namespaces to support channel ids that do not conform
 			// to OSL spec - MC did not enforce a strict spec before 1.13
-			return new NamespacedIdentifierImpl(null, s);
+			return new NamespacedIdentifierImpl("", s);
 		} else {
 			return new NamespacedIdentifierImpl(s.substring(0, i), s.substring(i + 1));
 		}
@@ -64,7 +64,7 @@ public final class StringChannelIdentifierParser {
 	 * Convert the given {@code NamespacedIdentifier} to its {@code String} representation.
 	 */
 	public static String toString(NamespacedIdentifier id) {
-		return id.namespace() == null
+		return id.namespace().isEmpty()
 			? id.identifier()
 			: id.namespace() + "|" + id.identifier();
 	}
