@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-branding",
-  "version": "0.4.0-alpha.4+mcin-20100206-2103-mca1.2.1_01",
+  "version": "0.4.0-alpha.4+mca1.0.1_01-mca1.2.1_01",
   "environment": "client",
   "entrypoints": {
     "client-init": [
@@ -13,7 +13,7 @@
   ],
   "depends": {
     "fabricloader": "\u003e\u003d0.17.3",
-    "minecraft": "\u003e\u003d0.31.20100206 \u003c\u003d1.0.0-alpha.2.1.1",
+    "minecraft": "\u003e\u003d1.0.0-alpha.0.1.1 \u003c\u003d1.0.0-alpha.2.1.1",
     "osl-core": "\u003e\u003d0.7.0-",
     "osl-entrypoints": "\u003e\u003d0.5.0-",
     "osl-lifecycle-events": "\u003e\u003d0.6.0-"
