@@ -10,8 +10,7 @@
 	"client": [
 		"client.ClientNetworkHandlerMixin",
 		"client.HandshakePacketMixin",
-		"client.LocalClientPlayerEntityMixin",
-		"client.MinecraftMixin"
+		"client.LocalClientPlayerEntityMixin"
 	],
 	"server": [
 	],

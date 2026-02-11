@@ -26,7 +26,11 @@ public final class Connections {
 		boolean handleAsync = ChannelRegistryImpl.contains(channel);
 
 		if (handleAsync) {
-			packet.handle(listener);
+			try {
+				packet.handle(listener);
+			} catch (NotOnMainThreadException e) {
+				handleAsync = false;
+			}
 		}
 
 		return handleAsync;

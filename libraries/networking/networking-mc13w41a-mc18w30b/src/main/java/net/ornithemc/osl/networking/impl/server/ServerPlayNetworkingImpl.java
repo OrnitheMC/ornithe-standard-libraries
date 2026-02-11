@@ -122,7 +122,13 @@ public final class ServerPlayNetworkingImpl {
 			try {
 				handlePayload(channel, listener, ctx, data);
 			} catch (NotOnMainThreadException e) {
-				((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+				if (server instanceof TaskRunnerAccess) {
+					// use built-in task queue like other packets do (14w21a+)
+					((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+				} else {
+					// rethrow so packet is added to the read queue (14w20b-)
+					throw e;
+				}
 			}
 
 			return true;

@@ -7,13 +7,11 @@
 		"common.ConnectionMixin",
 		"common.CustomPayloadC2SPacketMixin",
 		"common.CustomPayloadS2CPacketMixin",
-		"common.MinecraftServerMixin",
 		"common.PlayerManagerMixin",
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin",
-		"client.MinecraftMixin"
+		"client.ClientPlayNetworkHandlerMixin"
 	],
 	"server": [
 	],

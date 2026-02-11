@@ -10,7 +10,6 @@
 	"client": [
 	],
 	"server": [
-		"server.MinecraftServerMixin",
 		"server.ServerLoginNetworkHandlerMixin",
 		"server.ServerPlayNetworkHandlerMixin"
 	],

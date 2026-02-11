@@ -24,7 +24,6 @@ import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
-import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ClientPlayNetworkingImpl {
 
@@ -113,23 +112,15 @@ public final class ClientPlayNetworkingImpl {
 			byte[] data = p.osl$networking$getData();
 
 			try {
-				handlePayload(channel, listener, ctx, data);
-			} catch (NotOnMainThreadException e) {
-				((TaskRunnerAccess) minecraft).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+				listener.handle(ctx, data);
+			} catch (IOException e) {
+				LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
 			}
 
 			return true;
 		}
 
 		return false;
-	}
-
-	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, byte[] data) {
-		try {
-			listener.handle(ctx, data);
-		} catch (IOException e) {
-			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
-		}
 	}
 
 	public static boolean isPlayReady() {

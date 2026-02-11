@@ -5,14 +5,12 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.ConnectionMixin",
-		"common.CustomPayloadPacketMixin",
-		"common.MinecraftServerMixin",
+		"common.CustomPayloadPacketMixin"
 		"common.ServerLoginNetworkHandlerMixin",
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientNetworkHandlerMixin",
-		"client.MinecraftMixin"
+		"client.ClientNetworkHandlerMixin"
 	],
 	"server": [
 	],
