@@ -25,10 +25,6 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		MinecraftClientEvents.STOP.register(ClientPlayNetworkingImpl::destroy);
 		ClientPlayNetworkingImpl.setUpPacketFactory(CustomPayloadPacket::new);
 		ClientPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
-			// ensure the handshake is processed on the main thread,
-			// where the network handler is guaranteed to be set
-			context.ensureOnMainThread();
-
 			// send channel registration data as a response to receiving server channel registration data
 			ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 

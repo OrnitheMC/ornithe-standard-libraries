@@ -30,6 +30,7 @@ public final class ClientPlayNetworkingImpl {
 
 	private static final Logger LOGGER = LogManager.getLogger("OSL|Client Play Networking");
 
+	private static final ThreadLocal<ClientPlayNetworkHandler> currentHandler = new ThreadLocal<>();
 	private static PacketFactory packetFactory;
 	private static Minecraft minecraft;
 	private static Thread thread;
@@ -109,7 +110,7 @@ public final class ClientPlayNetworkingImpl {
 		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
 
 		if (listener != null) {
-			ChannelListener.Context ctx = new ChannelListener.Context();
+			ChannelListener.Context ctx = new ChannelListener.Context(handler);
 			PacketBuffer data = p.osl$networking$getData();
 
 			try {
@@ -125,10 +126,13 @@ public final class ClientPlayNetworkingImpl {
 	}
 
 	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
+		currentHandler.set(ctx.networkHandler());
 		try {
 			listener.handle(ctx, data);
 		} catch (IOException e) {
 			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		} finally {
+			currentHandler.remove();
 		}
 	}
 
@@ -210,7 +214,15 @@ public final class ClientPlayNetworkingImpl {
 		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
 		if (settings != null && settings.isServerbound()) {
-			minecraft.getNetworkHandler().sendPacket(packetFactory.create(channel, data));
+			ClientPlayNetworkHandler handler = currentHandler.get();
+			if (handler == null) {
+				handler = minecraft.getNetworkHandler();
+			}
+			if (handler != null) {
+				handler.sendPacket(packetFactory.create(channel, data));
+			} else {
+				LOGGER.warn("dropping packet on channel '{}': no network handler available", channel);
+			}
 		}
 	}
 
@@ -221,6 +233,12 @@ public final class ClientPlayNetworkingImpl {
 
 		class Context implements ClientPacketListener.Context {
 
+			private final ClientPlayNetworkHandler handler;
+
+			Context(ClientPlayNetworkHandler handler) {
+				this.handler = handler;
+			}
+
 			@Override
 			public Minecraft minecraft() {
 				return minecraft;
@@ -228,7 +246,7 @@ public final class ClientPlayNetworkingImpl {
 
 			@Override
 			public ClientPlayNetworkHandler networkHandler() {
-				return minecraft.getNetworkHandler();
+				return handler;
 			}
 
 			@Override
