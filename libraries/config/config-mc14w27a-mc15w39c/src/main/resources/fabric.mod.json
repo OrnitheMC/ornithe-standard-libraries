@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-config",
-  "version": "0.6.0-alpha.1+mc14w27a-mc15w39c",
+  "version": "0.6.0+mc14w27a-mc15w39c",
   "environment": "*",
   "entrypoints": {
     "init": [
@@ -20,9 +20,9 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.17.3",
     "minecraft": "\u003e\u003d1.8-alpha.14.27.a \u003c\u003d1.9-alpha.15.39.c",
-    "osl-core": "\u003e\u003d0.7.0-",
-    "osl-entrypoints": "\u003e\u003d0.5.0-",
-    "osl-lifecycle-events": "\u003e\u003d0.6.0-"
+    "osl-core": "\u003e\u003d0.7.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0"
   },
   "name": "OSL Config",
   "description": "A config library.",

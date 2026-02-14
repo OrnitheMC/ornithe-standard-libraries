@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-networking",
-  "version": "0.9.0-alpha.4+mc13w41a-mc18w30b",
+  "version": "0.9.0+mc13w41a-mc18w30b",
   "environment": "*",
   "mixins": [
     "osl.networking.mixins.json"
@@ -9,9 +9,9 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.17.3",
     "minecraft": "\u003e\u003d1.7-alpha.13.41.a \u003c\u003d1.13.1-alpha.18.30.b",
-    "osl-core": "\u003e\u003d0.7.0-",
-    "osl-entrypoints": "\u003e\u003d0.5.0-",
-    "osl-lifecycle-events": "\u003e\u003d0.6.0-"
+    "osl-core": "\u003e\u003d0.7.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0"
   },
   "name": "OSL Networking",
   "description": "Client-server networking API and events.",
