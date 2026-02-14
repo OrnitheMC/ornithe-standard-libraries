@@ -379,6 +379,14 @@ def setUpModule(project, String... dependencies) {
 				}
 
 				from project.components.java
+
+				pom.withXml {
+					asNode().dependencies.dependency.each { dep ->
+						if (dep.groupId.last().value().last() == project.group) {
+							dep.parent().remove(dep)
+						}
+					}
+				}
 			}
 		}
 		repositories {
