@@ -2,7 +2,6 @@ package net.ornithemc.osl.branding.impl;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
 
 import net.ornithemc.osl.branding.api.BrandingContext;
 import net.ornithemc.osl.branding.api.BrandingPatchEvents;
@@ -24,16 +23,13 @@ public class BrandingPatchImpl implements ClientModInitializer {
 	public void initClient() {
 		LaunchEvents.PARSE_RUN_ARGS.register(new OptionsConsumer() {
 
-			private OptionSpec<String> versionTypeSpec;
-
 			@Override
 			public void defineOptions(OptionParser parser) {
-				versionTypeSpec = parser.accepts(Constants.VERSION_TYPE).withRequiredArg().defaultsTo(Constants.RELEASE);
 			}
 
 			@Override
 			public void acceptOptions(OptionSet options) {
-				String versionType = options.valueOf(versionTypeSpec);
+				String versionType = (String) options.valueOf(Constants.VERSION_TYPE);
 
 				if (versionType != null && !Constants.RELEASE.equals(versionType)) {
 					modifiers.register(BrandingContext.ALL, Constants.VERSION_TYPE_COMPONENT, Operation.APPEND, "/" + versionType);
