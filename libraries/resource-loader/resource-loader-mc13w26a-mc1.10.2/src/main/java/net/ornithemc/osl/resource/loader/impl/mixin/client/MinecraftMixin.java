@@ -1,5 +1,6 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Final;
@@ -13,6 +14,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
+import net.minecraft.client.resource.metadata.ResourcePackMetadata;
+import net.minecraft.client.resource.pack.BuiltInResourcePack;
 import net.minecraft.client.resource.pack.ResourcePack;
 
 import net.ornithemc.osl.resource.loader.api.ModResourcePack;
@@ -24,7 +28,12 @@ import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 public class MinecraftMixin {
 
 	@Shadow @Final
+	private ResourceMetadataSerializerRegistry resourceMetadataSerializerRegistry;
+	@Shadow @Final
 	private List<ResourcePack> defaultResourcePacks;
+	@Shadow @Final
+	private BuiltInResourcePack defaultResourcePack;
+	
 
 	@Inject(
 		method = "init",
@@ -34,6 +43,15 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$addDefaultResourcePacks(CallbackInfo ci) {
+		try {
+			ResourcePackMetadata metadata = defaultResourcePack.getMetadataSection(resourceMetadataSerializerRegistry, "pack");
+			int format = metadata.getFormat();
+
+			ResourceLoader.setPackFormat(format);
+		} catch (IOException e) {
+			ResourceLoader.LOGGER.info("unable to parse resource pack format from default resource pack", e);
+		}
+
 		for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
 			if ("builtin".equals(mod.getMetadata().getType())) {
 				continue;
