@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.google.gson.JsonObject;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
@@ -33,6 +34,8 @@ import net.ornithemc.osl.resource.loader.api.ModPack;
 import net.ornithemc.osl.resource.loader.api.ResourceUtils;
 
 public class BuiltInModPack implements ModPack {
+
+	private static final boolean DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	private final ModContainer mod;
 	private final PackType type;
@@ -151,16 +154,25 @@ public class BuiltInModPack implements ModPack {
 		List<Identifier> locations = new ArrayList<>();
 
 		for (Path root : roots) {
+			String separator = root.getFileSystem().getSeparator();
 			Path dir = root.resolve(type.getDirectory()).resolve(namespace);
-			Path start = dir.resolve(path);
-			Iterator<Path> it = Files.walk(start).iterator();
+			Path start = dir.resolve(path.replace("/", separator));
 
-			while (it.hasNext()) {
-				Path p = it.next();
+			if (!Files.isDirectory(start)) {
+				continue;
+			}
 
-				if (!p.endsWith(".mcmeta") && Files.isRegularFile(p) && filter.test(p.getFileName().toString())) {
-					locations.add(new Identifier(namespace, dir.relativize(p).toString().replaceAll("\\\\", "/")));
-				}
+			try (Stream<Path> paths = Files.find(
+					start,
+					Integer.MAX_VALUE,
+					(p, attributes) -> attributes.isRegularFile()
+									&& !p.toString().endsWith(".mcmeta")
+									&& (DEBUG || !p.endsWith(".ds_store"))
+									&& filter.test(p.getFileName().toString())
+			)) {
+				paths.forEach(p -> {
+					locations.add(new Identifier(namespace, dir.relativize(p).toString().replaceAll(separator, "/")));
+				});
 			}
 		}
 
