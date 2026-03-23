@@ -219,12 +219,18 @@ def setUpModule(project, String... dependencies) {
 		project.version += "+mc${project.min_mc_version}-mc${project.max_mc_version}"
 	}
 
+	def ctfile = project.file("src/main/resources/${project.rootProject.mod_id_short}.${library.library_id}.classtweaker")
+
 	project.loom {
 		if (project.hasProperty('environment') && project.environment == 'client') {
 			clientOnlyMinecraftJar()
 		}
 		if (project.hasProperty('environment') && project.environment == 'server') {
 			serverOnlyMinecraftJar()
+		}
+
+		if (ctfile.exists()) {
+			accessWidenerPath = ctfile
 		}
 	}
 	project.ploceus {
@@ -326,6 +332,10 @@ def setUpModule(project, String... dependencies) {
 				entrypoint 'server-init', library.entrypoint_server_init
 			} else if (project.hasProperty('entrypoint_server_init')) {
 				entrypoint 'server-init', project.entrypoint_server_init
+			}
+
+			if (ctfile.exists()) {
+				accessWidener = ctfile.getName()
 			}
 
 			if (project.hasProperty('environment')) {
