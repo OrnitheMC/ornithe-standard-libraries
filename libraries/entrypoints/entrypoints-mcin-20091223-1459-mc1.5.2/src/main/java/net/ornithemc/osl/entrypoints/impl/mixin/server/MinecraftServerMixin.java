@@ -24,14 +24,14 @@ public class MinecraftServerMixin {
 	)
 	private static void osl$entrypoints$init(String[] args, CallbackInfo ci) {
 		FabricLoader.getInstance().invokeEntrypoints(
-			ServerModInitializer.ENTRYPOINT_KEY,
-			ServerModInitializer.class,
-			ServerModInitializer::initServer
-		);
-		FabricLoader.getInstance().invokeEntrypoints(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init
+		);
+		FabricLoader.getInstance().invokeEntrypoints(
+			ServerModInitializer.ENTRYPOINT_KEY,
+			ServerModInitializer.class,
+			ServerModInitializer::initServer
 		);
 
 		LaunchUtils.triggerLaunchEvents(args);

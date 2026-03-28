@@ -24,14 +24,14 @@ public class MinecraftAppletMixin {
 	)
 	private void osl$entrypoints$init(CallbackInfo ci) {
 		FabricLoader.getInstance().invokeEntrypoints(
-			ClientModInitializer.ENTRYPOINT_KEY,
-			ClientModInitializer.class,
-			ClientModInitializer::initClient
-		);
-		FabricLoader.getInstance().invokeEntrypoints(
 			ModInitializer.ENTRYPOINT_KEY,
 			ModInitializer.class,
 			ModInitializer::init
+		);
+		FabricLoader.getInstance().invokeEntrypoints(
+			ClientModInitializer.ENTRYPOINT_KEY,
+			ClientModInitializer.class,
+			ClientModInitializer::initClient
 		);
 
 		LaunchUtils.triggerLaunchEvents(FabricLoader.getInstance().getLaunchArguments(false));
