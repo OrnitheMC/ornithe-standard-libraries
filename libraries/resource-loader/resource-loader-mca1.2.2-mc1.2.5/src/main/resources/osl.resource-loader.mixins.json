@@ -1,0 +1,25 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.resource.loader.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.resource.loader.impl.ResourceLoaderMixinPlugin",
+	"mixins": [
+	],
+	"client": [
+		"client.DirectoryTexturePackAccess",
+		"client.DirectoryTexturePackMixin",
+		"client.MinecraftMixin",
+		"client.TextureManagerMixin",
+		"client.TexturePackListMixin",
+		"client.TexturePackMixin",
+		"client.TexturePacksMixin",
+		"client.TexturePacksScreenMixin",
+		"client.ZippedTexturePackAccess"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

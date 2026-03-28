@@ -6,8 +6,12 @@
 	"mixins": [
 	],
 	"client": [
+		"client.AbstractTexturePackAccess",
 		"client.AbstractTexturePackMixin",
-		"client.LanguageMixin"
+		"client.MinecraftMixin",
+		"client.TextureManagerMixin",
+		"client.TexturePackListMixin",
+		"client.TexturePacksMixin"
 	],
 	"server": [
 	],
