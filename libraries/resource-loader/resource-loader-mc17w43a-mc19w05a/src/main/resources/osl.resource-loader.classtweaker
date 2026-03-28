@@ -1,0 +1,3 @@
+classTweaker	v1	named
+
+accessible	field	net/minecraft/resource/pack/repository/PackRepository factory	Lnet/minecraft/resource/pack/repository/UnopenedPack$Factory;

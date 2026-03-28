@@ -1,0 +1,22 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.resource.loader.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.AdvancementManagerMixin",
+		"common.CraftingManagerMixin"
+	],
+	"client": [
+		"client.CustomResourcePackAccess",
+		"client.LegacyResourcePackAccess",
+		"client.MinecraftMixin",
+		"client.ResourcePacksMixin",
+		"client.ResourcePacksScreenMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

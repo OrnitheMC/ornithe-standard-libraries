@@ -1,0 +1,3 @@
+classTweaker	v1	named
+
+extendable	method	net/minecraft/client/resource/pack/AbstractTexturePack loadIcon	()V

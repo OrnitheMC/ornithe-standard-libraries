@@ -9,7 +9,9 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.2-alpha.12.15.a \u003c\u003d1.5-alpha.13.7.a",
-    "osl-core": "\u003e\u003d0.7.0"
+    "osl-core": "\u003e\u003d0.7.0",
+    "osl-executors": "\u003e\u003d0.1.0-",
+    "osl-text-components": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Resource Loader",
   "description": "Resource loading API and events.",
