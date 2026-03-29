@@ -157,7 +157,7 @@ def fillModJson(project, task) {
 	project.tasks.build.dependsOn task
 }
 
-def setUpLibrary(project) {
+def setUpLibrary(project, String... dependencies) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
@@ -182,6 +182,8 @@ def setUpLibrary(project) {
 		mavenCentral()
 	}
 
+	def libraries = getLibraryDependencies(project, dependencies)
+
 	project.dependencies {
 		implementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
@@ -189,6 +191,10 @@ def setUpLibrary(project) {
 		implementation "org.apache.logging.log4j:log4j-core:2.19.0"
 
 		implementation project.dependencies.project(path: ':libraries:core', configuration: 'namedElements')
+
+		libraries.each { libraryPath ->
+			implementation project.dependencies.project(path: libraryPath)
+		}
 	}
 
 	addPomDependency(project)
@@ -237,7 +243,6 @@ def setUpModule(project, String... dependencies) {
 		setIntermediaryGeneration(2)
 	}
 
-	def libraries = getLibraryDependencies(project, dependencies)
 	def modules = getModuleDependencies(project, dependencies)
 
 	project.repositories {
@@ -281,9 +286,10 @@ def setUpModule(project, String... dependencies) {
 			include "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		}
 
-		libraries.each { libraryPath ->
-			implementation project.dependencies.project(path: libraryPath)
+		if (!isCore) {
+			implementation project.dependencies.project(path: library.path)
 		}
+
 		modules.each { modulePath ->
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
 		}
@@ -424,17 +430,10 @@ def setUpModule(project, String... dependencies) {
 	setUpJavadoc(project)
 }
 
-def getLibraryDependencies(project, String... moduleNames) {
+def getLibraryDependencies(project, String... libraryNames) {
 	def libraries = new ArrayList<>()
 
-	if (project.path != ':libraries:core') {
-		libraries.add(project.parent.path)
-	}
-
-	for (moduleName : moduleNames) {
-		def i = moduleName.indexOf('-mc')
-		def libraryName = moduleName.substring(0, i)
-
+	for (libraryName : libraryNames) {
 		libraries.add(":libraries:${libraryName}")
 	}
 
