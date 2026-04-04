@@ -1,3 +1,9 @@
+buildscript {
+	dependencies {
+		classpath 'net.fabricmc:fabric-loader:0.18.6'
+	}
+}
+
 plugins {
 	id 'java-library'
 	id 'eclipse'
@@ -6,6 +12,9 @@ plugins {
 	id 'fabric-loom' version '1.15-SNAPSHOT' apply false
 	id 'ploceus' version '1.15-SNAPSHOT' apply false
 }
+
+import net.fabricmc.loader.api.SemanticVersion
+import net.fabricmc.loader.impl.game.minecraft.McVersionLookup
 
 setUpJar(project)
 
@@ -157,7 +166,7 @@ def fillModJson(project, task) {
 	project.tasks.build.dependsOn task
 }
 
-def setUpLibrary(project, String... dependencies) {
+def setUpLibrary(project) {
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
@@ -182,7 +191,10 @@ def setUpLibrary(project, String... dependencies) {
 		mavenCentral()
 	}
 
-	def libraries = getLibraryDependencies(project, dependencies)
+	def libraries = []
+	def modules = []
+
+	findLibraryDependencies(project, libraries, modules)
 
 	project.dependencies {
 		implementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
@@ -195,13 +207,16 @@ def setUpLibrary(project, String... dependencies) {
 		libraries.each { libraryPath ->
 			implementation project.dependencies.project(path: libraryPath)
 		}
+		modules.each { modulePath ->
+			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
+		}
 	}
 
 	addPomDependency(project)
 	setUpJavadoc(project)
 }
 
-def setUpModule(project, String... dependencies) {
+def setUpModule(project) {
 	// normally modules have a 'root' and subprojects
 	// for different mc version ranges
 	// the Core API is the only exception to this
@@ -243,10 +258,10 @@ def setUpModule(project, String... dependencies) {
 		setIntermediaryGeneration(2)
 	}
 
-	def modules = getModuleDependencies(project, dependencies)
+	def libraries = []
+	def modules = []
 
-	project.repositories {
-	}
+	findModuleDependencies(project, libraries, modules)
 
 	project.dependencies {
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -290,6 +305,9 @@ def setUpModule(project, String... dependencies) {
 			implementation project.dependencies.project(path: library.path)
 		}
 
+		libraries.each { libraryPath ->
+			implementation project.dependencies.project(path: libraryPath)
+		}
 		modules.each { modulePath ->
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
 		}
@@ -430,31 +448,81 @@ def setUpModule(project, String... dependencies) {
 	setUpJavadoc(project)
 }
 
-def getLibraryDependencies(project, String... libraryNames) {
-	def libraries = new ArrayList<>()
+def findLibraryDependencies(project, libraries, modules) {
+	if (project.hasProperty('osl_dependencies')) {
+		def deps = project.osl_dependencies.split(',')
 
-	for (libraryName : libraryNames) {
-		libraries.add(":libraries:${libraryName}")
-	}
+		for (dep : deps) {
+			def libraryName = dep.substring(0, dep.indexOf(':'))
 
-	return libraries
-}
+			if (libraryName != 'core') {
+				libraries.add(":libraries:${libraryName}")
+			}
+		}
 
-def getModuleDependencies(project, String... moduleNames) {
-	def modules = new ArrayList<>()
-
-	if (project.path != ':libraries:core') {
 		modules.add(':libraries:core')
 	}
+}
 
-	for (moduleName : moduleNames) {
-		def i = moduleName.indexOf('-mc')
-		def libraryName = moduleName.substring(0, i)
+def findModuleDependencies(project, libraries, modules) {
+	if (project.hasProperty('osl_dependencies')) {
+		def deps = project.osl_dependencies.split(',')
 
-		modules.add(":libraries:${libraryName}:${moduleName}")
+		for (dep : deps) {
+			def libraryName = dep.substring(0, dep.indexOf(':'))
+
+			if (libraryName != 'core') {
+				def moduleName = findModuleDependency(project, libraryName)
+
+				libraries.add(":libraries:${libraryName}")
+				if (moduleName != null) {
+					modules.add(":libraries:${libraryName}:${moduleName}")
+				}
+			}
+		}
+
+		modules.add(':libraries:core')
+	}
+}
+
+def findModuleDependency(project, libraryName) {
+	def library = project.project(":libraries:${libraryName}")
+	def modules = library.getSubprojects()
+
+	def projectMcVersion = getMinecraftVersion(project.minecraft_version)
+
+	for (module : modules) {
+		if (!environmentsMatch(project, module)) {
+			continue;
+		}
+
+		def pathParts = module.path.split(':')
+		def moduleName = pathParts[3]
+
+		def mcVersionParts = moduleName.split('-mc')
+		def minMcVersion = getMinecraftVersion(mcVersionParts[1])
+		def maxMcVersion = getMinecraftVersion(mcVersionParts[2])
+
+		if (projectMcVersion >= minMcVersion && projectMcVersion <= maxMcVersion) {
+			return moduleName;
+		}
 	}
 
-	return modules
+	return null
+}
+
+def getMinecraftVersion(name) {
+	def release = McVersionLookup.getRelease(name)
+	def normalized = McVersionLookup.normalizeVersion(name, release)
+
+	return SemanticVersion.parse(normalized)
+}
+
+def environmentsMatch(project, module) {
+	def env = project.hasProperty('environment') ? project.environment : '*'
+	def menv = module.hasProperty('environment') ? module.environment : '*'
+
+	return env == '*' || menv == '*' || env == menv
 }
 
 def shouldPublish(project, mavenUrl) {

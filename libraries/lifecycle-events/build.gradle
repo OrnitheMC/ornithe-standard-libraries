@@ -1,1 +1,1 @@
-setUpLibrary(project, 'entrypoints')
+setUpLibrary(project)

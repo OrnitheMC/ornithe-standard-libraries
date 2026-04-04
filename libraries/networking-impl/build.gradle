@@ -1,1 +1,1 @@
-setUpLibrary(project, 'entrypoints', 'lifecycle-events', 'networking')
+setUpLibrary(project)

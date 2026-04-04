@@ -1,4 +1,1 @@
-setUpModule(project,
-	'entrypoints-mc13w16a-mc1.14.4',
-	'lifecycle-events-mc18w30a-mc18w50a'
-)
+setUpModule(project)

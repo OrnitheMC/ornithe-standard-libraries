@@ -1,1 +1,1 @@
-setUpLibrary(project, 'entrypoints', 'lifecycle-events')
+setUpLibrary(project)
