@@ -265,8 +265,13 @@ def setUpModule(project) {
 
 	project.dependencies {
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
-		mappings project.ploceus.featherMappings(project.feather_build)
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
+
+		if (project.hasProperty('feather_build')) {
+			mappings project.ploceus.featherMappings(project.feather_build)
+		} else {
+			mappings project.ploceus.featherMappings(project.rootProject.feather_build)
+		}
 
 		if (project.hasProperty('raven_build')) {
 			exceptions project.ploceus.raven(project.raven_build)
