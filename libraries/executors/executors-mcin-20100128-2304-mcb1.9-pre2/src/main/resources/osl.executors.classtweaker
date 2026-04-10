@@ -1,0 +1,4 @@
+classTweaker	v1	named
+
+transitive-inject-interface	net/minecraft/client/Minecraft	net/ornithemc/osl/executors/api/MainThreadExecutor
+transitive-inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/executors/api/MainThreadExecutor

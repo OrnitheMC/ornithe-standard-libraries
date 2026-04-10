@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-executors",
+  "version": "0.1.0-alpha.1+mc14w02a-mc14w06b",
+  "environment": "*",
+  "mixins": [
+    "osl.executors.mixins.json"
+  ],
+  "accessWidener": "osl.executors.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.17.3",
+    "minecraft": "\u003e\u003d1.8-alpha.14.2.a \u003c\u003d18.alpha.14.6.b",
+    "osl-core": "\u003e\u003d0.7.0"
+  },
+  "name": "OSL Executors",
+  "description": "Interface for main thread and background threads executors.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
