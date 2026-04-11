@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-executors",
-  "version": "0.1.0-alpha.1+mcb1.9-pre3-1350-mc1.7.5",
+  "version": "0.1.0-alpha.1+mcb1.9-pre3-1350-mc12w17a",
   "environment": "*",
   "mixins": [
     "osl.executors.mixins.json"
@@ -9,7 +9,7 @@
   "accessWidener": "osl.executors.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.17.3",
-    "minecraft": "\u003e\u003d1.0.0-beta.9.0.3 \u003c\u003d1.7.5",
+    "minecraft": "\u003e\u003d1.0.0-beta.9.0.3 \u003c\u003d1.3-alpha.12.17.a",
     "osl-core": "\u003e\u003d0.7.0"
   },
   "name": "OSL Executors",

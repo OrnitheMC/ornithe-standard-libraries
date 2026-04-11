@@ -3,7 +3,9 @@ package net.ornithemc.osl.executors.impl.mixin.client;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -11,12 +13,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.profiler.Profiler;
 
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
 import net.ornithemc.osl.executors.impl.Executors;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin implements MainThreadExecutor {
+
+	@Shadow @Final
+	private Profiler profiler;
 
 	@Unique
 	private final Queue<Runnable> pendingTasks = new ArrayDeque<>();
@@ -59,7 +65,9 @@ public class MinecraftMixin implements MainThreadExecutor {
 		)
 	)
 	private void osl$executors$runPendingTasks(CallbackInfo ci) {
+		this.profiler.push("scheduledExecutables");
 		this.runPendingTasks();
+		this.profiler.pop();
 	}
 
 	@Unique

@@ -1,9 +1,7 @@
-package net.ornithemc.osl.executors.impl.mixin.server;
+package net.ornithemc.osl.executors.impl.mixin.client;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
-
-import org.objectweb.asm.Opcodes;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.client.Minecraft;
 
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
 import net.ornithemc.osl.executors.impl.Executors;
 
-@Mixin(MinecraftServer.class)
-public class MinecraftServerMixin implements MainThreadExecutor {
+@Mixin(Minecraft.class)
+public class MinecraftMixin implements MainThreadExecutor {
 
 	@Unique
 	private final Queue<Runnable> pendingTasks = new ArrayDeque<>();
@@ -27,7 +25,7 @@ public class MinecraftServerMixin implements MainThreadExecutor {
 	private Thread thread;
 
 	@Inject(
-		method = "run",
+		method = "init",
 		at = @At(
 			value = "HEAD"
 		)
@@ -53,11 +51,10 @@ public class MinecraftServerMixin implements MainThreadExecutor {
 	}
 
 	@Inject(
-		method = "tick",
+		method = "runGame",
 		at  = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/server/MinecraftServer;ticks:I",
-			opcode = Opcodes.PUTFIELD,
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/TickTimer;advance()V",
 			shift = Shift.AFTER
 		)
 	)

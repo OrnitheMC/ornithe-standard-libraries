@@ -1,24 +1,27 @@
-package net.ornithemc.osl.executors.impl.mixin.server;
+package net.ornithemc.osl.executors.impl.mixin.common;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import org.objectweb.asm.Opcodes;
-
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.profiler.Profiler;
 
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
 import net.ornithemc.osl.executors.impl.Executors;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements MainThreadExecutor {
+
+	@Shadow @Final
+	private Profiler profiler;
 
 	@Unique
 	private final Queue<Runnable> pendingTasks = new ArrayDeque<>();
@@ -53,16 +56,15 @@ public class MinecraftServerMixin implements MainThreadExecutor {
 	}
 
 	@Inject(
-		method = "tick",
+		method = "tickWorlds",
 		at  = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/server/MinecraftServer;ticks:I",
-			opcode = Opcodes.PUTFIELD,
-			shift = Shift.AFTER
+			value = "HEAD"
 		)
 	)
 	private void osl$executors$runPendingTasks(CallbackInfo ci) {
+		this.profiler.push("scheduledExecutables");
 		this.runPendingTasks();
+		this.profiler.pop();
 	}
 
 	@Unique
@@ -81,15 +83,5 @@ public class MinecraftServerMixin implements MainThreadExecutor {
 		} catch (Throwable t) {
 			Executors.LOGGER.fatal("Error running task", t);
 		}
-	}
-
-	@Inject(
-		method = "shutdown",
-		at = @At(
-			value = "TAIL"
-		)
-	)
-	private void osl$executors$shutdownBackgroundExecutor(CallbackInfo ci) {
-		Executors.shutdownBackgroundExecutor();
 	}
 }
