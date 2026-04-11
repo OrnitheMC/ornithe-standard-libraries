@@ -1,4 +1,4 @@
-package net.ornithemc.osl.executors.api;
+package net.ornithemc.osl.executors.impl;
 
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Executors {
+public final class Executors {
 
 	public static final Logger LOGGER = LogManager.getLogger("OSL|Executors");
 

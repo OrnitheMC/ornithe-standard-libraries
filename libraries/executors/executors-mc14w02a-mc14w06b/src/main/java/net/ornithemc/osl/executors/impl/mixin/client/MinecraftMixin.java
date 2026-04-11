@@ -6,14 +6,14 @@ import java.util.Queue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
 
-import net.ornithemc.osl.executors.api.Executors;
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
+import net.ornithemc.osl.executors.impl.Executors;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin implements MainThreadExecutor {

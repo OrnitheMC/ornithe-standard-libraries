@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.MinecraftServer;
 
-import net.ornithemc.osl.executors.api.Executors;
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
+import net.ornithemc.osl.executors.impl.Executors;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements MainThreadExecutor {
