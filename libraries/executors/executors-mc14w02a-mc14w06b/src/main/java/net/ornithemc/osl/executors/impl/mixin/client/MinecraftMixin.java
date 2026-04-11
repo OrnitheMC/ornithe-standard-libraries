@@ -79,4 +79,14 @@ public class MinecraftMixin implements MainThreadExecutor {
 			Executors.LOGGER.fatal("Error running task", t);
 		}
 	}
+
+	@Inject(
+		method = "shutdown",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$executors$shutdownBackgroundExecutor(CallbackInfo ci) {
+		Executors.shutdownBackgroundExecutor();
+	}
 }
