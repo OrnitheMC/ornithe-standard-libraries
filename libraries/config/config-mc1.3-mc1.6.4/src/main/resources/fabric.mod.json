@@ -18,7 +18,7 @@
     "osl.config.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.17.3",
+    "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.3 \u003c\u003d1.6.4",
     "osl-core": "\u003e\u003d0.7.0",
     "osl-entrypoints": "\u003e\u003d0.5.0",

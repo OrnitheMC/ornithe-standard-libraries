@@ -7,7 +7,7 @@
     "osl.keybinds.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.17.3",
+    "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.13-alpha.17.43.a \u003c\u003d1.14.4",
     "osl-core": "\u003e\u003d0.7.0"
   },

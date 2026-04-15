@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "osl",
-  "version": "0.17.2",
+  "version": "0.18.0-alpha.1",
   "environment": "*",
   "depends": {
-    "fabricloader": "\u003e\u003d0.17.3",
+    "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "*"
   },
   "name": "Ornithe Standard Libraries",

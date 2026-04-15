@@ -7,7 +7,7 @@
     "osl.core.mixins.json"
   ],
   "depends": {
-    "fabricloader": "\u003e\u003d0.17.3"
+    "fabricloader": "\u003e\u003d0.18.0"
   },
   "name": "OSL Core",
   "description": "The core of Ornithe Standard Libraries.",
