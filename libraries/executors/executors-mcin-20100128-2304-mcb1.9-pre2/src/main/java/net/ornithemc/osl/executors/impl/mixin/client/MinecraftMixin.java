@@ -36,7 +36,7 @@ public class MinecraftMixin implements MainThreadExecutor {
 
 	@Override
 	public void execute(Runnable command) {
-		if (this.isOnSameThread()) {
+		if (this.isRunningOnSameThread()) {
 			command.run();
 		} else {
 			synchronized (this.pendingTasks) {
@@ -46,7 +46,7 @@ public class MinecraftMixin implements MainThreadExecutor {
 	}
 
 	@Override
-	public boolean isOnSameThread() {
+	public boolean isRunningOnSameThread() {
 		return Thread.currentThread() == this.thread;
 	}
 
