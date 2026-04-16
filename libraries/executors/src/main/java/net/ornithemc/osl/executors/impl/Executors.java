@@ -15,7 +15,7 @@ public final class Executors {
 
 	public static final Logger LOGGER = LogManager.getLogger("OSL|Executors");
 
-	private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main");
+	private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("OSL");
 
 	private static ExecutorService makeExecutor(String name) {
 		int maxBackgroundThreads = 7;
@@ -37,7 +37,7 @@ public final class Executors {
 					super.onTermination(exception);
 				}
 			};
-			backgroundThread.setName("Worker-" + workerCount.getAndIncrement());
+			backgroundThread.setName(String.format("Worker-%s-%d", name, workerCount.getAndIncrement()));
 			return backgroundThread;
 		}, Executors::handleBackgroundThreadException, true);
 	}
