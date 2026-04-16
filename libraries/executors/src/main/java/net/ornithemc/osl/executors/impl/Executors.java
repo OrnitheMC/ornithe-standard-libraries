@@ -15,11 +15,14 @@ public final class Executors {
 
 	public static final Logger LOGGER = LogManager.getLogger("OSL|Executors");
 
+	private static final String MAX_BACKGROUND_THREADS_PROPERTY= "max.bg.threads";
+	private static final int MAX_BACKGROUND_THREADS_LIMIT = 255;
+
 	private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("OSL");
 
 	private static ExecutorService makeExecutor(String name) {
-		int maxBackgroundThreads = 7;
-		int backgroundThreads = Math.min(Runtime.getRuntime().availableProcessors() - 1, maxBackgroundThreads);
+		int maxBackgroundThreads = maxBackgroundThreads();
+		int backgroundThreads = allowedBackgroundThreads(maxBackgroundThreads);
 
 		AtomicInteger workerCount = new AtomicInteger(1);
 
@@ -40,6 +43,30 @@ public final class Executors {
 			backgroundThread.setName(String.format("Worker-%s-%d", name, workerCount.getAndIncrement()));
 			return backgroundThread;
 		}, Executors::handleBackgroundThreadException, true);
+	}
+
+	private static int maxBackgroundThreads() {
+		String s = System.getProperty(MAX_BACKGROUND_THREADS_PROPERTY);
+
+		if (s != null) {
+			try {
+				int maxThreads = Integer.parseInt(s);
+
+				if (maxThreads >= 1 && maxThreads <= MAX_BACKGROUND_THREADS_LIMIT) {
+					return maxThreads;
+				}
+
+				LOGGER.error("Wrong {} property value '{}'. Should be an integer value between 1 and {}.", "max.bg.threads", s, MAX_BACKGROUND_THREADS_LIMIT);
+			} catch (NumberFormatException var2) {
+				LOGGER.error("Could not parse {} property value '{}'. Should be an integer value between 1 and {}.", MAX_BACKGROUND_THREADS_PROPERTY, s, MAX_BACKGROUND_THREADS_LIMIT);
+			}
+		}
+
+		return MAX_BACKGROUND_THREADS_LIMIT;
+	}
+
+	private static int allowedBackgroundThreads(int max) {
+		return Math.min(Runtime.getRuntime().availableProcessors() - 1, max);
 	}
 
 	private static void handleBackgroundThreadException(Thread thread, Throwable exception) {
