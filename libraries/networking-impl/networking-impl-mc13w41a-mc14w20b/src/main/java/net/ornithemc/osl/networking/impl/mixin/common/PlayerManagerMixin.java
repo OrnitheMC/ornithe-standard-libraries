@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.network.Connection;
+import com.llamalad7.mixinextras.sugar.Local;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
@@ -25,7 +26,7 @@ public class PlayerManagerMixin {
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleLogin(Connection connection, ServerPlayerEntity player, CallbackInfo ci) {
+	private void osl$networking$handleLogin(CallbackInfo ci, @Local ServerPlayerEntity player) {
 		ServerConnectionEvents.LOGIN.invoker().accept(server, player);
 	}
 }
