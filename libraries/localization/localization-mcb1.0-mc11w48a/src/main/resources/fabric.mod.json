@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-localization",
+  "version": "0.1.0-alpha.1+mcb1.0-mc11w48a",
+  "environment": "*",
+  "mixins": [
+    "osl.localization.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.0.0-beta.0 \u003c\u003d1.1-alpha.11.48.a",
+    "osl-core": "\u003e\u003d0.7.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-resource-loader": "\u003e\u003d0.7.0-"
+  },
+  "name": "OSL Localization",
+  "description": "Localization API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}

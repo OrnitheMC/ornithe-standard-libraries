@@ -202,6 +202,8 @@ def setUpLibrary(project) {
 		implementation "org.apache.logging.log4j:log4j-api:2.19.0"
 		implementation "org.apache.logging.log4j:log4j-core:2.19.0"
 
+		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
+
 		implementation project.dependencies.project(path: ':libraries:core', configuration: 'namedElements')
 
 		libraries.each { libraryPath ->

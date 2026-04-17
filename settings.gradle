@@ -70,6 +70,12 @@ include ':libraries:lifecycle-events:lifecycle-events-mc13w36a-mc1.13'
 include ':libraries:lifecycle-events:lifecycle-events-mc18w30a-mc18w50a'
 include ':libraries:lifecycle-events:lifecycle-events-mc19w04a-mc1.14.4'
 
+include ':libraries:localization'
+include ':libraries:localization:localization-mcb1.0-mc11w48a'
+include ':libraries:localization:localization-mc11w49a-mc1.5.2'
+include ':libraries:localization:localization-mc13w26a-mc18w01a'
+include ':libraries:localization:localization-mc18w02a-mc1.14.4'
+
 include ':libraries:networking'
 include ':libraries:networking:networking-mca1.0.16-mca1.2.6'
 include ':libraries:networking:networking-mca0.1.0-mca0.2.1'
