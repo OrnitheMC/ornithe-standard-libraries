@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-executors",
-  "version": "0.1.0-alpha.2+mc14w02a-mc14w06b",
+  "version": "0.1.0-alpha.3+mc14w02a-mc14w06b",
   "environment": "*",
   "mixins": [
     "osl.executors.mixins.json"
