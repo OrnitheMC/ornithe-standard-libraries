@@ -6,6 +6,7 @@
   "mixins": [
     "osl.core.mixins.json"
   ],
+  "accessWidener": "osl.core.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0"
   },
