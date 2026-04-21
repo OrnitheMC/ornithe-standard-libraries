@@ -21,7 +21,7 @@ public class BrandingPatchImpl implements ClientModInitializer {
 
 	public static String getGameVersion() {
 		if (gameVersion == null) {
-			gameVersion = FabricLoader.getInstance().getModContainer("minecraft").get().getMetadata().getVersion().getFriendlyString();
+			gameVersion = FabricLoader.getInstance().getRawGameVersion();
 		}
 
 		return gameVersion;
