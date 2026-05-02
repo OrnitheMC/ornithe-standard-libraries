@@ -104,3 +104,6 @@ include ':libraries:resource-loader:resource-loader-mc16w32a-mc1.12.2'
 include ':libraries:resource-loader:resource-loader-mc17w43a-mc19w07a'
 include ':libraries:resource-loader:resource-loader-mc19w08a-mc1.14.4'
 
+include ':libraries:text-components'
+include ':libraries:text-components:text-components-mca0.1.0-mc1.14.4'
+
