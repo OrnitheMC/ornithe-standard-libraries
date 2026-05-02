@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-resource-loader",
-  "version": "0.6.1+mc13w26a-mc1.8.2-pre4",
+  "version": "0.7.0-alpha.1+mc13w26a-mc1.8.2-pre4",
   "environment": "client",
   "mixins": [
     "osl.resource-loader.mixins.json"
@@ -9,8 +9,8 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.6-alpha.13.26.a \u003c\u003d1.8.2-rc.4",
-    "osl-core": "\u003e\u003d0.7.0",
-    "osl-executors": "\u003e\u003d0.1.0-",
+    "osl-core": "\u003e\u003d0.8.0-",
+    "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Resource Loader",
