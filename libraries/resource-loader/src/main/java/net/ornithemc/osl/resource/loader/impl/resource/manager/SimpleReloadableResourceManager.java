@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.Unit;
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
@@ -122,7 +123,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 	@Override
 	public Map<NamespacedIdentifier, Resource> findResources(String directory, Predicate<NamespacedIdentifier> filter) {
-		Map<NamespacedIdentifier, Resource> resources = new TreeMap<>();
+		Map<NamespacedIdentifier, Resource> resources = new TreeMap<>(NamespacedIdentifiers.COMPARATOR);
 
 		for (ResourceManager manager : this.resourceManagers.values()) {
 			resources.putAll(manager.findResources(directory, filter));
@@ -139,7 +140,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 	@Override
 	public Map<NamespacedIdentifier, List<Resource>> findResourceStacks(String directory, Predicate<NamespacedIdentifier> filter) {
-		Map<NamespacedIdentifier, List<Resource>> resources = new TreeMap<>();
+		Map<NamespacedIdentifier, List<Resource>> resources = new TreeMap<>(NamespacedIdentifiers.COMPARATOR);
 
 		for (ResourceManager manager : this.resourceManagers.values()) {
 			resources.putAll(manager.findResourceStacks(directory, filter));
