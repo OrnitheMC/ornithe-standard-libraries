@@ -46,7 +46,7 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public void addListener(net.minecraft.resource.manager.ResourceReloadListener listener) {
-		this.resourceManager.addReloader(new WrappedResourceReloadListener(listener));
+		this.resourceManager.addReloadedReloader(new WrappedResourceReloadListener(listener));
 	}
 
 	@Override

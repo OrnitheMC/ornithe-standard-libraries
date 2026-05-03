@@ -10,16 +10,16 @@ import net.minecraft.client.resource.pack.ResourcePack;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.resource.loader.api.resource.manager.ReloadableResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
+import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
 
 public class ResourceManagerAdapter implements net.minecraft.client.resource.manager.ReloadableResourceManager {
 
 	private final ResourceMetadataSerializerRegistry metadataSerializers;
-	private final ReloadableResourceManager resourceManager;
+	private final SimpleReloadableResourceManager resourceManager;
 
-	public ResourceManagerAdapter(ResourceMetadataSerializerRegistry metadataSerializers, ReloadableResourceManager resourceManager) {
+	public ResourceManagerAdapter(ResourceMetadataSerializerRegistry metadataSerializers, SimpleReloadableResourceManager resourceManager) {
 		this.metadataSerializers = metadataSerializers;
 		this.resourceManager = resourceManager;
 	}
@@ -41,7 +41,7 @@ public class ResourceManagerAdapter implements net.minecraft.client.resource.man
 
 	@Override
 	public void addListener(net.minecraft.client.resource.manager.ResourceReloadListener listener) {
-		this.resourceManager.addReloader(new WrappedResourceReloadListener(listener));
+		this.resourceManager.addReloadedReloader(new WrappedResourceReloadListener(listener));
 	}
 
 	@Override

@@ -160,9 +160,21 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		this.recentlyRegisteredReloaders.add(reloader);
 	}
 
+	public void addReloadedReloader(ResourceReloader reloader) {
+		this.registeredReloaders.add(reloader);
+	}
+
 	@Override
 	public void reload(List<ResourcePack> packs) {
 		ResourceReload reload = this.startReload(packs, Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
+
+		while (!reload.isDone()) {
+			reload.checkExceptions();
+		}
+	}
+
+	public void partialReload() {
+		ResourceReload reload = this.startPartialReload(Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
 
 		while (!reload.isDone()) {
 			reload.checkExceptions();

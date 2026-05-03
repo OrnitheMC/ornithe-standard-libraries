@@ -85,6 +85,7 @@ public class MinecraftMixin {
 	)
 	private void osl$resource_loader$initResourceManager(CallbackInfo ci) {
 		this.actualResourceManager.init();
+		this.actualResourceManager.partialReload();
 	}
 
 	@Inject(
