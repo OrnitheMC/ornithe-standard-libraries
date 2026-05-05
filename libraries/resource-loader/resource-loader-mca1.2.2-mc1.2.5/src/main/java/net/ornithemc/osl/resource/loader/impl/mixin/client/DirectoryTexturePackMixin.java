@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.resource.pack.BuiltInTexturePack;
-import net.minecraft.client.resource.pack.TexturePack;
-import net.minecraft.client.resource.pack.ZippedTexturePack;
+import net.minecraft.client.resource.pack.DirectoryTexturePack;
 
-@Mixin({TexturePack.class, ZippedTexturePack.class})
-public class TexturePackMixin {
+// directory packs were added in 12w08a
+@Mixin(DirectoryTexturePack.class)
+public class DirectoryTexturePackMixin {
 
 	@Inject(
 		method = "getResource",

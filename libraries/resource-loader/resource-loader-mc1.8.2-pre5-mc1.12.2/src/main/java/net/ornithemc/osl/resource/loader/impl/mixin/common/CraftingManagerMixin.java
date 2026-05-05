@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -17,7 +16,6 @@ import net.minecraft.crafting.CraftingManager;
 
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 
-@Pseudo // 17w13a+
 @Mixin(CraftingManager.class)
 public class CraftingManagerMixin {
 

@@ -15,7 +15,6 @@ public class TexturePacksScreenMixin {
 
 	@Redirect(
 		method = "render",
-		require = 0, // b1.2-
 		at = @At(
 			value = "FIELD",
 			target = "Lnet/minecraft/client/resource/pack/TexturePacks;selected:Lnet/minecraft/client/resource/pack/TexturePack;"
