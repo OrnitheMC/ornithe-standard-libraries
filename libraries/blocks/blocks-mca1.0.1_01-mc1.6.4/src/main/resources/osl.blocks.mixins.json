@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.blocks.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.blocks.impl.BlocksMixinPlugin",
+	"mixins": [
+		"common.BlockMixin",
+		"common.BlockMixinNew",
+		"common.BlockMixinOld",
+		"common.RedstoneTorchBlockMixin",
+		"common.RepeaterBlockMixin"
+	],
+	"client": [
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
