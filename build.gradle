@@ -64,6 +64,21 @@ def setUpJar(project) {
 		}
 	}
 
+	project.tasks.withType(GenerateModuleMetadata) {
+		enabled = false
+	}
+
+	project.tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.release = 8
+	}
+
+	project.java {
+		// Still required by IDEs such as Eclipse and Visual Studio Code
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+
 	project.jar {
 		from(project.rootProject.file('LICENSE')) {
 			rename { "${it}_${project.base.archivesName.get()}" }
@@ -212,6 +227,21 @@ def setUpLibrary(project) {
 		}
 	}
 
+	project.tasks.withType(GenerateModuleMetadata) {
+		enabled = false
+	}
+
+	project.tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.release = 8
+	}
+
+	project.java {
+		// Still required by IDEs such as Eclipse and Visual Studio Code
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+
 	addPomDependency(project)
 	setUpJavadoc(project)
 }
@@ -306,10 +336,6 @@ def setUpModule(project) {
 			include "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		}
 
-		if (!isCore) {
-			implementation project.dependencies.project(path: library.path)
-		}
-
 		libraries.each { libraryPath ->
 			implementation project.dependencies.project(path: libraryPath)
 		}
@@ -389,12 +415,20 @@ def setUpModule(project) {
 		}
 	}
 
+	project.tasks.withType(GenerateModuleMetadata) {
+		enabled = false
+	}
+
 	project.tasks.withType(JavaCompile).configureEach {
 		it.options.encoding = 'UTF-8'
 		it.options.release = 8
 	}
 
 	project.java {
+		// Still required by IDEs such as Eclipse and Visual Studio Code
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+
 		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
 		// If you remove this line, sources will not be generated.
 		withSourcesJar()
@@ -549,15 +583,4 @@ def shouldPublish(project, mavenUrl) {
 	}
 
 	return !exists
-}
-
-allprojects {
-	tasks.withType(GenerateModuleMetadata) {
-		enabled = false
-	}
-
-	tasks.withType(JavaCompile).configureEach {
-		it.options.encoding = 'UTF-8'
-		it.options.release = 8
-	}
 }
