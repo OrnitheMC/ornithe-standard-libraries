@@ -4,11 +4,10 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import net.fabricmc.loader.api.FabricLoader;
-
 import net.ornithemc.osl.branding.api.BrandingContext;
 import net.ornithemc.osl.branding.api.BrandingPatchEvents;
 import net.ornithemc.osl.branding.api.Operation;
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.entrypoints.api.launch.LaunchEvents;
 import net.ornithemc.osl.entrypoints.api.launch.OptionsConsumer;
@@ -21,7 +20,7 @@ public class BrandingPatchImpl implements ClientModInitializer {
 
 	public static String getGameVersion() {
 		if (gameVersion == null) {
-			gameVersion = FabricLoader.getInstance().getRawGameVersion();
+			gameVersion = MinecraftVersion.resolve().gameVersion();
 
 			if (gameVersion.charAt(0) == 'a') {
 				gameVersion = "Alpha v" + gameVersion.substring(1);
