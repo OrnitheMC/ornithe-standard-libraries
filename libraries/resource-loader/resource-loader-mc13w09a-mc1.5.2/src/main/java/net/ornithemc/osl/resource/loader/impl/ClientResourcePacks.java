@@ -8,6 +8,7 @@ import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
+import net.ornithemc.osl.resource.loader.impl.adapter.WrappedTexturePack;
 
 public class ClientResourcePacks implements ResourcePackRepository.Source {
 

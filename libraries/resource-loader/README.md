@@ -57,7 +57,7 @@ public class ExampleInitializer implements ClientModInitializer {
 
 	@Override
 	public void initClient() {
-		ResourcePackRepository.registerBundledModResources("cookie-assets", MOD, "client/cookies/")
+		ResourcePackRepository.registerBundledModResources("cookie-assets", "Cookie Assets", MOD, "client/cookies/")
 	}
 }
 ```

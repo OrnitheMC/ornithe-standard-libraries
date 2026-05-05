@@ -1,4 +1,4 @@
-package net.ornithemc.osl.resource.loader.impl;
+package net.ornithemc.osl.resource.loader.impl.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +23,12 @@ public class WrappedTexturePack extends AbstractResourcePack {
 	private final IOSupplier<InputStream> metadata;
 
 	public WrappedTexturePack(TexturePack pack) {
-		String description = pack.getDescriptionLine1();
-		if (pack.getDescriptionLine2() != null) {
-			description += "\n" + pack.getDescriptionLine2();
+		String description = "";
+		if (pack.getDescriptionLine1() != null) {
+			description += pack.getDescriptionLine1();
+			if (pack.getDescriptionLine2() != null) {
+				description += "\n" + pack.getDescriptionLine2();
+			}
 		}
 
 		this.pack = pack;
@@ -50,7 +53,11 @@ public class WrappedTexturePack extends AbstractResourcePack {
 
 	@Override
 	public boolean hasResource(String path) {
-		return this.pack.hasResource(path, false);
+		try {
+			return this.pack.getResource(path) != null;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class WrappedTexturePack extends AbstractResourcePack {
 		}
 		// TODO: pack.png
 
-		return this.pack.getResource(path, false);
+		return this.pack.getResource(path);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package net.ornithemc.osl.resource.loader.impl;
+package net.ornithemc.osl.resource.loader.impl.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +23,12 @@ public class WrappedTexturePack extends AbstractResourcePack {
 	private final IOSupplier<InputStream> metadata;
 
 	public WrappedTexturePack(TexturePack pack) {
-		String description = pack.getDescriptionLine1();
-		if (pack.getDescriptionLine2() != null) {
-			description += "\n" + pack.getDescriptionLine2();
+		String description = "";
+		if (pack.descriptionLine1 != null) {
+			description += pack.descriptionLine1;
+			if (pack.descriptionLine2 != null) {
+				description += "\n" + pack.descriptionLine2;
+			}
 		}
 
 		this.pack = pack;
@@ -35,7 +38,7 @@ public class WrappedTexturePack extends AbstractResourcePack {
 	}
 
 	public static String getId(TexturePack pack) {
-		return pack instanceof BuiltInTexturePack ? pack.getName() : "texturepack/" + pack.getKey();
+		return pack instanceof BuiltInTexturePack ? pack.name : "texturepack/" + pack.key;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class WrappedTexturePack extends AbstractResourcePack {
 
 	@Override
 	public String getName() {
-		return this.pack.getName();
+		return this.pack.name;
 	}
 
 	@Override
@@ -62,7 +65,6 @@ public class WrappedTexturePack extends AbstractResourcePack {
 		if (METADATA_FILE.equals(path)) {
 			return this.metadata.get();
 		}
-		// TODO: pack.png
 
 		return this.pack.getResource(path);
 	}
@@ -88,9 +90,11 @@ public class WrappedTexturePack extends AbstractResourcePack {
 
 	@Override
 	public void open() {
+		this.pack.open();
 	}
 
 	@Override
 	public void close() {
+		this.pack.close();
 	}
 }

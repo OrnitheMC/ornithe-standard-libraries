@@ -1,4 +1,4 @@
-package net.ornithemc.osl.resource.loader.impl;
+package net.ornithemc.osl.resource.loader.impl.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;

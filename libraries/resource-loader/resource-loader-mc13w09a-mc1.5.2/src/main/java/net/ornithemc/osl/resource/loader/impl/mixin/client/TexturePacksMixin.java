@@ -24,9 +24,9 @@ import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
-import net.ornithemc.osl.resource.loader.impl.ResourceManagerAdapter;
-import net.ornithemc.osl.resource.loader.impl.WrappedTexturePack;
 import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
+import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
+import net.ornithemc.osl.resource.loader.impl.adapter.WrappedTexturePack;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.BundledModResourcePacks;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
