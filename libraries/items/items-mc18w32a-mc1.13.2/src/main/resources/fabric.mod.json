@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-items",
+  "version": "0.1.0-alpha.1+mc18w32a-mc1.13.2",
+  "environment": "*",
+  "mixins": [
+    "osl.items.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.13.1-alpha.18.32.a \u003c\u003d1.13.2",
+    "osl-core": "\u003e\u003d0.7.0",
+    "osl-blocks": "\u003e\u003d0.1.0-"
+  },
+  "name": "OSL Items",
+  "description": "Items API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
