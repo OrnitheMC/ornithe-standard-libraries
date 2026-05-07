@@ -1,9 +1,12 @@
 package net.ornithemc.osl.resource.loader.api.client;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import net.ornithemc.osl.core.api.events.Event;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ReloadableResourceManager;
+import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
+import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadContext;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 
 /**
@@ -56,13 +59,13 @@ public final class ClientResourceLoaderEvents {
 	 * 
 	 * <pre>
 	 * {@code
-	 * ClientResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.register(() -> {
+	 * ClientResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.register(packRepository -> {
 	 * 	...
 	 * });
 	 * }
 	 * </pre>
 	 */
-	public static final Event<Runnable> START_RESOURCE_PACKS_RELOAD = Event.runnable();
+	public static final Event<Consumer<ResourcePackRepository>> START_RESOURCE_PACKS_RELOAD = Event.consumer();
 
 	/**
 	 * This event is invoked after resource packs are reloaded.
@@ -73,13 +76,13 @@ public final class ClientResourceLoaderEvents {
 	 * 
 	 * <pre>
 	 * {@code
-	 * ClientResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.register(() -> {
+	 * ClientResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.register(packRepository -> {
 	 * 	...
 	 * });
 	 * }
 	 * </pre>
 	 */
-	public static final Event<Runnable> END_RESOURCE_PACKS_RELOAD   = Event.runnable();
+	public static final Event<Consumer<ResourcePackRepository>> END_RESOURCE_PACKS_RELOAD = Event.consumer();
 
 	/**
 	 * This event is invoked before resources are reloaded.
@@ -90,13 +93,13 @@ public final class ClientResourceLoaderEvents {
 	 * 
 	 * <pre>
 	 * {@code
-	 * ClientResourceLoaderEvents.START_RESOURCE_RELOAD.register(() -> {
+	 * ClientResourceLoaderEvents.START_RESOURCE_RELOAD.register((resourceManager, context) -> {
 	 * 	...
 	 * });
 	 * }
 	 * </pre>
 	 */
-	public static final Event<Runnable> START_RESOURCE_RELOAD = Event.runnable();
+	public static final Event<BiConsumer<ResourceManager, ResourceReloadContext>> START_RESOURCE_RELOAD = Event.biConsumer();
 
 	/**
 	 * This event is invoked after resources are reloaded.
@@ -107,12 +110,12 @@ public final class ClientResourceLoaderEvents {
 	 * 
 	 * <pre>
 	 * {@code
-	 * ClientResourceLoaderEvents.END_RESOURCE_RELOAD.register(() -> {
+	 * ClientResourceLoaderEvents.END_RESOURCE_RELOAD.register((resourceManager, context) -> {
 	 * 	...
 	 * });
 	 * }
 	 * </pre>
 	 */
-	public static final Event<Runnable> END_RESOURCE_RELOAD   = Event.runnable();
+	public static final Event<BiConsumer<ResourceManager, ResourceReloadContext>> END_RESOURCE_RELOAD = Event.biConsumer();
 
 }

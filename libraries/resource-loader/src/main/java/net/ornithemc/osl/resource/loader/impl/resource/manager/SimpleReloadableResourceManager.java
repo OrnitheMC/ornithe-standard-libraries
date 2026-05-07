@@ -26,9 +26,11 @@ import net.ornithemc.osl.resource.loader.api.resource.manager.ReloadableResource
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReload;
+import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadContext;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
 import net.ornithemc.osl.resource.loader.api.server.ServerResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
+import net.ornithemc.osl.resource.loader.impl.resource.reload.SimpleResourceReloadContext;
 
 public class SimpleReloadableResourceManager implements ReloadableResourceManager {
 
@@ -49,6 +51,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	private final ResourceType type;
 	private final List<ResourceReloader> registeredReloaders;
 	private final List<ResourceReloader> recentlyRegisteredReloaders;
+	private final List<ResourcePack> resourcePacks;
 	private final Map<String, FallbackResourceManager> resourceManagers;
 	private final LegacyResourceManager legacyResourceManager;
 
@@ -56,6 +59,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		this.type = type;
 		this.registeredReloaders = new ArrayList<>();
 		this.recentlyRegisteredReloaders = new ArrayList<>();
+		this.resourcePacks = new ArrayList<>();
 		this.resourceManagers = new HashMap<>();
 		this.legacyResourceManager = new LegacyResourceManager();
 	}
@@ -69,9 +73,9 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	}
 
 	public void add(ResourcePack pack) {
-		Set<String> namespaces = pack.getNamespaces(this.type);
+		this.resourcePacks.add(pack);
 
-		for (String namespace : namespaces) {
+		for (String namespace : pack.getNamespaces(this.type)) {
 			FallbackResourceManager manager = this.resourceManagers.get(namespace);
 			if (manager == null) {
 				this.resourceManagers.put(namespace, manager = new FallbackResourceManager(this.type, namespace));
@@ -186,6 +190,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	public ResourceReload startReload(List<ResourcePack> packs, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
 		ResourceLoader.LOGGER.info("Reloading ResourceManager: {}", packs.stream().map(ResourcePack::getId).collect(Collectors.joining(", ")));
 
+		this.resourcePacks.clear();
 		this.resourceManagers.clear();
 		this.legacyResourceManager.clear();
 
@@ -204,11 +209,13 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		reloaders = new ArrayList<>(reloaders);
 		this.recentlyRegisteredReloaders.clear();
 
+		ResourceReloadContext context = new SimpleResourceReloadContext(this.resourcePacks, reloaders);
+
 		initialTask = initialTask.thenRun(() -> {
 			if (this.type == ResourceType.CLIENT_ASSETS) {
-				ClientResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().run();
+				ClientResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().accept(this, context);
 			} else if (this.type == ResourceType.SERVER_DATA) {
-				ServerResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().run();
+				ServerResourceLoaderEvents.START_RESOURCE_RELOAD.invoker().accept(this, context);
 			}
 		});
 
@@ -216,9 +223,9 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 		reload.result().thenRun(() -> {
 			if (this.type == ResourceType.CLIENT_ASSETS) {
-				ClientResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().run();
+				ClientResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().accept(this, context);
 			} else if (this.type == ResourceType.SERVER_DATA) {
-				ServerResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().run();
+				ServerResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().accept(this, context);
 			}
 		});
 

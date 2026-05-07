@@ -75,9 +75,9 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 		this.close();
 
 		if (this.type == ResourceType.CLIENT_ASSETS) {
-			ClientResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.invoker().run();
+			ClientResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.invoker().accept(this);
 		} else if (this.type == ResourceType.SERVER_DATA) {
-			ServerResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.invoker().run();
+			ServerResourceLoaderEvents.START_RESOURCE_PACKS_RELOAD.invoker().accept(this);
 		}
 
 		List<String> selection = this.selected.stream().map(ResourcePackSummary::getId).collect(Collectors.toList());
@@ -86,9 +86,9 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 		this.rebuildSelectedPacks(selection);
 
 		if (this.type == ResourceType.CLIENT_ASSETS) {
-			ClientResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.invoker().run();
+			ClientResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.invoker().accept(this);
 		} else if (this.type == ResourceType.SERVER_DATA) {
-			ServerResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.invoker().run();
+			ServerResourceLoaderEvents.END_RESOURCE_PACKS_RELOAD.invoker().accept(this);
 		}
 	}
 
