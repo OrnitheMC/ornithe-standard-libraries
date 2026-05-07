@@ -16,6 +16,9 @@ import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResource
  */
 public interface ResourcePackRepository extends AutoCloseable {
 
+	/**
+	 * @return the pack repository for the Minecraft client.
+	 */
 	static ResourcePackRepository client() {
 		return SimpleResourcePackRepository.client();
 	}
@@ -25,6 +28,20 @@ public interface ResourcePackRepository extends AutoCloseable {
 	 */
 	static ResourcePackRepository server() {
 		return SimpleResourcePackRepository.server();
+	}
+
+	/**
+	 * @return the pack source for resource packs provided by the Minecraft client.
+	 */
+	static ClientPackSource clientPackSource() {
+		return SimpleResourcePackRepository.clientPackSource();
+	}
+
+	/**
+	 * @return the pack source for resource packs provided by the Minecraft server.
+	 */
+	static ServerPackSource serverPackSource() {
+		return SimpleResourcePackRepository.serverPackSource();
 	}
 
 	/**

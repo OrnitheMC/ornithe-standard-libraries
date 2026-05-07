@@ -25,6 +25,7 @@ public final class ResourcePackLists {
 		);
 	}
 
+	// separate class because ResourcePackEntry only exists in 13w36a+
 	public static class Gui {
 		public static void fixSelection(ResourcePacksScreen screen, List<ResourcePackEntry> entries, boolean reversed) {
 			Minecraft minecraft = Minecraft.getInstance();

@@ -42,6 +42,8 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private Map<String, TexturePack> availablePacksByKey;
 	@Shadow
 	private TexturePack selected;
+	@Shadow
+	private boolean hasServerTextures;
 
 	@Unique
 	private SimpleResourcePackRepository resourcePacks;
@@ -76,7 +78,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 
 		this.resourcePacks.setCallbacks(null, this::selectionChanged);
 
-		this.resourcePacks.addSource(new ClientResourcePacks(DEFAULT_PACK));
+		this.resourcePacks.addSource(new ClientResourcePacks((TexturePacks) (Object) this));
 		this.resourcePacks.addSource(new BundledModResourcePacks());
 		this.resourcePacks.addSource(this); // texturepacks/ directory source
 
@@ -173,13 +175,28 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	}
 
 	@Override
+	public TexturePack osl$resource_loader$getDefaultPack() {
+		return DEFAULT_PACK;
+	}
+
+	@Override
+	public TexturePack osl$resource_loader$getServerPack() {
+		return this.hasServerPack() ? this.actuallySelected : null;
+	}
+
+	@Override
 	public TexturePack osl$resource_loader$getActuallySelected() {
 		return this.actuallySelected;
 	}
 
 	@Unique
+	private boolean hasServerPack() {
+		return this.hasServerTextures;
+	}
+
+	@Unique // TODO: call from the server pack download callback
 	private void selectPack(TexturePack pack) {
-		if (pack == null || pack == DEFAULT_PACK) {
+		if (pack == null || pack == DEFAULT_PACK || this.hasServerPack()) {
 			this.resourcePacks.setSelectedPacks(Collections.emptyList());
 		} else {
 			this.resourcePacks.setSelectedPacks(Collections.singletonList(WrappedTexturePack.getId(pack)));

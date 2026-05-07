@@ -74,7 +74,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 
 		this.resourcePacks.setCallbacks(null, this::selectionChanged);
 
-		this.resourcePacks.addSource(new ClientResourcePacks(this.defaultPack));
+		this.resourcePacks.addSource(new ClientResourcePacks((TexturePacks) (Object) this));
 		this.resourcePacks.addSource(new BundledModResourcePacks());
 		this.resourcePacks.addSource(this); // texturepacks/ directory source
 
@@ -181,6 +181,11 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 				consumer.accept(summary);
 			}
 		}
+	}
+
+	@Override
+	public TexturePack osl$resource_loader$getDefaultPack() {
+		return this.defaultPack;
 	}
 
 	@Override

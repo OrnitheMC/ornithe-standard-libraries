@@ -76,7 +76,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 
 		this.resourcePacks.setCallbacks(null, this::selectionChanged);
 
-		this.resourcePacks.addSource(new ClientResourcePacks(DEFAULT_PACK));
+		this.resourcePacks.addSource(new ClientResourcePacks((TexturePacks) (Object) this));
 		this.resourcePacks.addSource(new BundledModResourcePacks());
 		this.resourcePacks.addSource(this); // texturepacks/ directory source
 
@@ -173,13 +173,29 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	}
 
 	@Override
+	public TexturePack osl$resource_loader$getDefaultPack() {
+		return DEFAULT_PACK;
+	}
+
+	@Override
+	public TexturePack osl$resource_loader$getServerPack() {
+		return this.hasServerPack() ? this.actuallySelected : null;
+	}
+
+	@Override
 	public TexturePack osl$resource_loader$getActuallySelected() {
 		return this.actuallySelected;
 	}
 
 	@Unique
+	private boolean hasServerPack() {
+		// cannot use @Shadow hasServerTextures 'cause that field only exists in 12w18a+
+		return ClientResourcePacks.SERVER_TEXTURES_SUPPORTED && ((TexturePacks) (Object) this).hasServerTextures();
+	}
+
+	@Unique
 	private void selectPack(TexturePack pack) {
-		if (pack == null || pack == DEFAULT_PACK) {
+		if (pack == null || pack == DEFAULT_PACK || this.hasServerPack()) {
 			this.resourcePacks.setSelectedPacks(Collections.emptyList());
 		} else {
 			this.resourcePacks.setSelectedPacks(Collections.singletonList(WrappedTexturePack.getId(pack)));

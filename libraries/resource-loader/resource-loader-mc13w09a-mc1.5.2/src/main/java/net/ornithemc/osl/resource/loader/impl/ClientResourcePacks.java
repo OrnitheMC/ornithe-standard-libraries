@@ -1,33 +1,31 @@
 package net.ornithemc.osl.resource.loader.impl;
 
-import java.util.function.Consumer;
+import net.minecraft.client.resource.pack.TexturePacks;
 
-import net.minecraft.client.resource.pack.TexturePack;
-
-import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
+import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedTexturePack;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.AbstractClientPackSource;
 
-public class ClientResourcePacks implements ResourcePackRepository.Source {
+public class ClientResourcePacks extends AbstractClientPackSource {
 
-	private final TexturePack defaultPack;
+	private final TexturePacks texturePacks;
 
-	public ClientResourcePacks(TexturePack defaultPack) {
-		this.defaultPack = defaultPack;
+	public ClientResourcePacks(TexturePacks texturePacks) {
+		this.texturePacks = texturePacks;
 	}
 
 	@Override
-	public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
-		ResourcePack pack = new WrappedTexturePack(this.defaultPack);
-		ResourcePackSummary summary = ResourcePackSummary.create(
-			pack,
-			true,
-			false,
-			PackPosition.BOTTOM
-		);
+	protected ResourcePack getOrWrapDefaultPack() {
+		return new WrappedTexturePack(((TexturePacksAccess) this.texturePacks).osl$resource_loader$getDefaultPack());
+	}
 
-		consumer.accept(summary);
+	@Override
+	protected ResourcePack getOrWrapServerPack() {
+		if (((TexturePacksAccess) this.texturePacks).osl$resource_loader$getServerPack() != null) {
+			return new WrappedTexturePack(((TexturePacksAccess) this.texturePacks).osl$resource_loader$getServerPack());
+		} else {
+			return null;
+		}
 	}
 }

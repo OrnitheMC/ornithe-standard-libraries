@@ -13,14 +13,19 @@ import java.util.stream.Collectors;
 
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
+import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
+import net.ornithemc.osl.resource.loader.api.resource.repository.ServerPackSource;
 import net.ornithemc.osl.resource.loader.api.server.ServerResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
 public class SimpleResourcePackRepository implements ResourcePackRepository {
 
 	private static final Map<ResourceType, SimpleResourcePackRepository> INSTANCES = new EnumMap<>(ResourceType.class);
+
+	static ClientPackSource clientPackSource;
+	static ServerPackSource serverPackSource;
 
 	private static SimpleResourcePackRepository forType(ResourceType type) {
 		return INSTANCES.computeIfAbsent(type, SimpleResourcePackRepository::new);
@@ -32,6 +37,14 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 
 	public static SimpleResourcePackRepository server() {
 		return forType(ResourceType.SERVER_DATA);
+	}
+
+	public static ClientPackSource clientPackSource() {
+		return clientPackSource;
+	}
+
+	public static ServerPackSource serverPackSource() {
+		return serverPackSource;
 	}
 
 	private final ResourceType type;

@@ -1,16 +1,12 @@
 package net.ornithemc.osl.resource.loader.impl;
 
-import java.util.function.Consumer;
-
 import net.minecraft.client.resource.pack.ResourcePacks;
 
-import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedResourcePack;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.AbstractClientPackSource;
 
-public class ClientResourcePacks implements ResourcePackRepository.Source {
+public class ClientResourcePacks extends AbstractClientPackSource {
 
 	private final ResourcePacks resourcePacks;
 
@@ -19,29 +15,16 @@ public class ClientResourcePacks implements ResourcePackRepository.Source {
 	}
 
 	@Override
-	public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
-		ResourcePack pack = new WrappedResourcePack(this.resourcePacks.defaultPack);
-		ResourcePackSummary summary = ResourcePackSummary.create(
-			pack,
-			true,
-			false,
-			PackPosition.BOTTOM
-		);
+	protected ResourcePack getOrWrapDefaultPack() {
+		return new WrappedResourcePack(this.resourcePacks.defaultPack);
+	}
 
-		consumer.accept(summary);
-
-		if (this.resourcePacks.getServerPack() != null) {
-			ResourcePack serverPack = new WrappedResourcePack(this.resourcePacks.getServerPack());
-			ResourcePackSummary serverSummary = ResourcePackSummary.create(
-				serverPack,
-				true,
-				true,
-				PackPosition.TOP
-			);
-
-			if (serverSummary != null) {
-				consumer.accept(serverSummary);
-			}
+	@Override
+	protected ResourcePack getOrWrapServerPack() {
+		if (this.resourcePacks.getServerResourcePack() != null) {
+			return new WrappedResourcePack(this.resourcePacks.getServerPack());
+		} else {
+			return null;
 		}
 	}
 }

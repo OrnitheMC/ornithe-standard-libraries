@@ -1,31 +1,15 @@
 package net.ornithemc.osl.resource.loader.impl;
 
-import java.util.function.Consumer;
-
-import net.minecraft.client.gui.screen.resourcepack.ResourcePackEntry;
 import net.minecraft.client.resource.pack.ResourcePacks;
 
-import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedResourcePack;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.AbstractClientPackSource;
 
-public class ClientResourcePacks implements ResourcePackRepository.Source {
+public class ClientResourcePacks extends AbstractClientPackSource {
 
-	public static final boolean NEW_RESOURCE_PACKS_GUI;
-
-	static {
-		boolean exists;
-
-		try {
-			exists = ResourcePackEntry.class != null;
-		} catch (Throwable t) {
-			exists = false;
-		}
-
-		NEW_RESOURCE_PACKS_GUI = exists;
-	}
+	public static final boolean NEW_RESOURCE_PACKS_GUI = MinecraftVersion.resolve().compareTo("13w36a") >= 0;
 
 	private final ResourcePacks resourcePacks;
 
@@ -34,29 +18,16 @@ public class ClientResourcePacks implements ResourcePackRepository.Source {
 	}
 
 	@Override
-	public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
-		ResourcePack pack = new WrappedResourcePack(this.resourcePacks.defaultPack);
-		ResourcePackSummary summary = ResourcePackSummary.create(
-			pack,
-			true,
-			false,
-			PackPosition.BOTTOM
-		);
+	protected ResourcePack getOrWrapDefaultPack() {
+		return new WrappedResourcePack(this.resourcePacks.defaultPack);
+	}
 
-		consumer.accept(summary);
-
+	@Override
+	protected ResourcePack getOrWrapServerPack() {
 		if (NEW_RESOURCE_PACKS_GUI && this.resourcePacks.getServerPack() != null) {
-			ResourcePack serverPack = new WrappedResourcePack(this.resourcePacks.getServerPack());
-			ResourcePackSummary serverSummary = ResourcePackSummary.create(
-				serverPack,
-				true,
-				true,
-				PackPosition.TOP
-			);
-
-			if (serverSummary != null) {
-				consumer.accept(serverSummary);
-			}
+			return new WrappedResourcePack(this.resourcePacks.getServerPack());
+		} else {
+			return null;
 		}
 	}
 }
