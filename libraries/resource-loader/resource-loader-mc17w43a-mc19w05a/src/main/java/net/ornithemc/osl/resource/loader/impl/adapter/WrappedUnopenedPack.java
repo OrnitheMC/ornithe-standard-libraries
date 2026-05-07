@@ -10,11 +10,11 @@ import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSum
 import net.ornithemc.osl.text.api.TextComponent;
 import net.ornithemc.osl.text.api.TextComponents;
 
-class WrappedUnopenedPack<T extends UnopenedPack> implements ResourcePackSummary {
+class WrappedUnopenedPack implements ResourcePackSummary {
 
-	final T pack;
+	final UnopenedPack pack;
 
-	WrappedUnopenedPack(T pack) {
+	WrappedUnopenedPack(UnopenedPack pack) {
 		this.pack = pack;
 	}
 

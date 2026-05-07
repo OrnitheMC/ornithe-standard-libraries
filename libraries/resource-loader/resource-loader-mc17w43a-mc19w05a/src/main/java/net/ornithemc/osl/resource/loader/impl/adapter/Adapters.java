@@ -145,7 +145,7 @@ class Adapters {
 	}
 
 	static ResourcePackSummary resourcePackSummary(UnopenedPack unopenedPack) {
-		return new WrappedUnopenedPack<>(unopenedPack);
+		return new WrappedUnopenedPack(unopenedPack);
 	}
 
 	static <T extends UnopenedPack> T unopenedPack(ResourcePackSummary summary, UnopenedPack.Factory<T> factory) {
