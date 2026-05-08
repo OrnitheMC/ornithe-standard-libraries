@@ -1,6 +1,5 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Final;
@@ -17,15 +16,12 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.manager.ReloadableResourceManager;
 import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
-import net.minecraft.client.resource.metadata.ResourcePackMetadata;
 import net.minecraft.client.resource.pack.BuiltInResourcePack;
 import net.minecraft.client.resource.pack.ResourcePack;
 
-import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourcePackLists;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
-import net.ornithemc.osl.resource.loader.impl.resource.pack.ResourcePacks;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -41,26 +37,6 @@ public class MinecraftMixin {
 
 	@Unique
 	private final SimpleReloadableResourceManager actualResourceManager = SimpleReloadableResourceManager.client();
-
-	@Inject(
-		method = "init",
-		at = @At(
-			value = "NEW",
-			target = "net/minecraft/client/resource/pack/ResourcePacks"
-		)
-	)
-	private void osl$resource_loader$detectPackFormat(CallbackInfo ci) {
-		// TODO: detect pack format for server resources!
-		// it'll be the same pack number but we need detection on the server
-		try {
-			ResourcePackMetadata metadata = defaultResourcePack.getMetadataSection(resourceMetadataSerializerRegistry, "pack");
-			int format = metadata.getFormat();
-
-			ResourcePacks.setSupportedFormat(format);
-		} catch (IOException e) {
-			ResourceLoader.LOGGER.info("unable to parse pack format from default resource pack", e);
-		}
-	}
 
 	@Inject(
 		method = "init",

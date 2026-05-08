@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.core.impl.util.NamespacedIdentifierException;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
@@ -28,14 +29,29 @@ public final class ResourcePacks {
 
 	// up until 20w45a (1.17 snapshot) Resource Packs
 	// and Data Packs used the same format number!
-	private static int supportedFormat = 1;
+	private static final int SUPPORTED_FORMAT = resolveSupportedPackFormat();
 
-	public static void setSupportedFormat(int format) {
-		supportedFormat = format;
+	private static int resolveSupportedPackFormat() {
+		MinecraftVersion minecraftVersion = MinecraftVersion.resolve();
+
+		if (minecraftVersion.compareTo("17w48a") >= 0) {
+			return 4;
+		}
+		if (minecraftVersion.compareTo("16w32a") >= 0) {
+			return 3;
+		}
+		if (minecraftVersion.compareTo("15w31a") >= 0) {
+			return 2;
+		}
+		if (minecraftVersion.compareTo("13w26a") >= 0) {
+			return 1;
+		}
+
+		return 0;
 	}
 
 	public static int getSupportedFormat() {
-		return supportedFormat;
+		return SUPPORTED_FORMAT;
 	}
 
 	public static List<Path> getRootPaths(Path path, String directory) {
@@ -147,6 +163,6 @@ public final class ResourcePacks {
 	}
 
 	public static IOSupplier<InputStream> generateMetadataFile(TextComponent description) {
-		return JsonResourceMetadata.asInputStream(new SimpleResourcePackMetadata(supportedFormat, description));
+		return JsonResourceMetadata.asInputStream(new SimpleResourcePackMetadata(SUPPORTED_FORMAT, description));
 	}
 }
