@@ -18,11 +18,11 @@ import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourceConsumer;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 
-class WrappedPack implements ResourcePack {
+public class WrappedPack implements ResourcePack {
 
 	final Pack pack;
 
-	WrappedPack(Pack pack) {
+	public WrappedPack(Pack pack) {
 		this.pack = pack;
 	}
 

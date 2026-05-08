@@ -8,17 +8,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.resource.pack.UnopenedResourcePack;
 import net.minecraft.resource.pack.BuiltInPack;
+import net.minecraft.resource.pack.Pack;
 import net.minecraft.resource.pack.metadata.PackMetadataSection;
 
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
+import net.ornithemc.osl.resource.loader.impl.access.ResourcePacksAccess;
 import net.ornithemc.osl.resource.loader.impl.resource.pack.ResourcePacks;
 
 @Mixin(net.minecraft.client.resource.pack.ResourcePacks.class)
-public class ResourcePacksMixin {
+public class ResourcePacksMixin implements ResourcePacksAccess {
 
 	@Shadow
 	private BuiltInPack defaultPack;
+	@Shadow
+	private UnopenedResourcePack serverPack;
 
 	@Inject(
 		method = "<init>",
@@ -35,5 +40,10 @@ public class ResourcePacksMixin {
 		} catch (IOException e) {
 			ResourceLoader.LOGGER.info("unable to parse pack format from default resource pack", e);
 		}
+	}
+
+	@Override
+	public Pack osl$resource_loader$getServerPack() {
+		return this.serverPack == null ? null : this.serverPack.build();
 	}
 }

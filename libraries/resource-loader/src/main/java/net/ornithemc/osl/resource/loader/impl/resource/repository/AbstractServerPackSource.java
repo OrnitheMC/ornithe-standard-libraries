@@ -21,7 +21,7 @@ public abstract class AbstractServerPackSource implements ServerPackSource {
 	public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
 		SimpleResourcePackRepository.serverPackSource = this;
 
-		this.defaultPack = this.wrapOrCreateDefaultPack();
+		this.defaultPack = this.getOrWrapDefaultPack();
 
 		ResourcePackSummary summary = ResourcePackSummary.create(
 			this.defaultPack,
@@ -38,7 +38,7 @@ public abstract class AbstractServerPackSource implements ServerPackSource {
 		return this.defaultPack;
 	}
 
-	protected abstract ResourcePack wrapOrCreateDefaultPack();
+	protected abstract ResourcePack getOrWrapDefaultPack();
 
 	public void close() {
 		SimpleResourcePackRepository.serverPackSource = null;
