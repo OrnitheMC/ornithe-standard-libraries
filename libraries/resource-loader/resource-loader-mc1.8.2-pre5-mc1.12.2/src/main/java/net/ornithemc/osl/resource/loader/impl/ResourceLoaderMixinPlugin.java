@@ -29,7 +29,7 @@ public class ResourceLoaderMixinPlugin implements IMixinConfigPlugin {
 			return MinecraftVersion.resolve().compareTo("17w13a") >= 0;
 		}
 		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.LegacyResourcePackAccess".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("15w31a") >= 0;
+			return MinecraftVersion.resolve().compareTo("16w32a") >= 0;
 		}
 
 		return true;
