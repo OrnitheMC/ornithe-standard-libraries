@@ -87,6 +87,11 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 		}
 
 		@Override
+		public String getName() {
+			return this.listener.getClass().getSimpleName();
+		}
+
+		@Override
 		public void prepareSharedState(SharedState state) {
 		}
 

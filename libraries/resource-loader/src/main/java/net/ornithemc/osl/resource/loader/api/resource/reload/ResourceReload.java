@@ -6,6 +6,8 @@ import java.util.concurrent.Executor;
 
 import net.ornithemc.osl.core.api.util.Unit;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
+import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
+import net.ornithemc.osl.resource.loader.impl.resource.reload.ProfiledResourceReload;
 import net.ornithemc.osl.resource.loader.impl.resource.reload.SimpleResourceReload;
 
 /**
@@ -19,7 +21,11 @@ public interface ResourceReload {
 	 * @return a new resource reload.
 	 */
 	static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
-		return SimpleResourceReload.of(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
+		if (ResourceLoader.LOGGER.isDebugEnabled()) {
+			return ProfiledResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
+		} else {
+			return SimpleResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
+		}
 	}
 
 	/**

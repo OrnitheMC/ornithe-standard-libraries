@@ -11,6 +11,13 @@ import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 public interface ResourceReloader {
 
 	/**
+	 * @return the name of this resource reloader for logging purposes.
+	 */
+	default String getName() {
+		return this.getClass().getSimpleName();
+	}
+
+	/**
 	 * Prepares the {@linkplain SharedState} that is shared between all reloaders of a resource reload.
 	 * 
 	 * @param state the shared state to be prepared.

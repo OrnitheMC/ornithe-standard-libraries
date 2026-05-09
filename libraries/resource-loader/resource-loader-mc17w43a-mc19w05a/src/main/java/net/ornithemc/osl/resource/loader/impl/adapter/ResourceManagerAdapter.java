@@ -67,6 +67,11 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 		}
 
 		@Override
+		public String getName() {
+			return this.listener.getClass().getSimpleName();
+		}
+
+		@Override
 		public void resourcesReloaded(ResourceManager manager) {
 			if (manager == ResourceManagerAdapter.this.resourceManager) {
 				this.listener.reload(ResourceManagerAdapter.this);

@@ -17,11 +17,11 @@ import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReload;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader.SharedState;
 
-public class SimpleResourceReload<S> implements ResourceReload {
+public class SimpleResourceReload<R> implements ResourceReload {
 
-	public static ResourceReload of(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
+	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
 		SimpleResourceReload<Void> reload = new SimpleResourceReload<>();
-		reload.startTasks(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask);
+		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask);
 		return reload;
 	}
 
@@ -38,16 +38,16 @@ public class SimpleResourceReload<S> implements ResourceReload {
 	private final AtomicInteger finishedApplications = new AtomicInteger();
 
 	private int reloaderCount;
-	private CompletableFuture<List<S>> result;
+	private CompletableFuture<List<R>> result;
 
-	private void startTasks(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<S> taskFactory, CompletableFuture<?> initialTask) {
+	void start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<R> taskFactory, CompletableFuture<?> initialTask) {
 		this.runningReloaders.addAll(reloaders);
 		this.reloaderCount = reloaders.size();
 
-		this.result = this.prepareTasks(manager, reloaders, backgroundExecutor, mainThreadExecutor, taskFactory, initialTask);
+		this.result = this.startTasks(manager, reloaders, backgroundExecutor, mainThreadExecutor, taskFactory, initialTask);
 	}
 
-	private CompletableFuture<List<S>> prepareTasks(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<S> taskFactory, CompletableFuture<?> initialTask) {
+	CompletableFuture<List<R>> startTasks(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<R> taskFactory, CompletableFuture<?> initialTask) {
 		Executor reloadExecutor = r -> {
 			this.startedReloads.incrementAndGet();
 			backgroundExecutor.execute(() -> {
@@ -72,12 +72,12 @@ public class SimpleResourceReload<S> implements ResourceReload {
 			reloader.prepareSharedState(state);
 		}
 
-		List<CompletableFuture<S>> tasks = new ArrayList<>();
+		List<CompletableFuture<R>> tasks = new ArrayList<>();
 		CompletableFuture<?> prevTask = initialTask;
 
 		for (ResourceReloader reloader : reloaders) {
 			ReloadStep previousStep = this.createReloadStep(reloader, prevTask, mainThreadExecutor);
-			CompletableFuture<S> task = taskFactory.createTask(state, previousStep, reloader, reloadExecutor, applyExecutor);
+			CompletableFuture<R> task = taskFactory.createTask(reloader, state, previousStep, reloadExecutor, applyExecutor);
 
 			tasks.add(task);
 			prevTask = task;
@@ -125,12 +125,11 @@ public class SimpleResourceReload<S> implements ResourceReload {
 		return reloads * RELOAD_PROGRESS_WEIGHT + applications * APPLICATION_PROGRESS_WEIGHT + reloaders * RELOADER_PROGRESS_WEIGHT;
 	}
 
-	protected interface TaskFactory<S> {
+	interface TaskFactory<R> {
 
-		TaskFactory<Void> SIMPLE = (state, previousStep, reloader, reloadExecutor, applyExecutor)
-				-> reloader.reloadResources(state, previousStep, reloadExecutor, applyExecutor);
+		TaskFactory<Void> SIMPLE = ResourceReloader::reloadResources;
 
-		CompletableFuture<S> createTask(SharedState state, ReloadStep previousStep, ResourceReloader reloader, Executor reloadExecutor, Executor applyExecutor);
+		CompletableFuture<R> createTask(ResourceReloader reloader, SharedState state, ReloadStep previousStep, Executor reloadExecutor, Executor applyExecutor);
 
 	}
 }
