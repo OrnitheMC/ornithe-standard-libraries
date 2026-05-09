@@ -29,7 +29,7 @@ public class LegacyResourceManager implements ResourceManager {
 
 	@Override
 	public boolean hasResource(String path) {
-		for (int i = 0; i < this.fallbacks.size(); i++) {
+		for (int i = this.fallbacks.size() - 1; i >= 0; i--) {
 			ResourcePack fallback = this.fallbacks.get(i);
 
 			if (fallback.hasResource(path)) {

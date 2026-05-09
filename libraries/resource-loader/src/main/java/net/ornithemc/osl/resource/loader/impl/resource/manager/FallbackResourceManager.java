@@ -95,10 +95,10 @@ public class FallbackResourceManager implements ResourceManager {
 
 			for (int i = this.fallbacks.size() - 1; i >= resourceIndex; i--) {
 				ResourcePack fallback = this.fallbacks.get(i);
-				IOSupplier<InputStream> resource = fallback.getResource(this.type, location);
+				IOSupplier<InputStream> metadata = fallback.getResource(this.type, location);
 
-				if (resource != null) {
-					return JsonResourceMetadata.fromInputStream(resource);
+				if (metadata != null) {
+					return JsonResourceMetadata.fromInputStream(metadata);
 				}
 			}
 
@@ -115,7 +115,7 @@ public class FallbackResourceManager implements ResourceManager {
 			IOSupplier<InputStream> resource = fallback.getResource(this.type, location);
 
 			if (resource != null) {
-				IOSupplier<ResourceMetadata> metadata = this.getResourceMetadata(location, i);
+				IOSupplier<ResourceMetadata> metadata = this.getResourceMetadata(fallback, location);
 				resources.add(new LazyResource(fallback.getId(), location, resource, metadata));
 			}
 		}
@@ -123,15 +123,13 @@ public class FallbackResourceManager implements ResourceManager {
 		return resources;
 	}
 
-	private IOSupplier<ResourceMetadata> getResourceMetadata(NamespacedIdentifier resourceLocation, int resourceIndex) {
+	private IOSupplier<ResourceMetadata> getResourceMetadata(ResourcePack fallback, NamespacedIdentifier resourceLocation) {
 		return () -> {
-			ResourcePack fallback = this.fallbacks.get(resourceIndex);
-
 			NamespacedIdentifier location = ResourcePacks.getMetadataLocation(resourceLocation);
-			IOSupplier<InputStream> resource = fallback.getResource(this.type, location);
+			IOSupplier<InputStream> metadata = fallback.getResource(this.type, location);
 
-			if (resource != null) {
-				return JsonResourceMetadata.fromInputStream(resource);
+			if (metadata != null) {
+				return JsonResourceMetadata.fromInputStream(metadata);
 			}
 
 			return ResourceMetadata.EMPTY;
