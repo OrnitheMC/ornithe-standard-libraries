@@ -173,7 +173,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	public void reload(List<ResourcePack> packs) {
 		ResourceReload reload = this.startReload(packs, Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
 
-		while (!reload.isDone()) {
+		if (reload.isDone()) {
 			reload.checkExceptions();
 		}
 	}
@@ -181,7 +181,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	public void partialReload() {
 		ResourceReload reload = this.startPartialReload(Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
 
-		while (!reload.isDone()) {
+		if (reload.isDone()) {
 			reload.checkExceptions();
 		}
 	}
