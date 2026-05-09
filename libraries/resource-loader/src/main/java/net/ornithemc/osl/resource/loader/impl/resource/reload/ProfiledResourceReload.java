@@ -30,14 +30,14 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
 	};
 
 	private static Executor profileExecutor(Executor executor, AtomicLong taskCount, AtomicLong timeNanos) {
-		return task -> {
+		return task -> executor.execute(() -> {
 			long startNanos = System.nanoTime();
 			task.run();
 			long endNanos = System.nanoTime();
 
 			taskCount.incrementAndGet();
-			timeNanos.addAndGet(startNanos - endNanos);
-		};
+			timeNanos.addAndGet(endNanos - startNanos);
+		});
 	}
 
 	private final Stopwatch stopwatch = Stopwatch.createStarted();
