@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +26,11 @@ public class LegacyResourceManager implements ResourceManager {
 
 	public void add(ResourcePack pack) {
 		this.fallbacks.add(pack);
+	}
+
+	@Override
+	public List<ResourcePack> getResourcePacks() {
+		return Collections.unmodifiableList(this.fallbacks);
 	}
 
 	@Override

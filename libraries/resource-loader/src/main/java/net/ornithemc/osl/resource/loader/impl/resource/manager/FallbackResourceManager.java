@@ -42,6 +42,11 @@ public class FallbackResourceManager implements ResourceManager {
 	}
 
 	@Override
+	public List<ResourcePack> getResourcePacks() {
+		return Collections.unmodifiableList(this.fallbacks);
+	}
+
+	@Override
 	public boolean hasResource(String path) {
 		throw new UnsupportedOperationException("Use LegacyResourceManager!");
 	}

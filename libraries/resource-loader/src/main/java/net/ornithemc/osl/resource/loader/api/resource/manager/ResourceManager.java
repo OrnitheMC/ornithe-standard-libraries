@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
+import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
 
 /**
@@ -30,6 +31,11 @@ public interface ResourceManager {
 	static ReloadableResourceManager server() {
 		return SimpleReloadableResourceManager.server();
 	}
+
+	/**
+	 * @return all loaded resource packs in order.
+	 */
+	List<ResourcePack> getResourcePacks();
 
 	/**
 	 * Checks whether the resource at the given path exists.

@@ -88,6 +88,11 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	}
 
 	@Override
+	public List<ResourcePack> getResourcePacks() {
+		return Collections.unmodifiableList(this.resourcePacks);
+	}
+
+	@Override
 	public boolean hasResource(String path) {
 		return this.legacyResourceManager.hasResource(path);
 	}
