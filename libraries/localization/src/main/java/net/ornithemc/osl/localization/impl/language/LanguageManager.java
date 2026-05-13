@@ -26,7 +26,7 @@ public final class LanguageManager {
 
 	public static final String EN_US = ResourcePacks.getSupportedFormat() < 3 ? "en_US" : "en_us";
 	public static final String DEFAULT_LANGUAGE = EN_US;
-	public static final String BACKUP_LANGUAGE = EN_US;
+	public static final String FALLBACK_LANGUAGE = EN_US;
 
 	private final Locale locale = Locale.instance();
 
@@ -100,8 +100,8 @@ public final class LanguageManager {
 	public void reloadLocale(ResourceManager resourceManager) {
 		List<String> languageCodes = new ArrayList<>();
 
-		if (BACKUP_LANGUAGE.equals(this.selectedLanguage)) {
-			languageCodes.add(BACKUP_LANGUAGE);
+		if (!FALLBACK_LANGUAGE.equals(this.selectedLanguage)) {
+			languageCodes.add(FALLBACK_LANGUAGE);
 		}
 		languageCodes.add(this.selectedLanguage);
 
