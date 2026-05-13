@@ -28,6 +28,9 @@ public class MinecraftMixin {
 	private void osl$resource_loader$initPackRepository(CallbackInfo ci) {
 		this.packRepository = SimpleResourcePackRepository.client();
 
+		this.packRepository.reset();
+		this.packRepository.setCallbacks(null, null);
+
 		this.packRepository.addSource(new ClientResourcePacks());
 		this.packRepository.addSource(new BundledModResourcePacks());
 //		this.packRepository.addSource(new DirectoryResourcePackSource()); // TODO

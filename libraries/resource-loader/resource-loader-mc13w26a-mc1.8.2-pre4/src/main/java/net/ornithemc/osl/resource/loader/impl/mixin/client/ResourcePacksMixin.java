@@ -34,9 +34,9 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 	private List<ResourcePacks.Entry> appliedPacks;
 
 	@Unique
-	private final SimpleResourcePackRepository resourcePacks = SimpleResourcePackRepository.client();
+	private SimpleResourcePackRepository packRepository;
 	@Unique
-	private final Map<String, ResourcePacks.Entry> availablePacksById = new HashMap<>();
+	private Map<String, ResourcePacks.Entry> availablePacksById;
 
 	@Unique
 	private boolean vanillaReloading;
@@ -54,13 +54,17 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 		)
 	)
 	private void osl$resource_loader$initAvailable(CallbackInfo ci) {
-		this.resourcePacks.setCallbacks(null, this::selectionChanged);
+		this.packRepository = SimpleResourcePackRepository.client();
+		this.availablePacksById = new HashMap<>();
 
-		this.resourcePacks.addSource(new ClientResourcePacks((ResourcePacks) (Object) this));
-		this.resourcePacks.addSource(new BundledModResourcePacks());
-		this.resourcePacks.addSource(this); // resourcepacks/ directory source
+		this.packRepository.reset();
+		this.packRepository.setCallbacks(null, this::selectionChanged);
 
-		this.resourcePacks.init();
+		this.packRepository.addSource(new ClientResourcePacks((ResourcePacks) (Object) this));
+		this.packRepository.addSource(new BundledModResourcePacks());
+		this.packRepository.addSource(this); // resourcepacks/ directory source
+
+		this.packRepository.init();
 	}
 
 	@Inject(
@@ -85,7 +89,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 			this.vanillaReloading = true;
 
 			if (!this.reloading) {
-				this.resourcePacks.reload();
+				this.packRepository.reload();
 
 				// cancel this call as the pack repository will trigger
 				// another recursive call through this.loadResourcePacks
@@ -147,14 +151,14 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 			selection.add(WrappedResourcePack.getId(pack.get()));
 		}
 
-		this.resourcePacks.setSelectedPacks(selection);
+		this.packRepository.setSelectedPacks(selection);
 	}
 
 	@Unique
 	private void selectionChanged() {
 		this.appliedPacks.clear();
 
-		for (ResourcePackSummary summary : this.resourcePacks.getSelectedPacks()) {
+		for (ResourcePackSummary summary : this.packRepository.getSelectedPacks()) {
 			ResourcePacks.Entry pack = this.availablePacksById.get(summary.getId());
 
 			if (pack != null) {

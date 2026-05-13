@@ -46,6 +46,8 @@ public class MinecraftServerMixin {
 	private void osl$resource_loader$setPackRepository(CallbackInfo ci) {
 		this.actualPackRepository = SimpleResourcePackRepository.server();
 		this.packRepository = new ResourcePackRepositoryAdapter<>(this.packRepository.factory, this.actualPackRepository);
+
+		this.actualPackRepository.reset();
 	}
 
 	@Inject(
@@ -60,6 +62,8 @@ public class MinecraftServerMixin {
 	private void osl$resource_loader$setResourceManager(CallbackInfo ci) {
 		this.actualResourceManager = SimpleReloadableResourceManager.server();
 		this.resourceManager = new ResourceManagerAdapter(this.actualResourceManager);
+
+		this.actualResourceManager.reset();
 	}
 
 	@Inject(

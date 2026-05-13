@@ -72,6 +72,14 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		}
 	}
 
+	public void reset() {
+		this.registeredReloaders.clear();
+		this.recentlyRegisteredReloaders.clear();
+		this.resourcePacks.clear();
+		this.resourceManagers.clear();
+		this.legacyResourceManager.clear();
+	}
+
 	public void add(ResourcePack pack) {
 		this.resourcePacks.add(pack);
 

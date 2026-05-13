@@ -42,6 +42,7 @@ public class TextureManagerMixin implements ResourceReloadListener {
 		this.packRepository = SimpleResourcePackRepository.client();
 		this.resourceManager = SimpleReloadableResourceManager.client();
 
+		this.resourceManager.reset();
 		// ensure the selected packs have been applied
 		this.resourceManager.reload(this.packRepository.openSelectedPacks());
 

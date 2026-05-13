@@ -36,7 +36,7 @@ public class MinecraftMixin {
 	private ReloadableResourceManager resourceManager;
 
 	@Unique
-	private final SimpleReloadableResourceManager actualResourceManager = SimpleReloadableResourceManager.client();
+	private SimpleReloadableResourceManager actualResourceManager;
 
 	@Inject(
 		method = "init",
@@ -48,7 +48,10 @@ public class MinecraftMixin {
 		)
 	)
 	private void osl$resource_loader$setResourceManager(CallbackInfo ci) {
+		this.actualResourceManager = SimpleReloadableResourceManager.client();
 		this.resourceManager = new ResourceManagerAdapter(this.resourceMetadataSerializerRegistry, this.actualResourceManager);
+
+		this.actualResourceManager.reset();
 	}
 
 	@Inject(

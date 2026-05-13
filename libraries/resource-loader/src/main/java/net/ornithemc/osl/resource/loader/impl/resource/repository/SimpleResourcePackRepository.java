@@ -78,6 +78,18 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 		}
 	}
 
+	public void reset() {
+		this.close();
+
+		this.sources.clear();
+		this.packs.clear();
+		this.available.clear();
+		this.selected.clear();
+
+		this.discoveryCallback = null;
+		this.selectionCallback = null;
+	}
+
 	@Override
 	public void addSource(Source source) {
 		this.sources.add(source);

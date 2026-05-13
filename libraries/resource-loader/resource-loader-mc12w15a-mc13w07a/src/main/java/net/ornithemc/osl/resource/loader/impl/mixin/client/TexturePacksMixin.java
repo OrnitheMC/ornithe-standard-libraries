@@ -44,7 +44,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private TexturePack selected;
 
 	@Unique
-	private SimpleResourcePackRepository resourcePacks;
+	private SimpleResourcePackRepository packRepository;
 	@Unique
 	private TexturePack resourceManager;
 	@Unique
@@ -68,19 +68,20 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		)
 	)
 	private void osl$resource_loader$initResourcePackRepository(CallbackInfo ci) {
-		this.resourcePacks = SimpleResourcePackRepository.client();
+		this.packRepository = SimpleResourcePackRepository.client();
 		// wrap the ResourceManager into a texture pack, and set this as selected
 		// this way we don't have to redirect every call to TexturePack::getResource!
 		this.resourceManager = new ResourceManagerAdapter(ResourceManager.client());
 		this.availablePacksById = new HashMap<>();
 
-		this.resourcePacks.setCallbacks(null, this::selectionChanged);
+		this.packRepository.reset();
+		this.packRepository.setCallbacks(null, this::selectionChanged);
 
-		this.resourcePacks.addSource(new ClientResourcePacks((TexturePacks) (Object) this));
-		this.resourcePacks.addSource(new BundledModResourcePacks());
-		this.resourcePacks.addSource(this); // texturepacks/ directory source
+		this.packRepository.addSource(new ClientResourcePacks((TexturePacks) (Object) this));
+		this.packRepository.addSource(new BundledModResourcePacks());
+		this.packRepository.addSource(this); // texturepacks/ directory source
 
-		this.resourcePacks.init();
+		this.packRepository.init();
 	}
 
 	@Inject(
@@ -119,7 +120,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 			this.vanillaReloading = true;
 
 			if (!this.reloading) {
-				this.resourcePacks.reload();
+				this.packRepository.reload();
 
 				// cancel this call as the pack repository will trigger
 				// another recursive call through this.loadResourcePacks
@@ -196,9 +197,9 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	@Unique
 	private void selectPack(TexturePack pack) {
 		if (pack == null || pack == DEFAULT_PACK || this.hasServerPack()) {
-			this.resourcePacks.setSelectedPacks(Collections.emptyList());
+			this.packRepository.setSelectedPacks(Collections.emptyList());
 		} else {
-			this.resourcePacks.setSelectedPacks(Collections.singletonList(WrappedTexturePack.getId(pack)));
+			this.packRepository.setSelectedPacks(Collections.singletonList(WrappedTexturePack.getId(pack)));
 		}
 
 		this.actuallySelected = pack;
@@ -209,7 +210,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private void selectionChanged() {
 		this.actuallySelected = DEFAULT_PACK;
 
-		for (ResourcePackSummary summary : this.resourcePacks.getSelectedPacks()) {
+		for (ResourcePackSummary summary : this.packRepository.getSelectedPacks()) {
 			TexturePack pack = this.availablePacksById.get(summary.getId());
 
 			if (pack != null) {
