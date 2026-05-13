@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import net.ornithemc.osl.localization.api.language.Language;
 import net.ornithemc.osl.localization.impl.language.LanguageManager;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
-import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 
 public final class Localization {
 
@@ -34,7 +33,7 @@ public final class Localization {
 	}
 
 	public static void reloadLanguageManager() {
-		languageManager.reload(ResourcePackRepository.client().openSelectedPacks());
+		languageManager.reload(ResourceManager.client().getResourcePacks());
 	}
 
 	public static void reloadLocale() {
