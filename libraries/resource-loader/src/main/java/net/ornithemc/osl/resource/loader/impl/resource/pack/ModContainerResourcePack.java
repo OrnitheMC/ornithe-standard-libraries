@@ -1,6 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.resource.pack;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
@@ -12,27 +13,31 @@ import net.fabricmc.loader.api.ModContainer;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
 
-class ModContainerResourcePack extends PathResourcePack {
+public abstract class ModContainerResourcePack extends PathResourcePack {
 
-	final ModContainer mod;
-	final String directory;
+	protected final ModContainer mod;
+	protected final String directory;
 
-	private final String id;
 	private final String name;
 
-	ModContainerResourcePack(ModContainer mod) {
-		this(mod, ".", mod.getMetadata().getId(), mod.getMetadata().getName());
-	}
+	private final IOSupplier<InputStream> metadata;
+	private final IOSupplier<InputStream> icon;
 
-	ModContainerResourcePack(ModContainer mod, String directory, String id, String name) {
+	public ModContainerResourcePack(ModContainer mod, String directory, String name) {
 		this.mod = mod;
 		this.directory = directory;
 
-		this.id = id;
 		this.name = name;
+
+		this.metadata = this.generateMetadataFile();
+		this.icon = this.generateIconFile();
 	}
 
-	static IOSupplier<InputStream> getIcon(String modId) {
+	protected abstract IOSupplier<InputStream> generateMetadataFile();
+
+	protected abstract IOSupplier<InputStream> generateIconFile();
+
+	protected static IOSupplier<InputStream> getIcon(String modId) {
 		Optional<ModContainer> mod = FabricLoader.getInstance().getModContainer(modId);
 
 		if (mod.isPresent()) {
@@ -42,7 +47,7 @@ class ModContainerResourcePack extends PathResourcePack {
 		}
 	}
 
-	static IOSupplier<InputStream> getIcon(ModContainer mod) {
+	protected static IOSupplier<InputStream> getIcon(ModContainer mod) {
 		Optional<String> pathName = mod.getMetadata().getIconPath(128);
 		Optional<Path> path = pathName.flatMap(mod::findPath);
 
@@ -61,12 +66,23 @@ class ModContainerResourcePack extends PathResourcePack {
 	}
 
 	@Override
-	public String getId() {
-		return "mod/" + this.id;
+	public String getName() {
+		return this.name;
 	}
 
 	@Override
-	public String getName() {
-		return this.name;
+	public InputStream getResource(String path) throws IOException {
+		try {
+			return super.getResource(path);
+		} catch (FileNotFoundException e) {
+			if (METADATA_FILE.equals(path)) {
+				return this.metadata.get();
+			}
+			if (ICON_FILE.equals(path)) {
+				return this.icon.get();
+			}
+
+			throw e;
+		}
 	}
 }

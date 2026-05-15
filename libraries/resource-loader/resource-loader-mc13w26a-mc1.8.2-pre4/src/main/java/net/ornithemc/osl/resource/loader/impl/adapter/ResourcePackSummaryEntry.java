@@ -1,37 +1,33 @@
 package net.ornithemc.osl.resource.loader.impl.adapter;
 
-import java.io.IOException;
+import java.io.InputStream;
 
 import net.minecraft.client.gui.screen.ResourcePacksScreen;
 import net.minecraft.client.gui.screen.resourcepack.ResourcePackEntry;
 import net.minecraft.client.render.texture.DynamicTexture;
 import net.minecraft.client.render.texture.TextureUtil;
-import net.minecraft.client.resource.pack.ResourcePack;
 import net.minecraft.resource.Identifier;
 
+import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 
 class ResourcePackSummaryEntry extends ResourcePackEntry {
 
 	private final ResourcePackSummary summary;
-	private final ResourcePack pack;
-
 	private final Identifier iconLocation;
 
 	ResourcePackSummaryEntry(ResourcePacksScreen parent, ResourcePackSummary summary) {
 		super(parent);
 
-		this.summary = summary;
-		this.pack = Adapters.resourcePack(summary.open());
-
 		DynamicTexture icon;
 
-		try {
-			icon = new DynamicTexture(this.pack.getIcon());
-		} catch (IOException e) {
+		try (InputStream is = summary.open().getResource(ResourcePack.ICON_FILE)) {
+			icon = new DynamicTexture(TextureUtil.readImage(is));
+		} catch (Throwable t) {
 			icon = TextureUtil.MISSING_TEXTURE;
 		}
 
+		this.summary = summary;
 		this.iconLocation = this.minecraft.getTextureManager().register("texturepackicon", icon);
 	}
 

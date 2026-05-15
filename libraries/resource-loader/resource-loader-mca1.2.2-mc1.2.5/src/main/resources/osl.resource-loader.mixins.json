@@ -7,12 +7,14 @@
 	"mixins": [
 	],
 	"client": [
+		"client.DirectoryTexturePackAccess",
 		"client.DirectoryTexturePackMixin",
 		"client.TextureManagerMixin",
 		"client.TexturePackListMixin",
 		"client.TexturePackMixin",
 		"client.TexturePacksMixin",
-		"client.TexturePacksScreenMixin"
+		"client.TexturePacksScreenMixin",
+		"client.ZippedTexturePackAccess"
 	],
 	"server": [
 	],

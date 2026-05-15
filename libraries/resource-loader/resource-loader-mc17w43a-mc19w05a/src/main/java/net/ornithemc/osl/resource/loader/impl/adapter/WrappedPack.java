@@ -8,7 +8,6 @@ import java.util.Set;
 import com.google.gson.JsonObject;
 
 import net.minecraft.client.resource.metadata.serializer.ResourceMetadataSerializer;
-import net.minecraft.resource.pack.BuiltInPack;
 import net.minecraft.resource.pack.Pack;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -24,11 +23,6 @@ public class WrappedPack implements ResourcePack {
 
 	public WrappedPack(Pack pack) {
 		this.pack = pack;
-	}
-
-	@Override
-	public String getId() {
-		return this.pack instanceof BuiltInPack ? this.pack.getName() : "resourcepack/" + this.pack.getName();
 	}
 
 	@Override

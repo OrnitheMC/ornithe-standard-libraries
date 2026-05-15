@@ -1,10 +1,10 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,15 +14,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.resource.pack.CustomResourcePack;
 import net.minecraft.client.resource.pack.ResourcePacks;
 
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
+import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedResourcePack;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.BundledModResourcePacks;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.DirectoryPackSource;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
 @Mixin(ResourcePacks.class)
@@ -32,6 +35,10 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 	private List<ResourcePacks.Entry> availablePacks;
 	@Shadow @Final
 	private List<ResourcePacks.Entry> appliedPacks;
+	@Shadow @Final
+	private net.minecraft.client.resource.pack.ResourcePack defaultPack;
+	@Shadow
+	private net.minecraft.client.resource.pack.ResourcePack serverPack;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -130,6 +137,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 			ResourcePack resourcePack = new WrappedResourcePack(pack.get());
 			ResourcePackSummary summary = ResourcePackSummary.create(
 				resourcePack,
+				this.packId(pack),
 				false,
 				false,
 				PackPosition.TOP
@@ -145,13 +153,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 
 	@Unique
 	private void updateSelection() {
-		List<String> selection = new ArrayList<>();
-
-		for (ResourcePacks.Entry pack : this.appliedPacks) {
-			selection.add(WrappedResourcePack.getId(pack.get()));
-		}
-
-		this.packRepository.setSelectedPacks(selection);
+		this.packRepository.setSelectedPacks(this.appliedPacks.stream().map(this::packId).collect(Collectors.toList()));
 	}
 
 	@Unique
@@ -161,9 +163,25 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 		for (ResourcePackSummary summary : this.packRepository.getSelectedPacks()) {
 			ResourcePacks.Entry pack = this.availablePacksById.get(summary.getId());
 
+			// vanilla and server packs are handled separately
 			if (pack != null) {
 				this.appliedPacks.add(pack);
 			}
+		}
+	}
+
+	@Unique
+	private String packId(ResourcePacks.Entry unopenedPack) {
+		net.minecraft.client.resource.pack.ResourcePack pack = unopenedPack.get();
+
+		if (pack == this.defaultPack) {
+			return ClientPackSource.DEFAULT_PACK_ID;
+		} else if (pack == this.serverPack) {
+			return ClientPackSource.SERVER_PACK_ID;
+		} else if (pack instanceof CustomResourcePack) {
+			return DirectoryPackSource.packId(((CustomResourcePackAccess) pack).accessFile().toPath());
+		} else {
+			return "resourcepack/" + pack.getName();
 		}
 	}
 }

@@ -8,7 +8,8 @@ import java.util.function.Consumer;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-
+	
+import net.ornithemc.osl.core.impl.util.ModLoader;
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
@@ -17,6 +18,8 @@ import net.ornithemc.osl.resource.loader.impl.resource.pack.BuiltInModResourcesP
 import net.ornithemc.osl.resource.loader.impl.resource.pack.ModResourcePack;
 
 public class BundledModResourcePacks implements ResourcePackRepository.Source {
+
+	public static final String BUILT_IN_MOD_RESOURCES_ID = ModLoader.resolve().id() + "-mod-resources";
 
 	private static final Map<String, CustomModResources> CUSTOM_MOD_RESOURCES = new LinkedHashMap<>();
 
@@ -43,6 +46,7 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 		ResourcePack compositePack = new BuiltInModResourcesPack(packs);
 		ResourcePackSummary compositeSummary = ResourcePackSummary.create(
 			compositePack,
+			BUILT_IN_MOD_RESOURCES_ID,
 			true,
 			false,
 			PackPosition.BOTTOM
@@ -54,6 +58,7 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 			ResourcePack pack = customResources.buildResourcePack();
 			ResourcePackSummary summary = ResourcePackSummary.create(
 				pack,
+				customResources.id,
 				true,
 				false,
 				PackPosition.BOTTOM
@@ -80,7 +85,7 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 		}
 
 		ResourcePack buildResourcePack() {
-			return new ModResourcePack(this.mod, this.directory, this.id, this.name);
+			return new ModResourcePack(this.mod, this.directory, this.name);
 		}
 	}
 }

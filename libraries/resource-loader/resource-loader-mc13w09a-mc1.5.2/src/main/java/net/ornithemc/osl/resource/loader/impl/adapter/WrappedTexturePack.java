@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.client.resource.pack.BuiltInTexturePack;
 import net.minecraft.client.resource.pack.TexturePack;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -35,15 +34,6 @@ public class WrappedTexturePack extends AbstractResourcePack {
 		this.metadata = ResourcePacks.generateMetadataFile(
 			TextComponents.literal(description)
 		);
-	}
-
-	public static String getId(TexturePack pack) {
-		return pack instanceof BuiltInTexturePack ? pack.getName() : "texturepack/" + pack.getKey();
-	}
-
-	@Override
-	public String getId() {
-		return getId(this.pack);
 	}
 
 	@Override

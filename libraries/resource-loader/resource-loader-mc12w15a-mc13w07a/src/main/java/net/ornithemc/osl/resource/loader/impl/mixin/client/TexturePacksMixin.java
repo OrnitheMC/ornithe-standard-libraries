@@ -15,12 +15,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.resource.pack.DirectoryTexturePack;
 import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
+import net.minecraft.client.resource.pack.ZippedTexturePack;
 
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
+import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
@@ -28,6 +31,7 @@ import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedTexturePack;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.BundledModResourcePacks;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.DirectoryPackSource;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
 @Mixin(TexturePacks.class)
@@ -160,6 +164,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 			ResourcePack resourcePack = new WrappedTexturePack(pack);
 			ResourcePackSummary summary = ResourcePackSummary.create(
 				resourcePack,
+				this.packId(pack),
 				false,
 				false,
 				PackPosition.TOP
@@ -194,16 +199,16 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		return ClientResourcePacks.SERVER_TEXTURES_SUPPORTED && ((TexturePacks) (Object) this).hasServerTextures();
 	}
 
-	@Unique
+	@Unique // TODO: call from the server pack download callback
 	private void selectPack(TexturePack pack) {
+		this.actuallySelected = pack;
+		this.selected = this.resourceManager;
+
 		if (pack == null || pack == DEFAULT_PACK || this.hasServerPack()) {
 			this.packRepository.setSelectedPacks(Collections.emptyList());
 		} else {
-			this.packRepository.setSelectedPacks(Collections.singletonList(WrappedTexturePack.getId(pack)));
+			this.packRepository.setSelectedPacks(Collections.singletonList(this.packId(pack)));
 		}
-
-		this.actuallySelected = pack;
-		this.selected = this.resourceManager;
 	}
 
 	@Unique
@@ -213,9 +218,23 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		for (ResourcePackSummary summary : this.packRepository.getSelectedPacks()) {
 			TexturePack pack = this.availablePacksById.get(summary.getId());
 
+			// vanilla and server packs are handled separately
 			if (pack != null) {
 				this.actuallySelected = pack;
 			}
+		}
+	}
+
+	@Unique
+	private String packId(TexturePack pack) {
+		if (pack == DEFAULT_PACK) {
+			return ClientPackSource.DEFAULT_PACK_ID;
+		} else if (pack == this.actuallySelected && this.hasServerPack()) {
+			return ClientPackSource.SERVER_PACK_ID;
+		} else if (pack instanceof ZippedTexturePack || pack instanceof DirectoryTexturePack) {
+			return DirectoryPackSource.packId(((AbstractTexturePackAccess) pack).accessFile().toPath());
+		} else {
+			return "texturepack/" + pack.getName();
 		}
 	}
 }

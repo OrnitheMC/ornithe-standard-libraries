@@ -12,17 +12,17 @@ import net.ornithemc.osl.text.api.TextComponents;
 
 class WrappedUnopenedPack implements ResourcePackSummary {
 
-	final UnopenedPack pack;
+	final UnopenedPack unopenedPack;
 
 	WrappedUnopenedPack(UnopenedPack pack) {
-		this.pack = pack;
+		this.unopenedPack = pack;
 	}
 
 	@Override
 	public TextComponent getTitle() {
-		if (this.pack instanceof UnopenedResourcePack) {
+		if (this.unopenedPack instanceof UnopenedResourcePack) {
 			// TODO: convert Vanilla Text -> OSL TextComponent
-			return TextComponents.literal(((UnopenedResourcePack) this.pack).getTitle().getFormattedString());
+			return TextComponents.literal(((UnopenedResourcePack) this.unopenedPack).getTitle().getFormattedString());
 		}
 
 		return null;
@@ -30,9 +30,9 @@ class WrappedUnopenedPack implements ResourcePackSummary {
 
 	@Override
 	public TextComponent getDescription() {
-		if (this.pack instanceof UnopenedResourcePack) {
+		if (this.unopenedPack instanceof UnopenedResourcePack) {
 			// TODO: convert Vanilla Text -> OSL TextComponent
-			return TextComponents.literal(((UnopenedResourcePack) this.pack).getDescription().getFormattedString());
+			return TextComponents.literal(((UnopenedResourcePack) this.unopenedPack).getDescription().getFormattedString());
 		}
 
 		return null;
@@ -40,36 +40,36 @@ class WrappedUnopenedPack implements ResourcePackSummary {
 
 	@Override
 	public String getId() {
-		return this.pack.getId();
+		return this.unopenedPack.getId();
 	}
 
 	@Override
 	public boolean isRequired() {
-		return this.pack.isRequired();
+		return this.unopenedPack.isRequired();
 	}
 
 	@Override
 	public boolean isFixedPosition() {
-		return this.pack.isFixed();
+		return this.unopenedPack.isFixed();
 	}
 
 	@Override
 	public PackPosition getDefaultPosition() {
-		return Adapters.packPosition(this.pack.getPosition());
+		return Adapters.packPosition(this.unopenedPack.getPosition());
 	}
 
 	@Override
 	public PackCompatibility getCompatibility() {
-		return Adapters.packCompatibility(this.pack.getCompatibility());
+		return Adapters.packCompatibility(this.unopenedPack.getCompatibility());
 	}
 
 	@Override
 	public ResourcePack open() {
-		return Adapters.resourcePack(this.pack.build());
+		return new WrappedPack(this.unopenedPack.build());
 	}
 
 	@Override
 	public void close() {
-		this.pack.close();
+		this.unopenedPack.close();
 	}
 }

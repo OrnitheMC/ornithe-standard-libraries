@@ -8,6 +8,11 @@ import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 public interface ServerPackSource extends ResourcePackRepository.Source {
 
 	/**
+	 * The resource pack ID for Vanilla's built-in data.
+	 */
+	String DEFAULT_PACK_ID = "vanilla";
+
+	/**
 	 * @return the built-in resource pack for the default behavior of Minecraft;
 	 */
 	ResourcePack getDefaultResourcePack();

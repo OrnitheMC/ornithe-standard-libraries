@@ -1,24 +1,29 @@
 package net.ornithemc.osl.resource.loader.impl.adapter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.minecraft.resource.Identifier;
-import net.minecraft.resource.Resource;
 import net.minecraft.resource.pack.Pack;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.resource.loader.api.resource.Resource;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
+import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
 
 public class ResourceManagerAdapter implements net.minecraft.resource.manager.ReloadableResourceManager {
 
-	final SimpleReloadableResourceManager resourceManager;
+	private final SimpleReloadableResourceManager resourceManager;
 
 	public ResourceManagerAdapter(SimpleReloadableResourceManager resourceManager) {
 		this.resourceManager = resourceManager;
@@ -30,13 +35,13 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 	}
 
 	@Override
-	public Resource getResource(Identifier location) throws IOException {
-		return Adapters.resource((NamespacedIdentifier) location, this.resourceManager.getResource((NamespacedIdentifier) location));
+	public net.minecraft.resource.Resource getResource(Identifier location) throws IOException {
+		return this.wrapResource((NamespacedIdentifier) location, this.resourceManager.getResource((NamespacedIdentifier) location));
 	}
 
 	@Override
-	public List<Resource> getResources(Identifier location) throws IOException {
-		return Adapters.resources(this.resourceManager.getResourceStack((NamespacedIdentifier) location));
+	public List<net.minecraft.resource.Resource> getResources(Identifier location) throws IOException {
+		return this.wrapResources(this.resourceManager.getResourceStack((NamespacedIdentifier) location));
 	}
 
 	@Override
@@ -51,7 +56,37 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public void reload(List<Pack> packs) {
-		this.resourceManager.reload(Adapters.resourcePacks(packs));
+		this.resourceManager.reload(this.wrapPacks(packs));
+	}
+
+	private net.minecraft.resource.Resource wrapResource(NamespacedIdentifier location, Optional<Resource> resource) throws IOException {
+		if (resource.isPresent()) {
+			return new ResourceAdapter(resource.get());
+		}
+
+		throw new FileNotFoundException(location.toString());
+	}
+
+	private List<net.minecraft.resource.Resource> wrapResources(List<Resource> resources) throws IOException {
+		List<net.minecraft.resource.Resource> wrappedResources = new ArrayList<>();
+
+		for (Resource resource : resources) {
+			wrappedResources.add(new ResourceAdapter(resource));
+		}
+
+		return Collections.unmodifiableList(wrappedResources);
+	}
+
+	private ResourcePack wrapPack(Pack pack) {
+		if (pack instanceof ResourcePackAdapter) {
+			return ((ResourcePackAdapter) pack).pack;
+		} else {
+			return new WrappedPack(pack);
+		}
+	}
+
+	private List<ResourcePack> wrapPacks(List<Pack> packs) {
+		return packs.stream().map(this::wrapPack).collect(Collectors.toList());
 	}
 
 	private class WrappedResourceReloadListener implements ResourceReloadListener {

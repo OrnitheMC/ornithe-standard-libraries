@@ -22,11 +22,6 @@ public interface ResourcePack extends AutoCloseable {
 	String ICON_FILE = "pack.png";
 
 	/**
-	 * @return the ID of this resource pack.
-	 */
-	String getId();
-
-	/**
 	 * @return the name of this resource pack.
 	 */
 	String getName();

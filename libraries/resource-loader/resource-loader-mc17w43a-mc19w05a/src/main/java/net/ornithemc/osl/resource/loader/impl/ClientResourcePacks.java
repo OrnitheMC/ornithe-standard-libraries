@@ -21,7 +21,7 @@ public class ClientResourcePacks extends AbstractClientPackSource {
 	@Override
 	protected ResourcePack getOrWrapServerPack() {
 		if (((ResourcePacksAccess) this.resourcePacks).osl$resource_loader$getServerPack() != null) {
-			return new WrappedPack(((ResourcePacksAccess) this.resourcePacks).osl$resource_loader$getServerPack()); // TODO
+			return new WrappedPack(((ResourcePacksAccess) this.resourcePacks).osl$resource_loader$getServerPack());
 		} else {
 			return null;
 		}

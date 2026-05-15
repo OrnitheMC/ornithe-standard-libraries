@@ -25,6 +25,7 @@ public abstract class AbstractServerPackSource implements ServerPackSource {
 
 		ResourcePackSummary summary = ResourcePackSummary.create(
 			this.defaultPack,
+			DEFAULT_PACK_ID,
 			false,
 			false,
 			PackPosition.BOTTOM

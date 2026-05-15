@@ -27,6 +27,7 @@ public abstract class AbstractClientPackSource implements ClientPackSource {
 
 		ResourcePackSummary summary = ResourcePackSummary.create(
 			this.defaultPack,
+			DEFAULT_PACK_ID,
 			true,
 			false,
 			PackPosition.BOTTOM
@@ -37,6 +38,7 @@ public abstract class AbstractClientPackSource implements ClientPackSource {
 		if (this.serverPack != null) {
 			ResourcePackSummary serverSummary = ResourcePackSummary.create(
 				this.serverPack,
+				SERVER_PACK_ID,
 				true,
 				true,
 				PackPosition.TOP

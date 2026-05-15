@@ -2,7 +2,9 @@ package net.ornithemc.osl.resource.loader.impl.adapter;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import net.minecraft.resource.pack.repository.PackRepository;
@@ -16,60 +18,89 @@ import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSum
 public class ResourcePackRepositoryAdapter<T extends UnopenedPack> extends PackRepository<T> {
 
 	private final UnopenedPack.Factory<T> factory;
-	private final Map<String, T> packs;
+	private final Map<String, T> unopenedPacks;
 
-	final ResourcePackRepository repository;
+	final ResourcePackRepository packRepository;
 
 	public ResourcePackRepositoryAdapter(Factory<T> factory, ResourcePackRepository repository) {
 		super(factory);
 
 		this.factory = factory;
-		this.packs = new HashMap<>();
+		this.unopenedPacks = new HashMap<>();
 
-		this.repository = repository;
-	}
-
-	private T summaryToPack(ResourcePackSummary summary) {
-		return this.packs.get(summary.getId());
+		this.packRepository = repository;
 	}
 
 	@Override
 	public void reload() {
-		this.packs.clear();
-		this.repository.reload();
+		this.unopenedPacks.clear();
+		this.packRepository.reload();
 
-		for (ResourcePackSummary summary : this.repository.getAvailablePacks()) {
-			this.packs.put(summary.getId(), Adapters.unopenedPack(summary, this.factory));
+		for (ResourcePackSummary summary : this.packRepository.getAvailablePacks()) {
+			this.unopenedPacks.put(summary.getId(), this.wrapSummary(summary));
 		}
 	}
 
 	@Override
 	public void select(Collection<T> packs) {
-		this.repository.setSelectedPacks(packs.stream().map(T::getId).collect(Collectors.toList()));
+		this.packRepository.setSelectedPacks(packs.stream().map(T::getId).collect(Collectors.toList()));
 	}
 
 	@Override
 	public Collection<T> getAvailable() {
-		return this.repository.getAvailablePacks().stream().map(this::summaryToPack).collect(Collectors.toList());
+		return this.packRepository.getAvailablePacks().stream().map(ResourcePackSummary::getId).map(this.unopenedPacks::get).collect(Collectors.toList());
 	}
 
 	@Override
 	public Collection<T> getUnselected() {
-		return this.repository.getUnselectedPacks().stream().map(this::summaryToPack).collect(Collectors.toList());
+		return this.packRepository.getUnselectedPacks().stream().map(ResourcePackSummary::getId).map(this.unopenedPacks::get).collect(Collectors.toList());
 	}
 
 	@Override
 	public Collection<T> getSelected() {
-		return this.repository.getSelectedPacks().stream().map(this::summaryToPack).collect(Collectors.toList());
+		return this.packRepository.getSelectedPacks().stream().map(ResourcePackSummary::getId).map(this.unopenedPacks::get).collect(Collectors.toList());
 	}
 
 	@Override
 	public T getPack(String id) {
-		return this.packs.get(id);
+		return this.unopenedPacks.get(id);
 	}
 
 	@Override
 	public void addSource(RepositorySource source) {
-		this.repository.addSource(new WrappedRepositorySource<>(this.factory, source));
+		this.packRepository.addSource(new WrappedRepositorySource(source));
+	}
+
+	@SuppressWarnings("unchecked")
+	private T wrapSummary(ResourcePackSummary summary) {
+		if (summary instanceof WrappedUnopenedPack) {
+			return (T) ((WrappedUnopenedPack) summary).unopenedPack;
+		} else {
+			return UnopenedPack.create(
+				summary.getId(),
+				summary.isRequired(),
+				() -> new ResourcePackAdapter(summary.open()),
+				this.factory,
+				Adapters.position(summary.getDefaultPosition())
+			);
+		}
+	}
+
+	private class WrappedRepositorySource implements ResourcePackRepository.Source {
+
+		private final RepositorySource source;
+
+		private WrappedRepositorySource(RepositorySource source) {
+			this.source = source;
+		}
+
+		@Override
+		public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
+			Map<String, T> packs = new LinkedHashMap<>();
+			this.source.loadPacks(packs, ResourcePackRepositoryAdapter.this.factory);
+			packs.values().forEach(pack -> {
+				consumer.accept(new WrappedUnopenedPack(pack));
+			});
+		}
 	}
 }

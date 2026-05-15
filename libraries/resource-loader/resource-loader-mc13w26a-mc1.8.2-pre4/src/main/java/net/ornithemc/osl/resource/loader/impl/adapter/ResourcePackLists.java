@@ -20,7 +20,7 @@ public final class ResourcePackLists {
 	public static void fixSelection(List<net.minecraft.client.resource.pack.ResourcePack> packs, boolean reversed) {
 		fixSelection(
 			packs,
-			(summary, pack) -> Adapters.resourcePack(pack),
+			(summary, pack) -> new ResourcePackAdapter(pack),
 			reversed
 		);
 	}

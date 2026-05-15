@@ -7,6 +7,7 @@ import net.ornithemc.osl.resource.loader.impl.resource.repository.AbstractClient
 
 public class ClientResourcePacks extends AbstractClientPackSource {
 
+	// TODO: add programmer_art pack
 	private final net.minecraft.client.resource.pack.ResourcePacks resourcePacks;
 
 	public ClientResourcePacks(net.minecraft.client.resource.pack.ResourcePacks resourcePacks) {

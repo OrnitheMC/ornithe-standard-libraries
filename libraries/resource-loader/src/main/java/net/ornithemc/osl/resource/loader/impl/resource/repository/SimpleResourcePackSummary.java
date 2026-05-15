@@ -14,8 +14,8 @@ import net.ornithemc.osl.text.api.TextComponents;
 
 public class SimpleResourcePackSummary implements ResourcePackSummary {
 
-	public static ResourcePackSummary create(ResourcePack pack, boolean required, boolean fixedPosition, PackPosition defaultPosition) {
-		return create(pack.getId(), required, fixedPosition, defaultPosition, () -> pack);
+	public static ResourcePackSummary create(ResourcePack pack, String id, boolean required, boolean fixedPosition, PackPosition defaultPosition) {
+		return create(id, required, fixedPosition, defaultPosition, () -> pack);
 	}
 
 	public static ResourcePackSummary create(String id, boolean required, boolean fixedPosition, PackPosition defaultPosition, Supplier<ResourcePack> opener) {

@@ -201,7 +201,7 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 	@Override
 	public ResourceReload startReload(List<ResourcePack> packs, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
-		ResourceLoader.LOGGER.info("Reloading ResourceManager: {}", packs.stream().map(ResourcePack::getId).collect(Collectors.joining(", ")));
+		ResourceLoader.LOGGER.info("Reloading ResourceManager: {}", packs.stream().map(ResourcePack::getName).collect(Collectors.joining(", ")));
 
 		this.resourcePacks.clear();
 		this.resourceManagers.clear();

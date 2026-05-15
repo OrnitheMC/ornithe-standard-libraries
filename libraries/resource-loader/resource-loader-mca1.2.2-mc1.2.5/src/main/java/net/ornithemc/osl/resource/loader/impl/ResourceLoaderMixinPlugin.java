@@ -24,13 +24,14 @@ public class ResourceLoaderMixinPlugin implements IMixinConfigPlugin {
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.TexturePacksScreenMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("1.0.0-beta.3") < 0;
+			return MinecraftVersion.resolve().compareTo("b1.3") < 0;
 		}
 		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.TexturePackListMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("1.0.0-beta.3") >= 0;
+			return MinecraftVersion.resolve().compareTo("b1.3") >= 0;
 		}
-		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.DirectoryTexturePackMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("1.2-alpha.12.8.a") >= 0;
+		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.DirectoryTexturePackAccess".equals(mixinClassName)
+			|| "net.ornithemc.osl.resource.loader.impl.mixin.client.DirectoryTexturePackMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w08a") >= 0;
 		}
 
 		return true;

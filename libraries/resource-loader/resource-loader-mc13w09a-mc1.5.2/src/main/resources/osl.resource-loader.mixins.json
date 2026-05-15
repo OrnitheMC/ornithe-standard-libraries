@@ -6,6 +6,7 @@
 	"mixins": [
 	],
 	"client": [
+		"client.AbstractTexturePackAccess",
 		"client.AbstractTexturePackMixin",
 		"client.TextureManagerMixin",
 		"client.TexturePackListMixin",

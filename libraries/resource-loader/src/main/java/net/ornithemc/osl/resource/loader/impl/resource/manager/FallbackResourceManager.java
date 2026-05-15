@@ -87,7 +87,7 @@ public class FallbackResourceManager implements ResourceManager {
 
 			if (resource != null) {
 				IOSupplier<ResourceMetadata> metadata = this.findResourceMetadata(location, i);
-				return Optional.of(new LazyResource(fallback.getId(), location, resource, metadata));
+				return Optional.of(new LazyResource(fallback.getName(), location, resource, metadata));
 			}
 		}
 
@@ -121,7 +121,7 @@ public class FallbackResourceManager implements ResourceManager {
 
 			if (resource != null) {
 				IOSupplier<ResourceMetadata> metadata = this.getResourceMetadata(fallback, location);
-				resources.add(new LazyResource(fallback.getId(), location, resource, metadata));
+				resources.add(new LazyResource(fallback.getName(), location, resource, metadata));
 			}
 		}
 
@@ -157,11 +157,11 @@ public class FallbackResourceManager implements ResourceManager {
 					NamespacedIdentifier resourceLocation = ResourcePacks.getResourceLocation(location);
 
 					if (filter.test(resourceLocation)) {
-						metadataSuppliers.put(resourceLocation, new ResourceFromFallback(fallbackIndex, fallback.getId(), resource));
+						metadataSuppliers.put(resourceLocation, new ResourceFromFallback(fallbackIndex, fallback.getName(), resource));
 					}
 				} else {
 					if (filter.test(location)) {
-						resourceSuppliers.put(location, new ResourceFromFallback(fallbackIndex, fallback.getId(), resource));
+						resourceSuppliers.put(location, new ResourceFromFallback(fallbackIndex, fallback.getName(), resource));
 					}
 				}
 			});
@@ -204,11 +204,11 @@ public class FallbackResourceManager implements ResourceManager {
 					NamespacedIdentifier resourceLocation = ResourcePacks.getResourceLocation(location);
 
 					if (filter.test(resourceLocation)) {
-						metadataSuppliers.computeIfAbsent(resourceLocation, key -> new LinkedHashMap<>()).put(fallback.getId(), resource);
+						metadataSuppliers.computeIfAbsent(resourceLocation, key -> new LinkedHashMap<>()).put(fallback.getName(), resource);
 					}
 				} else {
 					if (filter.test(location)) {
-						resourceSuppliers.computeIfAbsent(location, key -> new LinkedHashMap<>()).put(fallback.getId(), resource);
+						resourceSuppliers.computeIfAbsent(location, key -> new LinkedHashMap<>()).put(fallback.getName(), resource);
 					}
 				}
 			});

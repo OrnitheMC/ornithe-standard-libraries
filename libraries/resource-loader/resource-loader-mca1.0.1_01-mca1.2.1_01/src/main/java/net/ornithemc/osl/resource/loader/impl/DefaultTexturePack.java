@@ -11,12 +11,26 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourceConsumer;
-import net.ornithemc.osl.resource.loader.impl.resource.pack.ModResourcePack;
+import net.ornithemc.osl.resource.loader.impl.resource.pack.ModContainerResourcePack;
+import net.ornithemc.osl.resource.loader.impl.resource.pack.ResourcePacks;
+import net.ornithemc.osl.text.api.TextComponents;
 
-public class DefaultTexturePack extends ModResourcePack {
+public class DefaultTexturePack extends ModContainerResourcePack {
 
 	public DefaultTexturePack() {
-		super(FabricLoader.getInstance().getModContainer("minecraft").get(), ".", "Default", "Default");
+		super(FabricLoader.getInstance().getModContainer("minecraft").get(), ".", "Default");
+	}
+
+	@Override
+	protected IOSupplier<InputStream> generateMetadataFile() {
+		return ResourcePacks.generateMetadataFile(
+			TextComponents.literal("The default look of Minecraft")
+		);
+	}
+
+	@Override
+	protected IOSupplier<InputStream> generateIconFile() {
+		return ModContainerResourcePack.getIcon(this.mod);
 	}
 
 	@Override

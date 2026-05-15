@@ -7,25 +7,13 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-public class ZippedResourcePack extends PathResourcePack {
-
-	private final Path file;
+public class ZippedResourcePack extends FileResourcePack {
 
 	private FileSystem zipFs;
 	private boolean zipFailed;
 
 	public ZippedResourcePack(Path file) {
-		this.file = file;
-	}
-
-	@Override
-	public String getId() {
-		return "zip/" + this.file.getFileName();
-	}
-
-	@Override
-	public String getName() {
-		return this.file.getFileName().toString();
+		super(file);
 	}
 
 	@Override

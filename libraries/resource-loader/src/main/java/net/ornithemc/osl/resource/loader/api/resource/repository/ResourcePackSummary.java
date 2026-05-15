@@ -13,8 +13,8 @@ import net.ornithemc.osl.text.api.TextComponent;
  */
 public interface ResourcePackSummary extends AutoCloseable {
 
-	static ResourcePackSummary create(ResourcePack pack, boolean required, boolean fixedPosition, PackPosition defaultPosition) {
-		return SimpleResourcePackSummary.create(pack, required, fixedPosition, defaultPosition);
+	static ResourcePackSummary create(ResourcePack pack, String id, boolean required, boolean fixedPosition, PackPosition defaultPosition) {
+		return SimpleResourcePackSummary.create(pack, id, required, fixedPosition, defaultPosition);
 	}
 
 	static ResourcePackSummary create(String id, boolean required, boolean fixedPosition, PackPosition defaultPosition, Supplier<ResourcePack> opener) {

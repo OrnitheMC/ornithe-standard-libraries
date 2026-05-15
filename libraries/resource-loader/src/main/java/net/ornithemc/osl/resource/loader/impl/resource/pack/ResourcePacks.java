@@ -107,7 +107,7 @@ public final class ResourcePacks {
 					}
 				}
 			} catch (IOException e) {
-				ResourceLoader.LOGGER.warn("failed to parse namespaces for resource pack " + pack.getId(), e);
+				ResourceLoader.LOGGER.warn("failed to parse namespaces for resource pack " + pack.getName(), e);
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public final class ResourcePacks {
 				consumer.accept(location, resource);
 			}
 		} catch (IOException e) {
-			ResourceLoader.LOGGER.debug("error while listing resources from resource pack " + pack.getId(), e);
+			ResourceLoader.LOGGER.debug("error while listing resources from resource pack " + pack.getName(), e);
 		}
 	}
 

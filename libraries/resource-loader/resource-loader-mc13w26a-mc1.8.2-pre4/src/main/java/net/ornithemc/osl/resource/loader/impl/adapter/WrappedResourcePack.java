@@ -36,15 +36,6 @@ public class WrappedResourcePack extends AbstractResourcePack {
 		this.pack = pack;
 	}
 
-	public static String getId(net.minecraft.client.resource.pack.ResourcePack pack) {
-		return pack instanceof BuiltInResourcePack ? pack.getName() : "resourcepack/" + pack.getName();
-	}
-
-	@Override
-	public String getId() {
-		return getId(this.pack);
-	}
-
 	@Override
 	public String getName() {
 		return this.pack.getName();
