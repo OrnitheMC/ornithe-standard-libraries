@@ -1,0 +1,111 @@
+package net.ornithemc.osl.blockstates.impl.mixin.common;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportCategory;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.WorldChunk;
+
+import net.ornithemc.feather.constants.SetBlockFlags;
+
+import net.ornithemc.osl.blockstates.api.block.state.BlockState;
+import net.ornithemc.osl.blockstates.api.world.WorldExtension;
+import net.ornithemc.osl.core.api.util.math.BlockPos;
+
+@Mixin(World.class)
+public class WorldMixin implements WorldExtension {
+
+	@Shadow
+	private boolean isMultiplayer;
+	@Shadow
+	private Profiler profiler;
+
+	@Shadow
+	private WorldChunk getChunk(int x, int z) { return null; }
+	@Shadow
+	private boolean checkLight(int x, int y, int z) { return false; }
+	@Shadow
+	private void notifyBlockChanged(int x, int y, int z) { }
+	@Shadow
+	private void onBlockChanged(int x, int y, int z, Block block) { }
+	@Shadow
+	private void updateNeighborComparators(int x, int y, int z, Block block) { }
+
+	@Override
+	public WorldChunk getChunk(BlockPos pos) {
+		return this.getChunk(pos.x(), pos.z());
+	}
+
+	@Override
+	public BlockState getBlockState(BlockPos pos) {
+		return this.getBlockState(pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	public BlockState getBlockState(int x, int y, int z) {
+		if (!WorldExtension.isInsideWorld(x, y, z)) {
+			return Blocks.AIR.defaultState();
+		}
+
+		WorldChunk chunk = null;
+
+		try {
+			chunk = this.getChunk(x, z);
+			return chunk.getBlockState(x, y, z);
+		} catch (Throwable t) {
+			CrashReport report = CrashReport.of(t, "Exception getting block state in world");
+			CrashReportCategory category = report.addCategory("Requested block coordinates");
+			category.add("Found chunk", chunk == null);
+			category.add("Location", CrashReportCategory.formatPosition(x, y, z));
+
+			throw new CrashException(report);
+		}
+	}
+
+	@Override
+	public boolean setBlockState(BlockPos pos, BlockState state, int flags) {
+		return this.setBlockState(pos.x(), pos.y(), pos.z(), state, flags);
+	}
+
+	@Override
+	public boolean setBlockState(int x, int y, int z, BlockState state, int flags) {
+		if (!WorldExtension.isInsideWorld(x, y, z)) {
+			return false;
+		}
+
+		WorldChunk chunk = this.getChunk(x, z);
+		BlockState replaced = chunk.setBlockState(x, y, z, state);
+
+		if (replaced == null) {
+			return false;
+		}
+
+		Block replacedBlock = replaced.getBlock();
+
+		if (!state.is(replacedBlock)) {
+			this.profiler.push("checkLight");
+			this.checkLight(x, y, z);
+			this.profiler.pop();
+		}
+
+		if ((flags & SetBlockFlags.NOTIFY_LISTENERS) != 0 && (!this.isMultiplayer || (flags & SetBlockFlags.NO_REDRAW) == 0) && chunk.isPopulated()) {
+			this.notifyBlockChanged(x, y, z);
+		}
+
+		if (!this.isMultiplayer && (flags & SetBlockFlags.NOTIFY_NEIGHBORS) != 0) {
+			this.onBlockChanged(x, y, z, replacedBlock);
+
+			if (replaced.isAnalogSignalSource()) {
+				this.updateNeighborComparators(x, y, z, replacedBlock);
+			}
+		}
+
+		return true;
+	}
+}
