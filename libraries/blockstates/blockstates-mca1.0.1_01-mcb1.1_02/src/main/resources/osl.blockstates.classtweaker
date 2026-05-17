@@ -1,0 +1,6 @@
+classTweaker	v1	named
+
+transitive-inject-interface	net/minecraft/block/Block	net/ornithemc/osl/blockstates/impl/block/BlockExtensionImpl
+transitive-inject-interface	net/minecraft/world/WorldView	net/ornithemc/osl/blockstates/impl/world/WorldViewExtensionImpl
+transitive-inject-interface	net/minecraft/world/World	net/ornithemc/osl/blockstates/impl/world/WorldExtensionImpl
+transitive-inject-interface	net/minecraft/world/chunk/WorldChunk	net/ornithemc/osl/blockstates/impl/world/WorldChunkExtensionImpl
