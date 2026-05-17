@@ -92,7 +92,7 @@ public final class LanguageManager {
 					}
 				}
 			} catch (Exception e) {
-				Localization.LOGGER.warn("Unable to parse language metadata from resource pack: {}", resourcePack.getId(), e);
+				Localization.LOGGER.warn("Unable to parse language metadata from resource pack: {}", resourcePack.getName(), e);
 			}
 		}
 	}
