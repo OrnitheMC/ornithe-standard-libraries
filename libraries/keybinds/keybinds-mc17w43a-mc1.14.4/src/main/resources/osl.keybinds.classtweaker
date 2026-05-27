@@ -1,0 +1,3 @@
+classTweaker	v1	named
+
+mutable	field	net/minecraft/client/options/GameOptions	keyBindings	[Lnet/minecraft/client/options/KeyBinding;

@@ -6,7 +6,8 @@
 	"mixins": [
 	],
 	"client": [
-		"client.GameOptionsMixin"
+		"client.GameOptionsMixin",
+		"client.KeyBindingMixin"
 	],
 	"server": [
 	],

@@ -6,7 +6,10 @@ import net.ornithemc.osl.core.api.events.Event;
 
 /**
  * Events related to Minecraft's keybinds.
+ * 
+ * @deprecated use {@linkplain KeybindEvents} instead
  */
+@Deprecated
 public class KeyBindingEvents {
 
 	/**
