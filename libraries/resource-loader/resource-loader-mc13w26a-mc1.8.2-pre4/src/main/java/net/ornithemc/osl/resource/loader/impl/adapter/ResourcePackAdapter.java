@@ -11,7 +11,6 @@ import net.minecraft.client.resource.metadata.ResourceMetadataSection;
 import net.minecraft.client.resource.metadata.ResourceMetadataSerializerRegistry;
 import net.minecraft.resource.Identifier;
 
-import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
@@ -29,18 +28,18 @@ class ResourcePackAdapter implements net.minecraft.client.resource.pack.Resource
 
 	@Override
 	public InputStream getResource(Identifier location) throws IOException {
-		IOSupplier<InputStream> resource = this.pack.getResource(ResourceType.CLIENT_ASSETS, (NamespacedIdentifier) location);
+		IOSupplier<InputStream> resource = this.pack.getResource(ResourceType.CLIENT_ASSETS, location);
 
 		if (resource != null) {
 			return resource.get();
 		}
 
-		throw new ResourcePackFileNotFoundException(this.pack, ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, (NamespacedIdentifier) location));
+		throw new ResourcePackFileNotFoundException(this.pack, ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, location));
 	}
 
 	@Override
 	public boolean hasResource(Identifier location) {
-		return this.pack.hasResource(ResourceType.CLIENT_ASSETS, (NamespacedIdentifier) location);
+		return this.pack.hasResource(ResourceType.CLIENT_ASSETS, location);
 	}
 
 	@Override

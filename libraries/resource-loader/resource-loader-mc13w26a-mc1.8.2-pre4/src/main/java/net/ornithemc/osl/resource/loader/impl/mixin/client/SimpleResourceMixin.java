@@ -17,6 +17,6 @@ public class SimpleResourceMixin implements ResourceLocationAccess {
 
 	@Override
 	public NamespacedIdentifier resourceLocation() {
-		return (NamespacedIdentifier) location;
+		return location;
 	}
 }

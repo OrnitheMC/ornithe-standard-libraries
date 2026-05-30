@@ -46,7 +46,7 @@ class ResourceAdapter implements net.minecraft.client.resource.Resource, Resourc
 
 	@Override
 	public NamespacedIdentifier resourceLocation() {
-		return (NamespacedIdentifier) this.location;
+		return this.location;
 	}
 
 	@Override

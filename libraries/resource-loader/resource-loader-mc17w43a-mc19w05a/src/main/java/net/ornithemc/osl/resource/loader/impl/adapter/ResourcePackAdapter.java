@@ -13,7 +13,6 @@ import net.minecraft.resource.Identifier;
 import net.minecraft.resource.pack.Pack;
 import net.minecraft.resource.pack.PackType;
 
-import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
@@ -38,18 +37,18 @@ class ResourcePackAdapter implements Pack {
 
 	@Override
 	public InputStream getResource(PackType type, Identifier location) throws IOException {
-		IOSupplier<InputStream> resource = this.pack.getResource(Adapters.resourceType(type), (NamespacedIdentifier) location);
+		IOSupplier<InputStream> resource = this.pack.getResource(Adapters.resourceType(type), location);
 
 		if (resource != null) {
 			return resource.get();
 		}
 
-		throw new ResourcePackFileNotFoundException(this.pack, ResourcePath.nameOf(Adapters.resourceType(type), (NamespacedIdentifier) location));
+		throw new ResourcePackFileNotFoundException(this.pack, ResourcePath.nameOf(Adapters.resourceType(type), location));
 	}
 
 	@Override
 	public boolean hasResource(PackType type, Identifier location) {
-		return this.pack.hasResource(Adapters.resourceType(type), (NamespacedIdentifier) location);
+		return this.pack.hasResource(Adapters.resourceType(type), location);
 	}
 
 	@Override

@@ -46,12 +46,12 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public net.minecraft.resource.Resource getResource(Identifier location) throws IOException {
-		return this.wrapResource((NamespacedIdentifier) location, this.resourceManager.getResource((NamespacedIdentifier) location));
+		return this.wrapResource(location, this.resourceManager.getResource(location));
 	}
 
 	@Override
 	public List<net.minecraft.resource.Resource> getResources(Identifier location) throws IOException {
-		return this.wrapResources(this.resourceManager.getResourceStack((NamespacedIdentifier) location));
+		return this.wrapResources(this.resourceManager.getResourceStack(location));
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public boolean m_12351820(Identifier location) {
-		return this.resourceManager.hasResource((NamespacedIdentifier) location);
+		return this.resourceManager.hasResource(location);
 	}
 
 	@Override

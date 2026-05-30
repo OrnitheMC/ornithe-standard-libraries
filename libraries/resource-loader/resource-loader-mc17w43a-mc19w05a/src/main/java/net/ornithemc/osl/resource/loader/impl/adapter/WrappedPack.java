@@ -67,7 +67,7 @@ public class WrappedPack implements ResourcePack {
 	public void findResources(ResourceType type, String namespace, String directory, ResourceConsumer consumer) {
 		this.pack.findResources(Adapters.packType(type), directory, Integer.MAX_VALUE, fileName -> true).forEach(location -> {
 			if (location.getNamespace().equals(namespace)) {
-				consumer.accept((NamespacedIdentifier) location, () -> this.pack.getResource(Adapters.packType(type), location));
+				consumer.accept(location, () -> this.pack.getResource(Adapters.packType(type), location));
 			}
 		});
 	}
