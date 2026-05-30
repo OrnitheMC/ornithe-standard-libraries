@@ -116,7 +116,7 @@ public class LocaleMixin {
 		if (resource instanceof ResourceLocationAccess) {
 			return ((ResourceLocationAccess) resource).resourceLocation();
 		} else {
-			return (NamespacedIdentifier) resource.getLocation();
+			return resource.getLocation();
 		}
 	}
 }
