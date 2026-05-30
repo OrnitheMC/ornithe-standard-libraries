@@ -182,6 +182,8 @@ def fillModJson(project, task) {
 }
 
 def setUpLibrary(project) {
+	def isCore = (project.path == ':libraries:core')
+
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
 	project.apply plugin: 'idea'
@@ -209,7 +211,9 @@ def setUpLibrary(project) {
 	def libraries = []
 	def modules = []
 
-	findLibraryDependencies(project, libraries, modules)
+	if (!isCore) {
+		findLibraryDependencies(project, libraries, modules)
+	}
 
 	project.dependencies {
 		implementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
@@ -217,13 +221,21 @@ def setUpLibrary(project) {
 		implementation "org.apache.logging.log4j:log4j-api:2.19.0"
 		implementation "org.apache.logging.log4j:log4j-core:2.19.0"
 
-		implementation project.dependencies.project(path: ':libraries:core', configuration: 'namedElements')
+		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 
 		libraries.each { libraryPath ->
 			implementation project.dependencies.project(path: libraryPath)
+
+			if (libraryPath == ':libraries:core') {
+				evaluationDependsOn libraryPath
+			}
 		}
 		modules.each { modulePath ->
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
+
+			if (modulePath.startsWith(':libraries:core')) {
+				evaluationDependsOn modulePath
+			}
 		}
 	}
 
@@ -247,11 +259,8 @@ def setUpLibrary(project) {
 }
 
 def setUpModule(project) {
-	// normally modules have a 'root' and subprojects
-	// for different mc version ranges
-	// the Core API is the only exception to this
-	def isCore = (project.path == ':libraries:core')
-	def library = (isCore) ? project : project.parent
+	def library = project.parent
+	def isCore = (library.path == ':libraries:core')
 
 	project.apply plugin: 'java-library'
 	project.apply plugin: 'eclipse'
@@ -263,12 +272,8 @@ def setUpModule(project) {
 	project.base {
 		archivesName = "${project.rootProject.mod_id_short}-${library.library_id}"
 	}
-	project.version = "${library.library_version}"
+	project.version = "${library.library_version}+mc${project.min_mc_version}-mc${project.max_mc_version}"
 	project.group = "${project.rootProject.library_maven_group}"
-
-	if (!isCore) {
-		project.version += "+mc${project.min_mc_version}-mc${project.max_mc_version}"
-	}
 
 	def ctfile = project.file("src/main/resources/${project.rootProject.mod_id_short}.${library.library_id}.classtweaker")
 
@@ -291,7 +296,9 @@ def setUpModule(project) {
 	def libraries = []
 	def modules = []
 
-	findModuleDependencies(project, libraries, modules)
+	if (!isCore) {
+		findModuleDependencies(project, libraries, modules)
+	}
 
 	project.dependencies {
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -336,11 +343,21 @@ def setUpModule(project) {
 			include "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		}
 
+		implementation project.dependencies.project(path: library.path)
+
 		libraries.each { libraryPath ->
 			implementation project.dependencies.project(path: libraryPath)
+
+			if (libraryPath == ':libraries:core') {
+				evaluationDependsOn libraryPath
+			}
 		}
 		modules.each { modulePath ->
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
+
+			if (modulePath.startsWith(':libraries:core')) {
+				evaluationDependsOn modulePath
+			}
 		}
 	}
 
@@ -351,14 +368,10 @@ def setUpModule(project) {
 	project.sourceSets {
 		main {
 			java {
-				if (!isCore) {
-					srcDirs += project.parent.sourceSets.main.java.srcDirs
-				}
+				srcDirs += project.parent.sourceSets.main.java.srcDirs
 			}
 			resources {
-				if (!isCore) {
-					srcDirs += project.parent.sourceSets.main.resources.srcDirs
-				}
+				srcDirs += project.parent.sourceSets.main.resources.srcDirs
 			}
 		}
 	}
@@ -399,9 +412,7 @@ def setUpModule(project) {
 				environment = '*'
 			}
 
-			if (!isCore) {
-				depends "minecraft", "${project.minecraft_dependency}"
-			}
+			depends "minecraft", "${project.minecraft_dependency}"
 
 			if (!isCore && library.hasProperty('osl_dependencies')) {
 				for (def dependency : library.osl_dependencies.split(',')) {
@@ -447,10 +458,7 @@ def setUpModule(project) {
 	project.publishing {
 		publications {
 			mavenJava(MavenPublication) {
-				if (!isCore) {
-					artifactId project.parent.name
-				}
-
+				artifactId library.library_id
 				from project.components.java
 
 				pom.withXml {
@@ -480,10 +488,6 @@ def setUpModule(project) {
 		}
 	}
 
-	if (isCore) {
-		addPomDependency(project)
-	}
-
 	setUpJavadoc(project)
 }
 
@@ -493,13 +497,8 @@ def findLibraryDependencies(project, libraries, modules) {
 
 		for (dep : deps) {
 			def libraryName = dep.substring(0, dep.indexOf(':'))
-
-			if (libraryName != 'core') {
-				libraries.add(":libraries:${libraryName}")
-			}
+			libraries.add(":libraries:${libraryName}")
 		}
-
-		modules.add(':libraries:core')
 	}
 }
 
@@ -509,18 +508,13 @@ def findModuleDependencies(project, libraries, modules) {
 
 		for (dep : deps) {
 			def libraryName = dep.substring(0, dep.indexOf(':'))
+			def moduleName = findModuleDependency(project, libraryName)
 
-			if (libraryName != 'core') {
-				def moduleName = findModuleDependency(project, libraryName)
-
+			if (moduleName != null) {
 				libraries.add(":libraries:${libraryName}")
-				if (moduleName != null) {
-					modules.add(":libraries:${libraryName}:${moduleName}")
-				}
+				modules.add(":libraries:${libraryName}:${moduleName}")
 			}
 		}
-
-		modules.add(':libraries:core')
 	}
 }
 
