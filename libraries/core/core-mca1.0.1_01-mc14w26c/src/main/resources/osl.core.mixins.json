@@ -4,9 +4,9 @@
 	"package": "net.ornithemc.osl.core.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"IdentifierMixin"
 	],
 	"client": [
+		"client.IdentifierMixin"
 	],
 	"server": [
 	],

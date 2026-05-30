@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-core",
+  "version": "0.7.1+mc14w27a-mc1.14.4",
+  "environment": "*",
+  "mixins": [
+    "osl.core.mixins.json"
+  ],
+  "accessWidener": "osl.core.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.8-alpha.14.27.a \u003c\u003d1.14.4"
+  },
+  "name": "OSL Core",
+  "description": "The core of Ornithe Standard Libraries.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}

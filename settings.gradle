@@ -19,6 +19,8 @@ pluginManagement {
 rootProject.name = 'osl'
 
 include ':libraries:core'
+include ':libraries:core:core-mca1.0.1_01-mc14w26c'
+include ':libraries:core:core-mc14w27a-mc1.14.4'
 
 include ':libraries:branding'
 include ':libraries:branding:branding-mcin-20100206-2103-mca1.2.1_01'

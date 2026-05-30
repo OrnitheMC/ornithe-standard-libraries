@@ -1,7 +1,6 @@
-package net.ornithemc.osl.core.impl.mixin;
+package net.ornithemc.osl.core.impl.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,9 +11,8 @@ import net.minecraft.client.resource.Identifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
-@Pseudo // needed because Identifier does not exist in all versions
 @Mixin(Identifier.class)
-public class IdentifierMixin implements NamespacedIdentifier { // TODO: interface injection
+public class IdentifierMixin implements NamespacedIdentifier {
 
 	@Shadow
 	private String namespace;
