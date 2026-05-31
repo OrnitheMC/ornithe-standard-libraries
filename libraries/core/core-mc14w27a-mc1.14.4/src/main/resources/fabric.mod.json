@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-core",
-  "version": "0.7.1+mc14w27a-mc1.14.4",
+  "version": "0.8.0-alpha.4+mc14w27a-mc1.14.4",
   "environment": "*",
   "mixins": [
     "osl.core.mixins.json"
