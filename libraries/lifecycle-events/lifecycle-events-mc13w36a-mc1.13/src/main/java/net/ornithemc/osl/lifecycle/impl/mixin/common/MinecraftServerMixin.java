@@ -47,7 +47,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$lifecycle$stop(CallbackInfo ci) {
-		if (osl$lifecycle$shutdownDepth++ == 0) {
+		if (osl$lifecycle$shutdownDepth++ == 0 && MinecraftServerAccess.INSTANCE != null) {
 			MinecraftServerEvents.STOP.invoker().accept(MinecraftServerAccess.INSTANCE);
 		}
 	}
