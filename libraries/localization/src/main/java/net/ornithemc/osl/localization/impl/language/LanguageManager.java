@@ -28,6 +28,10 @@ public final class LanguageManager {
 	public static final String DEFAULT_LANGUAGE = EN_US;
 	public static final String FALLBACK_LANGUAGE = EN_US;
 
+	static {
+		INSTANCE.selectedLanguage = DEFAULT_LANGUAGE;
+	}
+
 	private final Locale locale = Locale.instance();
 
 	private boolean wrapper;
@@ -39,8 +43,6 @@ public final class LanguageManager {
 	private LanguageManager() {
 		this.languages = new HashMap<>();
 		this.metadataSection = LanguageMetadata.SECTION;
-
-		this.selectedLanguage = DEFAULT_LANGUAGE;
 	}
 
 	public void wrap(Map<String, Language> map, Language.Factory languageFactory) {
