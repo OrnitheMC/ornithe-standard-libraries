@@ -21,7 +21,7 @@ public class ClientResourcePacks extends AbstractClientPackSource {
 
 	@Override
 	protected ResourcePack getOrWrapServerPack() {
-		if (this.resourcePacks.getServerResourcePack() != null) {
+		if (this.resourcePacks.getServerPack() != null) {
 			return new WrappedResourcePack(this.resourcePacks.getServerPack());
 		} else {
 			return null;
