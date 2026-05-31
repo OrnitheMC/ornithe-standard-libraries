@@ -37,8 +37,6 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 	private List<ResourcePacks.Entry> appliedPacks;
 	@Shadow @Final
 	private net.minecraft.client.resource.pack.ResourcePack defaultPack;
-	@Shadow
-	private net.minecraft.client.resource.pack.ResourcePack serverPack;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -176,7 +174,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 
 		if (pack == this.defaultPack) {
 			return ClientPackSource.DEFAULT_PACK_ID;
-		} else if (pack == this.serverPack) {
+		} else if (ClientResourcePacks.NEW_RESOURCE_PACKS_GUI && pack == ((ResourcePacks)(Object)this).getServerPack() /* @Shadow field/method would fail in 1.6! */) {
 			return ClientPackSource.SERVER_PACK_ID;
 		} else if (pack instanceof CustomResourcePack) {
 			return DirectoryPackSource.packId(((CustomResourcePackAccess) pack).accessFile().toPath());
