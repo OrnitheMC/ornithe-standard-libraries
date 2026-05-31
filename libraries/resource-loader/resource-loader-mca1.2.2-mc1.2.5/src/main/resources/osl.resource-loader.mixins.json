@@ -9,6 +9,7 @@
 	"client": [
 		"client.DirectoryTexturePackAccess",
 		"client.DirectoryTexturePackMixin",
+		"client.MinecraftMixin",
 		"client.TextureManagerMixin",
 		"client.TexturePackListMixin",
 		"client.TexturePackMixin",

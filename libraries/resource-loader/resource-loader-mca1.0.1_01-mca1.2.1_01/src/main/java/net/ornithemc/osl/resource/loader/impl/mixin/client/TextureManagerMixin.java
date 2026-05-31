@@ -80,8 +80,6 @@ public class TextureManagerMixin implements ResourceReloadListener {
 
 		// let this class act as the texture reloader
 		this.resourceManager.addReloader(this);
-
-		this.resourceManager.init();
 	}
 
 	@Inject(
