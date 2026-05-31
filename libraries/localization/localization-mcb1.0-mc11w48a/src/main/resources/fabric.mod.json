@@ -3,6 +3,11 @@
   "id": "osl-localization",
   "version": "0.1.0-alpha.2+mcb1.0-mc11w48a",
   "environment": "*",
+  "entrypoints": {
+    "client-init": [
+      "net.ornithemc.osl.localization.impl.LanguageReloader::init"
+    ]
+  },
   "mixins": [
     "osl.localization.mixins.json"
   ],

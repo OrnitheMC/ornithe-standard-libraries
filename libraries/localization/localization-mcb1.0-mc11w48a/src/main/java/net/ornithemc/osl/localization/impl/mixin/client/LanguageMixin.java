@@ -27,8 +27,5 @@ public class LanguageMixin {
 	)
 	private void osl$localization$initLocalization(CallbackInfo ci) throws IOException {
 		Localization.getLocale().wrap(this.translations);
-
-		Localization.reloadLanguageManager();
-		Localization.reloadLocale();
 	}
 }
