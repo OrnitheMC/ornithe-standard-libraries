@@ -48,7 +48,7 @@ public class MinecraftMixin {
 	@Inject(
 		method = "shutdown",
 		at = @At(
-			value = "HEAD"
+			value = "TAIL"
 		)
 	)
 	private void osl$lifecycle$stopped(CallbackInfo ci) {
