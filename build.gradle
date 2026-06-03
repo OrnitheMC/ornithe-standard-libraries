@@ -9,8 +9,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.15-SNAPSHOT' apply false
-	id 'ploceus' version '1.15-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.17-SNAPSHOT' apply false
+	id 'ploceus' version '1.17-SNAPSHOT' apply false
 }
 
 import net.fabricmc.loader.api.SemanticVersion
@@ -304,12 +304,6 @@ def setUpModule(project) {
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
 		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
 
-		if (project.hasProperty('feather_build')) {
-			mappings project.ploceus.featherMappings(project.feather_build)
-		} else {
-			mappings project.ploceus.featherMappings(project.rootProject.feather_build)
-		}
-
 		if (project.hasProperty('raven_build')) {
 			exceptions project.ploceus.raven(project.raven_build)
 		}
@@ -336,6 +330,12 @@ def setUpModule(project) {
 		}
 		if (project.hasProperty('server_nests_build')) {
 			serverNests project.ploceus.nests(project.server_nests_build, 'server')
+		}
+
+		if (project.hasProperty('feather_build')) {
+			mappings project.ploceus.featherMappings(project.feather_build)
+		} else {
+			mappings project.ploceus.featherMappings(project.rootProject.feather_build)
 		}
 
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"

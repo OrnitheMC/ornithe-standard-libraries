@@ -108,4 +108,3 @@ include ':libraries:resource-loader:resource-loader-mc19w08a-mc1.14.4'
 
 include ':libraries:text-components'
 include ':libraries:text-components:text-components-mca0.1.0-mc1.14.4'
-
