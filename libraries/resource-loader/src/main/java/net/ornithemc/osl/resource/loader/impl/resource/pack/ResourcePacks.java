@@ -16,7 +16,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
-import net.ornithemc.osl.core.impl.util.NamespacedIdentifierException;
+import net.ornithemc.osl.resource.loader.api.resource.ResourceLocation;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourceConsumer;
@@ -101,9 +101,8 @@ public final class ResourcePacks {
 					String s = p.getFileName().toString();
 					String namespace = s.replace(separator, "");
 
-					try {
-						consumer.accept(type, NamespacedIdentifiers.validateNamespace(namespace));
-					} catch (NamespacedIdentifierException e) {
+					if (ResourceLocation.isValid(namespace)) {
+						consumer.accept(type, namespace);
 					}
 				}
 			} catch (IOException e) {

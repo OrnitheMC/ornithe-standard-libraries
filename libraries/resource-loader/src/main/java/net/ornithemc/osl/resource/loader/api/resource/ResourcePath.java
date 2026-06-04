@@ -56,9 +56,8 @@ public final class ResourcePath {
 	public static Path of(Path root, String path) {
 		String separator = root.getFileSystem().getSeparator();
 		String pathName = nameOf(path).replace("/", separator);
-		Path p = root.resolve(pathName).normalize();
 
-		return p;
+		return root.resolve(pathName).normalize();
 	}
 
 	/**
@@ -69,8 +68,7 @@ public final class ResourcePath {
 	public static Path of(Path root, ResourceType type, NamespacedIdentifier location) {
 		String separator = root.getFileSystem().getSeparator();
 		String pathName = nameOf(type, location).replace("/", separator);
-		Path p = root.resolve(pathName).normalize();
 
-		return p;
+		return root.resolve(pathName).normalize();
 	}
 }
