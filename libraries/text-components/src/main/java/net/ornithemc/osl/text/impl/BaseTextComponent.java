@@ -3,12 +3,16 @@ package net.ornithemc.osl.text.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import net.ornithemc.osl.text.api.Formatting;
 import net.ornithemc.osl.text.api.Style;
+import net.ornithemc.osl.text.api.StyledTextVisitor;
 import net.ornithemc.osl.text.api.TextComponent;
 import net.ornithemc.osl.text.api.TextComponents;
+import net.ornithemc.osl.text.api.TextVisitResults;
+import net.ornithemc.osl.text.api.TextVisitor;
 
 abstract class BaseTextComponent implements TextComponent {
 
@@ -64,38 +68,89 @@ abstract class BaseTextComponent implements TextComponent {
 
 	@Override
 	public String buildString() {
-		return this.buildString(false);
-	}
-
-	@Override
-	public String buildFormattedString() {
-		return this.buildString(true);
-	}
-
-	private String buildString(boolean formatted) {
 		StringBuilder sb = new StringBuilder();
 
-		this.buildString(sb, formatted);
-		this.buildString(sb, formatted, this.siblings);
-
-		if (formatted) {
-			sb.append(Formatting.RESET);
-		}
+		this.visit(text -> {
+			sb.append(text);
+			return TextVisitResults.CONTINUE;
+		});
 
 		return sb.toString();
 	}
 
-	abstract void buildString(StringBuilder sb, boolean formatted);
+	@Override
+	public String buildFormattedString() {
+		StringBuilder sb = new StringBuilder();
 
-	final void buildString(StringBuilder sb, boolean formatted, List<TextComponent> texts) {
-		for (TextComponent text : texts) {
-			if (formatted) {
-				this.style.apply(sb);
-			}
+		this.visit(Style.EMPTY, (style, text) -> {
+			style.apply(sb);
+			sb.append(text);
+			return TextVisitResults.CONTINUE;
+		});
 
-			sb.append(formatted
-				? text.buildFormattedString()
-				: text.buildString());
+		return sb.toString();
+	}
+
+	@Override
+	public <T> Optional<T> visit(TextVisitor<T> visitor) {
+		Optional<T> result = this.visitSelf(visitor);
+		if (result.isPresent()) {
+			return result;
 		}
+
+		for (TextComponent sibling : this.siblings) {
+			result = sibling.visit(visitor);
+			if (result.isPresent()) {
+				return result;
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	abstract <T> Optional<T> visitSelf(TextVisitor<T> visitor);
+
+	@Override
+	public <T> Optional<T> visit(Style fallback, StyledTextVisitor<T> visitor) {
+		Style style = fallback.withStyle(this.style);
+
+		Optional<T> result = this.visitSelf(style, visitor);
+		if (result.isPresent()) {
+			return result;
+		}
+
+		for (TextComponent sibling : this.siblings) {
+			result = sibling.visit(style, visitor);
+			if (result.isPresent()) {
+				return result;
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	abstract <T> Optional<T> visitSelf(Style style, StyledTextVisitor<T> visitor);
+
+	@Override
+	public TextComponent copy() {
+		BaseTextComponent copy = this.copySelf();
+
+		copy.siblings.addAll(this.siblings);
+		copy.style = this.style;
+
+		return copy;
+	}
+
+	abstract BaseTextComponent copySelf();
+
+	@Override
+	public TextComponent deepCopy() {
+		TextComponent copy = this.copy().format(this.style);
+
+		for (TextComponent sibling : this.siblings) {
+			copy.append(sibling.deepCopy());
+		}
+
+		return copy;
 	}
 }

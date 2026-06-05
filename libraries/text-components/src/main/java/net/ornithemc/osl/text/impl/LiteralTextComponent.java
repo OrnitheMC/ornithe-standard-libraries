@@ -1,5 +1,11 @@
 package net.ornithemc.osl.text.impl;
 
+import java.util.Optional;
+
+import net.ornithemc.osl.text.api.Style;
+import net.ornithemc.osl.text.api.StyledTextVisitor;
+import net.ornithemc.osl.text.api.TextVisitor;
+
 public class LiteralTextComponent extends BaseTextComponent {
 
 	private final String value;
@@ -13,11 +19,17 @@ public class LiteralTextComponent extends BaseTextComponent {
 	}
 
 	@Override
-	void buildString(StringBuilder sb, boolean formatted) {
-		if (formatted) {
-			this.style.apply(sb);
-		}
+	<T> Optional<T> visitSelf(TextVisitor<T> visitor) {
+		return visitor.accept(this.value);
+	}
 
-		sb.append(this.value);
+	@Override
+	<T> Optional<T> visitSelf(Style style, StyledTextVisitor<T> visitor) {
+		return visitor.accept(style, this.value);
+	}
+
+	@Override
+	BaseTextComponent copySelf() {
+		return new LiteralTextComponent(this.value);
 	}
 }
