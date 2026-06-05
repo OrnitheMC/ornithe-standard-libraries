@@ -351,6 +351,20 @@ public final class Style {
 		);
 	}
 
+	public Style copy() {
+		return new Style(
+			this.color,
+			this.bold,
+			this.italic,
+			this.underlined,
+			this.strikethrough,
+			this.obfuscated,
+			this.insertion,
+			this.clickEvent,
+			this.hoverEvent
+		);
+	}
+
 	/**
 	 * Applies the given style on top of this style and returns the result.
 	 * @param style

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import com.google.gson.Gson;
@@ -47,6 +48,14 @@ public interface TextComponent {
 	String buildString();
 
 	String buildFormattedString();
+
+	<T> Optional<T> visit(TextVisitor<T> visitor);
+
+	<T> Optional<T> visit(Style fallback, StyledTextVisitor<T> visitor);
+
+	TextComponent copy();
+
+	TextComponent deepCopy();
 
 	interface Builder {
 

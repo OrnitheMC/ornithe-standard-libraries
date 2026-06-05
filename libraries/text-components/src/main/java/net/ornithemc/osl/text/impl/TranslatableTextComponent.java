@@ -2,11 +2,15 @@ package net.ornithemc.osl.text.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.ornithemc.osl.text.api.Style;
+import net.ornithemc.osl.text.api.StyledTextVisitor;
 import net.ornithemc.osl.text.api.TextComponent;
 import net.ornithemc.osl.text.api.TextComponents;
+import net.ornithemc.osl.text.api.TextVisitor;
 
 public class TranslatableTextComponent extends BaseTextComponent {
 
@@ -32,15 +36,12 @@ public class TranslatableTextComponent extends BaseTextComponent {
 		return this.args;
 	}
 
-	@Override
-	void buildString(StringBuilder sb, boolean formatted) {
+	private void updateResolved() {
 		long localeUpdateTime = LOCALE.getLastUpdateTime();
 
 		if (this.resolved == null || this.resolvedTime != localeUpdateTime) {
 			this.resolve(localeUpdateTime);
 		}
-
-		this.buildString(sb, formatted, this.resolved);
 	}
 
 	private void resolve(long time) {
@@ -99,5 +100,38 @@ public class TranslatableTextComponent extends BaseTextComponent {
 		}
 
 		return TextComponents.resolve(arg);
+	}
+
+	@Override
+	<T> Optional<T> visitSelf(TextVisitor<T> visitor) {
+		this.updateResolved();
+
+		for (TextComponent component : this.resolved) {
+			Optional<T> result = component.visit(visitor);
+			if (result.isPresent()) {
+				return result;
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	@Override
+	<T> Optional<T> visitSelf(Style style, StyledTextVisitor<T> visitor) {
+		this.updateResolved();
+
+		for (TextComponent component : this.resolved) {
+			Optional<T> result = component.visit(style, visitor);
+			if (result.isPresent()) {
+				return result;
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	@Override
+	BaseTextComponent copySelf() {
+		return new TranslatableTextComponent(this.key, this.args);
 	}
 }
