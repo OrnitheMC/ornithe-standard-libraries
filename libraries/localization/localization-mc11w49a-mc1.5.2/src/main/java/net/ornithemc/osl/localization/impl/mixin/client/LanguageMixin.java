@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.locale.Language;
@@ -69,13 +71,29 @@ public class LanguageMixin {
 			target = "Lnet/minecraft/locale/Language;loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V"
 		)
 	)
-	private void osl$localization$loadExtraTranslations(CallbackInfo ci, @Local String language, @Local Properties translations) {
+	private void osl$localization$wrapTranslations(CallbackInfo ci, @Local String language, @Local Properties translations) {
 		// each ServerPlayerEntity also holds an instance of this class
 		if ((Language) (Object) this == INSTANCE) {
 			// the translations map is replaced with each reload
 			Localization.getLocale().wrap(translations);
+		}
+	}
+
+	@WrapOperation(
+		method = "loadLanguage",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/locale/Language;loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V"
+		)
+	)
+	private void osl$localization$loadExtraTranslations(Language self, Properties translations, String language, Operation<Void> op) {
+		// each ServerPlayerEntity also holds an instance of this class
+		if ((Language) (Object) this == INSTANCE) {
 			Localization.getLocale().loadLanguage(ResourceManager.client(), language);
 		}
+
+		// no need to run the original operation
+		// op.call(self, translations, language);
 	}
 
 	@Inject(
