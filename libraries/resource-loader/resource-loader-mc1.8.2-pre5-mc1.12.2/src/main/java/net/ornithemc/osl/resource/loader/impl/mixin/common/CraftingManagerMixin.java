@@ -44,6 +44,6 @@ public class CraftingManagerMixin {
 		)
 	)
 	private static Path osl$resource_loader$getPathFromJar(FileSystem fs, String path, String... paths) {
-		return MINECRAFT.findPath(ResourcePath.nameOf(path)).orElse(null);
+		return MINECRAFT.findPath(ResourcePath.relative(path)).orElse(null);
 	}
 }

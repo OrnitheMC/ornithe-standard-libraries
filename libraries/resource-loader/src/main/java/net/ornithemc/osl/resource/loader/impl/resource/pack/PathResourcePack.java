@@ -49,7 +49,7 @@ public abstract class PathResourcePack extends AbstractResourcePack {
 	}
 
 	private Path getPathToResource(String pathName) {
-		pathName = ResourcePath.nameOf(pathName);
+		pathName = ResourcePath.relative(pathName);
 
 		for (Path root : this.getRootPaths()) {
 			Path path = ResourcePath.of(root, pathName);

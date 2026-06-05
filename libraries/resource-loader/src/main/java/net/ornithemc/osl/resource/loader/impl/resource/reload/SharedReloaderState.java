@@ -27,6 +27,7 @@ public class SharedReloaderState implements SharedState {
 		this.state.put(key, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T get(Key<T> key) {
 		return (T) Objects.requireNonNull(this.state.get(key));

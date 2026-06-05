@@ -11,16 +11,25 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 public final class ResourcePath {
 
 	/**
-	 * Takes the given resource path and returns it as a relative path.
-	 * 
-	 * @return the resource path.
+	 * @return the given path name as a relative file path.
 	 */
-	public static String nameOf(String path) {
-		if (path.charAt(0) == '/') {
-			path = path.substring(1);
+	public static String relative(String pathName) {
+		if (pathName.charAt(0) == '/') {
+			pathName = pathName.substring(1);
 		}
 
-		return path;
+		return pathName;
+	}
+
+	/**
+	 * @return the given path name as an absolute file path.
+	 */
+	public static String absolute(String pathName) {
+		if (pathName.charAt(0) != '/') {
+			pathName = "/" + pathName;
+		}
+
+		return pathName;
 	}
 
 	/**
@@ -55,7 +64,7 @@ public final class ResourcePath {
 	 */
 	public static Path of(Path root, String path) {
 		String separator = root.getFileSystem().getSeparator();
-		String pathName = nameOf(path).replace("/", separator);
+		String pathName = relative(path).replace("/", separator);
 
 		return root.resolve(pathName).normalize();
 	}

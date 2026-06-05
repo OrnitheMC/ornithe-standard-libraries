@@ -10,6 +10,7 @@ import net.minecraft.client.resource.pack.TexturePack;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
+import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.AbstractResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourceConsumer;
@@ -43,7 +44,7 @@ public class WrappedTexturePack extends AbstractResourcePack {
 
 	@Override
 	public boolean hasResource(String path) {
-		return this.pack.hasResource(path, false);
+		return this.pack.hasResource(ResourcePath.absolute(path), false);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class WrappedTexturePack extends AbstractResourcePack {
 		}
 		// TODO: pack.png
 
-		return this.pack.getResource(path, false);
+		return this.pack.getResource(ResourcePath.absolute(path), false);
 	}
 
 	@Override

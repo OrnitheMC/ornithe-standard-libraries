@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import net.minecraft.client.resource.pack.AbstractTexturePack;
 
+import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 
 // one heck of a hack to inject OSL's resource manager
@@ -27,12 +28,12 @@ public class ResourceManagerAdapter extends AbstractTexturePack {
 
 	@Override
 	public InputStream openResource(String path) throws IOException {
-		return this.resourceManager.getResource(path);
+		return this.resourceManager.getResource(ResourcePath.relative(path));
 	}
 
 	@Override
 	public boolean hasResource(String path) {
-		return this.resourceManager.hasResource(path);
+		return this.resourceManager.hasResource(ResourcePath.relative(path));
 	}
 
 	@Override
