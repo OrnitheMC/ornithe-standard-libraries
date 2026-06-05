@@ -48,6 +48,16 @@ public interface TextComponent {
 
 	String buildFormattedString();
 
+	interface Builder {
+
+		Builder append(String text);
+
+		Builder append(TextComponent text);
+
+		TextComponent build();
+
+	}
+
 	class Serializer implements JsonDeserializer<TextComponent>, JsonSerializer<TextComponent> {
 
 		private static final String TEXT = "text";

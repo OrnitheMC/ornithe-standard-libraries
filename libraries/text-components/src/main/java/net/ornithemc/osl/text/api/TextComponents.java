@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import net.ornithemc.osl.text.api.TextComponent.Serializer;
 import net.ornithemc.osl.text.api.TextComponent.Serializer.LowercaseEnumTypeAdapterFactory;
 import net.ornithemc.osl.text.impl.LiteralTextComponent;
+import net.ornithemc.osl.text.impl.TextComponentBuilder;
 import net.ornithemc.osl.text.impl.TextResolvers;
 import net.ornithemc.osl.text.impl.TranslatableTextComponent;
 
@@ -18,6 +19,10 @@ public final class TextComponents {
 		.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 		.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory())
 		.create();
+
+	public static TextComponent.Builder builder() {
+		return new TextComponentBuilder();
+	}
 
 	public static TextComponent literal(String t) {
 		return new LiteralTextComponent(t);
