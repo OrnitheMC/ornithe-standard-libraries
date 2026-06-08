@@ -1,0 +1,30 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.commands.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
+	"mixins": [
+		"common.CommandManagerMixin",
+		"common.CommandRegistryMixin",
+		"common.CommandSuggestionsS2CPacketAccess",
+		"common.EntityMixin",
+		"common.MinecraftServerMixin",
+		"common.PlayerManagerMixin",
+		"common.PropertyMixin",
+		"common.ServerPlayerEntityMixin",
+		"common.ServerPlayNetworkHandlerMixin",
+		"common.StateDefinitionMixin"
+	],
+	"client": [
+		"client.ChatScreenMixin",
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.CommandSuggestionsMixin",
+		"client.LocalClientPlayerEntityMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
