@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-text-components",
-  "version": "0.1.0-alpha.1+mca0.1.0-mc1.14.4",
+  "version": "0.1.0-alpha.2+mca0.1.0-mc1.14.4",
   "environment": "*",
   "mixins": [
     "osl.text-components.mixins.json"

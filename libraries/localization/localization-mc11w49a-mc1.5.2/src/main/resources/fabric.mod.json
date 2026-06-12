@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-localization",
-  "version": "0.1.0-alpha.1+mc11w49a-mc1.5.2",
+  "version": "0.1.0+mc11w49a-mc1.5.2",
   "environment": "*",
   "entrypoints": {
     "client-init": [
@@ -14,11 +14,11 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.1-alpha.11.49.a \u003c\u003d1.5.2",
-    "osl-core": "\u003e\u003d0.7.0",
+    "osl-core": "\u003e\u003d0.8.0",
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-resource-loader": "\u003e\u003d0.7.0-"
+    "osl-resource-loader": "\u003e\u003d0.7.0"
   },
   "name": "OSL Localization",
   "description": "Localization API and events.",

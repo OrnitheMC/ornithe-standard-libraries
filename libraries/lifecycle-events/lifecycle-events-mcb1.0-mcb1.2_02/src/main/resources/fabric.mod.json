@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-lifecycle-events",
-  "version": "0.6.0+mcb1.0-mcb1.2_02",
+  "version": "0.6.1+mcb1.0-mcb1.2_02",
   "environment": "*",
   "mixins": [
     "osl.lifecycle-events.mixins.json"
