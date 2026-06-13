@@ -3,6 +3,7 @@ package net.ornithemc.osl.resource.loader.api.resource.pack;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
@@ -20,6 +21,13 @@ public interface ResourcePack extends AutoCloseable {
 	 * The path to the pack.png file.
 	 */
 	String ICON_FILE = "pack.png";
+
+	/**
+	 * @return a flat stream of all resource packs in this container.
+	 */
+	default Stream<ResourcePack> flatStream() {
+		return Stream.of(this);
+	}
 
 	/**
 	 * @return the name of this resource pack.

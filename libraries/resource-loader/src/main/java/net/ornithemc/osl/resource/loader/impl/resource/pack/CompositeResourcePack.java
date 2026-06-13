@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
@@ -23,6 +24,11 @@ public abstract class CompositeResourcePack extends AbstractResourcePack {
 
 	public CompositeResourcePack(List<ResourcePack> resourcePacks) {
 		this.resourcePacks.addAll(resourcePacks);
+	}
+
+	@Override
+	public Stream<ResourcePack> flatStream() {
+		return this.resourcePacks.stream().map(ResourcePack::flatStream).reduce(Stream.of(), Stream::concat);
 	}
 
 	@Override
