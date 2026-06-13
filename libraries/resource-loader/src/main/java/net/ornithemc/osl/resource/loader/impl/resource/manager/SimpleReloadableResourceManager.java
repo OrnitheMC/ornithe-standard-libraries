@@ -81,6 +81,10 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	}
 
 	public void add(ResourcePack pack) {
+		pack.flatStream().forEach(this::addResourcePack);
+	}
+
+	private void addResourcePack(ResourcePack pack) {
 		this.resourcePacks.add(pack);
 
 		for (String namespace : pack.getNamespaces(this.type)) {
