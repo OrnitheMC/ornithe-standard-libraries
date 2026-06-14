@@ -7,10 +7,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.item.Item;
 
+import net.ornithemc.osl.items.api.item.ItemExtension;
 import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 
 @Mixin(Item.class)
-public class ItemMixin {
+public class ItemMixinOld implements ItemExtension {
 
 	@Inject(
 		method = "<clinit>",
@@ -29,7 +30,11 @@ public class ItemMixin {
 		)
 	)
 	private static void osl$items$initAndLockItemRegistry(CallbackInfo ci) {
-		ItemRegistryImpl.init();
-		ItemRegistryImpl.lock();
+		ItemRegistryImpl.initItems();
+
+		if (ItemRegistryImpl.shouldInitialize()) {
+			ItemRegistryImpl.init();
+			ItemRegistryImpl.lock();
+		}
 	}
 }

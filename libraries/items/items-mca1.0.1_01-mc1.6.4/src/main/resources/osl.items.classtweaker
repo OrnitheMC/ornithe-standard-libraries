@@ -9,3 +9,5 @@ transitive-accessible	method	net/minecraft/item/Item	setRecipeRemainder	(Lnet/mi
 transitive-accessible	method	net/minecraft/item/Item	setPotionIngredient	(Ljava/lang/String;)Lnet/minecraft/item/Item;
 transitive-accessible	method	net/minecraft/item/Item	setCreativeModeTab	(Lnet/minecraft/item/CreativeModeTab;)Lnet/minecraft/item/Item;
 transitive-accessible	method	net/minecraft/item/Item	setSpriteName	(Ljava/lang/String;)Lnet/minecraft/item/Item;
+
+transitive-inject-interface	net/minecraft/item/Item	net/ornithemc/osl/items/impl/item/ItemExtensionImpl

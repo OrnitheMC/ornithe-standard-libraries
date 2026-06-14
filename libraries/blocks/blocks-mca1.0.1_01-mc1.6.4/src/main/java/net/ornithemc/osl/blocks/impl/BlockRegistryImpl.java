@@ -65,6 +65,7 @@ public final class BlockRegistryImpl {
 		}
 
 		VanillaBlocks.init();
+
 		BlockEvents.REGISTER_BLOCKS.invoker().run();
 		initialized = true;
 	}
