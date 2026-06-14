@@ -220,8 +220,8 @@ final class VanillaItems {
 		"record_wait"
 	};
 
-	private static final int ITEM_ID_OFFSET = 256;
-	private static final int DISC_ITEM_ID_OFFSET = 2000 + ITEM_ID_OFFSET;
+	static final int ITEM_ID_OFFSET = 256;
+	static final int DISC_ITEM_ID_OFFSET = 2000 + ITEM_ID_OFFSET;
 
 	static void init() {
 		for (Field f : Item.class.getDeclaredFields()) {

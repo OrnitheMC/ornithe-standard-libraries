@@ -7,7 +7,7 @@ import net.ornithemc.osl.blocks.api.block.Blocks;
 final class VanillaBlockItems {
 
 	static void init() {
-		for (int id = 0; id < Block.BY_ID.length; id++) {
+		for (int id = 0; id < VanillaItems.ITEM_ID_OFFSET; id++) {
 			Block block = Block.BY_ID[id];
 			Item item = Item.BY_ID[id];
 
