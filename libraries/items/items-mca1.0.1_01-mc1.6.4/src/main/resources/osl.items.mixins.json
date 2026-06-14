@@ -8,7 +8,8 @@
 		"common.BlockItemAccess",
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
-		"common.ItemMixin"
+		"common.ItemMixinNew",
+		"common.ItemMixinOld"
 	],
 	"client": [
 	],
