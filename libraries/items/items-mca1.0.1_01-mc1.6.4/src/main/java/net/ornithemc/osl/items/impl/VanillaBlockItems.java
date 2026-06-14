@@ -2,6 +2,7 @@ package net.ornithemc.osl.items.impl;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.ornithemc.osl.blocks.api.block.Blocks;
 
 final class VanillaBlockItems {
 
@@ -10,7 +11,7 @@ final class VanillaBlockItems {
 			Block block = Block.BY_ID[id];
 			Item item = Item.BY_ID[id];
 
-			if (item != null) {
+			if (block != Blocks.AIR && item != null) {
 				if (ItemRegistryImpl.getItem(id) == null) {
 					ItemRegistryImpl.register(block, item);
 				} else {
