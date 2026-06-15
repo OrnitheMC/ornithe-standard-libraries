@@ -8,14 +8,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.registry.IdRegistry;
 
 import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 
 @Mixin(Item.class)
-public class ItemMixin {
+public class ItemMixinOld {
 
 	@Inject(
 		method = "init",
@@ -52,9 +55,9 @@ public class ItemMixin {
 			target = "Lnet/minecraft/util/registry/IdRegistry;register(ILjava/lang/String;Ljava/lang/Object;)V"
 		)
 	)
-	private static void osl$items$registerBlockItems(IdRegistry<Item> registry, int id, String key, Object item, Operation<Void> operation) {
-		if (ItemRegistryImpl.getItem(id) == null) {
-			operation.call(registry, id, key, item);
+	private static void osl$items$registerBlockItems(IdRegistry<Item> registry, int id, String key, Object value, Operation<Void> operation, @Local Block block, @Local BlockItem item) {
+		if (item.getClass() != BlockItem.class || !ItemRegistryImpl.BLOCK_ITEMS.containsKey(block)) {
+			operation.call(registry, id, key, value);
 		}
 	}
 }

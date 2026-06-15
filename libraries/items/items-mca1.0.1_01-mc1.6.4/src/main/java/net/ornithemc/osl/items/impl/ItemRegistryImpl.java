@@ -1,5 +1,7 @@
 package net.ornithemc.osl.items.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -13,10 +15,11 @@ import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
 
 public final class ItemRegistryImpl {
 
+	public static final Map<Block, Item> BLOCK_ITEMS = new HashMap<>();
+
 	private static boolean locked = true;
 	private static boolean itemsInitialized = false;
 	private static boolean blocksInitialized = false;
-	private static boolean initialized = false;
 
 	public static int getId(Item item) {
 		return Item.REGISTRY.getId(item);
@@ -47,12 +50,16 @@ public final class ItemRegistryImpl {
 	}
 
 	public static <T extends Item> T register(Block block, T item) {
+		if (!locked) {
+			BLOCK_ITEMS.put(block, item);
+		}
+
 		return register(BlockRegistry.getId(block), BlockRegistry.getKey(block), item);
 	}
 
 	public static <T extends Item> T register(int id, NamespacedIdentifier key, T item) {
 		if (locked) {
-			throw new IllegalStateException("register called too " + (initialized ? "late" : "early") + ": registry locked!");
+			throw new IllegalStateException("register called too " + (itemsInitialized ? "late" : "early") + ": registry locked!");
 		} else {
 			Item.REGISTRY.register(id, key, item);
 		}
@@ -94,16 +101,19 @@ public final class ItemRegistryImpl {
 		blocksInitialized = true;
 	}
 
-	public static void init() {
+	public static void registerItems() {
 		if (locked) {
 			throw new IllegalStateException("cannot initialize item registry when it's locked!");
 		}
 
 		ItemEvents.REGISTER_ITEMS.invoker().run();
-		initialized = true;
 	}
 
-	public static boolean shouldInitialize() {
-		return itemsInitialized && blocksInitialized && !initialized;
+	public static void registerBlocks() {
+		if (locked) {
+			throw new IllegalStateException("cannot initialize item registry when it's locked!");
+		}
+
+		ItemEvents.REGISTER_BLOCK_ITEMS.invoker().run();
 	}
 }

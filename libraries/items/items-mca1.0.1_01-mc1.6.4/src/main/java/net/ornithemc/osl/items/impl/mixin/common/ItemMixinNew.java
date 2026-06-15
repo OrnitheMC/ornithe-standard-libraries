@@ -30,12 +30,7 @@ public class ItemMixinNew implements ItemExtension {
 			target = "Lnet/minecraft/stat/Stats;initItemStats()V"
 		)
 	)
-	private static void osl$items$initAndLockItemRegistry(CallbackInfo ci) {
-		ItemRegistryImpl.initItems();
-
-		if (ItemRegistryImpl.shouldInitialize()) {
-			ItemRegistryImpl.init();
-			ItemRegistryImpl.lock();
-		}
+	private static void osl$items$registerItems(CallbackInfo ci) {
+		ItemRegistryImpl.registerItems();
 	}
 }

@@ -3,9 +3,11 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.items.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.items.impl.ItemsMixinPlugin",
 	"mixins": [
 		"common.BlockItemAccess",
-		"common.ItemMixin"
+		"common.ItemMixinNew",
+		"common.ItemMixinOld"
 	],
 	"client": [
 	],

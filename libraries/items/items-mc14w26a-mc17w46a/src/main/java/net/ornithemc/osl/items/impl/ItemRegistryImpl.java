@@ -46,6 +46,10 @@ public final class ItemRegistryImpl {
 	}
 
 	public static <T extends Item> T register(Block block, T item) {
+		if (!locked) {
+			Item.BLOCK_ITEMS.put(block, item);
+		}
+
 		return register(BlockRegistry.getId(block), BlockRegistry.getKey(block), item);
 	}
 
@@ -53,10 +57,6 @@ public final class ItemRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too " + (initialized ? "late" : "early") + ": registry locked!");
 		} else {
-			if (item instanceof BlockItem) {
-				Item.BLOCK_ITEMS.put(((BlockItem) item).getBlock(), item);
-			}
-
 			Item.REGISTRY.register(id, identifier(key), item);
 		}
 

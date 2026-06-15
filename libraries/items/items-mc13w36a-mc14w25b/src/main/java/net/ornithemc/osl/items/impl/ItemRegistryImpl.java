@@ -1,5 +1,7 @@
 package net.ornithemc.osl.items.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,8 @@ import net.ornithemc.osl.items.api.ItemEvents;
 import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
 
 public final class ItemRegistryImpl {
+
+	public static final Map<Block, Item> BLOCK_ITEMS = new HashMap<>();
 
 	private static boolean locked = true;
 	private static boolean initialized = false;
@@ -48,6 +52,10 @@ public final class ItemRegistryImpl {
 	}
 
 	public static <T extends Item> T register(Block block, T item) {
+		if (!locked) {
+			BLOCK_ITEMS.put(block, item);
+		}
+
 		return register(BlockRegistry.getId(block), BlockRegistry.getKey(block), item);
 	}
 

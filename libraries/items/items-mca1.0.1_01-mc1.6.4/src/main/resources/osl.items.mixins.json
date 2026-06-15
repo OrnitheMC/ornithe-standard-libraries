@@ -6,6 +6,7 @@
 	"plugin": "net.ornithemc.osl.items.impl.ItemsMixinPlugin",
 	"mixins": [
 		"common.BlockItemAccess",
+		"common.BlockMixin",
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
 		"common.ItemMixinNew",
