@@ -2,7 +2,6 @@ package net.ornithemc.osl.blocks.impl.mixin.common;
 
 import org.objectweb.asm.Opcodes;
 
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,7 +15,6 @@ import net.minecraft.block.Block;
 
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
 
-@Debug(export = true)
 @Mixin(Block.class)
 public class BlockMixin {
 
@@ -45,14 +43,14 @@ public class BlockMixin {
 			ordinal = 0
 		)
 	)
-	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci, @Share("registryInitialized") LocalBooleanRef regisryInitialized) {
+	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci, @Share("osl$blocks$blocksRegistered") LocalBooleanRef blocksRegistered) {
 		// in some versions this injector targets a for-loop
-		if (!regisryInitialized.get()) {
+		if (!blocksRegistered.get()) {
 			BlockRegistryImpl.init();
 			BlockRegistryImpl.lock();
 		}
 
-		regisryInitialized.set(true);
+		blocksRegistered.set(true);
 	}
 
 	@Override

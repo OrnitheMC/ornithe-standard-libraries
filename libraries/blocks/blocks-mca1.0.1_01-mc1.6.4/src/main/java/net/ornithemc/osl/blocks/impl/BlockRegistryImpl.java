@@ -37,7 +37,6 @@ public final class BlockRegistryImpl {
 			throw new IllegalStateException("register called too " + (initialized ? "late" : "early") + ": registry locked!");
 		} else {
 			Block.REGISTRY.register(id, key, block);
-
 		}
 
 		return block;
