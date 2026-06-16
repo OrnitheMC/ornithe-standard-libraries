@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-blocks",
-  "version": "0.1.0-alpha.1+mc17w47a-mc18w31a",
+  "version": "0.1.0-alpha.2+mc17w47a-mc18w31a",
   "environment": "*",
   "mixins": [
     "osl.blocks.mixins.json"
