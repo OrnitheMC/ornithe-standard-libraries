@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-config",
-  "version": "0.6.1+mcb1.3-mcb1.7.3",
+  "version": "0.6.2-alpha.1+mcb1.3-mcb1.7.3",
   "environment": "client",
   "entrypoints": {
     "init": [
