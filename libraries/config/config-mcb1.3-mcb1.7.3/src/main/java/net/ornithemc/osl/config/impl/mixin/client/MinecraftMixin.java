@@ -1,5 +1,6 @@
 package net.ornithemc.osl.config.impl.mixin.client;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,13 +21,27 @@ public class MinecraftMixin {
 	@Shadow private World world;
 
 	@Inject(
+		method = "run",
+		at = @At(
+			value = "FIELD",
+			opcode = Opcodes.PUTFIELD,
+			target = "Lnet/minecraft/client/Minecraft;world:Lnet/minecraft/world/World;"
+		)
+	)
+	private void osl$config$closeWorld(CallbackInfo ci) {
+		if (this.world != null && !this.world.isMultiplayer) {
+			ConfigInitializer.CLOSE_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
+		}
+	}
+
+	@Inject(
 		method = "setWorld(Lnet/minecraft/world/World;Ljava/lang/String;Lnet/minecraft/entity/mob/player/PlayerEntity;)V",
 		at = @At(
 			value = "HEAD"
 		)
 	)
 	private void osl$config$closeWorld(World world, String message, PlayerEntity player, CallbackInfo ci) {
-		if ((this.world == null || !this.world.isMultiplayer) && world == null && osl$config$startGameDepth == 0) {
+		if (this.world != null && !this.world.isMultiplayer && world == null && osl$config$startGameDepth == 0) {
 			ConfigInitializer.CLOSE_WORLD.invoker().accept(MinecraftAccess.INSTANCE);
 		}
 	}
