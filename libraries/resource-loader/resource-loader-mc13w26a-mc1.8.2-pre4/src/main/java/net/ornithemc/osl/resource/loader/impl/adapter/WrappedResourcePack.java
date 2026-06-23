@@ -48,7 +48,7 @@ public class WrappedResourcePack extends AbstractResourcePack {
 
 	private boolean hasResourceFromPack(net.minecraft.client.resource.pack.ResourcePack pack, String path) {
 		if (pack instanceof BuiltInResourcePack) {
-			return ((BuiltInResourcePack) pack).hasResource(new PathIdentifier(path)) 
+			return ((BuiltInResourcePack) pack).hasResource(new FilePathIdentifier(path)) 
 				|| ((BuiltInResourcePack) pack).hasResource(new Identifier(path));
 		} else if (pack instanceof CustomResourcePack) {
 			return ((CustomResourcePackAccess) pack).invokeHasResource(path);
@@ -66,8 +66,8 @@ public class WrappedResourcePack extends AbstractResourcePack {
 
 	private InputStream getResourceFromPack(net.minecraft.client.resource.pack.ResourcePack pack, String path) throws IOException {
 		if (pack instanceof BuiltInResourcePack) {
-			return ((BuiltInResourcePack) pack).hasResource(new PathIdentifier(path))
-				? ((BuiltInResourcePack) pack).getResource(new PathIdentifier(path))
+			return ((BuiltInResourcePack) pack).hasResource(new FilePathIdentifier(path))
+				? ((BuiltInResourcePack) pack).getResource(new FilePathIdentifier(path))
 				: ((BuiltInResourcePack) pack).getResource(new Identifier(path));
 		} else if (pack instanceof CustomResourcePack) {
 			return ((CustomResourcePackAccess) pack).invokeOpenResource(path);
@@ -126,21 +126,6 @@ public class WrappedResourcePack extends AbstractResourcePack {
 			}
 		} else if (pack instanceof ResourcePackAdapter) {
 			((ResourcePackAdapter) pack).pack.findResources(type, namespace, directory, consumer);
-		}
-	}
-
-	/**
-	 * Path-only Identifier impl for accessing direct-path resources from the assets index.
-	 */
-	private static class PathIdentifier extends Identifier {
-
-		private PathIdentifier(String path) {
-			super(path);
-		}
-
-		@Override
-		public String toString() {
-			return this.getPath();
 		}
 	}
 }

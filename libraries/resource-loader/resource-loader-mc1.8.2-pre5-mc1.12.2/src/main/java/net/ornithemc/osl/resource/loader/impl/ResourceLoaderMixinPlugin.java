@@ -31,6 +31,12 @@ public class ResourceLoaderMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.LegacyResourcePackAccess".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("16w32a") >= 0;
 		}
+		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.BuiltInResourcePackMixinNew".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("16w32b") >= 0;
+		}
+		if ("net.ornithemc.osl.resource.loader.impl.mixin.client.BuiltInResourcePackMixinOld".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("16w32b") < 0;
+		}
 
 		return true;
 	}
