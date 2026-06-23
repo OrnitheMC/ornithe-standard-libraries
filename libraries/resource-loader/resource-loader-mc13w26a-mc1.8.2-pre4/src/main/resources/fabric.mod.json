@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-resource-loader",
-  "version": "0.7.2-alpha.1+mc13w26a-mc1.8.2-pre4",
+  "version": "0.7.2-alpha.2+mc13w26a-mc1.8.2-pre4",
   "environment": "client",
   "mixins": [
     "osl.resource-loader.mixins.json"
