@@ -9,6 +9,8 @@
 		"common.CraftingManagerMixin"
 	],
 	"client": [
+		"client.BuiltInResourcePackMixinNew",
+		"client.BuiltInResourcePackMixinOld",
 		"client.CustomResourcePackAccess",
 		"client.LegacyResourcePackAccess",
 		"client.MinecraftMixin",

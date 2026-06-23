@@ -52,7 +52,7 @@ public class WrappedResourcePack extends AbstractResourcePack {
 		if (ResourcePacks.getSupportedFormat() > 2 && pack instanceof LegacyResourcePack) {
 			return this.hasResourceFromPack(((LegacyResourcePackAccess) pack).accessPack(), path);
 		} else if (pack instanceof BuiltInResourcePack) {
-			return ((BuiltInResourcePack) pack).hasResource(new PathIdentifier(path)) 
+			return ((BuiltInResourcePack) pack).hasResource(new FilePathIdentifier(path)) 
 				|| ((BuiltInResourcePack) pack).hasResource(new Identifier(path));
 		} else if (pack instanceof CustomResourcePack) {
 			return ((CustomResourcePackAccess) pack).invokeHasResource(path);
@@ -72,8 +72,8 @@ public class WrappedResourcePack extends AbstractResourcePack {
 		if (ResourcePacks.getSupportedFormat() > 2 && pack instanceof LegacyResourcePack) {
 			return this.getResourceFromPack(((LegacyResourcePackAccess) pack).accessPack(), path);
 		} else if (pack instanceof BuiltInResourcePack) {
-			return ((BuiltInResourcePack) pack).hasResource(new PathIdentifier(path))
-				? ((BuiltInResourcePack) pack).getResource(new PathIdentifier(path))
+			return ((BuiltInResourcePack) pack).hasResource(new FilePathIdentifier(path))
+				? ((BuiltInResourcePack) pack).getResource(new FilePathIdentifier(path))
 				: ((BuiltInResourcePack) pack).getResource(new Identifier(path));
 		} else if (pack instanceof CustomResourcePack) {
 			return ((CustomResourcePackAccess) pack).invokeOpenResource(path);
@@ -134,21 +134,6 @@ public class WrappedResourcePack extends AbstractResourcePack {
 			}
 		} else if (pack instanceof ResourcePackAdapter) {
 			((ResourcePackAdapter) pack).pack.findResources(type, namespace, directory, consumer);
-		}
-	}
-
-	/**
-	 * Path-only Identifier impl for accessing direct-path resources from the assets index.
-	 */
-	private static class PathIdentifier extends Identifier {
-
-		private PathIdentifier(String path) {
-			super(path);
-		}
-
-		@Override
-		public String toString() {
-			return this.getPath();
 		}
 	}
 }
