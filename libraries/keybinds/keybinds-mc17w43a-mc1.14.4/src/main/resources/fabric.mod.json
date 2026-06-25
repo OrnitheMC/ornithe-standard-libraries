@@ -6,6 +6,7 @@
   "mixins": [
     "osl.keybinds.mixins.json"
   ],
+  "accessWidener": "osl.keybinds.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.13-alpha.17.43.a \u003c\u003d1.14.4",

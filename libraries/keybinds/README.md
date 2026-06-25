@@ -1,26 +1,42 @@
 # Keybinds API
 
-The keybinds API provides events for registering keybinds. You may register a callback to this event in your mod's initializer:
+The Keybinds API provides events and utilities for registering and working with keybinds.
+
+## Registering Custom Keybinds
+
+Keybind registration should be done in a listener to the `REGISTER_KEYBINDS` event. The `KeybindRegistry` class provides utility methods for registering keybinds.
+
+An example is shown below.
 
 ```java
 package com.example;
 
-import net.minecraft.client.options.KeyBinding;
-
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
-import net.ornithemc.osl.keybinds.api.KeyBindingEvents;
-
-import org.lwjgl.input.Keyboard;
+import net.ornithemc.osl.keybinds.api.KeybindEvents;
 
 public class ExampleInitializer implements ClientModInitializer {
 
-	public static KeyBinding cookieKeybind;
-
 	@Override
 	public void initClient() {
-		KeyBindingEvents.REGISTER_KEYBINDS.register(registry -> {
-			cookieKeybind = registry.register("Cookie", Keyboard.KEY_NONE, "Example Mod");
-		});
+		KeybindEvents.REGISTER_KEYBINDS.register(ExampleKeybinds::init);
+	}
+}
+```
+
+```java
+package com.example;
+
+import org.lwjgl.glfw.GLFW;
+
+import net.minecraft.client.options.KeyBinding;
+
+import net.ornithemc.osl.keybinds.api.KeybindRegistry;
+
+public final class ExampleKeybinds {
+
+	public static final KeyBinding COOKIE = KeybindRegistry.register("cookie", GLFW.GLFW_KEY_Z, "example");
+
+	public static void init() {
 	}
 }
 ```
