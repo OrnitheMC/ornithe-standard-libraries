@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-keybinds",
-  "version": "0.2.0+mca1.0.1_01-mcb1.7.3",
+  "version": "0.3.0+mca1.0.1_01-mcb1.7.3",
   "environment": "client",
   "mixins": [
     "osl.keybinds.mixins.json"

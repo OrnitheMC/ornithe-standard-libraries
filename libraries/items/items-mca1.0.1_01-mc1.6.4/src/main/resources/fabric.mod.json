@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-items",
-  "version": "0.1.0-alpha.1+mca1.0.1_01-mc1.6.4",
+  "version": "0.1.0+mca1.0.1_01-mc1.6.4",
   "environment": "*",
   "mixins": [
     "osl.items.mixins.json"
@@ -10,8 +10,8 @@
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.0.0-alpha.0.1 \u003c\u003d1.6.4",
-    "osl-core": "\u003e\u003d0.7.0",
-    "osl-blocks": "\u003e\u003d0.1.0-"
+    "osl-core": "\u003e\u003d0.9.0",
+    "osl-blocks": "\u003e\u003d0.1.0"
   },
   "name": "OSL Items",
   "description": "Items API and events.",
