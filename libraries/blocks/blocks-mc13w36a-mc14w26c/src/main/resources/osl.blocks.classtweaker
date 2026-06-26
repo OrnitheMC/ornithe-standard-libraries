@@ -1,5 +1,8 @@
 classTweaker	v1	named
 
+transitive-accessible   method  net/minecraft/block/Block   <init>      (Lnet/minecraft/block/material/Material;)V
+transitive-accessible   method  net/minecraft/block/Block   setShape    (FFFFFF)V
+transitive-accessible   method  net/minecraft/block/Block   disableStats ()Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setSounds	(Lnet/minecraft/block/Block$Sounds;)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setOpacity	(I)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setLight	(F)Lnet/minecraft/block/Block;
