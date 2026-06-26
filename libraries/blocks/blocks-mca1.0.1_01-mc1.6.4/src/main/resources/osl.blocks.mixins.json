@@ -8,6 +8,7 @@
 		"common.BlockMixin",
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
+		"common.WorldMixin",
 		"common.RedstoneTorchBlockMixin",
 		"common.RepeaterBlockMixin"
 	],
