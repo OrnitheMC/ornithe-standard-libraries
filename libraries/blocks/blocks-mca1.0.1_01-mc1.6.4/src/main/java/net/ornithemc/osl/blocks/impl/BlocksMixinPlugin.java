@@ -37,6 +37,9 @@ public class BlocksMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.RepeaterBlockMixin".equals(mixinClassName)) {
 			return !BLOCK_IS_METHOD_PRESENT && MinecraftVersion.resolve().compareTo("b1.3") >= 0;
 		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.WorldMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w03a") <= 0;
+		}
 
 		return true;
 	}
