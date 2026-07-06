@@ -170,6 +170,11 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 	}
 
 	@Override
+	public List<ResourcePack> openSelectedPacks() {
+		return this.selected.stream().map(ResourcePackSummary::open).collect(Collectors.toList());
+	}
+
+	@Override
 	public void setSelectedPacks(Collection<String> packs) {
 		this.rebuildSelectedPacks(packs);
 	}
@@ -186,6 +191,7 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 
 	@Override
 	public void close() {
+		this.selected.stream().map(ResourcePackSummary::open).forEach(ResourcePack::close);
 		this.available.forEach(ResourcePackSummary::close);
 	}
 }

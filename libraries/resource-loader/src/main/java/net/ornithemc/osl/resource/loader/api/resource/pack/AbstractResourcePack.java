@@ -57,9 +57,4 @@ public abstract class AbstractResourcePack implements ResourcePack {
 	public void close() {
 		this.namespaces = null;
 	}
-
-	@Override
-	public void finalize() {
-		this.close();
-	}
 }

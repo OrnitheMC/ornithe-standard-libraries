@@ -3,7 +3,6 @@ package net.ornithemc.osl.resource.loader.api.resource.repository;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import net.fabricmc.loader.api.ModContainer;
 
@@ -85,9 +84,7 @@ public interface ResourcePackRepository extends AutoCloseable {
 	/**
 	 * @return all selected resource packs.
 	 */
-	default List<ResourcePack> openSelectedPacks() {
-		return this.getSelectedPacks().stream().map(ResourcePackSummary::open).collect(Collectors.toList());
-	}
+	List<ResourcePack> openSelectedPacks();
 
 	/**
 	 * Updates the selected resource packs, closing any that are unselected.
