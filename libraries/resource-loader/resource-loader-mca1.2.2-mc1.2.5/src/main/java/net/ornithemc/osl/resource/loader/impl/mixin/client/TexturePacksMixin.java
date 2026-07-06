@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.pack.DirectoryTexturePack;
 import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
@@ -39,6 +40,8 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 
 	private static final boolean DIRECTORY_TEXTURE_PACKS_SUPPORTED = MinecraftVersion.resolve().compareTo("12w08a") >= 0;
 
+	@Shadow
+	private Minecraft minecraft;
 	@Shadow
 	private List<TexturePack> availablePacks;
 	@Shadow
@@ -97,9 +100,15 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		)
 	)
 	private void osl$resource_loader$initSelected(CallbackInfo ci) {
-		if (!this.availablePacks.contains(this.actuallySelected)) {
-			this.selectPack(null);
+		TexturePack selected = this.defaultPack;
+
+		for (TexturePack pack : this.availablePacks) {
+			if (pack.name.equals(this.minecraft.options.skin)) {
+				selected = pack;
+			}
 		}
+
+		this.selectPack(selected);
 	}
 
 	@Inject(
