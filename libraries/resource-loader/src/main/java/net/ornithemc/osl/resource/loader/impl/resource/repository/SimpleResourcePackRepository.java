@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
+import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
@@ -146,6 +147,8 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 				pack.getDefaultPosition().insert(this.selected, pack, false);
 			}
 		}
+
+		this.selected.stream().map(ResourcePackSummary::open).forEach(ResourcePack::open);
 
 		if (this.selectionCallback != null) {
 			this.selectionCallback.run();
