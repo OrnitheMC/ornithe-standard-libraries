@@ -24,7 +24,6 @@ import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
-import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ClientPlayNetworkingImpl {
 
@@ -115,7 +114,7 @@ public final class ClientPlayNetworkingImpl {
 			try {
 				handlePayload(channel, listener, ctx, data);
 			} catch (NotOnMainThreadException e) {
-				((TaskRunnerAccess) minecraft).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+				minecraft.execute(() -> handlePayload(channel, listener, ctx, data));
 			}
 
 			return true;
