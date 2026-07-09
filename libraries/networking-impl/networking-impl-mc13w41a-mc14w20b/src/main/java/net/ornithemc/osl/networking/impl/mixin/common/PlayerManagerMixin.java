@@ -1,5 +1,7 @@
 package net.ornithemc.osl.networking.impl.mixin.common;
 
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,11 +16,15 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
+import net.ornithemc.osl.networking.impl.access.PlayerManagerAccess;
+import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 
 @Mixin(PlayerManager.class)
-public class PlayerManagerMixin {
+public class PlayerManagerMixin implements PlayerManagerAccess {
 
 	@Shadow @Final private MinecraftServer server;
+	@Shadow @Final private List<ServerPlayerEntity> players;
 
 	@Inject(
 		method = "onLogin",
@@ -27,6 +33,27 @@ public class PlayerManagerMixin {
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci, @Local ServerPlayerEntity player) {
-		ServerConnectionEvents.LOGIN.invoker().accept(server, player);
+		ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) player.networkHandler;
+		ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+		ServerConnectionEvents.LOGIN.invoker().accept(connectionContext);
+	}
+
+	@Inject(
+		method = "remove",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$networking$handleDisconnect(CallbackInfo ci, @Local ServerPlayerEntity player) {
+		ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) player.networkHandler;
+		ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+		ServerConnectionEvents.DISCONNECT.invoker().accept(connectionContext);
+	}
+
+	@Override
+	public List<ServerPlayerEntity> osl$networking$getAll() {
+		return players;
 	}
 }

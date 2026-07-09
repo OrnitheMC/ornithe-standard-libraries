@@ -10,7 +10,9 @@
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientNetworkHandlerMixin"
+		"client.ClientNetworkHandlerMixin",
+		"client.LocalServerAccess",
+		"client.MinecraftMixin"
 	],
 	"server": [
 	],

@@ -3,6 +3,7 @@ package net.ornithemc.osl.networking.impl.mixin.server;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,22 +16,39 @@ import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.impl.CustomPayloadPacket;
-import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.impl.access.PacketHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
+import net.ornithemc.osl.text.api.TextComponents;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess, INetworkHandler {
+public class ServerPlayNetworkHandlerMixin implements ServerNetworkHandlerAccess, PacketHandlerAccess {
 
-	@Shadow private MinecraftServer server;
-	@Shadow private ServerPlayerEntity player;
+	@Shadow @Final
+	private MinecraftServer server;
 
+	@Shadow
+	private ServerPlayerEntity player;
+
+	@Unique
+	private ServerConnectionContext connectionContext;
 	/**
 	 * Channels that the client is listening to.
 	 */
-	@Unique private Set<NamespacedIdentifier> clientChannels;
+	@Unique
+	private Set<NamespacedIdentifier> clientChannels;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$networking$initConnectionContext(CallbackInfo ci) {
+		connectionContext = new ServerConnectionContext(server, (ServerPlayNetworkHandler) (Object) this);
+	}
 
 	@Inject(
 		method = "onDisconnect",
@@ -38,9 +56,15 @@ public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess, INet
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(CallbackInfo ci) {
-		ServerConnectionEvents.DISCONNECT.invoker().accept(server, player);
-		clientChannels = null;
+	private void osl$networking$handleDisconnect(String reason, Object[] args, CallbackInfo ci) {
+		connectionContext.offerDisconnectReason(args == null
+			? TextComponents.translatable(reason)
+			: TextComponents.translatable(reason, args));
+	}
+
+	@Override
+	public ServerConnectionContext osl$networking$connectionContext() {
+		return connectionContext;
 	}
 
 	@Override

@@ -10,6 +10,7 @@
 	"client": [
 	],
 	"server": [
+		"server.PlayerManagerMixin",
 		"server.ServerLoginNetworkHandlerMixin",
 		"server.ServerPlayNetworkHandlerMixin"
 	],

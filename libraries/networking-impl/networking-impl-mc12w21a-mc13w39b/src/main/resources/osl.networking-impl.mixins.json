@@ -6,6 +6,7 @@
 	"plugin": "net.ornithemc.osl.networking.impl.NetworkingMixinPlugin",
 	"mixins": [
 		"common.CustomPayloadPacketMixin",
+		"common.MinecraftServerMixin",
 		"common.PlayerManagerMixin",
 		"common.RemoteConnectionMixinNew",
 		"common.RemoteConnectionMixinOld",
@@ -13,7 +14,8 @@
 	],
 	"client": [
 		"client.ClientNetworkHandlerMixin",
-		"client.LocalConnectionMixin"
+		"client.LocalConnectionMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
 	],

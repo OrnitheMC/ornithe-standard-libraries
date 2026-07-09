@@ -10,9 +10,11 @@
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin"
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
+		"server.MinecraftServerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
