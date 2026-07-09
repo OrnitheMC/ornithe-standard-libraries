@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.network.packet.CustomPayloadPacket;
 
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.impl.access.PacketHandlerAccess;
 
 @Mixin(PacketHandler.class)
 public class PacketHandlerMixin {
@@ -21,7 +21,7 @@ public class PacketHandlerMixin {
 		)
 	)
 	private void osl$networking$handleCustomPayload(CustomPayloadPacket packet, CallbackInfo ci) {
-		if (this instanceof INetworkHandler && ((INetworkHandler)this).osl$networking$handleCustomPayload(packet)) {
+		if (this instanceof PacketHandlerAccess && ((PacketHandlerAccess) this).osl$networking$handleCustomPayload(packet)) {
 			ci.cancel();
 		}
 	}

@@ -3,6 +3,7 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.networking.impl.NetworkingMixinPlugin",
 	"mixins": [
 		"common.CustomPayloadC2SPacketMixin",
 		"common.CustomPayloadS2CPacketMixin",
@@ -10,7 +11,9 @@
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin"
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.MinecraftMixinNew",
+		"client.MinecraftMixinOld"
 	],
 	"server": [
 	],

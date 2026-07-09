@@ -11,7 +11,8 @@
 		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin"
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
 	],

@@ -1,8 +1,10 @@
 package net.ornithemc.osl.networking.impl.mixin.client;
 
+import java.net.SocketAddress;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,24 +15,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.client.world.MultiplayerWorld;
+import net.minecraft.network.Connection;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
+import net.ornithemc.osl.networking.impl.AddressParser;
 import net.ornithemc.osl.networking.impl.CustomPayloadPacket;
-import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.ClientNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.PacketHandlerAccess;
+import net.ornithemc.osl.networking.impl.client.ClientConnectionContext;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.text.api.TextComponents;
 
 @Mixin(ClientNetworkHandler.class)
-public class ClientNetworkHandlerMixin implements NetworkHandlerAccess, INetworkHandler {
+public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, PacketHandlerAccess {
 
-	@Shadow private Minecraft minecraft;
-	@Shadow private MultiplayerWorld world;
+	@Shadow @Final
+	private Minecraft minecraft;
+	@Shadow @Final
+	private MultiplayerWorld world;
+	@Shadow @Final
+	private Connection connection;
 
+	@Unique
+	private ClientConnectionContext connectionContext;
 	/**
 	 * Channels that the server is listening to.
 	 */
-	@Unique private Set<NamespacedIdentifier> serverChannels;
+	@Unique
+	private Set<NamespacedIdentifier> serverChannels;
 
 	@Inject(
 		method = "handleLogin",
@@ -39,7 +52,16 @@ public class ClientNetworkHandlerMixin implements NetworkHandlerAccess, INetwork
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
-		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
+		{
+			SocketAddress address = ((ConnectionAccessor) connection).osl$networking$accessAddress();
+
+			String serverAddress = AddressParser.getAddress(address);
+			int serverPort = AddressParser.getPort(address);
+
+			connectionContext = new ClientConnectionContext(minecraft, serverAddress, serverPort);
+		}
+
+		ClientConnectionEvents.LOGIN.invoker().accept(connectionContext);
 	}
 
 	@Inject(
@@ -48,9 +70,13 @@ public class ClientNetworkHandlerMixin implements NetworkHandlerAccess, INetwork
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(CallbackInfo ci) {
-		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
-		serverChannels = null;
+	private void osl$networking$handleDisconnect(String reason, CallbackInfo ci) {
+		connectionContext.setDisconnectReason(TextComponents.literal(reason));
+	}
+
+	@Override
+	public ClientConnectionContext osl$networking$connectionContext() {
+		return connectionContext;
 	}
 
 	@Override

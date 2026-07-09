@@ -1,5 +1,6 @@
 package net.ornithemc.osl.networking.impl.mixin.client;
 
+import java.net.SocketAddress;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,23 +14,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
+import net.minecraft.network.Connection;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.text.Text;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
+import net.ornithemc.osl.networking.impl.AddressParser;
 import net.ornithemc.osl.networking.impl.HandshakePayload;
-import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.ClientNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.client.ClientConnectionContext;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
+import net.ornithemc.osl.text.api.TextComponents;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class ClientPlayNetworkHandlerMixin implements NetworkHandlerAccess {
+public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess {
 
-	@Shadow @Final private Minecraft minecraft;
+	@Shadow @Final
+	private Minecraft minecraft;
+	@Shadow @Final
+	private Connection connection;
 
+	@Unique
+	private ClientConnectionContext connectionContext;
 	/**
 	 * Channels that the server is listening to.
 	 */
-	@Unique private Set<NamespacedIdentifier> serverChannels;
+	@Unique
+	private Set<NamespacedIdentifier> serverChannels;
 
 	@Inject(
 		method = "handleLogin",
@@ -38,10 +51,24 @@ public class ClientPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
+		if (minecraft.isIntegratedServerRunning()) {
+			IntegratedServer server = minecraft.getServer();
+			String worldName = server.getWorldName();
+
+			connectionContext = new ClientConnectionContext(minecraft, worldName);
+		} else {
+			SocketAddress address = connection.getAddress();
+
+			String serverAddress = AddressParser.getAddress(address);
+			int serverPort = AddressParser.getPort(address);
+
+			connectionContext = new ClientConnectionContext(minecraft, serverAddress, serverPort);
+		}
+
 		// send channel registration data as soon as login occurs
 		ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 
-		ClientConnectionEvents.LOGIN.invoker().accept(minecraft);
+		ClientConnectionEvents.LOGIN.invoker().accept(connectionContext);
 	}
 
 	@Inject(
@@ -50,9 +77,8 @@ public class ClientPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(CallbackInfo ci) {
-		ClientConnectionEvents.DISCONNECT.invoker().accept(minecraft);
-		serverChannels = null;
+	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
+		connectionContext.setDisconnectReason(TextComponents.literal(reason.getFormattedString()));
 	}
 
 	@Inject(
@@ -66,6 +92,11 @@ public class ClientPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 		if (ClientPlayNetworkingImpl.handlePacket(minecraft, (ClientPlayNetworkHandler)(Object)this, packet)) {
 			ci.cancel();
 		}
+	}
+
+	@Override
+	public ClientConnectionContext osl$networking$connectionContext() {
+		return connectionContext;
 	}
 
 	@Override
