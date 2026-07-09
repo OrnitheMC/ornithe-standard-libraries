@@ -29,7 +29,6 @@ import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
-import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ServerPlayNetworkingImpl {
 
@@ -120,7 +119,7 @@ public final class ServerPlayNetworkingImpl {
 			try {
 				handlePayload(channel, listener, ctx, data);
 			} catch (NotOnMainThreadException e) {
-				((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+				server.execute(() -> handlePayload(channel, listener, ctx, data));
 			}
 
 			return true;
