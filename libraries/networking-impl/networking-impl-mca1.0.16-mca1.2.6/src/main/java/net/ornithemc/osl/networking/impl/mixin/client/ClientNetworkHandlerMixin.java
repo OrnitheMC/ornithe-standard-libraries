@@ -53,7 +53,7 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
 		{
-			SocketAddress address = ((ConnectionAccessor) connection).osl$networking$accessAddress();
+			SocketAddress address = connection.socket.getRemoteSocketAddress();
 
 			String serverAddress = AddressParser.getAddress(address);
 			int serverPort = AddressParser.getPort(address);

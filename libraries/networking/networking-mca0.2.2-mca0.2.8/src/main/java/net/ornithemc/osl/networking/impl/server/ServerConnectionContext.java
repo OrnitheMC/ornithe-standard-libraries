@@ -7,7 +7,6 @@ import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents.DisconnectContext;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents.LoginContext;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents.PlayReadyContext;
-import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
 import net.ornithemc.osl.text.api.TextComponent;
 
 public final class ServerConnectionContext implements LoginContext, PlayReadyContext, DisconnectContext {
@@ -29,7 +28,7 @@ public final class ServerConnectionContext implements LoginContext, PlayReadyCon
 
 	@Override
 	public ServerPlayerEntity player() {
-		return ((ServerNetworkHandlerAccess) this.networkHandler).osl$networkin$player();
+		return this.networkHandler.player;
 	}
 
 	@Override
