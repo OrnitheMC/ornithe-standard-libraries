@@ -61,7 +61,9 @@ public final class ClientConnectionContext implements LoginContext, PlayReadyCon
 		return this.worldName != null;
 	}
 
-	public void setDisconnectReason(TextComponent disconnectReason) {
-		this.disconnectReason = disconnectReason;
+	public void offerDisconnectReason(TextComponent disconnectReason) {
+		if (this.disconnectReason == null) {
+			this.disconnectReason = disconnectReason;
+		}
 	}
 }

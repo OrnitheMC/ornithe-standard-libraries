@@ -37,7 +37,9 @@ public final class ServerConnectionContext implements LoginContext, PlayReadyCon
 		return this.disconnectReason;
 	}
 
-	public void setDisconnectReason(TextComponent disconnectReason) {
-		this.disconnectReason = disconnectReason;
+	public void offerDisconnectReason(TextComponent disconnectReason) {
+		if (this.disconnectReason == null) {
+			this.disconnectReason = disconnectReason;
+		}
 	}
 }

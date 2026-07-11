@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.client.world.MultiplayerWorld;
 import net.minecraft.network.Connection;
+import net.minecraft.network.packet.DisconnectPacket;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
@@ -65,13 +66,23 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 	}
 
 	@Inject(
+		method = "handleDisconnect",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$networking$handleDisconnect(DisconnectPacket packet, CallbackInfo ci) {
+		connectionContext.offerDisconnectReason(TextComponents.literal(packet.reason));
+	}
+
+	@Inject(
 		method = "onDisconnect",
 		at = @At(
 			value = "HEAD"
 		)
 	)
 	private void osl$networking$handleDisconnect(String reason, Object[] args, CallbackInfo ci) {
-		connectionContext.setDisconnectReason(args == null
+		connectionContext.offerDisconnectReason(args == null
 			? TextComponents.translatable(reason)
 			: TextComponents.translatable(reason, args));
 	}

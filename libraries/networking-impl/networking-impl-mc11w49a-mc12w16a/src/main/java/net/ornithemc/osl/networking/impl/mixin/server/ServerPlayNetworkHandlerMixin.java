@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.network.packet.CustomPayloadPacket;
+import net.minecraft.network.packet.DisconnectPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
@@ -51,13 +52,23 @@ public class ServerPlayNetworkHandlerMixin implements ServerNetworkHandlerAccess
 	}
 
 	@Inject(
+		method = "handleDisconnect",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$networking$handleDisconnect(DisconnectPacket packet, CallbackInfo ci) {
+		connectionContext.offerDisconnectReason(TextComponents.literal(packet.reason));
+	}
+
+	@Inject(
 		method = "onDisconnect",
 		at = @At(
 			value = "HEAD"
 		)
 	)
 	private void osl$networking$handleDisconnect(String reason, Object[] args, CallbackInfo ci) {
-		connectionContext.setDisconnectReason(args == null
+		connectionContext.offerDisconnectReason(args == null
 			? TextComponents.translatable(reason)
 			: TextComponents.translatable(reason, args));
 	}

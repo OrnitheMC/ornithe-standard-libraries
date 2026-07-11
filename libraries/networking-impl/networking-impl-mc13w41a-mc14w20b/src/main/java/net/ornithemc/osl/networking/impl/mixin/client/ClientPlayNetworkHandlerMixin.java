@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.network.Connection;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
 
@@ -72,13 +73,23 @@ public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess
 	}
 
 	@Inject(
+		method = "handleDisconnect",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$networking$handleDisconnect(DisconnectS2CPacket packet, CallbackInfo ci) {
+		connectionContext.offerDisconnectReason(TextComponents.literal(packet.getReason().getFormattedString()));
+	}
+
+	@Inject(
 		method = "onDisconnect",
 		at = @At(
 			value = "HEAD"
 		)
 	)
 	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
-		connectionContext.setDisconnectReason(TextComponents.literal(reason.getFormattedString()));
+		connectionContext.offerDisconnectReason(TextComponents.literal(reason.getFormattedString()));
 	}
 
 	@Inject(
