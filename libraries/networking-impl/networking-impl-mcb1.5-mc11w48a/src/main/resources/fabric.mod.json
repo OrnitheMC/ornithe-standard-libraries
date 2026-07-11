@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-networking-impl",
-  "version": "0.2.0-alpha.3+mcb1.5-mc11w48a",
+  "version": "0.2.0-alpha.4+mcb1.5-mc11w48a",
   "environment": "*",
   "entrypoints": {
     "init": [
