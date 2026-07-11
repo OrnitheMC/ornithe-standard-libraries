@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 import org.quiltmc.parsers.json.JsonReader;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
+import net.ornithemc.osl.resource.loader.api.resource.ResourceLocation;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.impl.resource.pack.ResourcePacks;
 
@@ -136,7 +136,7 @@ public final class Locale implements net.ornithemc.osl.text.impl.Locale {
 			}
 
 			for (String namespace : resourceManager.getNamespaces()) {
-				NamespacedIdentifier location = NamespacedIdentifiers.from(namespace, path);
+				NamespacedIdentifier location = ResourceLocation.of(namespace, path);
 				List<Resource> resources = resourceManager.getResourceStack(location);
 
 				this.loadFromResources(resources);

@@ -127,7 +127,7 @@ resourceManager.getResource("/path/to/resource");
 // Use this to access Vanilla resources in versions 1.6 and later.
 // It is recommended to lay out custom resources in namespaced
 // directories for improved compatibility and extra features.
-resourceManager.getResource(NamespacedIdentifiers.from("example", "path/to/resource"));
+resourceManager.getResource(ResourceLocation.of("example", "path/to/resource"));
 
 // Get all resources as a Map<NamespacedIdentifier, Resource>
 // in the specified directory that match the specified filter.

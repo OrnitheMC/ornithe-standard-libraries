@@ -13,9 +13,9 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+import net.ornithemc.osl.core.impl.util.NamespacedIdentifierImpl;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceLocation;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
@@ -101,8 +101,10 @@ public final class ResourcePacks {
 					String s = p.getFileName().toString();
 					String namespace = s.replace(separator, "");
 
-					if (ResourceLocation.isValid(namespace)) {
+					if (ResourceLocation.isValidNamespace(namespace)) {
 						consumer.accept(type, namespace);
+					} else {
+						ResourceLoader.LOGGER.warn("ignoring invalid namespace '{}' from resource pack {}", namespace, pack.getName());
 					}
 				}
 			} catch (IOException e) {
@@ -139,10 +141,14 @@ public final class ResourcePacks {
 				Path p = it.next();
 
 				String path = dir.relativize(p).toString().replace(separator, "/");
-				NamespacedIdentifier location = NamespacedIdentifiers.from(namespace, path);
+				NamespacedIdentifier location = new NamespacedIdentifierImpl(namespace, path);
 				IOSupplier<InputStream> resource = pack.getResource(type, location);
 
-				consumer.accept(location, resource);
+				if (ResourceLocation.isValid(location)) {
+					consumer.accept(location, pack.getResource(type, location));
+				} else {
+					ResourceLoader.LOGGER.warn("ignoring resource at invalid location '{}' from resource pack {}", location, pack.getName());
+				}
 			}
 		} catch (IOException e) {
 			ResourceLoader.LOGGER.debug("error while listing resources from resource pack " + pack.getName(), e);
@@ -154,11 +160,11 @@ public final class ResourcePacks {
 	}
 
 	public static NamespacedIdentifier getMetadataLocation(NamespacedIdentifier location) {
-		return NamespacedIdentifiers.from(location.namespace(), location.identifier() + ResourceMetadata.FILE_EXTENSION);
+		return new NamespacedIdentifierImpl(location.namespace(), location.identifier() + ResourceMetadata.FILE_EXTENSION);
 	}
 
 	public static NamespacedIdentifier getResourceLocation(NamespacedIdentifier metadata) {
-		return NamespacedIdentifiers.from(metadata.namespace(), metadata.identifier().substring(0, metadata.identifier().length() - ResourceMetadata.FILE_EXTENSION.length()));
+		return new NamespacedIdentifierImpl(metadata.namespace(), metadata.identifier().substring(0, metadata.identifier().length() - ResourceMetadata.FILE_EXTENSION.length()));
 	}
 
 	public static IOSupplier<InputStream> generateMetadataFile(TextComponent description) {
