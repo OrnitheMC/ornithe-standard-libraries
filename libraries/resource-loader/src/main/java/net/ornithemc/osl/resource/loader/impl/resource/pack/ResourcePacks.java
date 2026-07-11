@@ -13,9 +13,9 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+import net.ornithemc.osl.core.impl.util.NamespacedIdentifierImpl;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceLocation;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
@@ -139,7 +139,7 @@ public final class ResourcePacks {
 				Path p = it.next();
 
 				String path = dir.relativize(p).toString().replace(separator, "/");
-				NamespacedIdentifier location = NamespacedIdentifiers.from(namespace, path);
+				NamespacedIdentifier location = new NamespacedIdentifierImpl(namespace, path);
 				IOSupplier<InputStream> resource = pack.getResource(type, location);
 
 				consumer.accept(location, resource);
@@ -154,11 +154,11 @@ public final class ResourcePacks {
 	}
 
 	public static NamespacedIdentifier getMetadataLocation(NamespacedIdentifier location) {
-		return NamespacedIdentifiers.from(location.namespace(), location.identifier() + ResourceMetadata.FILE_EXTENSION);
+		return new NamespacedIdentifierImpl(location.namespace(), location.identifier() + ResourceMetadata.FILE_EXTENSION);
 	}
 
 	public static NamespacedIdentifier getResourceLocation(NamespacedIdentifier metadata) {
-		return NamespacedIdentifiers.from(metadata.namespace(), metadata.identifier().substring(0, metadata.identifier().length() - ResourceMetadata.FILE_EXTENSION.length()));
+		return new NamespacedIdentifierImpl(metadata.namespace(), metadata.identifier().substring(0, metadata.identifier().length() - ResourceMetadata.FILE_EXTENSION.length()));
 	}
 
 	public static IOSupplier<InputStream> generateMetadataFile(TextComponent description) {
