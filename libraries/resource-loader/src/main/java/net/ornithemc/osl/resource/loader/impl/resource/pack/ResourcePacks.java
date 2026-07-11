@@ -101,8 +101,10 @@ public final class ResourcePacks {
 					String s = p.getFileName().toString();
 					String namespace = s.replace(separator, "");
 
-					if (ResourceLocation.isValid(namespace)) {
+					if (ResourceLocation.isValidNamespace(namespace)) {
 						consumer.accept(type, namespace);
+					} else {
+						ResourceLoader.LOGGER.warn("ignoring invalid namespace '{}' from resource pack {}", namespace, pack.getName());
 					}
 				}
 			} catch (IOException e) {
@@ -142,7 +144,11 @@ public final class ResourcePacks {
 				NamespacedIdentifier location = new NamespacedIdentifierImpl(namespace, path);
 				IOSupplier<InputStream> resource = pack.getResource(type, location);
 
-				consumer.accept(location, resource);
+				if (ResourceLocation.isValid(location)) {
+					consumer.accept(location, pack.getResource(type, location));
+				} else {
+					ResourceLoader.LOGGER.warn("ignoring resource at invalid location '{}' from resource pack {}", location, pack.getName());
+				}
 			}
 		} catch (IOException e) {
 			ResourceLoader.LOGGER.debug("error while listing resources from resource pack " + pack.getName(), e);
