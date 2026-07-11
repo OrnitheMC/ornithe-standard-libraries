@@ -79,7 +79,7 @@ public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess
 		)
 	)
 	private void osl$networking$handleDisconnect(DisconnectS2CPacket packet, CallbackInfo ci) {
-		connectionContext.offerDisconnectReason(TextComponents.literal(packet.getReason().getFormattedString()));
+		connectionContext.offerDisconnectReason(TextComponents.resolve(packet.getReason()));
 	}
 
 	@Inject(
@@ -89,7 +89,7 @@ public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess
 		)
 	)
 	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
-		connectionContext.offerDisconnectReason(TextComponents.literal(reason.getFormattedString()));
+		connectionContext.offerDisconnectReason(TextComponents.resolve(reason));
 	}
 
 	@Inject(

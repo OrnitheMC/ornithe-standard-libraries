@@ -76,7 +76,7 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 		)
 	)
 	private void osl$networking$handleDisconnect(DisconnectPacket packet, CallbackInfo ci) {
-		connectionContext.offerDisconnectReason(TextComponents.literal(packet.reason));
+		connectionContext.offerDisconnectReason(TextComponents.resolve(packet.reason));
 	}
 
 	@Inject(

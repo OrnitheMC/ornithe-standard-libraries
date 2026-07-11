@@ -57,7 +57,7 @@ public class ServerPlayNetworkHandlerMixin implements ServerNetworkHandlerAccess
 		)
 	)
 	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
-		connectionContext.offerDisconnectReason(TextComponents.literal(reason.getFormattedString()));
+		connectionContext.offerDisconnectReason(TextComponents.resolve(reason));
 	}
 
 	@Inject(
