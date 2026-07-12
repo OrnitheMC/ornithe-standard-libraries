@@ -21,10 +21,14 @@ public interface ResourceReload {
 	 * @return a new resource reload.
 	 */
 	static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
+		return start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, () -> {});
+	}
+
+	static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, Runnable finalTask) {
 		if (ResourceLoader.LOGGER.isDebugEnabled()) {
-			return ProfiledResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
+			return ProfiledResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
 		} else {
-			return SimpleResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
+			return SimpleResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
 		}
 	}
 

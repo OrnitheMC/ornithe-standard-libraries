@@ -19,9 +19,9 @@ import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader.Sh
 
 public class SimpleResourceReload<R> implements ResourceReload {
 
-	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
+	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, Runnable finalTask) {
 		SimpleResourceReload<Void> reload = new SimpleResourceReload<>();
-		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask);
+		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask, finalTask);
 		return reload;
 	}
 
@@ -40,11 +40,14 @@ public class SimpleResourceReload<R> implements ResourceReload {
 	private int reloaderCount;
 	private CompletableFuture<List<R>> result;
 
-	void start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<R> taskFactory, CompletableFuture<?> initialTask) {
+	void start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<R> taskFactory, CompletableFuture<?> initialTask, Runnable finalTask) {
 		this.runningReloaders.addAll(reloaders);
 		this.reloaderCount = reloaders.size();
 
-		this.result = this.startTasks(manager, reloaders, backgroundExecutor, mainThreadExecutor, taskFactory, initialTask);
+		this.result = this.startTasks(manager, reloaders, backgroundExecutor, mainThreadExecutor, taskFactory, initialTask).thenApplyAsync(results -> {
+			finalTask.run();
+			return results;
+		}, mainThreadExecutor);
 	}
 
 	CompletableFuture<List<R>> startTasks(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, TaskFactory<R> taskFactory, CompletableFuture<?> initialTask) {

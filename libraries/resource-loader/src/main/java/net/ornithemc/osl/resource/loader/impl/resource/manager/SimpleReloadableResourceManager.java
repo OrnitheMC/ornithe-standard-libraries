@@ -236,16 +236,12 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 			}
 		});
 
-		ResourceReload reload = ResourceReload.start(this, reloaders, backgroundExecutor, mainThreadExecutor, initialTask);
-
-		reload.result().thenRun(() -> {
+		return ResourceReload.start(this, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, () -> {
 			if (this.type == ResourceType.CLIENT_ASSETS) {
 				ClientResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().accept(this, context);
 			} else if (this.type == ResourceType.SERVER_DATA) {
 				ServerResourceLoaderEvents.END_RESOURCE_RELOAD.invoker().accept(this, context);
 			}
 		});
-
-		return reload;
 	}
 }
