@@ -116,8 +116,8 @@ public final class NamespacedIdentifiers {
 		if (namespace.length() > MAX_LENGTH_NAMESPACE) {
 			throw NamespacedIdentifierException.invalidNamespace(namespace, "length " + namespace.length() + " is greater than maximum allowed " + MAX_LENGTH_NAMESPACE);
 		}
-		if (!namespace.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || (chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z') || (chr >= '0' && chr <= '9'))) {
-			throw NamespacedIdentifierException.invalidNamespace(namespace, "contains illegal characters - only [a-zA-Z0-9-._] are allowed");
+		if (!namespace.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'))) {
+			throw NamespacedIdentifierException.invalidNamespace(namespace, "contains illegal characters - only [a-z0-9-._] are allowed");
 		}
 
 		return namespace;
@@ -133,8 +133,8 @@ public final class NamespacedIdentifiers {
 		if (identifier.length() > MAX_LENGTH_IDENTIFIER) {
 			throw NamespacedIdentifierException.invalidIdentifier(identifier, "length " + identifier.length() + " is greater than maximum allowed " + MAX_LENGTH_IDENTIFIER);
 		}
-		if (!identifier.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z') || (chr >= '0' && chr <= '9'))) {
-			throw NamespacedIdentifierException.invalidIdentifier(identifier, "contains illegal characters - only [a-zA-Z0-9-._/] are allowed");
+		if (!identifier.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'))) {
+			throw NamespacedIdentifierException.invalidIdentifier(identifier, "contains illegal characters - only [a-z0-9-._/] are allowed");
 		}
 
 		return identifier;
