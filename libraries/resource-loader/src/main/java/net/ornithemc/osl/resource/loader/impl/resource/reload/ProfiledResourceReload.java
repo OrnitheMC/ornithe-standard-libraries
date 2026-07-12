@@ -15,9 +15,9 @@ import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
 public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourceReload.ProfileResult> {
 
-	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask) {
+	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, Runnable finalTask) {
 		ProfiledResourceReload reload = new ProfiledResourceReload();
-		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TASK_FACTORY, initialTask);
+		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TASK_FACTORY, initialTask, finalTask);
 		return reload;
 	}
 
