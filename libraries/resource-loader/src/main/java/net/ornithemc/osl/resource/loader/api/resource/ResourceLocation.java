@@ -1,6 +1,8 @@
 package net.ornithemc.osl.resource.loader.api.resource;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.impl.util.NamespacedIdentifierException;
+import net.ornithemc.osl.core.impl.util.NamespacedIdentifierImpl;
 import net.ornithemc.osl.resource.loader.impl.resource.pack.ResourcePacks;
 
 /**
@@ -12,14 +14,31 @@ public final class ResourceLocation {
 	private static final boolean STRICT_VALIDATION = ResourcePacks.getSupportedFormat() > 3;
 
 	/**
-	 * @return whether the given {@linkplain String} is a valid resource location.
+	 * Construct a resource location from the given namespace and path.
+	 * 
+	 * @return a resource location with the given namespace and path.
+	 * @throws NamespacedIdentifierException
+	 * 	 if the resource location contains illegal characters.
 	 */
-	public static boolean isValid(NamespacedIdentifier resourceLocation) {
-		return isValidNamespace(resourceLocation.namespace()) && isValidPath(resourceLocation.identifier());
+	public static NamespacedIdentifier of(String namespace, String path) {
+		if (!isValidNamespace(namespace)) {
+			throw NamespacedIdentifierException.invalidNamespace(namespace, "namespace contains illegal characters");
+		} else if (!isValidPath(path)) {
+			throw NamespacedIdentifierException.invalidIdentifier(path, "path contains illegal characters");
+		} else {
+			return new NamespacedIdentifierImpl(namespace, path);
+		}
 	}
 
 	/**
-	 * @return whether the given {@linkplain String} is a valid resource location namespace.
+	 * @return whether the given {@linkplain NamespacedIdentifier} is a valid resource location.
+	 */
+	public static boolean isValid(NamespacedIdentifier location) {
+		return isValidNamespace(location.namespace()) && isValidPath(location.identifier());
+	}
+
+	/**
+	 * @return whether the given {@linkplain String} is a valid resource namespace.
 	 */
 	public static boolean isValidNamespace(String namespace) {
 		return STRICT_VALIDATION
@@ -28,7 +47,7 @@ public final class ResourceLocation {
 	}
 
 	/**
-	 * @return whether the given {@linkplain String} is a valid resource location path.
+	 * @return whether the given {@linkplain String} is a valid resource path.
 	 */
 	public static boolean isValidPath(String path) {
 		return STRICT_VALIDATION
