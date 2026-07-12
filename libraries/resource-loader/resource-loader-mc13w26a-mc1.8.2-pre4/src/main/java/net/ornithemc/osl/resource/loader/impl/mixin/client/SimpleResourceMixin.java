@@ -16,7 +16,7 @@ public class SimpleResourceMixin implements ResourceLocationAccess {
 	private Identifier location;
 
 	@Override
-	public NamespacedIdentifier resourceLocation() {
+	public NamespacedIdentifier osl$resource_loader$resourceLocation() {
 		return location;
 	}
 }

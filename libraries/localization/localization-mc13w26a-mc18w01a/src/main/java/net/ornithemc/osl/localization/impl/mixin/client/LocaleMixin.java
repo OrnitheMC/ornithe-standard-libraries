@@ -114,7 +114,7 @@ public class LocaleMixin {
 	private NamespacedIdentifier resourceLocation(Resource resource) throws IOException {
 		// in 14w21b and earlier, there is no accessor method in Vanilla!
 		if (resource instanceof ResourceLocationAccess) {
-			return ((ResourceLocationAccess) resource).resourceLocation();
+			return ((ResourceLocationAccess) resource).osl$resource_loader$resourceLocation();
 		} else {
 			return resource.getLocation();
 		}
