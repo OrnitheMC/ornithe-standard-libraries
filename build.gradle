@@ -203,7 +203,7 @@ def setUpLibrary(project) {
 	def modules = []
 
 	if (!isCore) {
-		findLibraryDependencies(project, libraries, modules)
+		getLibraryDependencyNotations(project, libraries, modules)
 	}
 
 	project.dependencies {
@@ -282,7 +282,7 @@ def setUpModule(project) {
 	def modules = []
 
 	if (!isCore) {
-		findModuleDependencies(project, libraries, modules)
+		getModuleDependencyNotations(project, libraries, modules)
 	}
 
 	project.dependencies {
@@ -393,13 +393,14 @@ def setUpModule(project) {
 
 			depends "minecraft", "${project.minecraft_dependency}"
 
-			if (!isCore && library.hasProperty('osl_dependencies')) {
-				for (def dependency : library.osl_dependencies.split(',')) {
-					def parts = dependency.split(':')
-					def library_id = parts[0]
-					def library_versions = parts[1]
+			if (!isCore) {
+				def deps = findDependencies(project)
 
-					depends "${project.rootProject.mod_id_short}-${library_id}", library_versions
+				for (e : deps.entrySet()) {
+					def library_id = e.key
+					def library_version = e.value
+
+					depends "${project.rootProject.mod_id_short}-${library_id}", ">=${library_version}"
 				}
 			}
 		}
@@ -470,24 +471,52 @@ def setUpModule(project) {
 	setUpJavadoc(project)
 }
 
-def findLibraryDependencies(project, libraries, modules) {
+def findDependencies(project) {
+	def deps = new LinkedHashMap<>()
+	findDependencies(project, deps)
+	return deps
+}
+
+def findDependencies(project, libraries) {
 	if (project.hasProperty('osl_dependencies')) {
 		def deps = project.osl_dependencies.split(',')
 
 		for (dep : deps) {
 			def libraryName = dep.substring(0, dep.indexOf(':'))
+			def libraryVersion = dep.substring(dep.indexOf(':') + 1)
+			def libraryProject = project.project(":libraries:${libraryName}")
+
+			findDependencies(libraryProject, libraries)
+
+			libraries.compute(libraryName, (key, value) -> {
+				def version = SemanticVersion.parse(libraryVersion)
+
+				if (value == null || version > value) {
+					return version
+				} else {
+					return value;
+				}
+			})
+		}
+	}
+}
+
+def getLibraryDependencyNotations(project, libraries, modules) {
+	if (project.hasProperty('osl_dependencies')) {
+		def deps = findDependencies(project)
+
+		for (libraryName : deps.keySet()) {
 			libraries.add(":libraries:${libraryName}")
 		}
 	}
 }
 
-def findModuleDependencies(project, libraries, modules) {
+def getModuleDependencyNotations(project, libraries, modules) {
 	if (project.hasProperty('osl_dependencies')) {
-		def deps = project.osl_dependencies.split(',')
+		def deps = findDependencies(project)
 
-		for (dep : deps) {
-			def libraryName = dep.substring(0, dep.indexOf(':'))
-			def moduleName = findModuleDependency(project, libraryName)
+		for (libraryName : deps.keySet()) {
+			def moduleName = findModuleDependencyProject(project, libraryName)
 
 			if (moduleName != null) {
 				libraries.add(":libraries:${libraryName}")
@@ -497,7 +526,7 @@ def findModuleDependencies(project, libraries, modules) {
 	}
 }
 
-def findModuleDependency(project, libraryName) {
+def findModuleDependencyProject(project, libraryName) {
 	def library = project.project(":libraries:${libraryName}")
 	def modules = library.getSubprojects()
 

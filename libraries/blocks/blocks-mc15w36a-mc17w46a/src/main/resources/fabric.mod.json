@@ -20,8 +20,8 @@
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.9.0",
-    "osl-networking-impl": "\u003e\u003d0.1.0",
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0",
     "osl-registries": "\u003e\u003d0.1.0"
   },
   "name": "OSL Blocks",

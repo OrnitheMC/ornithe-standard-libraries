@@ -11,6 +11,7 @@
     "minecraft": "\u003e\u003d1.0.0-alpha.0.16 \u003c\u003d1.0.0-alpha.2.6",
     "osl-core": "\u003e\u003d0.7.0",
     "osl-executors": "\u003e\u003d0.1.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-text-components": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Networking",

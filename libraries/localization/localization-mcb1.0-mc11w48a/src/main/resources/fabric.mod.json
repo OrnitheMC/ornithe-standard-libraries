@@ -16,6 +16,7 @@
     "minecraft": "\u003e\u003d1.0.0-beta.0 \u003c\u003d1.1-alpha.11.48.a",
     "osl-core": "\u003e\u003d0.8.0",
     "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
     "osl-resource-loader": "\u003e\u003d0.8.0"

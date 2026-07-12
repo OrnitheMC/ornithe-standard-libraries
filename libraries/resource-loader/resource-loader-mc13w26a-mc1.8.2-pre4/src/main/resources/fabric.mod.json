@@ -10,8 +10,9 @@
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.6-alpha.13.26.a \u003c\u003d1.8.2-rc.4",
     "osl-core": "\u003e\u003d0.8.0",
-    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Resource Loader",
