@@ -142,7 +142,6 @@ public final class ResourcePacks {
 
 				String path = dir.relativize(p).toString().replace(separator, "/");
 				NamespacedIdentifier location = new NamespacedIdentifierImpl(namespace, path);
-				IOSupplier<InputStream> resource = pack.getResource(type, location);
 
 				if (ResourceLocation.isValid(location)) {
 					consumer.accept(location, pack.getResource(type, location));

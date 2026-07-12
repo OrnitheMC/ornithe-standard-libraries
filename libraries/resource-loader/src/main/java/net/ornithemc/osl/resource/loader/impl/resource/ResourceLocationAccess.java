@@ -8,6 +8,6 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
  */
 public interface ResourceLocationAccess {
 
-	NamespacedIdentifier resourceLocation();
+	NamespacedIdentifier osl$resource_loader$resourceLocation();
 
 }
