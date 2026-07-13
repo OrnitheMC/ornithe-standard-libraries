@@ -38,8 +38,7 @@ public class BlockMixin {
 			shift = Shift.AFTER
 		)
 	)
-	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci) {
-		BlockRegistryImpl.init();
-		BlockRegistryImpl.lock();
+	private static void osl$blocks$registerBlocks(CallbackInfo ci) {
+		BlockRegistryImpl.registerBlocks();
 	}
 }

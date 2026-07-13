@@ -2,6 +2,7 @@ package net.ornithemc.osl.items.impl;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+
 import net.ornithemc.osl.blocks.api.block.Blocks;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -14,9 +15,9 @@ final class VanillaBlockItems {
 			Item item = Item.BY_ID[id];
 
 			if (block != Blocks.AIR && item != null) {
-				NamespacedIdentifier key = BlockRegistryImpl.getKey(block);
+				NamespacedIdentifier identifier = BlockRegistryImpl.getIdentifier(block);
 
-				if (ItemRegistryImpl.getItem(key) == null) {
+				if (ItemRegistryImpl.getItem(identifier) == null) {
 					ItemRegistryImpl.register(block, item);
 				} else {
 					// some blocks have both a block item and special item form

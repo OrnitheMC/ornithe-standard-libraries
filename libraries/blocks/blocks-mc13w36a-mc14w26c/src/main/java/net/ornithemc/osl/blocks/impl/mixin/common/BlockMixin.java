@@ -36,14 +36,13 @@ public class BlockMixin implements BlockExtension {
 			target = "Lnet/minecraft/util/registry/IdRegistry;iterator()Ljava/util/Iterator;"
 		)
 	)
-	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci) {
-		BlockRegistryImpl.init();
-		BlockRegistryImpl.lock();
+	private static void osl$blocks$registerBlocks(CallbackInfo ci) {
+		BlockRegistryImpl.registerBlocks();
 	}
 
 	@Override
 	public String toString() {
-		return "Block{" + BlockRegistryImpl.getKey((Block) (Object) this) + "}";
+		return "Block{" + BlockRegistryImpl.getIdentifier((Block) (Object) this) + "}";
 	}
 
 	@Override

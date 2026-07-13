@@ -3,6 +3,11 @@
   "id": "osl-blocks",
   "version": "0.1.1+mc18w32a-mc1.13.2",
   "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.blocks.impl.BlockRegistryImpl::init"
+    ]
+  },
   "mixins": [
     "osl.blocks.mixins.json"
   ],

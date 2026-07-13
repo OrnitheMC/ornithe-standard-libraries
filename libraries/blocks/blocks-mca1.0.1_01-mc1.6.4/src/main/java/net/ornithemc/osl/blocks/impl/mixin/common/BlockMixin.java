@@ -5,11 +5,8 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 
 import net.minecraft.block.Block;
 
@@ -30,31 +27,24 @@ public class BlockMixin {
 
 	@Inject(
 		method = "<clinit>",
-		slice = @Slice(
-			from = @At(
-				value = "FIELD",
-				opcode = Opcodes.PUTSTATIC,
-				target = "Lnet/minecraft/block/Block;STONE:Lnet/minecraft/block/Block;"
-			)
-		),
 		at = @At(
-			value = "CONSTANT",
-			args = "intValue=256",
-			ordinal = 0
+			// inject before the for-loop for checking USES_NEIGHBOR_LIGHT
+			value = "JUMP",
+			opcode = Opcodes.IF_ICMPGE,
+			shift = Shift.BY,
+			// it's extreme but this ensures that the injector is only invoked once
+			by = -5
 		)
 	)
-	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci, @Share("osl$blocks$blocksRegistered") LocalBooleanRef blocksRegistered) {
-		// in some versions this injector targets a for-loop
-		if (!blocksRegistered.get()) {
-			BlockRegistryImpl.init();
-			BlockRegistryImpl.lock();
-		}
-
-		blocksRegistered.set(true);
+	private static void osl$blocks$registerBlocks(CallbackInfo ci) {
+		// in Beta 1.2 and above Item class init will happen before this point
+		// but that should not matter as there is a separate event for block
+		// item registration
+		BlockRegistryImpl.registerBlocks();
 	}
 
 	@Override
 	public String toString() {
-		return "Block{" + BlockRegistryImpl.getKey((Block) (Object) this) + "}";
+		return "Block{" + BlockRegistryImpl.getIdentifier((Block) (Object) this) + "}";
 	}
 }

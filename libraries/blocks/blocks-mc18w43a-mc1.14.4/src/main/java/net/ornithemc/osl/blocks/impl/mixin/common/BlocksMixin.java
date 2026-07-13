@@ -29,8 +29,7 @@ public class BlocksMixin {
 			target = "Lnet/minecraft/util/registry/Registry;BLOCK:Lnet/minecraft/util/registry/DefaultedIdRegistry;"
 		)
 	)
-	private static void osl$blocks$initAndLockBlockRegistry(CallbackInfo ci) {
-		BlockRegistryImpl.init();
-		BlockRegistryImpl.lock();
+	private static void osl$blocks$registerBlocks(CallbackInfo ci) {
+		BlockRegistryImpl.registerBlocks();
 	}
 }

@@ -56,7 +56,7 @@ public final class ItemRegistryImpl {
 			BLOCK_ITEMS.put(block, item);
 		}
 
-		return register(BlockRegistry.getId(block), BlockRegistry.getKey(block), item);
+		return register(BlockRegistry.getId(block), BlockRegistry.getIdentifier(block), item);
 	}
 
 	public static <T extends Item> T register(int id, NamespacedIdentifier key, T item) {

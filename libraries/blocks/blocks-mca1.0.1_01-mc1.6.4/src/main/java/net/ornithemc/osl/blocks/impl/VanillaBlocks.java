@@ -233,6 +233,7 @@ final class VanillaBlocks {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void register(Block block) {
 		if (block.id >= 0 && block.id < IDENTIFIERS.length) {
 			String identifier = IDENTIFIERS[block.id];
