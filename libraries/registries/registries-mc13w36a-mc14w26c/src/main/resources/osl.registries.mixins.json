@@ -1,0 +1,28 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.registries.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.registries.impl.RegistriesMixinPlugin",
+	"mixins": [
+		"common.AlphaWorldStorageMixin",
+		"common.BootstrapMixin",
+		"common.CrudeIncrementalIntIdentityHashMapMixin",
+		"common.CrudeIncrementalIntIdentityHashMapMixin_1_7_10_pre3",
+		"common.CrudeIncrementalIntIdentityHashMapMixin_14w25a",
+		"common.DefaultedIdRegistryAccess",
+		"common.IdRegistryMixin",
+		"common.MinecraftServerMixin",
+		"common.PlayerManagerMixin",
+		"common.StatAccess"
+	],
+	"client": [
+		"client.IntegratedServerMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1,
+		"maxShiftBy": 2
+	}
+}

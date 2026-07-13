@@ -1,0 +1,25 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.registries.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.registries.impl.RegistriesMixinPlugin",
+	"mixins": [
+		"common.AlphaWorldStorageMixin",
+		"common.MinecraftServerMixin",
+		"common.NbtCompoundAccess",
+		"common.PlayerManagerMixin"
+	],
+	"client": [
+		"client.ClientNetworkHandlerAccess",
+		"client.IntegratedServerMixin",
+		"client.MinecraftMixin"
+	],
+	"server": [
+		"server.MinecraftServerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1,
+		"maxShiftBy": 2
+	}
+}
