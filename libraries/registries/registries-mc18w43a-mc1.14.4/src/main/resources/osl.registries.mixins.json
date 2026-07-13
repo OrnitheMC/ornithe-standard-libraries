@@ -1,0 +1,23 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.registries.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.AlphaWorldStorageMixin",
+		"common.BootstrapMixin",
+		"common.CrudeIncrementalIntIdentityHashMapMixin",
+		"common.DefaultedIdRegistryAccess",
+		"common.Id2ObjectBiMapMixin",
+		"common.IdRegistryMixin",
+		"common.PlayerManagerMixin"
+	],
+	"client": [
+		"client.IntegratedServerMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

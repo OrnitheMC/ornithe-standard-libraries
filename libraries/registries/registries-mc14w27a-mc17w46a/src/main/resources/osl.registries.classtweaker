@@ -1,0 +1,4 @@
+classTweaker	v1	named
+
+inject-interface	net/minecraft/util/Id2ObjectBiMap	net/ornithemc/osl/registries/impl/registry/Id2ObjectBiMapAccess
+inject-interface	net/minecraft/util/registry/IdRegistry	net/ornithemc/osl/registries/impl/registry/IdRegistryAccess
