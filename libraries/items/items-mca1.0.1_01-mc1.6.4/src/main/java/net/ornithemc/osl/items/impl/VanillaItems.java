@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
-final class VanillaItems {
+public final class VanillaItems {
 
 	/**
 	 * Namespaced IDs were introduced in 1.7. Before then, the numerical IDs
@@ -220,8 +220,8 @@ final class VanillaItems {
 		"record_wait"
 	};
 
-	static final int ITEM_ID_OFFSET = 256;
-	static final int DISC_ITEM_ID_OFFSET = 2000 + ITEM_ID_OFFSET;
+	public static final int ITEM_ID_OFFSET = VanillaBlockItems.MAX_ID + 1;
+	public static final int DISC_ITEM_ID_OFFSET = ITEM_ID_OFFSET + 2000;
 
 	static void init() {
 		for (Field f : Item.class.getDeclaredFields()) {
@@ -230,29 +230,33 @@ final class VanillaItems {
 					Item item = (Item) f.get(null);
 
 					if (item != null) {
-						String identifier = null;
-
-						if (item.id >= DISC_ITEM_ID_OFFSET) {
-							int id = item.id - DISC_ITEM_ID_OFFSET;
-
-							if (id >= 0 && id < DISC_IDENTIFIERS.length) {
-								identifier = DISC_IDENTIFIERS[id];
-							}
-						} else if (item.id >= ITEM_ID_OFFSET) {
-							int id = item.id - ITEM_ID_OFFSET;
-
-							if (id >= 0 && id < IDENTIFIERS.length) {
-								identifier = IDENTIFIERS[id];
-							}
-						}
-
-						if (identifier != null) {
-							ItemRegistryImpl.register(item.id, NamespacedIdentifiers.from(identifier), item);
-						}
+						register(item);
 					}
 				} catch (Throwable t) {
 				}
 			}
+		}
+	}
+
+	private static void register(Item item) {
+		String identifier = null;
+
+		if (item.id >= DISC_ITEM_ID_OFFSET) {
+			int id = item.id - DISC_ITEM_ID_OFFSET;
+
+			if (id >= 0 && id < DISC_IDENTIFIERS.length) {
+				identifier = DISC_IDENTIFIERS[id];
+			}
+		} else if (item.id >= ITEM_ID_OFFSET) {
+			int id = item.id - ITEM_ID_OFFSET;
+
+			if (id >= 0 && id < IDENTIFIERS.length) {
+				identifier = IDENTIFIERS[id];
+			}
+		}
+
+		if (identifier != null) {
+			ItemRegistryImpl.register(NamespacedIdentifiers.from(identifier), item);
 		}
 	}
 }

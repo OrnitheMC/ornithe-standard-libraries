@@ -32,5 +32,6 @@ public class ItemMixinNew implements ItemExtension {
 	)
 	private static void osl$items$registerItems(CallbackInfo ci) {
 		ItemRegistryImpl.registerItems();
+		ItemRegistryImpl.registerUnknownItems();
 	}
 }

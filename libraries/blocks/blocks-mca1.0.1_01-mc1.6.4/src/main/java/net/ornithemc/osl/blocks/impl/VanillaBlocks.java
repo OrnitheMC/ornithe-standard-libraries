@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.ornithemc.osl.blocks.api.block.Blocks;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
-final class VanillaBlocks {
+public final class VanillaBlocks {
 
 	/**
 	 * Namespaced IDs were introduced in 1.7. Before then, the numerical IDs
@@ -215,6 +215,8 @@ final class VanillaBlocks {
 		"coal_block"
 	};
 
+	public static final int MAX_ID = 255;
+
 	static void init() {
 		// Air block added by OSL
 		register(Blocks.AIR);
@@ -233,6 +235,7 @@ final class VanillaBlocks {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void register(Block block) {
 		if (block.id >= 0 && block.id < IDENTIFIERS.length) {
 			String identifier = IDENTIFIERS[block.id];

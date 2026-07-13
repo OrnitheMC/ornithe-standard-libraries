@@ -3,13 +3,25 @@
   "id": "osl-blocks",
   "version": "0.1.1+mc18w32a-mc1.13.2",
   "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.blocks.impl.BlockRegistryImpl::init"
+    ]
+  },
   "mixins": [
     "osl.blocks.mixins.json"
   ],
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.13.1-alpha.18.32.a \u003c\u003d1.13.2",
-    "osl-core": "\u003e\u003d0.9.0"
+    "osl-core": "\u003e\u003d0.9.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-networking": "\u003e\u003d0.9.0",
+    "osl-networking-impl": "\u003e\u003d0.1.0",
+    "osl-registries": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Blocks",
   "description": "Blocks API and events.",

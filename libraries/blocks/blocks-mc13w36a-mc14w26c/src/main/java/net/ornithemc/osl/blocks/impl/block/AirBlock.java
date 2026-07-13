@@ -12,6 +12,11 @@ public class AirBlock extends Block {
 	}
 
 	@Override
+	public boolean isAir() {
+		return true;
+	}
+
+	@Override
 	public int getRenderType() {
 		return -1;
 	}

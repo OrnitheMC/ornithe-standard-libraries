@@ -13,6 +13,7 @@ import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 public class ItemsMixinPlugin implements IMixinConfigPlugin {
 
 	public static final boolean SPECIAL_BLOCK_ITEM_HANDLING = MinecraftVersion.resolve().compareTo("13w37a") >= 0;
+	public static final boolean BLOCK_ITEMS_MAP_EXISTS = MinecraftVersion.resolve().compareTo("14w25a") >= 0;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -30,6 +31,12 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixinOld".equals(mixinClassName)) {
 			return !SPECIAL_BLOCK_ITEM_HANDLING;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixin_14w21b".equals(mixinClassName)) {
+			return !BLOCK_ITEMS_MAP_EXISTS;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixin_14w25a".equals(mixinClassName)) {
+			return BLOCK_ITEMS_MAP_EXISTS;
 		}
 
 		return true;

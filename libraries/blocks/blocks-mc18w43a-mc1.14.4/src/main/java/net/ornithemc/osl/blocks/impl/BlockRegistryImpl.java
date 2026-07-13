@@ -1,74 +1,84 @@
 package net.ornithemc.osl.blocks.impl;
 
-import java.util.Collections;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.resource.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import net.ornithemc.osl.blocks.api.BlockEvents;
+import net.ornithemc.osl.blocks.impl.block.BlockStateRegistryFixer;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.registries.api.registry.DefaultedRegistry;
+import net.ornithemc.osl.registries.api.registry.Registry;
+import net.ornithemc.osl.registries.api.registry.RegistryKeys;
+import net.ornithemc.osl.registries.api.registry.ResourceKey;
+import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
+import net.ornithemc.osl.registries.impl.registry.VanillaRegistries;
 
 public final class BlockRegistryImpl {
 
+	public static final DefaultedRegistry<Block> REGISTRY = VanillaRegistries.registerDefaulted(RegistryKeys.BLOCK, net.minecraft.util.registry.Registry.BLOCK);
+
 	private static boolean locked = true;
-	private static boolean initialized = false;
 
 	public static int getId(Block block) {
-		return Registry.BLOCK.getId(block);
+		return REGISTRY.getId(block);
 	}
 
-	public static NamespacedIdentifier getKey(Block block) {
-		return Registry.BLOCK.getKey(block);
+	public static NamespacedIdentifier getIdentifier(Block block) {
+		return REGISTRY.getIdentifier(block);
+	}
+
+	public static ResourceKey<Block> getKey(Block block) {
+		return REGISTRY.getKey(block);
 	}
 
 	public static Block getBlock(int id) {
-		return Registry.BLOCK.get(id);
+		return REGISTRY.get(id);
 	}
 
-	public static Block getBlock(NamespacedIdentifier key) {
-		return Registry.BLOCK.getOrDefault(identifier(key));
+	public static Block getBlock(NamespacedIdentifier identifier) {
+		return REGISTRY.get(identifier);
 	}
 
-	public static Set<NamespacedIdentifier> keySet() {
-		return Collections.unmodifiableSet(Registry.BLOCK.keySet());
+	public static Block getBlock(ResourceKey<Block> key) {
+		return REGISTRY.get(key);
 	}
 
-	public static <T extends Block> T register(NamespacedIdentifier key, T block) {
+	public static Set<NamespacedIdentifier> identifierSet() {
+		return REGISTRY.identifierSet();
+	}
+
+	public static Set<ResourceKey<Block>> keySet() {
+		return REGISTRY.keySet();
+	}
+
+	public static <T extends Block> T register(NamespacedIdentifier identifier, T block) {
 		if (locked) {
-			throw new IllegalStateException("register called too " + (initialized ? "late" : "early") + ": registry locked!");
+			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.BLOCK.m_30368144(identifier(key), block);
+			return Registry.register(REGISTRY, identifier, block);
 		}
 	}
 
-	private static Identifier identifier(NamespacedIdentifier id) {
-		return id instanceof Identifier ? (Identifier) id : new Identifier(id.namespace(), id.identifier());
-	}
-
-	public static void lock() {
-		if (!initialized) {
-			throw new IllegalStateException("cannot lock block registry unless it's been initialized!");
+	public static <T extends Block> T register(ResourceKey<Block> key, T block) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			return Registry.register(REGISTRY, key, block);
 		}
-
-		locked = true;
-	}
-
-	public static void unlock() {
-		if (initialized) {
-			throw new IllegalStateException("cannot unlock block registry once it's been initialized!");
-		}
-
-		locked = false;
 	}
 
 	public static void init() {
-		if (locked) {
-			throw new IllegalStateException("cannot initialize block registry when it's locked!");
-		}
+		SyncedRegistries.register(RegistryKeys.BLOCK);
+		SyncedRegistries.registerFixer(RegistryKeys.BLOCK, NamespacedIdentifiers.from("blockstate"), new BlockStateRegistryFixer());
+	}
 
+	public static void unlock() {
+		locked = false;
+	}
+
+	public static void registerBlocks() {
 		BlockEvents.REGISTER_BLOCKS.invoker().run();
-		initialized = true;
 	}
 }

@@ -19,7 +19,7 @@ public class BlockMixinNew {
 			target = "Lnet/minecraft/stat/Stats;initBlockStats()V"
 		)
 	)
-	private static void osl$items$initBlockItems(CallbackInfo ci) {
-		ItemRegistryImpl.initBlocks();
+	private static void osl$items$registerVanillaBlockItems(CallbackInfo ci) {
+		ItemRegistryImpl.registerVanillaBlockItems();
 	}
 }

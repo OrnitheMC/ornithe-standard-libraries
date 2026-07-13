@@ -3,10 +3,15 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.items.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.items.impl.ItemsMixinPlugin",
 	"mixins": [
-		"common.ItemMixin"
+		"common.ItemMixin",
+		"common.StatsMixin",
+		"common.StatsMixinNew"
 	],
 	"client": [
+		"client.ItemColorsMixin",
+		"client.ItemModelShaperMixin"
 	],
 	"server": [
 	],

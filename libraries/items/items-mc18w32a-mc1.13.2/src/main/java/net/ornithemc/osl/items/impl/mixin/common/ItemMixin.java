@@ -28,8 +28,7 @@ public class ItemMixin {
 			value = "TAIL"
 		)
 	)
-	private static void osl$items$initAndLockItemRegistry(CallbackInfo ci) {
-		ItemRegistryImpl.init();
-		ItemRegistryImpl.lock();
+	private static void osl$items$registerItems(CallbackInfo ci) {
+		ItemRegistryImpl.registerItems();
 	}
 }
