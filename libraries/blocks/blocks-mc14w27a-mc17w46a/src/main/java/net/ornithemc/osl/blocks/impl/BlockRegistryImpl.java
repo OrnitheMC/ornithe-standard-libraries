@@ -79,6 +79,8 @@ public final class BlockRegistryImpl {
 	}
 
 	public static void init() {
+		SyncedRegistries.register(RegistryKeys.BLOCK);
+		SyncedRegistries.registerFixer(RegistryKeys.BLOCK, NamespacedIdentifiers.from("blockstate"), new BlockStateRegistryFixer());
 	}
 
 	public static void unlock() {

@@ -77,6 +77,7 @@ public final class BlockRegistryImpl {
 	}
 
 	public static void init() {
+		SyncedRegistries.register(RegistryKeys.BLOCK);
 	}
 
 	public static void unlock() {
