@@ -2,10 +2,11 @@ package net.ornithemc.osl.items.api.item;
 
 import net.minecraft.item.Item;
 
-import net.ornithemc.osl.core.api.registry.SimpleIdRegistry;
+import net.ornithemc.osl.items.impl.ItemRegistryImpl;
+import net.ornithemc.osl.registries.api.registry.Registry;
 
 public interface ItemExtension {
 
-	SimpleIdRegistry<Item> REGISTRY = new SimpleIdRegistry<>();
+	Registry<Item> REGISTRY = ItemRegistryImpl.REGISTRY;
 
 }

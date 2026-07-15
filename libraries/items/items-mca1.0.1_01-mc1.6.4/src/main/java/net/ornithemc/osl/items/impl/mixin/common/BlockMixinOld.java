@@ -18,7 +18,7 @@ public class BlockMixinOld {
 			value = "TAIL"
 		)
 	)
-	private static void osl$items$initBlockItems(CallbackInfo ci) {
-		ItemRegistryImpl.initBlocks();
+	private static void osl$items$registerVanillaBlockItems(CallbackInfo ci) {
+		ItemRegistryImpl.registerVanillaBlockItems();
 	}
 }

@@ -12,33 +12,48 @@ import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.items.api.ItemEvents;
 import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
+import net.ornithemc.osl.registries.api.registry.Registries;
+import net.ornithemc.osl.registries.api.registry.Registry;
+import net.ornithemc.osl.registries.api.registry.RegistryKeys;
+import net.ornithemc.osl.registries.api.registry.ResourceKey;
 
 public final class ItemRegistryImpl {
 
+	public static final Registry<Item> REGISTRY = Registries.registerSimple(RegistryKeys.ITEM, () -> { });
 	public static final Map<Block, Item> BLOCK_ITEMS = new HashMap<>();
 
 	private static boolean locked = true;
-	private static boolean itemsInitialized = false;
-	private static boolean blocksInitialized = false;
 
 	public static int getId(Item item) {
-		return Item.REGISTRY.getId(item);
+		return REGISTRY.getId(item);
 	}
 
-	public static NamespacedIdentifier getKey(Item item) {
-		return Item.REGISTRY.getKey(item);
+	public static NamespacedIdentifier getIdentifier(Item item) {
+		return REGISTRY.getIdentifier(item);
+	}
+
+	public static ResourceKey<Item> getKey(Item item) {
+		return REGISTRY.getKey(item);
 	}
 
 	public static Item getItem(int id) {
-		return Item.REGISTRY.get(id);
+		return REGISTRY.get(id);
 	}
 
-	public static Item getItem(NamespacedIdentifier key) {
-		return Item.REGISTRY.get(key);
+	public static Item getItem(NamespacedIdentifier identifier) {
+		return REGISTRY.get(identifier);
 	}
 
-	public static Set<NamespacedIdentifier> keySet() {
-		return Item.REGISTRY.keySet();
+	public static Item getItem(ResourceKey<Item> key) {
+		return REGISTRY.get(key);
+	}
+
+	public static Set<NamespacedIdentifier> identifierSet() {
+		return REGISTRY.identifierSet();
+	}
+
+	public static Set<ResourceKey<Item>> keySet() {
+		return REGISTRY.keySet();
 	}
 
 	public static BlockItem register(Block block) {
@@ -57,63 +72,49 @@ public final class ItemRegistryImpl {
 		return register(BlockRegistry.getId(block), BlockRegistry.getIdentifier(block), item);
 	}
 
-	public static <T extends Item> T register(int id, NamespacedIdentifier key, T item) {
+	public static <T extends Item> T register(NamespacedIdentifier identifier, T item) {
 		if (locked) {
-			throw new IllegalStateException("register called too " + (itemsInitialized ? "late" : "early") + ": registry locked!");
+			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			Item.REGISTRY.register(id, key, item);
+			return Registry.register(REGISTRY, identifier, item);
 		}
-
-		return item;
 	}
 
-	public static void lock() {
-		if (!itemsInitialized || !blocksInitialized) {
-			throw new IllegalStateException("cannot lock item registry unless it's been initialized!");
+	public static <T extends Item> T register(ResourceKey<Item> key, T item) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			return Registry.register(REGISTRY, key, item);
 		}
+	}
 
-		locked = true;
+	@Deprecated
+	public static <T extends Item> T register(int id, NamespacedIdentifier key, T item) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			return Registry.register(REGISTRY, id, key, item);
+		}
+	}
+
+	public static void init() {
 	}
 
 	public static void unlock() {
-		if (itemsInitialized || blocksInitialized) {
-			throw new IllegalStateException("cannot unlock item registry once it's been initialized!");
-		}
-
 		locked = false;
 	}
 
-	public static void initItems() {
-		if (locked) {
-			throw new IllegalStateException("cannot initialize items when the registry is locked!");
-		}
-
-		VanillaItems.init();
-		itemsInitialized = true;
-	}
-
-	public static void initBlocks() {
-		if (locked) {
-			throw new IllegalStateException("cannot initialize block items when the registry is locked!");
-		}
-
-		VanillaBlockItems.init();
-		blocksInitialized = true;
-	}
-
 	public static void registerItems() {
-		if (locked) {
-			throw new IllegalStateException("cannot initialize item registry when it's locked!");
-		}
-
+		VanillaItems.init();
 		ItemEvents.REGISTER_ITEMS.invoker().run();
 	}
 
-	public static void registerBlocks() {
-		if (locked) {
-			throw new IllegalStateException("cannot initialize item registry when it's locked!");
-		}
-
+	public static void registerBlockItems() {
 		ItemEvents.REGISTER_BLOCK_ITEMS.invoker().run();
+	}
+
+	public static void registerVanillaBlockItems() {
+		// must be invoked separately because most block items are auto-generated!
+		VanillaBlockItems.init();
 	}
 }

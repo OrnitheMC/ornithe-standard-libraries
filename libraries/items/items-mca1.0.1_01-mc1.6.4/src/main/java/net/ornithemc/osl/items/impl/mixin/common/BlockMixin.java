@@ -5,13 +5,12 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
 import net.minecraft.block.Block;
@@ -20,7 +19,10 @@ import net.minecraft.item.Item;
 
 import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 
-@Mixin(Block.class)
+@Mixin(
+	value = Block.class,
+	priority = 1 // make sure blocks mixin is applied first 
+)
 public class BlockMixin {
 
 	/*
@@ -51,35 +53,26 @@ public class BlockMixin {
 	 * that block item stats initialize correctly, but *before* Vanilla
 	 * block items are initialized. This is because Vanilla auto-generates
 	 * most block items, but we want to allow mods to register special
-	 * item forms of their blocks.
+	 * item forms for their blocks.
 	 */
 
 	@Inject(
 		method = "<clinit>",
-		slice = @Slice(
-			from = @At(
-				value = "FIELD",
-				opcode = Opcodes.PUTSTATIC,
-				target = "Lnet/minecraft/block/Block;STONE:Lnet/minecraft/block/Block;"
-			)
-		),
 		at = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/item/Item;BY_ID:[Lnet/minecraft/item/Item;",
-			ordinal = 0
+			// inject before the for-loop for auto block item generation
+			value = "JUMP",
+			opcode = Opcodes.IF_ICMPGE,
+			shift = Shift.BY,
+			// it's extreme but this ensures that the injector is only invoked once
+			by = -5
 		)
 	)
-	private static void osl$items$registerBlockItems(CallbackInfo ci, @Share("osl$items$blockItemsRegistered") LocalBooleanRef blockItemsRegistered) {
-		// in some versions this injector targets a for-loop
-		if (!blockItemsRegistered.get()) {
-			// Item registration would be initiated here anyway
-			// force it to happen *before* we register block items
-			Item.BY_ID.getClass();
+	private static void osl$items$registerBlockItems(CallbackInfo ci) {
+		// trigger Item class init in Beta 1.1 and below
+		// it would otherwise be triggered in the for-loop anyway
+		Item.BY_ID.getClass();
 
-			ItemRegistryImpl.registerBlocks();
-		}
-
-		blockItemsRegistered.set(true);
+		ItemRegistryImpl.registerBlockItems();
 	}
 
 	@WrapOperation(

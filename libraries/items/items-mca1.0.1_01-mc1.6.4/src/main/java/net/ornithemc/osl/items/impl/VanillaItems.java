@@ -230,29 +230,34 @@ final class VanillaItems {
 					Item item = (Item) f.get(null);
 
 					if (item != null) {
-						String identifier = null;
-
-						if (item.id >= DISC_ITEM_ID_OFFSET) {
-							int id = item.id - DISC_ITEM_ID_OFFSET;
-
-							if (id >= 0 && id < DISC_IDENTIFIERS.length) {
-								identifier = DISC_IDENTIFIERS[id];
-							}
-						} else if (item.id >= ITEM_ID_OFFSET) {
-							int id = item.id - ITEM_ID_OFFSET;
-
-							if (id >= 0 && id < IDENTIFIERS.length) {
-								identifier = IDENTIFIERS[id];
-							}
-						}
-
-						if (identifier != null) {
-							ItemRegistryImpl.register(item.id, NamespacedIdentifiers.from(identifier), item);
-						}
+						register(item);
 					}
 				} catch (Throwable t) {
 				}
 			}
+		}
+	}
+
+	@Deprecated
+	private static void register(Item item) {
+		String identifier = null;
+
+		if (item.id >= DISC_ITEM_ID_OFFSET) {
+			int id = item.id - DISC_ITEM_ID_OFFSET;
+
+			if (id >= 0 && id < DISC_IDENTIFIERS.length) {
+				identifier = DISC_IDENTIFIERS[id];
+			}
+		} else if (item.id >= ITEM_ID_OFFSET) {
+			int id = item.id - ITEM_ID_OFFSET;
+
+			if (id >= 0 && id < IDENTIFIERS.length) {
+				identifier = IDENTIFIERS[id];
+			}
+		}
+
+		if (identifier != null) {
+			ItemRegistryImpl.register(item.id, NamespacedIdentifiers.from(identifier), item);
 		}
 	}
 }

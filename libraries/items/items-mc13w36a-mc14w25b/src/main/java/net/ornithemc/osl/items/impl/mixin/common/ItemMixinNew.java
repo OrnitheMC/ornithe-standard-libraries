@@ -34,10 +34,10 @@ public class ItemMixinNew {
 			target = "Lnet/minecraft/util/registry/IdRegistry;keySet()Ljava/util/Set;"
 		)
 	)
-	private static void osl$items$initAndLockItemRegistry(CallbackInfo ci, @Local HashSet<Block> blocksToSkip) {
-		ItemRegistryImpl.init();
-		ItemRegistryImpl.lock();
+	private static void osl$items$registerItems(CallbackInfo ci, @Local HashSet<Block> blocksToSkip) {
+		ItemRegistryImpl.registerItems();
 
+		// this set contains all blocks for not to auto-generate block items
 		blocksToSkip.addAll(ItemRegistryImpl.BLOCK_ITEMS.keySet());
 	}
 }
