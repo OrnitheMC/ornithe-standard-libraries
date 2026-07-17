@@ -7,6 +7,8 @@
 		"common.ItemsMixin"
 	],
 	"client": [
+		"client.ItemColorsMixin",
+		"client.ItemModelShaperMixin"
 	],
 	"server": [
 	],

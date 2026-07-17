@@ -95,6 +95,7 @@ public final class ItemRegistryImpl {
 	}
 
 	public static void init() {
+		SyncedRegistries.register(RegistryKeys.ITEM);
 	}
 
 	public static void unlock() {
