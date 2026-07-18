@@ -133,10 +133,4 @@ public class WrappedIdRegistry<T> implements ClearableRegistry<T> {
 		this.nextId = 0;
 		this.frozen = false;
 	}
-
-	public interface RegisterCallback {
-
-		void valueRegistered(int id, Object key, Object value);
-
-	}
 }

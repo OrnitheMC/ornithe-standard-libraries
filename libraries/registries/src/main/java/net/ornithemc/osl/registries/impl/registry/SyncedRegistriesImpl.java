@@ -60,7 +60,7 @@ public final class SyncedRegistriesImpl {
 			SyncedRegistry synced = SYNCED_REGISTRIES.get(registry.identifier());
 
 			if (synced != null) {
-				synced.getMappings().reset();
+				synced.init();
 			} else {
 				RegistriesImpl.LOGGER.debug("registry {} is not synced!", registry.identifier());
 			}

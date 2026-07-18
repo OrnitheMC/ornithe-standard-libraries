@@ -21,6 +21,8 @@ public class RegistryMapper implements IdMapper {
 	private final ClearableRegistry<Object> registry;
 	private final ClearableRegistry<Object> backup;
 
+	private boolean applied;
+
 	@SuppressWarnings("unchecked")
 	private RegistryMapper(Registry<?> registry) {
 		this.registry = (ClearableRegistry<Object>) registry;
@@ -50,20 +52,26 @@ public class RegistryMapper implements IdMapper {
 		}
 
 		this.registry.freeze();
+
+		this.applied = true;
 	}
 
 	@Override
 	public void undo(RegistryMappings mappings) {
-		this.registry.clear();
+		if (this.applied) {
+			this.registry.clear();
 
-		for (Object value : this.backup) {
-			int id = this.backup.getId(value);
-			ResourceKey<Object> key = this.backup.getKey(value);
+			for (Object value : this.backup) {
+				int id = this.backup.getId(value);
+				ResourceKey<Object> key = this.backup.getKey(value);
 
-			register(this.registry, id, key, value);
+				register(this.registry, id, key, value);
+			}
+
+			this.registry.freeze();
 		}
 
-		this.registry.freeze();
+		this.applied = false;
 	}
 
 	@SuppressWarnings("deprecation")

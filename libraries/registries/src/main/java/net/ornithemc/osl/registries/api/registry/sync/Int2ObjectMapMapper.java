@@ -12,6 +12,8 @@ public class Int2ObjectMapMapper implements IdMapper {
 	private final Int2ObjectMap<Object> registry;
 	private final Int2ObjectMap<Object> backup;
 
+	private boolean applied;
+
 	@SuppressWarnings("unchecked")
 	private Int2ObjectMapMapper(Int2ObjectMap<?> registry) {
 		this.registry = (Int2ObjectMap<Object>) registry;
@@ -21,13 +23,7 @@ public class Int2ObjectMapMapper implements IdMapper {
 	@Override
 	public void apply(RegistryMappings mappings) {
 		this.backup.clear();
-
-		for (Int2ObjectMap.Entry<Object> e : this.registry.int2ObjectEntrySet()) {
-			Object value = e.getValue();
-			int id = e.getIntKey();
-
-			this.backup.put(id, value);
-		}
+		this.backup.putAll(this.registry);
 
 		this.registry.clear();
 
@@ -40,17 +36,17 @@ public class Int2ObjectMapMapper implements IdMapper {
 				this.registry.put(newId, value);
 			}
 		}
+
+		this.applied = true;
 	}
 
 	@Override
 	public void undo(RegistryMappings mappings) {
-		this.registry.clear();
-
-		for (Int2ObjectMap.Entry<Object> e : this.backup.int2ObjectEntrySet()) {
-			int id = e.getIntKey();
-			Object value = e.getValue();
-
-			this.registry.put(id, value);
+		if (this.applied) {
+			this.registry.clear();
+			this.registry.putAll(this.backup);
 		}
+
+		this.applied = false;
 	}
 }

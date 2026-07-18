@@ -9,7 +9,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 
 import net.minecraft.util.CrudeIncrementalIntIdentityHashMap;
 
-import net.ornithemc.osl.registries.impl.registry.Clearable;
+import net.ornithemc.osl.registries.impl.access.Clearable;
 
 @Mixin(CrudeIncrementalIntIdentityHashMap.class)
 public class CrudeIncrementalIntIdentityHashMapMixin implements Clearable {

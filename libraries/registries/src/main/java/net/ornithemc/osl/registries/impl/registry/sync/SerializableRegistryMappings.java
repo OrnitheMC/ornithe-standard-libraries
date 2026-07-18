@@ -18,13 +18,13 @@ public class SerializableRegistryMappings implements RegistryMappings {
 		return new SerializableRegistryMappings(registry);
 	}
 
-	final Registry<Object> registry;
+	private final Registry<Object> registry;
 
-	final Object2IntMap<NamespacedIdentifier> mappings = new Object2IntOpenHashMap<>();
-	final Object2IntMap<NamespacedIdentifier> unmappings = new Object2IntOpenHashMap<>();
+	private final Object2IntMap<NamespacedIdentifier> mappings = new Object2IntOpenHashMap<>();
+	private final Object2IntMap<NamespacedIdentifier> unmappings = new Object2IntOpenHashMap<>();
 
-	final Int2IntMap idMappings = new Int2IntOpenHashMap();
-	final Int2IntMap idUnmappings = new Int2IntOpenHashMap();
+	private final Int2IntMap idMappings = new Int2IntOpenHashMap();
+	private final Int2IntMap idUnmappings = new Int2IntOpenHashMap();
 
 	@SuppressWarnings("unchecked")
 	private SerializableRegistryMappings(Registry<?> registry) {

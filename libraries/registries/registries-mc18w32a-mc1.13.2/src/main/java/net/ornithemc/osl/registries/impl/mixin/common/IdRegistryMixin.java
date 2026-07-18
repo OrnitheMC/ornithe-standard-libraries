@@ -14,9 +14,8 @@ import net.minecraft.resource.Identifier;
 import net.minecraft.util.CrudeIncrementalIntIdentityHashMap;
 import net.minecraft.util.registry.IdRegistry;
 
-import net.ornithemc.osl.registries.impl.registry.Clearable;
-import net.ornithemc.osl.registries.impl.registry.IdRegistryAccess;
-import net.ornithemc.osl.registries.impl.registry.WrappedIdRegistry.RegisterCallback;
+import net.ornithemc.osl.registries.impl.access.Clearable;
+import net.ornithemc.osl.registries.impl.access.IdRegistryAccess;
 
 @Mixin(IdRegistry.class)
 public class IdRegistryMixin<T> implements IdRegistryAccess, Clearable {

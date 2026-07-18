@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.util.CrudeIncrementalIntIdentityHashMap;
 
-import net.ornithemc.osl.registries.impl.registry.Clearable;
+import net.ornithemc.osl.registries.impl.access.Clearable;
 
 @Mixin(CrudeIncrementalIntIdentityHashMap.class)
 public class CrudeIncrementalIntIdentityHashMapMixin implements Clearable {

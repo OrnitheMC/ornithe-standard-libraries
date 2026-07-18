@@ -12,6 +12,7 @@
 		"common.DefaultedIdRegistryAccess",
 		"common.Id2ObjectBiMapMixin",
 		"common.IdRegistryMixin",
+		"common.MinecraftServerMixin",
 		"common.PlayerManagerMixin"
 	],
 	"client": [

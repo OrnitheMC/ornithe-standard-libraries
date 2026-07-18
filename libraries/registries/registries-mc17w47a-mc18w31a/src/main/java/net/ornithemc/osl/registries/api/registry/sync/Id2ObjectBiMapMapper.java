@@ -11,6 +11,8 @@ public class Id2ObjectBiMapMapper implements IdMapper {
 	private final Id2ObjectBiMap<Object> registry;
 	private final Id2ObjectBiMap<Object> backup;
 
+	private boolean applied;
+
 	@SuppressWarnings("unchecked")
 	private Id2ObjectBiMapMapper(Id2ObjectBiMap<?> registry) {
 		this.registry = (Id2ObjectBiMap<Object>) registry;
@@ -24,13 +26,13 @@ public class Id2ObjectBiMapMapper implements IdMapper {
 
 	@Override
 	public void apply(RegistryMappings mappings) {
-		this.backup.osl$registries$clear();;
+		this.backup.osl$registries$clear();
 
 		for (int id : this.registry.osl$registries$idSet()) {
 			this.backup.put(this.registry.get(id), id);
 		}
 
-		this.registry.osl$registries$clear();;
+		this.registry.osl$registries$clear();
 
 		for (int oldId : this.backup.osl$registries$idSet()) {
 			Object value = this.backup.get(oldId);
@@ -40,14 +42,20 @@ public class Id2ObjectBiMapMapper implements IdMapper {
 				this.registry.put(value, newId);
 			}
 		}
+
+		this.applied = true;
 	}
 
 	@Override
 	public void undo(RegistryMappings mappings) {
-		this.registry.osl$registries$clear();;
+		if (this.applied) {
+			this.registry.osl$registries$clear();
 
-		for (int id : this.backup.osl$registries$idSet()) {
-			this.registry.put(this.backup.get(id), id);
+			for (int id : this.backup.osl$registries$idSet()) {
+				this.registry.put(this.backup.get(id), id);
+			}
 		}
+
+		this.applied = false;
 	}
 }

@@ -42,6 +42,10 @@ public class SyncedRegistry {
 		}
 	}
 
+	public void init() {
+		this.mappings.reset();
+	}
+
 	public NamespacedIdentifier identifier() {
 		return this.registry.identifier();
 	}

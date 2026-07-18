@@ -9,7 +9,9 @@
 		"common.CrudeIncrementalIntIdentityHashMapMixin",
 		"common.DefaultedIdRegistryAccess",
 		"common.IdRegistryMixin",
-		"common.PlayerManagerMixin"
+		"common.MinecraftServerMixin",
+		"common.PlayerManagerMixin",
+		"common.StatAccess"
 	],
 	"client": [
 		"client.IntegratedServerMixin"
@@ -17,6 +19,7 @@
 	"server": [
 	],
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 1,
+		"maxShiftBy": 2
 	}
 }

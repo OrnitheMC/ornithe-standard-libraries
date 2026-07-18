@@ -16,8 +16,8 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 
 import net.minecraft.util.Id2ObjectBiMap;
 
-import net.ornithemc.osl.registries.impl.registry.Clearable;
-import net.ornithemc.osl.registries.impl.registry.Id2ObjectBiMapAccess;
+import net.ornithemc.osl.registries.impl.access.Clearable;
+import net.ornithemc.osl.registries.impl.access.Id2ObjectBiMapAccess;
 
 @Mixin(Id2ObjectBiMap.class)
 public class Id2ObjectBiMapMixin<T> implements Id2ObjectBiMapAccess, Clearable {

@@ -1,0 +1,23 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.registries.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.AlphaWorldStorageMixin",
+		"common.NbtCompoundAccess"
+	],
+	"client": [
+		"client.ClientNetworkHandlerAccess",
+		"client.MinecraftMixin",
+		"client.WorldAccess"
+	],
+	"server": [
+		"server.MinecraftServerMixin",
+		"server.ServerLoginNetworkHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1,
+		"maxShiftBy": 2
+	}
+}

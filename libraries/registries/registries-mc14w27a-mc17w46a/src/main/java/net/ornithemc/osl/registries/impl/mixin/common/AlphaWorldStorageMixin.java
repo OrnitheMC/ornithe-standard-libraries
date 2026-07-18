@@ -11,17 +11,13 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.world.WorldData;
 import net.minecraft.world.storage.AlphaWorldStorage;
 
 import net.ornithemc.osl.registries.impl.Constants;
+import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingException;
@@ -29,7 +25,7 @@ import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingSource;
 import net.ornithemc.osl.registries.impl.registry.sync.SyncedRegistriesNbtSerializer;
 
 @Mixin(AlphaWorldStorage.class)
-public class AlphaWorldStorageMixin {
+public class AlphaWorldStorageMixin implements WorldStorageAccess {
 
 	@Shadow @Final
 	private String name;
@@ -37,13 +33,8 @@ public class AlphaWorldStorageMixin {
 	@Shadow
 	private File getDirectory() { return null; }
 
-	@Inject(
-		method = "loadData",
-		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$registries$loadRegistryMappings(CallbackInfoReturnable<WorldData> cir) {
+	@Override
+	public void osl$registries$loadRegistryMappings() throws IOException {
 		File dir = this.getDirectory();
 		File file = new File(dir, Constants.REGISTRY_MAPPINGS_FILE_NAME);
 
@@ -57,7 +48,7 @@ public class AlphaWorldStorageMixin {
 	}
 
 	@Unique
-	private boolean readRegistryMappings(File file, boolean throwOnException) {
+	private boolean readRegistryMappings(File file, boolean throwOnException) throws IOException {
 		if (file.exists()) {
 			try (InputStream is = new FileInputStream(file)) {
 				NbtCompound nbt = NbtIo.readCompressed(is);
@@ -68,13 +59,13 @@ public class AlphaWorldStorageMixin {
 				return true;
 			} catch (IOException e) {
 				if (throwOnException) {
-					throw new RuntimeException("Unable to read registry mappings for '" + this.name + "'", e);
+					throw new IOException("Unable to read registry mappings for '" + this.name + "'", e);
 				} else {
 					RegistriesImpl.LOGGER.warn("error while reading registry mappings for '" + this.name + "'", e);
 				}
 			} catch (RegistryMappingException e) {
 				if (throwOnException) {
-					throw new RuntimeException("Invalid registry mappings for '" + this.name + "'", e);
+					throw new IOException("Invalid registry mappings for '" + this.name + "'", e);
 				} else {
 					RegistriesImpl.LOGGER.warn("invalid registry mappings for '" + this.name + "'", e);
 				}
@@ -84,13 +75,8 @@ public class AlphaWorldStorageMixin {
 		return false;
 	}
 
-	@Inject(
-		method = "saveData(Lnet/minecraft/world/WorldData;Lnet/minecraft/nbt/NbtCompound;)V",
-		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$registries$saveRegistryMappings(CallbackInfo ci) {
+	@Override
+	public void osl$registries$saveRegistryMappings() throws IOException {
 		File dir = this.getDirectory();
 		File file = new File(dir, Constants.REGISTRY_MAPPINGS_FILE_NAME);
 		File tmp = new File(dir, Constants.REGISTRY_MAPPINGS_FILE_NAME + "_tmp");
@@ -100,7 +86,7 @@ public class AlphaWorldStorageMixin {
 	}
 
 	@Unique
-	private void writeRegistryMappings(File file, File newFile, File oldFile) {
+	private void writeRegistryMappings(File file, File newFile, File oldFile) throws IOException {
 		NbtCompound nbt = new NbtCompound();
 
 		try {

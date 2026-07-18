@@ -13,6 +13,7 @@ import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 
 	public static final boolean NEW_CRUDE_INCREMENTAL_INT_IDENTITY_HASH_MAP_IMPLEMENTATION = MinecraftVersion.resolve().compareTo("15w35a") >= 0;
+	public static final boolean ID_2_OBJECT_BI_MAP_EXISTS = MinecraftVersion.resolve().compareTo("15w36a") >= 0;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -30,6 +31,9 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 		}
 		if ("net.ornithemc.osl.registries.impl.mixin.common.CrudeIncrementalIntIdentityHashMapMixinOld".equals(mixinClassName)) {
 			return !NEW_CRUDE_INCREMENTAL_INT_IDENTITY_HASH_MAP_IMPLEMENTATION;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.common.Id2ObjectBiMapMixin".equals(mixinClassName)) {
+			return ID_2_OBJECT_BI_MAP_EXISTS;
 		}
 
 		return true;
