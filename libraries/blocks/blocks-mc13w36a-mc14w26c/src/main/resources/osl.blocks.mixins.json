@@ -7,7 +7,8 @@
 	"mixins": [
 		"common.AirBlockMixin",
 		"common.BlockMixin",
-		"common.BlocksMixin"
+		"common.BlocksMixin",
+		"common.StatsMixin"
 	],
 	"client": [
 	],

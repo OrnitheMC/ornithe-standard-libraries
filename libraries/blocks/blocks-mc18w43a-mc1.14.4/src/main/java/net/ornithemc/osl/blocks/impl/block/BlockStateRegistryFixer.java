@@ -5,7 +5,7 @@ import net.minecraft.block.state.BlockState;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.registries.api.registry.sync.IdFixer;
-import net.ornithemc.osl.registries.impl.registry.Clearable;
+import net.ornithemc.osl.registries.impl.access.Clearable;
 
 public class BlockStateRegistryFixer implements IdFixer {
 

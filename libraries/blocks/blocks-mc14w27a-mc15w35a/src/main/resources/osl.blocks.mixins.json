@@ -5,7 +5,8 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.AirBlockMixin",
-		"common.BlockMixin"
+		"common.BlockMixin",
+		"common.StatsMixin"
 	],
 	"client": [
 	],

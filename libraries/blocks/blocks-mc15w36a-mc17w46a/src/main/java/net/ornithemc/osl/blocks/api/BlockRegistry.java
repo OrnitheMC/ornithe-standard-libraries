@@ -78,31 +78,31 @@ public final class BlockRegistry {
 	 * @param block      the block to register.
 	 * @return the registered  block.
 	 */
-/*	public static <T extends Block> T register(NamespacedIdentifier identifier, T block) {
+	public static <T extends Block> T register(NamespacedIdentifier identifier, T block) {
 		return BlockRegistryImpl.register(identifier, block);
 	}
-*/
+
 	/**
 	 * @param <T>   the block type.
 	 * @param key   the resource key of the block.
 	 * @param block the block to register.
 	 * @return the registered  block.
 	 */
-/*	public static <T extends Block> T register(ResourceKey<Block> key, T block) {
+	public static <T extends Block> T register(ResourceKey<Block> key, T block) {
 		return BlockRegistryImpl.register(key, block);
 	}
-*/
+
 	/**
 	 * @param <T>   the block type.
 	 * @param id    the numerical ID of the block.
 	 * @param key   the namespaced ID of the block.
 	 * @param block the block to register.
 	 * @return the registered  block.
-	 */ 
-	 /* @deprecated use {@linkplain #register(NamespacedIdentifier, Block)}
+	 * 
+	 * @deprecated use {@linkplain #register(NamespacedIdentifier, Block)}
 	 *             or {@linkplain #register(ResourceKey, Block)} instead.
 	 */
-//	@Deprecated
+	@Deprecated
 	public static <T extends Block> T register(int id, NamespacedIdentifier key, T block) {
 		return BlockRegistryImpl.register(id, key, block);
 	}
