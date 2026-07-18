@@ -22,7 +22,7 @@ public final class ItemEvents {
 	 * <pre>
 	 * {@code
 	 * ItemEvents.REGISTER_ITEMS.register(() -> {
-	 * 	ItemRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieItem(AUTO_ASSIGN_ID));
+	 * 	ItemRegistry.register(999, NamespacedIdentifiers.from("example", "cookie"), new CookieItem(999));
 	 * });
 	 * }
 	 * </pre>
@@ -46,7 +46,7 @@ public final class ItemEvents {
 	 * <pre>
 	 * {@code
 	 * ItemEvents.REGISTER_BLOCK_ITEMS.register(() -> {
-	 * 	ItemRegistry.register(COOKIE_BLOCK, new CookieItem(AUTO_ASSIGN_ID));
+	 * 	ItemRegistry.register(COOKIE_BLOCK, new CookieItem(999));
 	 * });
 	 * }
 	 * </pre>

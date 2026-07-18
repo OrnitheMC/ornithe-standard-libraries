@@ -7,7 +7,8 @@
 	"mixins": [
 		"common.BlockItemAccess",
 		"common.ItemMixinNew",
-		"common.ItemMixinOld"
+		"common.ItemMixinOld",
+		"common.StatsMixin"
 	],
 	"client": [
 	],
