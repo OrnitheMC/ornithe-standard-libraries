@@ -11,6 +11,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
+import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
 public class SerializableRegistryMappings implements RegistryMappings {
 
@@ -79,6 +80,18 @@ public class SerializableRegistryMappings implements RegistryMappings {
 	}
 
 	public void build(RegistryMappingSource source) throws RegistryMappingException {
+		// the saved mappings may be incomplete for the current mod set
+		// but no entries should be dropped, so assign a new id
+		if (source == RegistryMappingSource.WORLD_SAVE) {
+			int nextId = this.mappings.values().intStream().max().getAsInt() + 1;
+
+			for (NamespacedIdentifier identifier : this.unmappings.keySet()) {
+				if (!this.mappings.containsKey(identifier)) {
+					this.mappings.put(identifier, nextId++);
+				}
+			}
+		}
+
 		this.idMappings.clear();
 		this.idUnmappings.clear();
 
@@ -89,7 +102,9 @@ public class SerializableRegistryMappings implements RegistryMappings {
 			if (oldId >= 0) {
 				this.idMappings.put(oldId, newId);
 			} else if (source == RegistryMappingSource.REMOTE_SERVER) {
-				throw new RegistryMappingException("received mapping for unknown entry " + identifier);
+				throw new RegistryMappingException("[" + this.registry.identifier() + "] received mapping for unknown entry " + identifier);
+			} else {
+				RegistriesImpl.LOGGER.warn("[{}] received mapping for unknown entry {}", this.registry.identifier(), identifier);
 			}
 		}
 
@@ -100,7 +115,9 @@ public class SerializableRegistryMappings implements RegistryMappings {
 			if (newId >= 0) {
 				this.idUnmappings.put(newId, oldId);
 			} else if (source == RegistryMappingSource.CLIENT) {
-				throw new RegistryMappingException("missing mapping for required entry " + identifier);
+				throw new RegistryMappingException("[" + this.registry.identifier() + "] missing mapping for required entry " + identifier);
+			} else {
+				RegistriesImpl.LOGGER.warn("[{}] missing mapping for required entry {}", this.registry.identifier(), identifier);
 			}
 		}
 	}
