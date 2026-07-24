@@ -16,7 +16,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 import net.ornithemc.osl.registries.impl.registry.sync.StatsMapper;
 
 @Mixin(Stats.class)
@@ -44,9 +44,9 @@ public class StatsMixin {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/used"), StatsMapper.of(BY_KEY, ITEMS_USED));
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/broken"), StatsMapper.of(BY_KEY, ITEMS_BROKEN));
 		} else {
-			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/crafted"), ArrayMapper.of(ITEMS_CRAFTED));
-			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/used"), ArrayMapper.of(ITEMS_USED));
-			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/broken"), ArrayMapper.of(ITEMS_BROKEN));
+			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/crafted"), ObjectArrayMapper.of(ITEMS_CRAFTED));
+			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/used"), ObjectArrayMapper.of(ITEMS_USED));
+			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/broken"), ObjectArrayMapper.of(ITEMS_BROKEN));
 		}
 	}
 }

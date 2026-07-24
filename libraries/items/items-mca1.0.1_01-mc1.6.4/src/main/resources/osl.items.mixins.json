@@ -9,8 +9,10 @@
 		"common.BlockMixin",
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
+		"common.ItemMixin",
 		"common.ItemMixinNew",
-		"common.ItemMixinOld"
+		"common.ItemMixinOld",
+		"common.StatsMixin"
 	],
 	"client": [
 	],

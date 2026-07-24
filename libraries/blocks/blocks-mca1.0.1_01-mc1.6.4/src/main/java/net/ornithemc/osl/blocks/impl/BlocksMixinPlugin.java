@@ -8,10 +8,14 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 
 public class BlocksMixinPlugin implements IMixinConfigPlugin {
 
+	public static final boolean CLIENT_SIDE = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
 	public static final boolean BLOCK_IS_METHOD_PRESENT = MinecraftVersion.resolve().compareTo("13w01a") >= 0;
 
 	@Override
@@ -37,8 +41,26 @@ public class BlocksMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.RepeaterBlockMixin".equals(mixinClassName)) {
 			return !BLOCK_IS_METHOD_PRESENT && MinecraftVersion.resolve().compareTo("b1.3") >= 0;
 		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_12w06a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w06a") <= 0;
+		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_12w40a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w40a") >= 0;
+		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_a1_1_0_12w06a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo(CLIENT_SIDE ? "a1.1.0" : "a0.2.0") >= 0 && MinecraftVersion.resolve().compareTo("12w06a") <= 0;
+		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_b1_6_tb3_1_4_7".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.6-tb3") >= 0 && MinecraftVersion.resolve().compareTo("1.4.7") <= 0;
+		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_b1_9_pre5_12w38b".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.9-pre5") >= 0 && MinecraftVersion.resolve().compareTo("12w38b") <= 0;
+		}
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.WorldMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w03a") <= 0;
+		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.StatsMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.4") >= 0;
 		}
 
 		return true;

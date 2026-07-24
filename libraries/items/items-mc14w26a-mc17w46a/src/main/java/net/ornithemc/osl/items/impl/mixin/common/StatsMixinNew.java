@@ -13,7 +13,7 @@ import net.minecraft.stat.Stats;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 
 @Mixin(Stats.class)
 public class StatsMixinNew {
@@ -31,7 +31,7 @@ public class StatsMixinNew {
 		)
 	)
 	private static void osl$items$registerStatsMapper(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/picked_up"), ArrayMapper.of(ITEMS_PICKED_UP));
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/dropped"), ArrayMapper.of(ITEMS_DROPPED));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/picked_up"), ObjectArrayMapper.of(ITEMS_PICKED_UP));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/dropped"), ObjectArrayMapper.of(ITEMS_DROPPED));
 	}
 }

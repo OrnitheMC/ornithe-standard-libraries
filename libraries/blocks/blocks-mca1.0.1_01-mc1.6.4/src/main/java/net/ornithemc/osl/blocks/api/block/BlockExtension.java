@@ -8,6 +8,7 @@ import net.ornithemc.osl.registries.api.registry.DefaultedRegistry;
 public interface BlockExtension {
 
 	DefaultedRegistry<Block> REGISTRY = BlockRegistryImpl.REGISTRY;
+	int AUTO_ASSIGN_ID = -172;
 
 	/**
 	 * @return whether this block is air.

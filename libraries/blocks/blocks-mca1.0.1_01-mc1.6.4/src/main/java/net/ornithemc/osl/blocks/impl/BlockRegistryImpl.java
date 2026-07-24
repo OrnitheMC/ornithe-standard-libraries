@@ -12,6 +12,7 @@ import net.ornithemc.osl.registries.api.registry.Registries;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
+import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 
 public final class BlockRegistryImpl {
 
@@ -51,19 +52,21 @@ public final class BlockRegistryImpl {
 		return REGISTRY.keySet();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static <T extends Block> T register(NamespacedIdentifier identifier, T block) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, identifier, block);
+			return Registry.register(REGISTRY, block.id, identifier, block);
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static <T extends Block> T register(ResourceKey<Block> key, T block) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, key, block);
+			return Registry.register(REGISTRY, block.id, key, block);
 		}
 	}
 
@@ -72,11 +75,16 @@ public final class BlockRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
+			if (block.id != id) {
+				throw new IllegalArgumentException("ID " + id + " does not match block ID " + block.id + " for " + key);
+			}
+
 			return Registry.register(REGISTRY, id, key, block);
 		}
 	}
 
 	public static void init() {
+		SyncedRegistries.register(RegistryKeys.BLOCK);
 	}
 
 	public static void unlock() {

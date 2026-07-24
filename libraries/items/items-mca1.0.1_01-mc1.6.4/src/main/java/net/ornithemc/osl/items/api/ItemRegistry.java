@@ -104,31 +104,31 @@ public final class ItemRegistry {
 	 * @param item       the item to register.
 	 * @return the registered item.
 	 */
-/*	public static <T extends Item> T register(NamespacedIdentifier identifier, T item) {
+	public static <T extends Item> T register(NamespacedIdentifier identifier, T item) {
 		return ItemRegistryImpl.register(identifier, item);
 	}
-*/
+
 	/**
 	 * @param <T>   the item type.
 	 * @param key   the resource key of the item.
 	 * @param item  the item to register.
 	 * @return the registered item.
 	 */
-/*	public static <T extends Item> T register(ResourceKey<Item> key, T item) {
+	public static <T extends Item> T register(ResourceKey<Item> key, T item) {
 		return ItemRegistryImpl.register(key, item);
 	}
-*/
+
 	/**
 	 * @param <T>   the item type.
 	 * @param id    the numerical ID of the item.
 	 * @param key   the namespaced ID of the item.
 	 * @param item  the item to register.
 	 * @return the registered item.
-	 */ 
-	 /* @deprecated use {@linkplain #register(NamespacedIdentifier, Item)}
+	 * 
+	 * @deprecated use {@linkplain #register(NamespacedIdentifier, Item)}
 	 *             or {@linkplain #register(ResourceKey, Item)} instead.
 	 */
-//	@Deprecated
+	@Deprecated
 	public static <T extends Item> T register(int id, NamespacedIdentifier key, T item) {
 		return ItemRegistryImpl.register(id, key, item);
 	}
