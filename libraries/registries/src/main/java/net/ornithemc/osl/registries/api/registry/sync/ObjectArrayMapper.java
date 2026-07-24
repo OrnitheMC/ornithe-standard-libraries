@@ -2,10 +2,10 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.Arrays;
 
-public class ArrayMapper implements IdMapper {
+public class ObjectArrayMapper implements IdMapper {
 
-	public static <T> ArrayMapper of(T[] registry) {
-		return new ArrayMapper(registry);
+	public static <T> ObjectArrayMapper of(T[] registry) {
+		return new ObjectArrayMapper(registry);
 	}
 
 	protected final Object[] registry;
@@ -13,7 +13,7 @@ public class ArrayMapper implements IdMapper {
 
 	private boolean applied;
 
-	protected <T> ArrayMapper(T[] registry) {
+	protected <T> ObjectArrayMapper(T[] registry) {
 		this.registry = (Object[]) registry;
 		this.backup = new Object[registry.length];
 	}

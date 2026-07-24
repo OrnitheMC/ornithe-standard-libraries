@@ -8,12 +8,12 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 
 import net.minecraft.stat.Stat;
 
-import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
 import net.ornithemc.osl.registries.impl.mixin.common.StatAccess;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
-public class StatsMapper extends ArrayMapper {
+public class StatsMapper extends ObjectArrayMapper {
 
 	public static StatsMapper of(Map<String, Stat> stats, Stat[] registry) {
 		return new StatsMapper(stats, registry);
