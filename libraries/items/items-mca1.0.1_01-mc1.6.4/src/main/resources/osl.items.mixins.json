@@ -12,6 +12,8 @@
 		"common.ItemMixin",
 		"common.ItemMixinNew",
 		"common.ItemMixinOld",
+		"common.ItemStackMixin",
+		"common.ItemStackMixinNew",
 		"common.StatsMixin"
 	],
 	"client": [

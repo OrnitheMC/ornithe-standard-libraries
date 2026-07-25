@@ -34,6 +34,9 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 			|| "net.ornithemc.osl.items.impl.mixin.common.BlockMixinOld".equals(mixinClassName)) {
 			return !STATS_EXIST;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.ItemStackMixinNew".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.2") >= 0;
+		}
 
 		return true;
 	}
