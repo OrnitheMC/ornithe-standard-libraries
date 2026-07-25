@@ -15,4 +15,14 @@ public interface IdentifierImpl extends NamespacedIdentifier {
 	default String identifier() {
 		throw new AbstractMethodError("Not implemented!");
 	}
+
+	@Override
+	default NamespacedIdentifier prefixed(String prefix) {
+		throw new AbstractMethodError("Not implemented!");
+	}
+
+	@Override
+	default NamespacedIdentifier suffixed(String prefix) {
+		throw new AbstractMethodError("Not implemented!");
+	}
 }

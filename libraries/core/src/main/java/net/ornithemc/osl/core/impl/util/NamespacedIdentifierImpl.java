@@ -54,4 +54,14 @@ public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 	public String identifier() {
 		return identifier;
 	}
+
+	@Override
+	public NamespacedIdentifier prefixed(String prefix) {
+		return new NamespacedIdentifierImpl(namespace, prefix + identifier);
+	}
+
+	@Override
+	public NamespacedIdentifier suffixed(String suffix) {
+		return new NamespacedIdentifierImpl(namespace, identifier + suffix);
+	}
 }
