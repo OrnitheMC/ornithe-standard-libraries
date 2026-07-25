@@ -8,6 +8,7 @@
 		"common.AirBlockMixin",
 		"common.BlockMixin",
 		"common.BlocksMixin",
+		"common.FireBlockMixin",
 		"common.StatsMixin"
 	],
 	"client": [
