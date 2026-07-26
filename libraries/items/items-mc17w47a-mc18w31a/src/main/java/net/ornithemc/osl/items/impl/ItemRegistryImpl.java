@@ -45,6 +45,10 @@ public final class ItemRegistryImpl {
 		return REGISTRY.get(key);
 	}
 
+	public static Item getItem(Block block) {
+		return Item.byBlock(block);
+	}
+
 	public static Set<NamespacedIdentifier> identifierSet() {
 		return REGISTRY.identifierSet();
 	}

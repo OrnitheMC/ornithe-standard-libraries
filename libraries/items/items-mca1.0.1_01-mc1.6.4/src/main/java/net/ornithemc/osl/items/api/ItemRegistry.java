@@ -58,6 +58,13 @@ public final class ItemRegistry {
 	}
 
 	/**
+	 * @return the item mapped to the given block.
+	 */
+	public static Item getItem(Block block) {
+		return ItemRegistryImpl.getItem(block);
+	}
+
+	/**
 	 * @return a set containing all namespaced IDs in the registry.
 	 */
 	public static Set<NamespacedIdentifier> identifierSet() {

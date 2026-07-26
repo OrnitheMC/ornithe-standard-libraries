@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import net.ornithemc.osl.items.api.ItemRegistry;
-import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
@@ -26,7 +25,7 @@ public class ItemStackMixin {
 		)
 	)
 	private void osl$items$fixBlockItemId(Block block, int size, CallbackInfo ci) {
-		Item item = ItemRegistryImpl.BLOCK_ITEMS.get(block);
+		Item item = ItemRegistry.getItem(block);
 		this.id = (item == null) ? 0 : ItemRegistry.getId(item);
 	}
 }

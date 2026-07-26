@@ -20,7 +20,7 @@ import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 
 public final class ItemRegistryImpl {
 
-	public static final Registry<Item> REGISTRY = Registries.registerSimple(RegistryKeys.ITEM, () -> { });
+	public static final Registry<Item> REGISTRY = Registries.registerSimple(RegistryKeys.ITEM, () -> { /* Item bootstrap is triggered by Block bootstrap */ });
 	public static final Map<Block, Item> BLOCK_ITEMS = new HashMap<>();
 
 	private static boolean locked = true;
@@ -47,6 +47,10 @@ public final class ItemRegistryImpl {
 
 	public static Item getItem(ResourceKey<Item> key) {
 		return REGISTRY.get(key);
+	}
+
+	public static Item getItem(Block block) {
+		return BLOCK_ITEMS.get(block);
 	}
 
 	public static Set<NamespacedIdentifier> identifierSet() {
