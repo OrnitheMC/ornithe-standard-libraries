@@ -12,7 +12,7 @@ import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 public class ItemMixin_14w21b {
 
 	@Overwrite
-	private static Item byBlock(Block block) {
+	public static Item byBlock(Block block) {
 		return ItemRegistryImpl.BLOCK_ITEMS.get(block);
 	}
 }
