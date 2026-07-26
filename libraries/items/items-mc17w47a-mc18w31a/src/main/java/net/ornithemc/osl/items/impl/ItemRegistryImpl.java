@@ -62,7 +62,7 @@ public final class ItemRegistryImpl {
 	}
 
 	public static <T extends Item> T register(Block block, T item) {
-		return register(BlockRegistry.getId(block), BlockRegistry.getIdentifier(block), item);
+		return register(BlockRegistry.getIdentifier(block), item);
 	}
 
 	public static <T extends Item> T register(NamespacedIdentifier identifier, T item) {
