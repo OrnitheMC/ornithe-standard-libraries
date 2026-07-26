@@ -37,7 +37,7 @@ public class ItemMixinNew {
 	private static void osl$items$registerItems(CallbackInfo ci, @Local HashSet<Block> blocksToSkip) {
 		ItemRegistryImpl.registerItems();
 
-		// this set contains all blocks for not to auto-generate block items
+		// this set contains all blocks for which not to auto-generate block items
 		blocksToSkip.addAll(ItemRegistryImpl.BLOCK_ITEMS.keySet());
 	}
 }
