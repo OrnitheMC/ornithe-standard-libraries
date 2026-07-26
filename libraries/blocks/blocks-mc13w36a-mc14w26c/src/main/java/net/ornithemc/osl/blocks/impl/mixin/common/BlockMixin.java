@@ -11,6 +11,7 @@ import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
 import net.ornithemc.osl.blocks.impl.BlocksMixinPlugin;
 import net.ornithemc.osl.blocks.impl.block.AirBlock;
+import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 
 @Mixin(Block.class)
 public class BlockMixin implements BlockExtension {
@@ -38,6 +39,12 @@ public class BlockMixin implements BlockExtension {
 	)
 	private static void osl$blocks$registerBlocks(CallbackInfo ci) {
 		BlockRegistryImpl.registerBlocks();
+
+		for (Block block : Block.REGISTRY) {
+			if (block instanceof BlockPostInit) {
+				((BlockPostInit) block).osl$blocks$postInit();
+			}
+		}
 	}
 
 	@Override
