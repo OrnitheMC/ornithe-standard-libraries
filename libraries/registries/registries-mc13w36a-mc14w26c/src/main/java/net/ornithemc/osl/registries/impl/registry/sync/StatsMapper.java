@@ -62,7 +62,7 @@ public class StatsMapper extends ObjectArrayMapper {
 
 			try {
 				int oldId = Integer.parseInt(id);
-				int newId = mapper.apply(oldId);
+				int newId = mapper.applyAsInt(oldId);
 
 				if (oldId != newId) {
 					this.stats.remove(stat.key);
