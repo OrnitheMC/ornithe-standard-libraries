@@ -13,7 +13,7 @@ public class BooleanArrayMapper implements IdMapper {
 
 	private boolean applied;
 
-	protected <T> BooleanArrayMapper(boolean[] registry) {
+	private <T> BooleanArrayMapper(boolean[] registry) {
 		this.registry = registry;
 		this.backup = new boolean[registry.length];
 	}

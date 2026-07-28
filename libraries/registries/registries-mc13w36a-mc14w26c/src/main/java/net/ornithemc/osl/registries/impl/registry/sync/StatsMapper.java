@@ -8,23 +8,30 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 
 import net.minecraft.stat.Stat;
 
+import net.ornithemc.osl.registries.api.registry.sync.IdMapper;
 import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
 import net.ornithemc.osl.registries.impl.mixin.common.StatAccess;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
-public class StatsMapper extends ObjectArrayMapper {
+public class StatsMapper implements IdMapper {
 
 	public static StatsMapper of(Map<String, Stat> stats, Stat[] registry) {
 		return new StatsMapper(stats, registry);
 	}
 
+	private final ObjectArrayMapper registryMapper;
+
+	private final Stat[] registry;
 	private final Map<String, Stat> stats;
 	private final Map<String, Stat> missing;
 
-	private StatsMapper(Map<String, Stat> stats, Stat[] registry) {
-		super(registry);
+	private boolean applied;
 
+	private StatsMapper(Map<String, Stat> stats, Stat[] registry) {
+		this.registryMapper = ObjectArrayMapper.of(registry);
+
+		this.registry = registry;
 		this.stats = stats;
 		this.missing = new HashMap<>();
 	}
@@ -34,27 +41,31 @@ public class StatsMapper extends ObjectArrayMapper {
 		this.missing.clear();
 		this.fixKeys(mappings::remap, true);
 
-		super.apply(mappings);
+		this.registryMapper.apply(mappings);
+
+		this.applied = true;
 	}
 
 	@Override
 	public void undo(RegistryMappings mappings) {
-		super.undo(mappings);
+		this.registryMapper.undo(mappings);
 
-		this.fixKeys(mappings::unmap, false);
-		this.stats.putAll(this.missing);
+		if (this.applied) {
+			this.fixKeys(mappings::unmap, false);
+			this.stats.putAll(this.missing);
+		}
+
+		this.applied = false;
 	}
 
 	private void fixKeys(Int2IntFunction mapper, boolean storeMissingStats) {
 		Map<String, Stat> fixed = new HashMap<>();
 
 		// some blocks/items share a single Stat!
-		Arrays.stream(this.registry).distinct().forEach(value -> {
-			if (value == null) {
+		Arrays.stream(this.registry).distinct().forEach(stat -> {
+			if (stat == null) {
 				return;
 			}
-
-			Stat stat = (Stat) value;
 
 			int i = stat.key.lastIndexOf('.');
 			String base = stat.key.substring(0, i + 1);

@@ -13,7 +13,7 @@ public class IntArrayMapper implements IdMapper {
 
 	private boolean applied;
 
-	protected <T> IntArrayMapper(int[] registry) {
+	private <T> IntArrayMapper(int[] registry) {
 		this.registry = registry;
 		this.backup = new int[registry.length];
 	}

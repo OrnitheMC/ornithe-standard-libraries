@@ -8,12 +8,12 @@ public class ObjectArrayMapper implements IdMapper {
 		return new ObjectArrayMapper(registry);
 	}
 
-	protected final Object[] registry;
+	private final Object[] registry;
 	private final Object[] backup;
 
 	private boolean applied;
 
-	protected <T> ObjectArrayMapper(T[] registry) {
+	private <T> ObjectArrayMapper(T[] registry) {
 		this.registry = (Object[]) registry;
 		this.backup = new Object[registry.length];
 	}
