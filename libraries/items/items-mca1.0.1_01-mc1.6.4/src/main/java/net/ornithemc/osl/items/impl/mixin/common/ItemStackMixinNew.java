@@ -7,10 +7,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import net.ornithemc.osl.items.api.ItemRegistry;
+import net.ornithemc.osl.items.impl.item.ItemUtil;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixinNew {
@@ -25,7 +24,6 @@ public class ItemStackMixinNew {
 		)
 	)
 	private void osl$items$fixBlockItemId(Block block, int size, int metadata, CallbackInfo ci) {
-		Item item = ItemRegistry.getItem(block);
-		this.id = (item == null) ? 0 : ItemRegistry.getId(item);
+		this.id = ItemUtil.itemId(block);
 	}
 }

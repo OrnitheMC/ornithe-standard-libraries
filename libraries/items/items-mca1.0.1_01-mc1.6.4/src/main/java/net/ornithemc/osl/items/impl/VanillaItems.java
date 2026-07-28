@@ -238,7 +238,6 @@ final class VanillaItems {
 		}
 	}
 
-	@Deprecated
 	private static void register(Item item) {
 		String identifier = null;
 
@@ -257,7 +256,7 @@ final class VanillaItems {
 		}
 
 		if (identifier != null) {
-			ItemRegistryImpl.register(item.id, NamespacedIdentifiers.from(identifier), item);
+			ItemRegistryImpl.register(NamespacedIdentifiers.from(identifier), item);
 		}
 	}
 }
