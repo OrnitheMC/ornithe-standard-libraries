@@ -90,7 +90,10 @@ public final class ItemRegistry {
 	 * @param <T>   the item type.
 	 * @param item  the item to register.
 	 * @return the registered block item.
+	 * 
+	 * @deprecated use {@linkplain #register(Block, Item)} instead.
 	 */
+	@Deprecated
 	public static <T extends BlockItem> T register(T item) {
 		return ItemRegistryImpl.register(item);
 	}

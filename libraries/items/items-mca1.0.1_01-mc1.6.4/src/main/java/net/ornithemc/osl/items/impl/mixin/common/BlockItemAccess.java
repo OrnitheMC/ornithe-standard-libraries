@@ -11,4 +11,7 @@ public interface BlockItemAccess {
 	@Accessor("block")
 	int accessBlock();
 
+	@Accessor("block")
+	void setBlock(int block);
+
 }

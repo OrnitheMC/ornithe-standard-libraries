@@ -72,6 +72,10 @@ public final class ItemRegistryImpl {
 	public static <T extends Item> T register(Block block, T item) {
 		if (!locked) {
 			BLOCK_ITEMS.put(block, item);
+
+			if (item instanceof BlockItem) {
+				((BlockItemAccess) item).setBlock(BlockRegistry.getId(block));
+			}
 		}
 
 		return register(BlockRegistry.getIdentifier(block), item);

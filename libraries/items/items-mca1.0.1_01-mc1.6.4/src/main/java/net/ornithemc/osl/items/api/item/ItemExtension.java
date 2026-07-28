@@ -8,6 +8,6 @@ import net.ornithemc.osl.registries.api.registry.Registry;
 public interface ItemExtension {
 
 	Registry<Item> REGISTRY = ItemRegistryImpl.REGISTRY;
-	int AUTO_ASSIGN_ID = -172;
+	int AUTO_ASSIGN_ID = -172172;
 
 }
