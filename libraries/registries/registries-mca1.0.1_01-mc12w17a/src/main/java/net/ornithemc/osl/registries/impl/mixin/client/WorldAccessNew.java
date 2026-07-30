@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldStorage;
 
 @Mixin(World.class)
-public interface WorldAccess {
+public interface WorldAccessNew {
 
 	@Accessor("storage")
 	WorldStorage accessStorage();

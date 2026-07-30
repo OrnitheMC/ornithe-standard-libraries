@@ -11,7 +11,7 @@ import net.ornithemc.osl.registries.impl.Bootstrap;
 
 @Mixin(
 	value = MinecraftServer.class,
-	priority = 1 // make sure entrypoints mixin is applied first
+	priority = 1001 // make sure entrypoints mixin is applied first
 )
 public class MinecraftServerMixin {
 

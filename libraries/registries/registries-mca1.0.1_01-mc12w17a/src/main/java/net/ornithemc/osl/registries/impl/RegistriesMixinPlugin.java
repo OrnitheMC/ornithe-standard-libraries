@@ -8,11 +8,15 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 
 public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 
-	private static final boolean INTEGRATED_SERVER_EXISTS = MinecraftVersion.resolve().compareTo("12w18a") >= 0;
+	private static final boolean OLD_WORLD_FORMAT = MinecraftVersion.resolve().compareTo("b1.3") < 0;
+	private static final boolean DIMENSIONS_EXIST = MinecraftVersion.resolve().compareTo(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ? "a1.2.0" : "a0.2.2") >= 0;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -25,19 +29,22 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if ("net.ornithemc.osl.registries.impl.mixin.client.IntegratedServerMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w25a") >= 0;
-		}
 		if ("net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinOld".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerOldMixin".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.server.PlayerManagerMixin".equals(mixinClassName)
-			) {
-			return !INTEGRATED_SERVER_EXISTS;
+			|| "net.ornithemc.osl.registries.impl.mixin.client.WorldAccessOld".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinOld".equals(mixinClassName)) {
+			return OLD_WORLD_FORMAT;
 		}
-		if ("net.ornithemc.osl.registries.impl.mixin.common.MinecraftServerMixin".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.common.PlayerManagerMixin".equals(mixinClassName)
-			) {
-			return INTEGRATED_SERVER_EXISTS;
+		if ("net.ornithemc.osl.registries.impl.mixin.common.AlphaWorldStorageMixin".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.client.WorldAccessNew".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinNew".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinNew".equals(mixinClassName)) {
+			return !OLD_WORLD_FORMAT;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.common.WorldMixinNew".equals(mixinClassName)) {
+			return OLD_WORLD_FORMAT && DIMENSIONS_EXIST;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.common.WorldMixinOld".equals(mixinClassName)) {
+			return OLD_WORLD_FORMAT && !DIMENSIONS_EXIST;
 		}
 
 		return true;
