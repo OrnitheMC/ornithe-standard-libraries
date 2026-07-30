@@ -24,6 +24,8 @@ public class ItemStackMixinNew {
 		)
 	)
 	private void osl$items$fixBlockItemId(Block block, int size, int metadata, CallbackInfo ci) {
-		this.id = ItemUtil.itemId(block);
+		if (ItemUtil.blockItemsInitialized) {
+			this.id = ItemUtil.itemId(block);
+		}
 	}
 }

@@ -6,22 +6,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.block.QuartzBlock;
 
 import net.ornithemc.osl.items.impl.item.ItemUtil;
 
-@Mixin(FurnaceBlockEntity.class)
-public class FurnaceBlockEntityMixinNew {
+@Mixin(QuartzBlock.class)
+public class QuartzBlockMixin {
 
 	@WrapOperation(
-		method = "getFuelTime",
+		method = "getSilkTouchDrop",
 		at = @At(
 			value = "FIELD",
-			target = "Lnet/minecraft/block/Block;id:I"
+			target = "Lnet/minecraft/block/QuartzBlock;id:I"
 		)
 	)
-	private static int osl$items$fixBlockItem(Block block, Operation<Integer> op) {
+	private int osl$items$fixBlockItem(QuartzBlock block, Operation<Integer> op) {
 		return ItemUtil.itemId(block);
 	}
 }

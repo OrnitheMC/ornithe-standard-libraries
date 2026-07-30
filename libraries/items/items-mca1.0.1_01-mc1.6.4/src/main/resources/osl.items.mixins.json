@@ -6,33 +6,60 @@
 	"plugin": "net.ornithemc.osl.items.impl.ItemsMixinPlugin",
 	"mixins": [
 		"common.AchievementsMixin",
+		"common.AxisBlockMixin",
 		"common.BlockItemAccess",
+		"common.BlockMixin_DropItem",
+		"common.BlockMixin_PickItem",
+		"common.BlockMixin_SilkTouchDropItem",
 		"common.BlockMixin",
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
 		"common.CraftingManagerMixin",
-		"common.CreativeModeTabDecorationsMixin",
-		"common.CreativeModeTabInventoryMixinNew",
-		"common.CreativeModeTabInventoryMixinOld",
-		"common.CreativeModeTabMixin",
 		"common.FurnaceBlockEntityMixin",
 		"common.FurnaceBlockEntityMixinNew",
 		"common.FurnaceBlockEntityMixinOld",
+		"common.GravelBlockMixin",
 		"common.ItemMixin",
 		"common.ItemMixinNew",
 		"common.ItemMixinOld",
 		"common.ItemStackMixin",
 		"common.ItemStackMixinNew",
+		"common.LeavesBlockMixin",
+		"common.PaneBlockMixin",
+		"common.QuartzBlockMixin",
 		"common.ShapedRecipeMixinNew",
 		"common.ShapedRecipeMixinOld",
 		"common.ShapelessRecipeMixin",
+		"common.SlabBlockMixin",
+		"common.SmeltingManagerMixin",
+		"common.SmeltingManagerMixinNew",
 		"common.StatsMixin"
 	],
 	"client": [
+		"client.CreativeModeTabDecorationsMixin",
+		"client.CreativeModeTabInventoryMixinNew",
+		"client.CreativeModeTabInventoryMixinOld",
+		"client.CreativeModeTabMixin",
+		"client.CustomizeFlatWorldScreen_LayerListWidgetMixin",
+		"client.ItemInHandRendererMixin",
+		"client.ItemRendererMixin_b1_4_01_12w34a_13w01a",
+		"client.ItemRendererMixin_b1_5_12w32a",
+		"client.ItemRendererMixin_12w50a",
+		"client.ItemRendererMixin_13w02a",
+		"client.ItemRendererMixin_1_6",
+		"client.MinecraftMixinMid",
+		"client.MinecraftMixinNew",
+		"client.MinecraftMixinOld",
+		"client.PlayerRendererMixin",
+		"client.WitchRendererMixin"
 	],
 	"server": [
 	],
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 1,
+		"maxShiftBy": 2
+	},
+	"mixinextras": {
+		"minVersion": "0.5.0"
 	}
 }

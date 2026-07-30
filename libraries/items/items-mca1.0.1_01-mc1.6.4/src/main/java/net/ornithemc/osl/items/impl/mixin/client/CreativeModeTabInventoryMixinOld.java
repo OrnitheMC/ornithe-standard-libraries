@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import net.minecraft.block.ChestBlock;
+import net.minecraft.block.Block;
 
 import net.ornithemc.osl.items.impl.item.ItemUtil;
 
@@ -19,10 +19,10 @@ public class CreativeModeTabInventoryMixinOld {
 		method = "getIconItem",
 		at = @At(
 			value = "FIELD",
-			target = "Lnet/minecraft/block/ChestBlock;id:I"
+			target = "Lnet/minecraft/block/Block;id:I"
 		)
 	)
-	private int osl$items$fixIconItem(ChestBlock block, Operation<Integer> op) {
+	private int osl$items$fixIconItem(Block block, Operation<Integer> op) {
 		return ItemUtil.itemId(block);
 	}
 }
