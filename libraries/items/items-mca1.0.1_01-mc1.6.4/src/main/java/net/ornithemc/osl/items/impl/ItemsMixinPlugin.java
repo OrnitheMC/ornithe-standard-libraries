@@ -89,6 +89,12 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 			|| "net.ornithemc.osl.items.impl.mixin.common.FurnaceBlockEntityMixinOld".equals(mixinClassName)) {
 			return !RECIPES_OVERHAULED;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixin_13w02a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("13w02a") >= 0;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixin_b1_0_13w01a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.0") >= 0 && MinecraftVersion.resolve().compareTo("13w02a") < 0;
+		}
 		if ("net.ornithemc.osl.items.impl.mixin.common.FurnaceBlockEntityMixinNew".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("b1.5") >= 0;
 		}

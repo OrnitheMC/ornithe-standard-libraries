@@ -8,6 +8,7 @@
 		"common.BlockItemAccess",
 		"common.ItemMixin_14w21b",
 		"common.ItemMixin_14w25a",
+		"common.ItemMixin",
 		"common.ItemMixinNew",
 		"common.ItemMixinOld",
 		"common.StatsMixin"
