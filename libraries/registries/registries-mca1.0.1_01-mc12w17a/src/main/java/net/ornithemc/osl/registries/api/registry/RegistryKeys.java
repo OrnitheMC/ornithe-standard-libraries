@@ -1,6 +1,7 @@
 package net.ornithemc.osl.registries.api.registry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -15,6 +16,7 @@ public final class RegistryKeys {
 
 	public static final ResourceKey<Registry<Block>> BLOCK = from("block");
 	public static final ResourceKey<Registry<Item>> ITEM = from("item");
+	public static final ResourceKey<Registry<Class<? extends BlockEntity>>> BLOCK_ENTITY_TYPE = from("block_entity_type");
 
 	/**
 	 * Constructs a registry key with the default namespace and the given identifier.
