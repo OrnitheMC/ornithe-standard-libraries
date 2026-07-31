@@ -12,3 +12,5 @@ transitive-accessible	method	net/minecraft/block/Block	setCreativeModeTab	(Lnet/
 transitive-accessible	method	net/minecraft/block/Block	setSpriteName	(Ljava/lang/String;)Lnet/minecraft/block/Block;
 
 transitive-inject-interface	net/minecraft/block/Block	net/ornithemc/osl/blocks/impl/block/BlockExtensionImpl
+
+mutable	field	net/minecraft/block/Block	id	I
