@@ -76,6 +76,8 @@ public abstract class BlockMixin implements BlockExtension {
 		)
 	)
 	private static void osl$blocks$registerArrayMappers(CallbackInfo ci) {
+		BlockRegistryImpl.registerUnknownBlocks();
+
 		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/by_id"), ObjectArrayMapper.of(BY_ID));
 		if (MinecraftVersion.resolve().compareTo("b1.5_02") <= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/is_solid"), BooleanArrayMapper.of(IS_SOLID_RENDER));

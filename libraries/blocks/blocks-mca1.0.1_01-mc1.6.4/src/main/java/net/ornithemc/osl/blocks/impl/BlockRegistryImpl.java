@@ -13,6 +13,7 @@ import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
+import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
 public final class BlockRegistryImpl {
 
@@ -94,5 +95,17 @@ public final class BlockRegistryImpl {
 	public static void registerBlocks() {
 		VanillaBlocks.init();
 		BlockEvents.REGISTER_BLOCKS.invoker().run();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void registerUnknownBlocks() {
+		for (Block block : Block.BY_ID) {
+			if (block != null && !REGISTRY.has(block)) {
+				NamespacedIdentifier identifier = NamespacedIdentifiers.from("osl", "block_" + block.id);
+
+				RegistriesImpl.LOGGER.warn("Block {}/{}", block.id, block.getClass().getSimpleName() + " was not registered to OSL's Block registry! Adding it as '" + identifier + "'...");
+				Registry.register(REGISTRY, block.id, identifier, block);
+			}
+		}
 	}
 }
