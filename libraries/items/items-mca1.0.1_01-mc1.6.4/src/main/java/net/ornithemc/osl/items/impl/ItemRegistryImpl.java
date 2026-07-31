@@ -12,6 +12,7 @@ import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.items.api.ItemEvents;
+import net.ornithemc.osl.items.impl.item.ItemIdFixer;
 import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
 import net.ornithemc.osl.registries.api.registry.Registries;
 import net.ornithemc.osl.registries.api.registry.Registry;
@@ -120,6 +121,7 @@ public final class ItemRegistryImpl {
 
 	public static void init() {
 		SyncedRegistries.register(RegistryKeys.ITEM);
+		SyncedRegistries.registerFixer(RegistryKeys.ITEM, NamespacedIdentifiers.from("item/id"), new ItemIdFixer());
 	}
 
 	public static void unlock() {

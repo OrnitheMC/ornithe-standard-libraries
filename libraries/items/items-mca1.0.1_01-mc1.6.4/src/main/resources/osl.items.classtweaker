@@ -11,3 +11,5 @@ transitive-accessible	method	net/minecraft/item/Item	setCreativeModeTab	(Lnet/mi
 transitive-accessible	method	net/minecraft/item/Item	setSpriteName	(Ljava/lang/String;)Lnet/minecraft/item/Item;
 
 transitive-inject-interface	net/minecraft/item/Item	net/ornithemc/osl/items/impl/item/ItemExtensionImpl
+
+mutable	field	net/minecraft/item/Item	id	I
