@@ -50,6 +50,13 @@ include ':libraries:blockstates:blockstates-mc16w39a-mc17w46a'
 include ':libraries:blockstates:blockstates-mc18w19a-mc1.13.2'
 include ':libraries:blockstates:blockstates-mc18w43a-mc1.14.4'
 
+include ':libraries:blockentities'
+include ':libraries:blockentities:blockentities-mca1.0.1_01-mc1.10.2'
+include ':libraries:blockentities:blockentities-mc16w32a-mc18w01a'
+include ':libraries:blockentities:blockentities-mc1.13-pre5-mc18w31a'
+include ':libraries:blockentities:blockentities-mc18w32a-mc1.14'
+include ':libraries:blockentities:blockentities-mc1.14.1-pre1-mc1.14.4'
+
 include ':libraries:branding'
 include ':libraries:branding:branding-mcin-20100206-2103-mca1.2.1_01'
 include ':libraries:branding:branding-mca1.2.2-mc14w29b'
