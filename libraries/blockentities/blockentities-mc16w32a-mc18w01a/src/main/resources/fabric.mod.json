@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-blockentities",
+  "version": "0.1.0+mc16w32a-mc18w01a",
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.blockentities.impl.BlockEntityTypeRegistryImpl::init"
+    ]
+  },
+  "mixins": [
+    "osl.blockentities.mixins.json"
+  ],
+  "accessWidener": "osl.blockentities.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.11-alpha.16.32.a \u003c\u003d1.13-alpha.18.1.a",
+    "osl-core": "\u003e\u003d0.9.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.1.0"
+  },
+  "name": "OSL Block Entities",
+  "description": "Block Entities API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,17 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.blockentities.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.BlockEntityIdFixMixin",
+		"common.BlockEntityMixin"
+	],
+	"client": [
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

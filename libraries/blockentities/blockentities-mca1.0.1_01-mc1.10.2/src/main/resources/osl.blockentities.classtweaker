@@ -1,0 +1,6 @@
+classTweaker	v1	named
+
+accessible	field	net/minecraft/block/entity/BlockEntity	ID_TO_TYPE	Ljava/util/Map;
+accessible	field	net/minecraft/block/entity/BlockEntity	TYPE_TO_ID	Ljava/util/Map;
+
+accessible	method	net/minecraft/block/entity/BlockEntity	register	(Ljava/lang/Class;Ljava/lang/String;)V
