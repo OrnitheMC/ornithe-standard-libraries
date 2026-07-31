@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.items.api.ItemEvents;
 import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
 import net.ornithemc.osl.registries.api.registry.Registries;
@@ -17,6 +18,7 @@ import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
+import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
 public final class ItemRegistryImpl {
 
@@ -136,5 +138,17 @@ public final class ItemRegistryImpl {
 	public static void registerVanillaBlockItems() {
 		// must be invoked separately because most block items are auto-generated!
 		VanillaBlockItems.init();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void registerUnknownItems() {
+		for (Item item : Item.BY_ID) {
+			if (item != null && !REGISTRY.has(item)) {
+				NamespacedIdentifier identifier = NamespacedIdentifiers.from("osl", "item_" + item.id);
+
+				RegistriesImpl.LOGGER.warn("Item {}/{}", item.id, item.getClass().getSimpleName() + " was not registered to OSL's Item registry! Adding it as '" + identifier + "'...");
+				Registry.register(REGISTRY, item.id, identifier, item);
+			}
+		}
 	}
 }
