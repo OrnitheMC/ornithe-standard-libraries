@@ -13,13 +13,13 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.impl.util.Util;
 
 @Mixin(Block.class)
-public class BlockMixin_b1_0_13w01a {
+public class BlockMixin_b1_0_1_3 {
 
 	@Shadow
 	private String key;
 
 	@Inject(
-		method = "getTranslationKey",
+		method = "m_27822537",
 		at = @At(
 			value = "HEAD"
 		)

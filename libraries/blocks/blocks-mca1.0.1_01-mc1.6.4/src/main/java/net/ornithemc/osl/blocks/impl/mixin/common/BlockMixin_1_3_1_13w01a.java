@@ -1,4 +1,4 @@
-package net.ornithemc.osl.items.impl.mixin.common;
+package net.ornithemc.osl.blocks.impl.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -6,32 +6,32 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
 
+import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.impl.util.Util;
-import net.ornithemc.osl.items.api.ItemRegistry;
 
-@Mixin(Item.class)
-public class ItemMixin_b1_0_13w01a {
+@Mixin(Block.class)
+public class BlockMixin_1_3_1_13w01a {
 
 	@Shadow
 	private String key;
 
 	@Inject(
-		method = "getTranslationKey()Ljava/lang/String;",
+		method = "getTranslationKey",
 		at = @At(
 			value = "HEAD"
 		)
 	)
-	private void osl$items$autoAssignTranslationKey(CallbackInfoReturnable<String> cir) {
+	private void osl$blocks$autoAssignTranslationKey(CallbackInfoReturnable<String> cir) {
 		if (this.key == null) {
-			NamespacedIdentifier identifier = ItemRegistry.getIdentifier((Item) (Object) this);
+			NamespacedIdentifier identifier = BlockRegistry.getIdentifier((Block) (Object) this);
 
 			if (identifier == null) {
-				this.key = "item.unknown";
+				this.key = "tile.unknown";
 			} else {
-				this.key = Util.makeTranslationKey("item", identifier);
+				this.key = Util.makeTranslationKey("tile", identifier);
 			}
 		}
 	}

@@ -5,11 +5,12 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.osl.blocks.impl.BlocksMixinPlugin",
 	"mixins": [
+		"common.BlockMixin_1_3_1_13w01a",
 		"common.BlockMixin_12w06a",
 		"common.BlockMixin_12w40a",
 		"common.BlockMixin_13w02a",
 		"common.BlockMixin_a1_1_0_12w06a",
-		"common.BlockMixin_b1_0_13w01a",
+		"common.BlockMixin_b1_0_1_3",
 		"common.BlockMixin_b1_6_tb3_1_4_7",
 		"common.BlockMixin_b1_9_pre5_12w38b",
 		"common.BlockMixin",
