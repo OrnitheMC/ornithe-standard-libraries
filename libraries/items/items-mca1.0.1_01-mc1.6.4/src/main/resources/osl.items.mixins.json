@@ -9,7 +9,6 @@
 		"common.AxisBlockMixin",
 		"common.BlockItemAccess",
 		"common.BlockMixin_DropItem",
-		"common.BlockMixin_PickItem",
 		"common.BlockMixin_SilkTouchDropItem",
 		"common.BlockMixin",
 		"common.BlockMixinNew",
@@ -33,12 +32,12 @@
 		"common.ShapedRecipeMixinNew",
 		"common.ShapedRecipeMixinOld",
 		"common.ShapelessRecipeMixin",
-		"common.SlabBlockMixin",
 		"common.SmeltingManagerMixin",
 		"common.SmeltingManagerMixinNew",
 		"common.StatsMixin"
 	],
 	"client": [
+		"client.BlockMixin_PickItem",
 		"client.CreativeModeTabDecorationsMixin",
 		"client.CreativeModeTabInventoryMixinNew",
 		"client.CreativeModeTabInventoryMixinOld",
@@ -54,6 +53,7 @@
 		"client.MinecraftMixinNew",
 		"client.MinecraftMixinOld",
 		"client.PlayerRendererMixin",
+		"client.SlabBlockMixin",
 		"client.WitchRendererMixin"
 	],
 	"server": [

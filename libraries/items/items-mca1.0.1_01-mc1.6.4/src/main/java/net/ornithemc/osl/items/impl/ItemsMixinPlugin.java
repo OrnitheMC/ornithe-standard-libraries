@@ -107,7 +107,7 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.common.BlockMixin_SilkTouchDropItem".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("b1.9-pre6") >= 0;
 		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.BlockMixin_PickItem".equals(mixinClassName)) {
+		if ("net.ornithemc.osl.items.impl.mixin.client.BlockMixin_PickItem".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w15a") >= 0;
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.common.AxisBlockMixin".equals(mixinClassName)) {
@@ -119,7 +119,7 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.common.PaneBlockMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w17a") >= 0;
 		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.SlabBlockMixin".equals(mixinClassName)) {
+		if ("net.ornithemc.osl.items.impl.mixin.client.SlabBlockMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w50a") >= 0;
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.common.QuartzBlockMixin".equals(mixinClassName)) {
