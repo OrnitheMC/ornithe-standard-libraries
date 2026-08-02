@@ -5,7 +5,9 @@ import java.util.Set;
 import net.minecraft.block.Block;
 
 import net.ornithemc.osl.blocks.api.BlockEvents;
+import net.ornithemc.osl.blocks.impl.block.BlockStateRegistryFixer;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.DefaultedRegistry;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
@@ -78,6 +80,7 @@ public final class BlockRegistryImpl {
 
 	public static void init() {
 		SyncedRegistries.register(RegistryKeys.BLOCK);
+		SyncedRegistries.registerFixer(RegistryKeys.BLOCK, NamespacedIdentifiers.from("blockstate"), new BlockStateRegistryFixer());
 	}
 
 	public static void unlock() {

@@ -1,17 +1,16 @@
 package net.ornithemc.osl.blocks.impl.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
+import net.ornithemc.osl.blockstates.api.block.state.BlockState;
 import net.ornithemc.osl.registries.api.registry.sync.IdFixer;
-import net.ornithemc.osl.registries.impl.access.Clearable;
 
 public class BlockStateRegistryFixer implements IdFixer {
 
 	@Override
 	public void apply() {
-		Clearable.clear(Block.STATE_REGISTRY);
+		Block.STATE_REGISTRY.clear();
 
 		for (Block block : BlockRegistry.REGISTRY) {
 			int blockId = BlockRegistry.getId(block);
