@@ -215,18 +215,12 @@ def setUpLibrary(project) {
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 
 		libraries.each { libraryPath ->
+			evaluationDependsOn libraryPath
 			implementation project.dependencies.project(path: libraryPath)
-
-			if (libraryPath == ':libraries:core') {
-				evaluationDependsOn libraryPath
-			}
 		}
 		modules.each { modulePath ->
+			evaluationDependsOn modulePath
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
-
-			if (modulePath.startsWith(':libraries:core')) {
-				evaluationDependsOn modulePath
-			}
 		}
 	}
 
@@ -337,18 +331,12 @@ def setUpModule(project) {
 		implementation project.dependencies.project(path: library.path)
 
 		libraries.each { libraryPath ->
+			evaluationDependsOn libraryPath
 			implementation project.dependencies.project(path: libraryPath)
-
-			if (libraryPath == ':libraries:core') {
-				evaluationDependsOn libraryPath
-			}
 		}
 		modules.each { modulePath ->
+			evaluationDependsOn modulePath
 			implementation project.dependencies.project(path: modulePath, configuration: 'namedElements')
-
-			if (modulePath.startsWith(':libraries:core')) {
-				evaluationDependsOn modulePath
-			}
 		}
 	}
 
