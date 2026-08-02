@@ -65,7 +65,7 @@ public final class ItemRegistryImpl {
 	}
 
 	public static BlockItem register(Block block) {
-		return register(block, new BlockItem(BlockRegistry.getId(block)));
+		return register(block, new BlockItem(Item.AUTO_ASSIGN_ID));
 	}
 
 	public static <T extends BlockItem> T register(T item) {

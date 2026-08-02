@@ -100,9 +100,9 @@ public abstract class BlockMixin implements BlockExtension {
 		argsOnly = true,
 		ordinal = 0,
 		at = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/block/Block;BY_ID:[Lnet/minecraft/block/Block;",
-			ordinal = 0
+			value = "INVOKE",
+			target = "Ljava/lang/Object;<init>()V",
+			shift = Shift.AFTER
 		)
 	)
 	private int osl$blocks$handleAutoAssignId(int id) {

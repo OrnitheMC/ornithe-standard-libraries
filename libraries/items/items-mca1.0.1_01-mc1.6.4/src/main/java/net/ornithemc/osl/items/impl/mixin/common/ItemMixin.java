@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.item.Item;
@@ -27,16 +28,17 @@ public class ItemMixin implements ItemExtension {
 		argsOnly = true,
 		ordinal = 0,
 		at = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/item/Item;BY_ID:[Lnet/minecraft/item/Item;",
-			ordinal = 0
+			value = "INVOKE",
+			target = "Ljava/lang/Object;<init>()V",
+			shift = Shift.AFTER
 		)
 	)
 	private int osl$items$handleAutoAssignId(int id) {
 		if (id == AUTO_ASSIGN_ID) {
-			// the Block[] array must contain all blocks so this should
-			// give us a valid ID for the Block registry to use.
-			id = DynamicArrays.length(BY_ID);
+			// the Item[] array must contain all items so this should
+			// give us a valid ID for the Item registry to use.
+			// we offset by 256 because the constructor logic adds 256
+			id = DynamicArrays.length(BY_ID) - 256;
 		}
 
 		return id;
