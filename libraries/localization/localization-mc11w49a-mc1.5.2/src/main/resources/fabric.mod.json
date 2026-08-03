@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-localization",
-  "version": "0.1.1-alpha.2+mc11w49a-mc1.5.2",
+  "version": "0.1.1-alpha.3+mc11w49a-mc1.5.2",
   "environment": "*",
   "entrypoints": {
     "client-init": [
