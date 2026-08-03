@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.quiltmc.parsers.json.JsonReader;
 
@@ -24,6 +25,8 @@ public final class Locale implements net.ornithemc.osl.text.impl.Locale {
 	public static Locale instance() {
 		return INSTANCE;
 	}
+
+	private static final Pattern ILLEGAL_FORMATTING_CHARACTERS = Pattern.compile("%(\\d+\\$)?[\\d\\.]*[df]");
 
 	// java.util.Map <=1.12.2, java.util.Properties >1.12.2
 	private Map<String, String> map;
@@ -80,6 +83,8 @@ public final class Locale implements net.ornithemc.osl.text.impl.Locale {
 	}
 
 	private void set(String key, String translation) {
+		translation = ILLEGAL_FORMATTING_CHARACTERS.matcher(translation).replaceAll("%$1s");
+
 		if (this.map != null) {
 			this.map.put(key, translation);
 		} else if (this.properties != null) {
