@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.util.CrudeIncrementalIntIdentityHashMap;
@@ -27,6 +28,22 @@ public class IdRegistryMixin<K, V> extends MappedRegistry<K, V> implements IdReg
 
 	@Unique
 	private RegisterCallback callback;
+	@Unique
+	private int nextId;
+
+	@Shadow
+	private void register(int id, K key, V value) { }
+
+	@Redirect(
+		method = "register",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/util/registry/IdRegistry;put(Ljava/lang/Object;Ljava/lang/Object;)V"
+		)
+	)
+	private void osl$registries$replaceThisPutWithSuperPut(IdRegistry<K, V> self, K key, V value) {
+		super.put(key, value);
+	}
 
 	@Inject(
 		method = "register",
@@ -35,9 +52,16 @@ public class IdRegistryMixin<K, V> extends MappedRegistry<K, V> implements IdReg
 		)
 	)
 	private void osl$registries$register(int id, K key, V value, CallbackInfo ci) {
+		this.nextId = Math.max(this.nextId, id + 1);
+
 		if (this.callback != null) {
 			this.callback.valueRegistered(id, key, value);
 		}
+	}
+
+	@Override
+	public void put(K key, V value) {
+		this.register(this.nextId, key, value);
 	}
 
 	@Override
@@ -55,5 +79,7 @@ public class IdRegistryMixin<K, V> extends MappedRegistry<K, V> implements IdReg
 		this.entries.clear();
 		this.keys.clear();
 		Clearable.clear(this.ids);
+
+		this.nextId = 0;
 	}
 }
