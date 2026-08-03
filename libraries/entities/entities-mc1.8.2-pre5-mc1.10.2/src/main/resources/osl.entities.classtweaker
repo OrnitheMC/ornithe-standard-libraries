@@ -1,0 +1,9 @@
+classTweaker	v1	named
+
+accessible	field	net/minecraft/entity/Entities	KEY_TO_TYPE	Ljava/util/Map;
+accessible	field	net/minecraft/entity/Entities	TYPE_TO_KEY	Ljava/util/Map;
+accessible	field	net/minecraft/entity/Entities	ID_TO_TYPE	Ljava/util/Map;
+accessible	field	net/minecraft/entity/Entities	TYPE_TO_ID	Ljava/util/Map;
+accessible	field	net/minecraft/entity/Entities	KEY_TO_ID	Ljava/util/Map;
+accessible	field	net/minecraft/entity/Entities	SPAWN_EGG_DATA	Ljava/util/Map;
+
