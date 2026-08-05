@@ -52,6 +52,10 @@ public final class RegistriesImpl {
 		WRITABLE_REGISTRY.register(registryKey, registry);
 		BOOTSTRAPS.put(identifier, bootstrap);
 
+		if (registry != null) {
+			LOGGER.debug("Added {} {}", registry.getClass().getSimpleName(), key.identifier());
+		}
+
 		return registry;
 	}
 
@@ -70,7 +74,13 @@ public final class RegistriesImpl {
 
 	@Deprecated
 	public static <T, V extends T> V registerMapping(Registry<T> registry, int id, ResourceKey<T> key, V value) {
-		return ((WritableRegistry<T>) registry).register(id, key, value);
+		value = ((WritableRegistry<T>) registry).register(id, key, value);
+
+		if (value != null) {
+			LOGGER.debug("[{}] registered {} {}", id, key.identifier());
+		}
+
+		return value;
 	}
 
 	public static void init() {

@@ -31,6 +31,10 @@ public class SyncedRegistry {
 			throw new IllegalArgumentException("duplicate ID mapper " + identifier + " for registry " + this.registry.identifier());
 		} else {
 			this.mappers.put(identifier, mapper);
+
+			if (mapper != null) {
+				RegistriesImpl.LOGGER.debug("[{}] added ID mapper {}", this.registry.identifier(), identifier);
+			}
 		}
 	}
 
@@ -39,6 +43,10 @@ public class SyncedRegistry {
 			throw new IllegalArgumentException("duplicate ID fixer " + identifier + " for registry " + this.registry.identifier());
 		} else {
 			this.fixers.put(identifier, fixer);
+
+			if (fixer != null) {
+				RegistriesImpl.LOGGER.debug("[{}] added ID fixer {}", this.registry.identifier(), identifier);
+			}
 		}
 	}
 
