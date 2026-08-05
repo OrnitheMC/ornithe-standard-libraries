@@ -1,0 +1,55 @@
+package net.ornithemc.osl.registries.impl;
+
+import java.util.List;
+import java.util.Set;
+
+import org.objectweb.asm.tree.ClassNode;
+
+import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
+import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+
+public class RegistriesMixinPlugin implements IMixinConfigPlugin {
+
+	@Override
+	public void onLoad(String mixinPackage) {
+	}
+
+	@Override
+	public String getRefMapperConfig() {
+		return null;
+	}
+
+	@Override
+	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		if ("net.ornithemc.osl.registries.impl.mixin.common.CrudeIncrementalIntIdentityHashMapMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("1.7.10-pre3") < 0 || (MinecraftVersion.resolve().compareTo("14w02a") >= 0 && MinecraftVersion.resolve().compareTo("14w25a") < 0);
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.common.CrudeIncrementalIntIdentityHashMapMixin_1_7_10_pre3".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("1.7.10-pre3") >= 0 && MinecraftVersion.resolve().compareTo("1.7.10") <= 0;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.common.CrudeIncrementalIntIdentityHashMapMixin_14w25a".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("14w25a") >= 0;
+		}
+
+		return true;
+	}
+
+	@Override
+	public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+	}
+
+	@Override
+	public List<String> getMixins() {
+		return null;
+	}
+
+	@Override
+	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+	}
+
+	@Override
+	public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+	}
+}
