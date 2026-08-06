@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.osl.blocks.impl.BlocksMixinPlugin",
 	"mixins": [
+		"common.BlockItemAccess",
 		"common.BlockMixin_1_3_1_13w01a",
 		"common.BlockMixin_12w06a",
 		"common.BlockMixin_12w40a",
@@ -17,6 +18,7 @@
 		"common.BlockMixinNew",
 		"common.BlockMixinOld",
 		"common.FireBlockMixin",
+		"common.ItemMixin",
 		"common.RedstoneTorchBlockMixin",
 		"common.RepeaterBlockMixin",
 		"common.StatsMixin",
