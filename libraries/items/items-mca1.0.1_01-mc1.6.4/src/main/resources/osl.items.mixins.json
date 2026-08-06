@@ -26,6 +26,7 @@
 		"common.ItemMixinOld",
 		"common.ItemStackMixin",
 		"common.ItemStackMixinNew",
+		"common.ItemStatAccess",
 		"common.LeavesBlockMixin",
 		"common.PaneBlockMixin",
 		"common.QuartzBlockMixin",

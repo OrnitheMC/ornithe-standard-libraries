@@ -68,6 +68,7 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 			return MinecraftVersion.resolve().compareTo("12w38a") >= 0;
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.common.ItemMixinNew".equals(mixinClassName)
+			|| "net.ornithemc.osl.items.impl.mixin.common.ItemStatAccess".equals(mixinClassName)
 			|| "net.ornithemc.osl.items.impl.mixin.common.BlockMixinNew".equals(mixinClassName)
 			|| "net.ornithemc.osl.items.impl.mixin.common.StatsMixin".equals(mixinClassName)
 			|| "net.ornithemc.osl.items.impl.mixin.common.AchievementsMixin".equals(mixinClassName)) {

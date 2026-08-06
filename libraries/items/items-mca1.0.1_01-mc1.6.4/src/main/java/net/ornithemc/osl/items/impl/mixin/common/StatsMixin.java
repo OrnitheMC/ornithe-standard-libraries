@@ -1,5 +1,7 @@
 package net.ornithemc.osl.items.impl.mixin.common;
 
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,6 +13,7 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.items.impl.item.ItemStatsMapper;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
@@ -18,6 +21,8 @@ import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 @Mixin(Stats.class)
 public class StatsMixin {
 
+	@Shadow @Final
+	private static List<Stat> ALL;
 	@Shadow @Final
 	private static Stat[] ITEMS_CRAFTED;
 	@Shadow @Final
@@ -33,6 +38,7 @@ public class StatsMixin {
 		)
 	)
 	private static void osl$items$registerStatsMapper(CallbackInfo ci) {
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/item"), ItemStatsMapper.of(ALL));
 		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/crafted"), ObjectArrayMapper.of(ITEMS_CRAFTED));
 		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/used"), ObjectArrayMapper.of(ITEMS_USED));
 		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("stats/broken"), ObjectArrayMapper.of(ITEMS_BROKEN));
