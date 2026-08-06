@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.item.Item;
 
 import net.ornithemc.osl.items.api.item.ItemExtension;
+import net.ornithemc.osl.items.impl.VanillaBlockItems;
+import net.ornithemc.osl.items.impl.VanillaItems;
 import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
 
 @Mixin(Item.class)
@@ -37,8 +39,15 @@ public class ItemMixin implements ItemExtension {
 		if (id == AUTO_ASSIGN_ID) {
 			// the Item[] array must contain all items so this should
 			// give us a valid ID for the Item registry to use.
-			// we offset by 256 because the constructor logic adds 256
-			id = DynamicArrays.length(BY_ID) - 256;
+			id = DynamicArrays.length(BY_ID);
+
+			// keep 0-255 free for all Vanilla block items
+			if (id <= VanillaBlockItems.MAX_ID) {
+				id = VanillaBlockItems.MAX_ID + 1;
+			}
+
+			// we offset by -256 because the constructor logic adds 256
+			id -= VanillaItems.ITEM_ID_OFFSET;
 		}
 
 		return id;
@@ -54,7 +63,8 @@ public class ItemMixin implements ItemExtension {
 		)
 	)
 	private void osl$items$growArrays(int id, CallbackInfo ci) {
-		int capacity = id + 1;
+		// the constructor logic adds 256
+		int capacity = (id + VanillaItems.ITEM_ID_OFFSET) + 1;
 
 		BY_ID = DynamicArrays.grow(BY_ID, capacity);
 	}
