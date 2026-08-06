@@ -6,10 +6,12 @@ import net.minecraft.client.resource.metadata.serializer.ResourceMetadataSeriali
 import net.minecraft.resource.SimpleResource;
 
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
+import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 
 class ResourceAdapter extends SimpleResource {
 
 	private final Resource resource;
+	private final ResourceMetadata metadata;
 
 	ResourceAdapter(Resource resource) throws IOException {
 		super(
@@ -19,19 +21,26 @@ class ResourceAdapter extends SimpleResource {
 			null
 		);
 
-		this.resource = resource;
+		ResourceMetadata metadata;
 
-		// parse now in case of exceptions (vanilla does not support lazy resources)
-		this.resource.metadata();
+		try {
+			metadata = resource.metadata();
+		} catch (IOException e) {
+			metadata = ResourceMetadata.EMPTY;
+		}
+
+		this.resource = resource;
+		this.metadata = metadata;
 	}
 
 	@Override
 	public <T> T getMetadata(ResourceMetadataSerializer<T> serializer) {
-		try {
-			return this.resource.metadata().getSection(serializer.getName(), serializer::deserialize);
-		} catch (IOException e) {
-			return null;
-		}
+		return this.metadata.getSection(serializer.getName(), serializer::deserialize);
+	}
+
+	@Override
+	public boolean m_71215293() {
+		return this.metadata != ResourceMetadata.EMPTY;
 	}
 
 	@Override
