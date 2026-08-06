@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 
 import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
+import net.ornithemc.osl.blocks.impl.VanillaBlocks;
 import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
@@ -110,6 +111,11 @@ public abstract class BlockMixin implements BlockExtension {
 			// the Block[] array must contain all blocks so this should
 			// give us a valid ID for the Block registry to use.
 			id = DynamicArrays.length(BY_ID);
+
+			// keep 0-255 free for all Vanilla blocks
+			if (id <= VanillaBlocks.MAX_ID) {
+				id = VanillaBlocks.MAX_ID + 1;
+			}
 		}
 
 		return id;
