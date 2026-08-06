@@ -24,7 +24,7 @@ public class IntegratedServerMixin {
 		method = "loadWorld",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/storage/AlphaWorldStorage;loadData()Lnet/minecraft/world/WorldData;"
+			target = "Lnet/minecraft/world/storage/AlphaWorldStorage;m_16306786()Lnet/minecraft/world/WorldData;"
 		)
 	)
 	private void osl$registries$loadRegistryMappings(CallbackInfo ci, @Local AlphaWorldStorage storage) {

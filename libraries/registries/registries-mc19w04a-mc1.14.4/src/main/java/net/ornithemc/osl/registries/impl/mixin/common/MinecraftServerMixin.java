@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
 
@@ -26,7 +27,7 @@ public class MinecraftServerMixin {
 		method = "loadWorld",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/storage/AlphaWorldStorage;loadData()Lnet/minecraft/world/WorldData;"
+			target = "Lnet/minecraft/world/storage/AlphaWorldStorage;m_16306786()Lnet/minecraft/world/WorldData;"
 		)
 	)
 	private void osl$registries$loadRegistryMappings(CallbackInfo ci, @Local AlphaWorldStorage storage) {
@@ -45,7 +46,7 @@ public class MinecraftServerMixin {
 			value = "HEAD"
 		)
 	)
-	private void osl$registries$saveRegistryMappings(CallbackInfo ci) {
+	private void osl$registries$saveRegistryMappings(CallbackInfoReturnable<Boolean> cir) {
 		@SuppressWarnings("resource")
 		MinecraftServer server = (MinecraftServer) (Object) this;
 
