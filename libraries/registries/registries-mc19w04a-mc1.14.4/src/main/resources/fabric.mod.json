@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-registries",
-  "version": "0.1.0-alpha.8+mc19w04a-mc1.14.4",
+  "version": "0.1.0-alpha.9+mc19w04a-mc1.14.4",
   "environment": "*",
   "entrypoints": {
     "client-init": [
