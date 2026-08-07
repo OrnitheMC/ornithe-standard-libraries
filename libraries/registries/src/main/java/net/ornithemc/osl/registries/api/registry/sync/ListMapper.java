@@ -1,7 +1,6 @@
 package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListMapper implements IdMapper {
@@ -23,10 +22,10 @@ public class ListMapper implements IdMapper {
 
 	@Override
 	public void apply(RegistryMappings mappings) {
-		Collections.fill(this.backup, null);
-		Collections.copy(this.backup, this.registry);
+		this.backup.clear();
+		this.backup.addAll(this.registry);
 		
-		Collections.fill(this.registry, null);
+		this.registry.clear();
 		
 		for (int oldId = 0; oldId < this.backup.size(); oldId++) {
 			Object value = this.backup.get(oldId);
@@ -35,7 +34,11 @@ public class ListMapper implements IdMapper {
 				int newId = mappings.remap(oldId);
 
 				if (newId >= 0) {
-					this.registry.set(newId, this.backup.get(oldId));
+					while (newId >= this.registry.size()) {
+						this.registry.add(null);
+					}
+
+					this.registry.set(newId, value);
 				}
 			}
 		}
@@ -46,8 +49,8 @@ public class ListMapper implements IdMapper {
 	@Override
 	public void undo(RegistryMappings mappings) {
 		if (this.applied) {
-			Collections.fill(this.registry, null);
-			Collections.copy(this.registry, this.backup);
+			this.registry.clear();
+			this.registry.addAll(this.backup);
 		}
 		
 		this.applied = false;
