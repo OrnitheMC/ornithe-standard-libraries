@@ -55,6 +55,10 @@ include ':libraries:entities:entities-mc18w19a-mc18w31a'
 include ':libraries:entities:entities-mc18w32a-mc19w04b'
 include ':libraries:entities:entities-mc19w08a-mc1.14.4'
 
+include ':libraries:entities-rendering'
+include ':libraries:entities-rendering:entities-rendering-mca1.0.1_01-mc14w04b'
+include ':libraries:entities-rendering:entities-rendering-mc14w05a-mc1.14.4'
+
 include ':libraries:entrypoints'
 include ':libraries:entrypoints:entrypoints-mcin-20091223-1459-mc1.5.2'
 include ':libraries:entrypoints:entrypoints-mc13w16a-mc1.14.4'
