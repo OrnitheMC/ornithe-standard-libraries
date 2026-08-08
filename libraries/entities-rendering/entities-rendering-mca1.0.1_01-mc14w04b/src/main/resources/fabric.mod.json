@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-entities-rendering",
+  "version": "0.1.0+mca1.0.1_01-mc14w04b",
+  "environment": "client",
+  "mixins": [
+    "osl.entities-rendering.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.0.0-alpha.0.1.1 \u003c\u003d1.8-alpha.14.4.b",
+    "osl-core": "\u003e\u003d0.9.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0"
+  },
+  "name": "OSL Entities Rendering",
+  "description": "Entities Rendering API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
