@@ -54,6 +54,7 @@
 		"client.MinecraftMixinNew",
 		"client.MinecraftMixinOld",
 		"client.PlayerRendererMixin",
+		"client.PlayerRendererMixinNew",
 		"client.SlabBlockMixin",
 		"client.WitchRendererMixin"
 	],

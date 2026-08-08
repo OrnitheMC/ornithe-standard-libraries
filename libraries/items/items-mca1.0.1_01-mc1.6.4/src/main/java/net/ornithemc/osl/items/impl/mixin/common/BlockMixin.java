@@ -2,7 +2,6 @@ package net.ornithemc.osl.items.impl.mixin.common;
 
 import org.objectweb.asm.Opcodes;
 
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +21,6 @@ import net.ornithemc.osl.blocks.impl.VanillaBlocks;
 import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 import net.ornithemc.osl.items.impl.VanillaItems;
 
-@Debug(export = true)
 @Mixin(
 	value = Block.class,
 	priority = 1001 // make sure blocks mixin is applied first 

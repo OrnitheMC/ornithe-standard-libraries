@@ -64,6 +64,12 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.client.ItemRendererMixin_1_6".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("1.6") >= 0;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.client.PlayerRendererMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("a1.0.6") >= 0;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.client.PlayerRendererMixinNew".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("a1.2.0") >= 0;
+		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.WitchRendererMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w38a") >= 0;
 		}
