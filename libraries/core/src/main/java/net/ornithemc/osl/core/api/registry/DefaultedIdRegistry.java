@@ -3,6 +3,10 @@ package net.ornithemc.osl.core.api.registry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
+/**
+ * @deprecated use Registries API instead
+ */
+@Deprecated
 public class DefaultedIdRegistry<T> extends SimpleIdRegistry<T> {
 
 	private final NamespacedIdentifier defaultKey;
