@@ -13,6 +13,10 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
+/**
+ * @deprecated use Registries API instead
+ */
+@Deprecated
 public class SimpleIdRegistry<T> implements Iterable<T> {
 
 	private final Int2ReferenceMap<T> values;
