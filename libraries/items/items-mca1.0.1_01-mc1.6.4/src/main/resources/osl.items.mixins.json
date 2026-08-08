@@ -50,6 +50,7 @@
 		"client.ItemRendererMixin_12w50a",
 		"client.ItemRendererMixin_13w02a",
 		"client.ItemRendererMixin_1_6",
+		"client.ItemRendererMixin",
 		"client.MinecraftMixinMid",
 		"client.MinecraftMixinNew",
 		"client.MinecraftMixinOld",
