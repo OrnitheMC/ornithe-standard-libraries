@@ -1,5 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.adapter;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 
 import net.minecraft.client.gui.screen.ResourcePacksScreen;
@@ -8,11 +10,15 @@ import net.minecraft.client.render.texture.DynamicTexture;
 import net.minecraft.client.render.texture.TextureUtil;
 import net.minecraft.resource.Identifier;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 
 class ResourcePackSummaryEntry extends ResourcePackEntry {
+
+	private static final boolean FALL_BACK_TO_UNKNOWN_PACK_ICON = MinecraftVersion.resolve().compareTo("16w36a") >= 0;
+	private static final Identifier UNKNOWN_PACK_ICON_LOCATION = new Identifier("textures/misc/unknown_pack.png");
 
 	private final ResourcePackSummary summary;
 	private final Identifier iconLocation;
@@ -20,16 +26,34 @@ class ResourcePackSummaryEntry extends ResourcePackEntry {
 	ResourcePackSummaryEntry(ResourcePacksScreen parent, ResourcePackSummary summary) {
 		super(parent);
 
-		DynamicTexture icon;
+		BufferedImage icon = null;
 
 		try (InputStream is = summary.open().getResource(ResourcePack.ICON_FILE)) {
-			icon = new DynamicTexture(TextureUtil.readImage(is));
-		} catch (Throwable t) {
-			icon = TextureUtil.MISSING_TEXTURE;
+			icon = TextureUtil.readImage(is);
+		} catch (IOException e) {
+			if (FALL_BACK_TO_UNKNOWN_PACK_ICON) {
+				try (InputStream is = this.minecraft.getResourceManager().getResource(UNKNOWN_PACK_ICON_LOCATION).asStream()) {
+					icon = TextureUtil.readImage(is);
+				} catch (Throwable t) {
+					e.addSuppressed(t);
+				}
+			}
+
+			if (icon == null) {
+				try {
+					icon = this.minecraft.getResourcePacks().defaultPack.getIcon();
+				} catch (Throwable t) {
+					e.addSuppressed(t);
+				}
+			}
+
+			if (icon == null) {
+				throw new IllegalStateException("Unable to load pack icon for " + summary.getId(), e);
+			}
 		}
 
 		this.summary = summary;
-		this.iconLocation = this.minecraft.getTextureManager().register("texturepackicon", icon);
+		this.iconLocation = this.minecraft.getTextureManager().register("texturepackicon", new DynamicTexture(icon));
 	}
 
 	@Override

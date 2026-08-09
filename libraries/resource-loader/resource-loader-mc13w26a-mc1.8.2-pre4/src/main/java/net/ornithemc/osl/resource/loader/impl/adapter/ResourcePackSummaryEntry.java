@@ -1,5 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.adapter;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 
 import net.minecraft.client.gui.screen.ResourcePacksScreen;
@@ -19,16 +21,24 @@ class ResourcePackSummaryEntry extends ResourcePackEntry {
 	ResourcePackSummaryEntry(ResourcePacksScreen parent, ResourcePackSummary summary) {
 		super(parent);
 
-		DynamicTexture icon;
+		BufferedImage icon = null;
 
 		try (InputStream is = summary.open().getResource(ResourcePack.ICON_FILE)) {
-			icon = new DynamicTexture(TextureUtil.readImage(is));
-		} catch (Throwable t) {
-			icon = TextureUtil.MISSING_TEXTURE;
+			icon = TextureUtil.readImage(is);
+		} catch (IOException e) {
+			try {
+				icon = this.minecraft.getResourcePacks().defaultPack.getIcon();
+			} catch (Throwable t) {
+				e.addSuppressed(t);
+			}
+
+			if (icon == null) {
+				throw new IllegalStateException("Unable to load pack icon for " + summary.getId(), e);
+			}
 		}
 
 		this.summary = summary;
-		this.iconLocation = this.minecraft.getTextureManager().register("texturepackicon", icon);
+		this.iconLocation = this.minecraft.getTextureManager().register("texturepackicon", new DynamicTexture(icon));
 	}
 
 	@Override
