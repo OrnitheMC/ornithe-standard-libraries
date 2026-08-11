@@ -68,6 +68,9 @@ public class BlocksMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.WorldMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w03a") <= 0;
 		}
+		if ("net.ornithemc.osl.blocks.impl.mixin.common.EndermanEntityMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("b1.8") >= 0;
+		}
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.StatsMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("b1.4") >= 0;
 		}

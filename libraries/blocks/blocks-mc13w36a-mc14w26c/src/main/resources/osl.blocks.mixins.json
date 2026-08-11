@@ -8,6 +8,7 @@
 		"common.AirBlockMixin",
 		"common.BlockMixin",
 		"common.BlocksMixin",
+		"common.EndermanEntityMixin",
 		"common.FireBlockMixin",
 		"common.StatsMixin"
 	],
