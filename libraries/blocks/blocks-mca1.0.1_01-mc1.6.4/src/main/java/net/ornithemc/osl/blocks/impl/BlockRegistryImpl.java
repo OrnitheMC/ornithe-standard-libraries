@@ -99,14 +99,13 @@ public final class BlockRegistryImpl {
 		BlockEvents.REGISTER_BLOCKS.invoker().run();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void registerUnknownBlocks() {
 		for (Block block : Block.BY_ID) {
-			if (block != null && !REGISTRY.has(block)) {
+			if (block != null && block.id != 0 && REGISTRY.getIdentifier(block) == REGISTRY.getDefaultIdentifier()) {
 				NamespacedIdentifier identifier = NamespacedIdentifiers.from("osl", "block_" + block.id);
 
 				RegistriesImpl.LOGGER.warn("Block {}/{}", block.id, block.getClass().getSimpleName() + " was not registered to OSL's Block registry! Adding it as '" + identifier + "'...");
-				Registry.register(REGISTRY, block.id, identifier, block);
+				BlockRegistryImpl.register(identifier, block);
 			}
 		}
 	}
