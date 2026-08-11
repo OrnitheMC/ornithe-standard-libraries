@@ -3,6 +3,12 @@ package net.ornithemc.osl.registries.api.registry.sync;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An {@linkplain IdMapper} implementation for maps with {@code Integer} keys
+ * ({@code Map<Integer, T>}) where IDs are used as keys to the map. The values
+ * are moved from the old key (the old ID) to the new key (the new ID) within
+ * the same map. {@code null} is used as the default or "empty" value.
+ */
 public class IntegerMapMapper implements IdMapper {
 
 	public static IntegerMapMapper of(Map<Integer, ?> registry) {

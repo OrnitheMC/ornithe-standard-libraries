@@ -2,6 +2,12 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import net.minecraft.util.Id2ObjectBiMap;
 
+/**
+ * An {@linkplain IdMapper} implementation for {@linkplain Id2ObjectBiMap}s
+ * where IDs are used as keys to the map. The values are moved from the old key
+ * (the old ID) to the new key (the new ID) within the same map. {@code null} is
+ * used as the default or "empty" value.
+ */
 public class Id2ObjectBiMapMapper implements IdMapper {
 
 	public static Id2ObjectBiMapMapper of(Id2ObjectBiMap<?> registry) {

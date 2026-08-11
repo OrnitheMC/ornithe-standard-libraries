@@ -46,11 +46,6 @@ public class IdRegistryMixin<T> implements IdRegistryAccess, Clearable {
 	}
 
 	@Override
-	public boolean osl$registries$has(Object value) {
-		return this.values.containsValue(value);
-	}
-
-	@Override
 	public void osl$registries$clear() {
 		this.values.clear();
 		Clearable.clear(this.ids);

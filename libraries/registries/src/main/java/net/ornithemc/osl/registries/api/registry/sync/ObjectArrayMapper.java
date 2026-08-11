@@ -2,6 +2,12 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.Arrays;
 
+/**
+ * An {@linkplain IdMapper} implementation for object arrays ({@code T[]} where
+ * IDs are used as indices to the array. The values are moved from the old index
+ * (the old ID) to the new index (the new ID) within the same array.
+ * {@code null} is used as the default or "empty" value.
+ */
 public class ObjectArrayMapper implements IdMapper {
 
 	public static <T> ObjectArrayMapper of(T[] registry) {

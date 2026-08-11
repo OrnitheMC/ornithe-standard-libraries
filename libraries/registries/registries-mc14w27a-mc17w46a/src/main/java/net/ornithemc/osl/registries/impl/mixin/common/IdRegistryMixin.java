@@ -70,11 +70,6 @@ public class IdRegistryMixin<K, V> extends MappedRegistry<K, V> implements IdReg
 	}
 
 	@Override
-	public boolean osl$registries$has(Object value) {
-		return this.keys.containsKey(value);
-	}
-
-	@Override
 	public void osl$registries$clear() {
 		this.entries.clear();
 		this.keys.clear();

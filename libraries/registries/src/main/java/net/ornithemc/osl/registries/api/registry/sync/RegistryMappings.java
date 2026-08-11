@@ -3,7 +3,7 @@ package net.ornithemc.osl.registries.api.registry.sync;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 
 /**
- * These mappings can be used to map old IDs to new IDs.
+ * These mappings can be used to map old IDs to new IDs and vice versa.
  */
 public interface RegistryMappings {
 

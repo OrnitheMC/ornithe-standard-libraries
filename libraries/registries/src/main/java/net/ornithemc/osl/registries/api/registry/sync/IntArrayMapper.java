@@ -2,6 +2,13 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.Arrays;
 
+/**
+ * An {@linkplain IdMapper} implementation for int arrays ({@code int[]} where
+ * IDs are used as indices to the array. The values are moved from the old index
+ * (the old ID) to the new index (the new ID) within the same array. Since
+ * {@code int} is a primitive type, {@code 0} is used as the default or "empty"
+ * value.
+ */
 public class IntArrayMapper implements IdMapper {
 
 	public static IntArrayMapper of(int[] registry) {

@@ -2,6 +2,13 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.Arrays;
 
+/**
+ * An {@linkplain IdMapper} implementation for boolean arrays ({@code boolean[]}
+ * where IDs are used as indices to the array. The values are moved from the old
+ * index (the old ID) to the new index (the new ID) within the same array. Since
+ * {@code boolean} is a primitive type, {@code false} is used as the default or
+ * "empty" value.
+ */
 public class BooleanArrayMapper implements IdMapper {
 
 	public static BooleanArrayMapper of(boolean[] registry) {

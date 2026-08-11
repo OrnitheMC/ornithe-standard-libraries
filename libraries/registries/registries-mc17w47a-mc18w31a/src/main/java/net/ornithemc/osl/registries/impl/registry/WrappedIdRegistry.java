@@ -83,11 +83,6 @@ public class WrappedIdRegistry<T> implements ClearableRegistry<T> {
 	}
 
 	@Override
-	public boolean has(T value) {
-		return this.registry.osl$registries$has(value);
-	}
-
-	@Override
 	public int getId(T value) {
 		return this.registry.getId(value);
 	}

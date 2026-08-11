@@ -4,7 +4,7 @@ The Registries API provides an alternative to Vanilla's registry system, with a 
 
 ## Resource Keys
 
-Registries are in essence fancy `Map`s. The keys used in registries are `ResourceKey`s. A resource key consists of two components, a `registry` identifier that uniquely identifies the registry it's a part of, and an `identifier` that uniquely identifies a resource within that registry. Thus, a resource key can uniquely identity any registered resource.
+Registries are used to keep track of in-game resources. They are assumed to hold all known values of a type, and each value is assigned a unique namespaced identifier. Registries themselves are also registered to their own registry. Thus, a single pair of namespaced identifiers can identify an in-game resource: the first specifies the registry the resource belongs to, and the second identifies the resource within that registry. This is called a `ResourceKey`, and it can be used to refer to a resource without a reference to the actual object. For example, `minecraft:block/minecraft:stone` points to the block `minecraft:stone` in the registry `minecraft:block`.
 
 The `ResourceKeys` class provides factory methods for creating resource keys:
 
@@ -22,13 +22,13 @@ Block COOKIE = Registry.register(BlockRegistry.REGISTRY, COOKIE_KEY, new CookieB
 
 ## Creating Registries
 
-Just like with other resources, you must create a `ResourceKey` that uniquely identifies your registry. The `RegistryKeys` class provides some factory methods for creating basic resource keys for registries.
+Just like with other resources, you must create a `ResourceKey` that uniquely identifies your registry. The `RegistryKeys` class provides some factory methods for creating resource keys for registries.
 
 ```java
 ResourceKey<Registry<CookieRecipe>> COOKIE_RECIPE_REGISTRY = RegistryKeys.from(NamespacedIdentifiers.from("example", "cookie_recipe"));
 ```
 
-Registries should be loaded in your mod's entrypoint. The `Registries` class provides helper methods for registering simple and defaulted registries. You can pass along a bootstrap for generating your registry's contents.
+Registries should be loaded in your mod's entrypoint. The `Registries` class provides helper methods for registering simple and defaulted registries. You can pass along a callback for bootstrapping your registry's contents.
 
 ```java
 Registry<CookieRecipe> COOKIE_RECIPE = Registries.registerSimple(COOKIE_RECIPE_REGISTRY, CookieRecipes::init);
@@ -87,7 +87,7 @@ public class ExampleInitializer implements ModInitializer {
 
 ## Registry Sync
 
-To ensure numerical IDs are consistent between the server and client and across sessions, you can register registry your registry through the `SyncedRegistries` class. This should also be done in your mod's entrypoint. An update to the above example is shown below.
+Numerical IDs may be used for serialization in server-client communication or in world saves. If this is the case, you must register your registry to be synchronized. The `SyncedRegistries` class has helper methods for this. An update to the above example is shown below.
 
 ```java
 package com.example;
@@ -111,4 +111,4 @@ public class ExampleRegistries {
 }
 ```
 
-If the numerical IDs of your registry are used in any way that is persistent across game sessions (think of Vanilla's item model registry, for example), you must register an ID mapper or fixer for those. This API provides implementations for remapping fastutils' `Int2ObjectMap` and Vanilla's `Id2ObjectBiMap` in `Int2ObjectMapMapper` and `Id2ObjectBiMapMapper` respectively.
+It is not recommended that you use the numerical IDs in any other places. If it is unavoidable, however, you can register a custom `IdMapper` or `IdFixer` to ensure there are no desync or corruption bugs. This API provides several `IdMapper` implementations you can use, such `BooleanArrayMapper`, `IntArrayMapper`, `ListMapper`, and `Int2ObjectMapMapper`. You can of course create a custom implementation as well.

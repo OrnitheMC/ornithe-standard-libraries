@@ -59,17 +59,12 @@ public final class RegistriesImpl {
 		return registry;
 	}
 
-	public static <T, V extends T> V registerMapping(Registry<T> registry, NamespacedIdentifier identifier, V value) {
-		return registerMapping(registry, ResourceKeys.from(registry.identifier(), identifier), value);
-	}
-
 	public static <T, V extends T> V registerMapping(Registry<T> registry, ResourceKey<T> key, V value) {
 		return ((WritableRegistry<T>) registry).register(key, value);
 	}
 
-	@Deprecated
-	public static <T, V extends T> V registerMapping(Registry<T> registry, int id, NamespacedIdentifier identifier, V value) {
-		return registerMapping(registry, id, ResourceKeys.from(registry.identifier(), identifier), value);
+	public static <T, V extends T> V registerMapping(Registry<T> registry, NamespacedIdentifier identifier, V value) {
+		return registerMapping(registry, ResourceKeys.from(registry.identifier(), identifier), value);
 	}
 
 	@Deprecated
@@ -81,6 +76,11 @@ public final class RegistriesImpl {
 		}
 
 		return value;
+	}
+
+	@Deprecated
+	public static <T, V extends T> V registerMapping(Registry<T> registry, int id, NamespacedIdentifier identifier, V value) {
+		return registerMapping(registry, id, ResourceKeys.from(registry.identifier(), identifier), value);
 	}
 
 	public static void init() {

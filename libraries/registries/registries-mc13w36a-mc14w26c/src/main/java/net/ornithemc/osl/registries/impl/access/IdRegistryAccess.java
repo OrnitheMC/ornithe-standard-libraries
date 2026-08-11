@@ -6,10 +6,6 @@ public interface IdRegistryAccess {
 		throw new AbstractMethodError();
 	}
 
-	default boolean osl$registries$has(Object value) {
-		throw new AbstractMethodError();
-	}
-
 	default void osl$registries$clear() {
 		throw new AbstractMethodError();
 	}

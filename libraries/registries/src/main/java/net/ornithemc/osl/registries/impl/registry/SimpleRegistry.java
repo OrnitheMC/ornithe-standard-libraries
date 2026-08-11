@@ -97,11 +97,6 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 	}
 
 	@Override
-	public boolean has(T value) {
-		return this.ids.containsKey(value);
-	}
-
-	@Override
 	public int getId(T value) {
 		return this.ids.getInt(value);
 	}

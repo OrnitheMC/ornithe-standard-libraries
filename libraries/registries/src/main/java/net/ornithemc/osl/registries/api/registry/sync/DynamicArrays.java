@@ -2,6 +2,9 @@ package net.ornithemc.osl.registries.api.registry.sync;
 
 import java.util.Arrays;
 
+/**
+ * Utility class for dynamically growing arrays.
+ */
 public final class DynamicArrays {
 
 	public static <T> int length(T[] array) {
