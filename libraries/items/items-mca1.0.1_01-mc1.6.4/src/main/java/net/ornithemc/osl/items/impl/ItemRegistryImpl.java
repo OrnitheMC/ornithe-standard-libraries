@@ -142,14 +142,13 @@ public final class ItemRegistryImpl {
 		VanillaBlockItems.init();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void registerUnknownItems() {
 		for (Item item : Item.BY_ID) {
-			if (item != null && !REGISTRY.has(item)) {
+			if (item != null && REGISTRY.getIdentifier(item) == null) {
 				NamespacedIdentifier identifier = NamespacedIdentifiers.from("osl", "item_" + item.id);
 
 				RegistriesImpl.LOGGER.warn("Item {}/{}", item.id, item.getClass().getSimpleName() + " was not registered to OSL's Item registry! Adding it as '" + identifier + "'...");
-				Registry.register(REGISTRY, item.id, identifier, item);
+				ItemRegistryImpl.register(identifier, item);
 			}
 		}
 	}
