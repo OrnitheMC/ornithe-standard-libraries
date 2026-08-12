@@ -47,7 +47,6 @@ public final class SyncedRegistriesPacketSerializer {
 
 				try {
 					mappings.read(buffer, SyncedRegistriesPacketSerializer::deserialize, source);
-					mappings.build(source);
 				} catch (RegistryMappingException e) {
 					throw new RegistryMappingException("Invalid registry mappings for " + identifier, e);
 				}

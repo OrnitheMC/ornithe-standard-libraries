@@ -53,19 +53,25 @@ public class SerializableRegistryMappings implements RegistryMappings {
 	}
 
 	public <M> void read(M medium, Deserializer<M> deserializer, RegistryMappingSource source) throws IOException, RegistryMappingException {
+		this.init();
 		deserializer.deserialize(medium, this.mappings, source);
+		this.build(source);
 	}
 
 	public <M> void write(M medium, Serializer<M> serializer) throws IOException {
 		serializer.serialize(medium, this.mappings);
 	}
 
-	public void reset() {
+	private void clear() {
 		this.mappings.clear();
 		this.unmappings.clear();
 
 		this.idMappings.clear();
 		this.idUnmappings.clear();
+	}
+
+	public void reset() {
+		this.clear();
 
 		for (Object value : this.registry) {
 			NamespacedIdentifier identifier = this.registry.getIdentifier(value);
@@ -79,7 +85,18 @@ public class SerializableRegistryMappings implements RegistryMappings {
 		}
 	}
 
-	public void build(RegistryMappingSource source) throws RegistryMappingException {
+	private void init() {
+		this.clear();
+
+		for (Object value : this.registry) {
+			NamespacedIdentifier identifier = this.registry.getIdentifier(value);
+			int id = this.registry.getId(value);
+
+			this.unmappings.put(identifier, id);
+		}
+	}
+
+	private void build(RegistryMappingSource source) throws RegistryMappingException {
 		// the saved mappings may be incomplete for the current mod set
 		// but no entries should be dropped, so assign a new id
 		if (source == RegistryMappingSource.WORLD_SAVE) {

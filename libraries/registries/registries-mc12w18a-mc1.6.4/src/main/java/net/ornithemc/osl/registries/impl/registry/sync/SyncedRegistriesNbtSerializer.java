@@ -56,7 +56,6 @@ public final class SyncedRegistriesNbtSerializer {
 
 				try {
 					mappings.read(mappingsNbt, SyncedRegistriesNbtSerializer::deserialize, source);
-					mappings.build(source);
 				} catch (RegistryMappingException e) {
 					throw new RegistryMappingException("Invalid registry mappings for " + identifier, e);
 				}
