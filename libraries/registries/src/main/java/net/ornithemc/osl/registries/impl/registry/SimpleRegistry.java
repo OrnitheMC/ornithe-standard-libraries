@@ -56,13 +56,13 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 			throw new IllegalStateException("invalid ID " + id + " (must be >= 0)");
 		}
 		if (this.values.containsKey(id)) {
-			throw new IllegalStateException("duplicate ID " + id + " (" + this.getKey(this.get(id)) + " and " + key + ")");
+			throw new IllegalStateException("duplicate ID " + id + " (" + this.getIdentifier(this.get(id)) + " and " + key.identifier() + ")");
 		}
 		if (this.registry.containsKey(key.identifier())) {
 			throw new IllegalStateException("duplicate Namespaced ID " + key.identifier() + " (" + this.getId(this.get(key)) + " and " + id + ")");
 		}
 		if (this.ids.containsKey(value) || this.keys.containsKey(value) || this.identifiers.containsKey(value)) {
-			throw new IllegalStateException("value registered twice (" + this.getId(value) + ", " + this.getKey(value) + " and " + id + ", " + key + ")");
+			throw new IllegalStateException("value registered twice (" + this.getId(value) + ", " + this.getIdentifier(value) + " and " + id + ", " + key.identifier() + ")");
 		}
 
 		this.values.put(id, value);
