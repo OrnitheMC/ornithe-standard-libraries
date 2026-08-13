@@ -2,6 +2,7 @@ package net.ornithemc.osl.registries.impl.registry;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.registries.api.registry.DefaultedRegistry;
+import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 
 public class DefaultedSimpleRegistry<T> extends SimpleRegistry<T> implements DefaultedRegistry<T> {
@@ -64,6 +65,15 @@ public class DefaultedSimpleRegistry<T> extends SimpleRegistry<T> implements Def
 	public NamespacedIdentifier getIdentifier(T value) {
 		NamespacedIdentifier identifier = super.getIdentifier(value);
 		return identifier == null ? this.defaultIdentifier : identifier;
+	}
+
+	@Override
+	public Registry<T> freeze() {
+		if (this.defaultValue == null) {
+			throw new IllegalStateException("Attempted to freeze defaulted registry " + this.identifier() + " before default value was registered!");
+		}
+
+		return super.freeze();
 	}
 
 	@Override
