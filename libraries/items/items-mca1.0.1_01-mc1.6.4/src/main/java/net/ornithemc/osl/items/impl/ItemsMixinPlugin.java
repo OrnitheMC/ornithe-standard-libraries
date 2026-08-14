@@ -170,6 +170,9 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.common.ServerWorldMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w18a") >= 0;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.VillagerEntityMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w21a") >= 0;
+		}
 
 		return true;
 	}
