@@ -22,10 +22,10 @@ public class StatsMixin {
 	private static Stat[] BLOCKS_MINED;
 
 	@Inject(
-		// inject at init instead of <clinit> in case the arrays are resized...
-		method = "init",
+		method = "initItemsCraftedStats",
 		at = @At(
-			value = "TAIL"
+			value = "INVOKE",
+			target = "Lnet/minecraft/stat/Stats;mergeBlockStats([Lnet/minecraft/stat/Stat;)V"
 		)
 	)
 	private static void osl$items$registerStatsMapper(CallbackInfo ci) {
