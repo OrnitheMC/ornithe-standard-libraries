@@ -14,12 +14,12 @@ import java.util.Set;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
-import net.ornithemc.osl.resource.loader.api.resource.Resource;
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.AbstractResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourceConsumer;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePackFileNotFoundException;
+import net.ornithemc.osl.resource.loader.impl.resource.LazyResource;
 
 public abstract class PathResourcePack extends AbstractResourcePack {
 
@@ -42,7 +42,7 @@ public abstract class PathResourcePack extends AbstractResourcePack {
 		Path path = this.getPathToResource(pathName);
 
 		if (path != null && fileExists(path)) {
-			return Files.newInputStream(path);
+			return LazyResource.fileInputStream(path);
 		}
 
 		throw new ResourcePackFileNotFoundException(this, pathName);
@@ -84,7 +84,7 @@ public abstract class PathResourcePack extends AbstractResourcePack {
 		Path path = this.getPathToResource(type, location);
 
 		if (path != null && fileExists(path)) {
-			return Resource.supplier(path);
+			return LazyResource.inputStreamSupplier(path);
 		}
 
 		return null;

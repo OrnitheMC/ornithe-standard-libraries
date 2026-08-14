@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
@@ -12,6 +14,18 @@ import net.ornithemc.osl.resource.loader.api.resource.Resource;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceMetadata;
 
 public class LazyResource implements Resource {
+
+	public static IOSupplier<InputStream> inputStreamSupplier(Path path) {
+		return () -> fileInputStream(path);
+	}
+
+	public static InputStream fileInputStream(Path path) throws IOException {
+		if (DeferredNioExecutionHandler.shouldDefer()) {
+			return DeferredNioExecutionHandler.submit(() -> new DeferredInputStream(Files.newInputStream(path)));
+		} else {
+			return Files.newInputStream(path);
+		}
+	}
 
 	private final String sourceName;
 	private final NamespacedIdentifier location;
