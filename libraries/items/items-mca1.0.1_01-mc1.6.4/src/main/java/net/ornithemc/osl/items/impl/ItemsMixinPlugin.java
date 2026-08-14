@@ -129,39 +129,6 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.common.LootEntryMixinOld".equals(mixinClassName)) {
 			return LOOT_ENTRIES_EXIST && !LOOT_ENTRY_USES_ITEM_STACK;
 		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.MineshaftPiecesMixin".equals(mixinClassName)) {
-			return LOOT_ENTRIES_EXIST;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.JungleTempleMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w22a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.DesertTempleMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w21a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.ChestCorridorMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("b1.9-pre3") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.LibraryMixin".equals(mixinClassName)) {
-			return LOOT_ENTRIES_EXIST;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.RoomCrossingMixin".equals(mixinClassName)) {
-			return LOOT_ENTRIES_EXIST;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.BlacksmithHouseMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w01a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.DungeonFeatureMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("13w18a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.FortressPieceMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("13w18a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.ServerWorldMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w18a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.common.VillagerEntityMixin".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w21a") >= 0;
-		}
 
 		return true;
 	}

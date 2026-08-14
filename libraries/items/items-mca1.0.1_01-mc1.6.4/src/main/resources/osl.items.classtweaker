@@ -13,3 +13,17 @@ transitive-accessible	method	net/minecraft/item/Item	setSpriteName	(Ljava/lang/S
 transitive-inject-interface	net/minecraft/item/Item	net/ornithemc/osl/items/impl/item/ItemExtensionImpl
 
 mutable	field	net/minecraft/item/Item	id	I
+accessible	field	net/minecraft/entity/living/mob/passive/VillagerEntity	BUY_OFFERS	Ljava/util/Map;
+accessible	field	net/minecraft/entity/living/mob/passive/VillagerEntity	SELL_OFFERS	Ljava/util/Map;
+accessible	field	net/minecraft/server/world/ServerWorld	BONUS_CHEST_LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/feature/DungeonFeature	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/VillagePieces$BlacksmithHouse	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/StrongholdPieces$ChestCorridor	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/StrongholdPieces$Library	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/StrongholdPieces$RoomCrossing	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/TemplePieces$DesertPyramid	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/TemplePieces$JungleTemple	TREASURE_LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/TemplePieces$JungleTemple	TRAP_LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	class	net/minecraft/world/gen/structure/FortressPieces$FortressPiece
+accessible	field	net/minecraft/world/gen/structure/FortressPieces$FortressPiece	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
+accessible	field	net/minecraft/world/gen/structure/MineshaftPieces	LOOT_ENTRIES	[Lnet/minecraft/world/gen/structure/LootEntry;
