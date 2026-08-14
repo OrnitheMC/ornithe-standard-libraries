@@ -11,7 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
-import net.ornithemc.osl.resource.loader.api.resource.Resource;
+import net.ornithemc.osl.resource.loader.impl.resource.LazyResource;
 
 public abstract class ModContainerResourcePack extends PathResourcePack {
 
@@ -52,7 +52,7 @@ public abstract class ModContainerResourcePack extends PathResourcePack {
 		Optional<Path> path = pathName.flatMap(mod::findPath);
 
 		if (path.isPresent()) {
-			return Resource.supplier(path.get());
+			return LazyResource.inputStreamSupplier(path.get());
 		} else {
 			return () -> {
 				throw new FileNotFoundException("Mod '" + mod.getMetadata().getId() + "' has no icon!");

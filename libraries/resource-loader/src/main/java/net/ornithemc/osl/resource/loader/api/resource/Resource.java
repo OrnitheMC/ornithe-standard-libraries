@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOSupplier;
+import net.ornithemc.osl.resource.loader.impl.resource.LazyResource;
 
 /**
  * A game resource.
@@ -19,7 +19,7 @@ public interface Resource extends Closeable {
 	 * @return a resource supplier for the file at the given path.
 	 */
 	static IOSupplier<InputStream> supplier(Path path) {
-		return () -> Files.newInputStream(path);
+		return LazyResource.inputStreamSupplier(path);
 	}
 
 	/**
