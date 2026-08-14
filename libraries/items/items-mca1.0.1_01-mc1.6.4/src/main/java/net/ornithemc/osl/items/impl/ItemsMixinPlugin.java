@@ -12,7 +12,6 @@ import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 
 public class ItemsMixinPlugin implements IMixinConfigPlugin {
 
-	public static final boolean CREATIVE_MODE_TABS_EXIST = MinecraftVersion.resolve().compareTo("12w21b") >= 0;
 	public static final boolean STATS_EXIST = MinecraftVersion.resolve().compareTo("b1.4") >= 0;
 	public static final boolean RECIPES_OVERHAULED = MinecraftVersion.resolve().compareTo("b1.2") >= 0;
 	public static final boolean LOOT_ENTRIES_EXIST = MinecraftVersion.resolve().compareTo("b1.8-pre1") >= 0;
@@ -29,16 +28,6 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if ("net.ornithemc.osl.items.impl.mixin.client.CreativeModeTabMixin".equals(mixinClassName)
-			|| "net.ornithemc.osl.items.impl.mixin.client.CreativeModeTabDecorationsMixin".equals(mixinClassName)) {
-			return CREATIVE_MODE_TABS_EXIST;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.client.CreativeModeTabInventoryMixinNew".equals(mixinClassName)) {
-			return CREATIVE_MODE_TABS_EXIST && MinecraftVersion.resolve().compareTo("13w03a") >= 0;
-		}
-		if ("net.ornithemc.osl.items.impl.mixin.client.CreativeModeTabInventoryMixinOld".equals(mixinClassName)) {
-			return CREATIVE_MODE_TABS_EXIST && MinecraftVersion.resolve().compareTo("13w03a") < 0;
-		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.CustomizeFlatWorldScreen_LayerListWidgetMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w37a") >= 0;
 		}

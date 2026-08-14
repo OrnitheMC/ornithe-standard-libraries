@@ -52,10 +52,6 @@
 	],
 	"client": [
 		"client.BlockMixin_PickItem",
-		"client.CreativeModeTabDecorationsMixin",
-		"client.CreativeModeTabInventoryMixinNew",
-		"client.CreativeModeTabInventoryMixinOld",
-		"client.CreativeModeTabMixin",
 		"client.CustomizeFlatWorldScreen_LayerListWidgetMixin",
 		"client.ItemInHandRendererMixin",
 		"client.ItemRendererMixin_b1_4_01_12w34a_13w01a",
