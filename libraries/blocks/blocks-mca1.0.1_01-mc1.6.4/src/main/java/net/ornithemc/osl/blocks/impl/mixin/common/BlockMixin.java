@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.living.mob.monster.EndermanEntity;
 
 import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
@@ -88,6 +89,10 @@ public abstract class BlockMixin implements BlockExtension {
 		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/opacity"), IntArrayMapper.of(OPACITIES));
 		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/is_translucent"), BooleanArrayMapper.of(IS_TRANSLUCENT));
 		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/light"), IntArrayMapper.of(LIGHT));
+
+		if (MinecraftVersion.resolve().compareTo("b1.8") >= 0) {
+			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/enderman_holdable"), BooleanArrayMapper.of(EndermanEntity.HOLDABLE_BLOCKS));
+		}
 
 		for (Block block : BY_ID) {
 			if (block instanceof BlockPostInit) {

@@ -14,3 +14,4 @@ transitive-accessible	method	net/minecraft/block/Block	setSpriteName	(Ljava/lang
 transitive-inject-interface	net/minecraft/block/Block	net/ornithemc/osl/blocks/impl/block/BlockExtensionImpl
 
 mutable	field	net/minecraft/block/Block	id	I
+accessible	field	net/minecraft/entity/living/mob/monster/EndermanEntity	HOLDABLE_BLOCKS	[Z

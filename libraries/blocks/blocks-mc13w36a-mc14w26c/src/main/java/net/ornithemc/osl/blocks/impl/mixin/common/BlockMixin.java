@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.living.mob.monster.EndermanEntity;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.blocks.api.block.BlockExtension;
@@ -16,7 +17,11 @@ import net.ornithemc.osl.blocks.impl.BlocksMixinPlugin;
 import net.ornithemc.osl.blocks.impl.block.AirBlock;
 import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.Util;
+import net.ornithemc.osl.registries.api.registry.RegistryKeys;
+import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
+import net.ornithemc.osl.registries.api.registry.sync.BooleanArrayMapper;
 
 @Mixin(Block.class)
 public class BlockMixin implements BlockExtension {
@@ -53,6 +58,16 @@ public class BlockMixin implements BlockExtension {
 				((BlockPostInit) block).osl$blocks$postInit();
 			}
 		}
+	}
+
+	@Inject(
+		method = "init",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private static void osl$blocks$registerArrayMappers(CallbackInfo ci) {
+		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/enderman_holdable"), BooleanArrayMapper.of(EndermanEntity.HOLDABLE_BLOCKS));
 	}
 
 	@Inject(
