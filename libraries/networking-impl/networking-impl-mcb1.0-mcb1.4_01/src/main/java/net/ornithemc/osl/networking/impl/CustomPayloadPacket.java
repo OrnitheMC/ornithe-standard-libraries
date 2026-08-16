@@ -10,7 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.networking.api.StringChannelIdentifierParser;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
-import net.ornithemc.osl.networking.impl.interfaces.mixin.INetworkHandler;
+import net.ornithemc.osl.networking.impl.access.PacketHandlerAccess;
 
 public class CustomPayloadPacket extends Packet implements CustomPayloadPacketAccess {
 
@@ -52,8 +52,8 @@ public class CustomPayloadPacket extends Packet implements CustomPayloadPacketAc
 
 	@Override
 	public void handle(PacketHandler handler) {
-		if (handler instanceof INetworkHandler) {
-			((INetworkHandler)handler).osl$networking$handleCustomPayload(this);
+		if (handler instanceof PacketHandlerAccess) {
+			((PacketHandlerAccess) handler).osl$networking$handleCustomPayload(this);
 		}
 	}
 

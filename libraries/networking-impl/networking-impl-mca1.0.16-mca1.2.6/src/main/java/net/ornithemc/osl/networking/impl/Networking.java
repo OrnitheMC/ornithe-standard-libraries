@@ -5,7 +5,8 @@ import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.entrypoints.api.server.ServerModInitializer;
 import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
-import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.ClientNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.client.ClientConnectionContext;
 import net.ornithemc.osl.networking.impl.client.ClientPlayNetworkingImpl;
 import net.ornithemc.osl.networking.impl.mixin.common.PacketAccessor;
 
@@ -29,8 +30,11 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 			// send channel registration data as a response to receiving server channel registration data
 			ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 
-			((NetworkHandlerAccess)context.networkHandler()).osl$networking$registerChannels(payload.channels);
-			ClientConnectionEvents.PLAY_READY.invoker().accept(context.minecraft());
+			ClientNetworkHandlerAccess networkHandler = (ClientNetworkHandlerAccess) context.networkHandler();
+			ClientConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+			networkHandler.osl$networking$registerChannels(payload.channels);
+			ClientConnectionEvents.PLAY_READY.invoker().accept(connectionContext);
 		});
 	}
 

@@ -15,22 +15,40 @@ import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
+import net.minecraft.text.Text;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
-import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
+import net.ornithemc.osl.text.api.TextComponents;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess {
+public class ServerPlayNetworkHandlerMixin implements ServerNetworkHandlerAccess {
 
-	@Shadow @Final private MinecraftServer server;
-	@Shadow @Final private ServerPlayerEntity player;
+	@Shadow @Final
+	private MinecraftServer server;
 
+	@Shadow
+	private ServerPlayerEntity player;
+
+	@Unique
+	private ServerConnectionContext connectionContext;
 	/**
 	 * Channels that the client is listening to.
 	 */
-	@Unique private Set<NamespacedIdentifier> clientChannels;
+	@Unique
+	private Set<NamespacedIdentifier> clientChannels;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$networking$initConnectionContext(CallbackInfo ci) {
+		connectionContext = new ServerConnectionContext(server, (ServerPlayNetworkHandler) (Object) this);
+	}
 
 	@Inject(
 		method = "onDisconnect",
@@ -38,9 +56,8 @@ public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$handleDisconnect(CallbackInfo ci) {
-		ServerConnectionEvents.DISCONNECT.invoker().accept(server, player);
-		clientChannels = null;
+	private void osl$networking$handleDisconnect(Text reason, CallbackInfo ci) {
+		connectionContext.offerDisconnectReason(TextComponents.resolve(reason));
 	}
 
 	@Inject(
@@ -54,6 +71,11 @@ public class ServerPlayNetworkHandlerMixin implements NetworkHandlerAccess {
 		if (ServerPlayNetworkingImpl.handlePacket(server, (ServerPlayNetworkHandler)(Object)this, player, packet)) {
 			ci.cancel();
 		}
+	}
+
+	@Override
+	public ServerConnectionContext osl$networking$connectionContext() {
+		return connectionContext;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import net.minecraft.server.network.handler.ServerPlayNetworkHandler;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.function.IOConsumer;
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketBuffers;
 import net.ornithemc.osl.networking.api.PacketPayload;
@@ -29,11 +30,11 @@ import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
 import net.ornithemc.osl.networking.impl.access.PlayerManagerAccess;
-import net.ornithemc.osl.networking.impl.access.TaskRunnerAccess;
 
 public final class ServerPlayNetworkingImpl {
 
 	private static final Logger LOGGER = LogManager.getLogger("OSL|Server Play Networking");
+	private static final boolean USE_EVENT_LOOP_FOR_ASYNC_HANDLING = MinecraftVersion.resolve().compareTo("14w21a") >= 0;
 
 	private static PacketFactory packetFactory;
 	private static MinecraftServer server;
@@ -122,9 +123,9 @@ public final class ServerPlayNetworkingImpl {
 			try {
 				handlePayload(channel, listener, ctx, data);
 			} catch (NotOnMainThreadException e) {
-				if (server instanceof TaskRunnerAccess) {
+				if (USE_EVENT_LOOP_FOR_ASYNC_HANDLING) {
 					// use built-in task queue like other packets do (14w21a+)
-					((TaskRunnerAccess) server).osl$networking$submit(() -> handlePayload(channel, listener, ctx, data));
+					server.execute(() -> handlePayload(channel, listener, ctx, data));
 				} else {
 					// rethrow so packet is added to the read queue (14w20b-)
 					throw e;

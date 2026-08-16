@@ -14,6 +14,8 @@ import net.minecraft.server.entity.mob.player.ServerPlayerEntity;
 import net.minecraft.server.network.handler.ServerLoginNetworkHandler;
 
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
+import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 
 @Mixin(ServerLoginNetworkHandler.class)
 public class ServerLoginNetworkHandlerMixin {
@@ -28,7 +30,10 @@ public class ServerLoginNetworkHandlerMixin {
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci, @Local ServerPlayerEntity player) {
 		if (player != null) {
-			ServerConnectionEvents.LOGIN.invoker().accept(server, player);
+			ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) player.networkHandler;
+			ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+			ServerConnectionEvents.LOGIN.invoker().accept(connectionContext);
 		}
 	}
 }

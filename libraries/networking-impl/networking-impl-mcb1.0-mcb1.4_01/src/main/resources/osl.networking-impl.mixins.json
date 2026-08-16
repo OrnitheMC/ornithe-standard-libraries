@@ -9,9 +9,11 @@
 	],
 	"client": [
 		"client.ClientNetworkHandlerMixin",
-		"client.HandshakePacketMixin"
+		"client.HandshakePacketMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
+		"server.PlayerManagerMixin",
 		"server.ServerLoginNetworkHandlerMixin",
 		"server.ServerPlayNetworkHandlerMixin"
 	],

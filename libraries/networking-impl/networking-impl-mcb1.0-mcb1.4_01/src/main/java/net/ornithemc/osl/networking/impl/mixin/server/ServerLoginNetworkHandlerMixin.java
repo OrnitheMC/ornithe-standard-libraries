@@ -18,6 +18,8 @@ import net.minecraft.server.network.handler.ServerLoginNetworkHandler;
 import net.ornithemc.osl.networking.api.server.ServerConnectionEvents;
 import net.ornithemc.osl.networking.impl.Constants;
 import net.ornithemc.osl.networking.impl.HandshakePayload;
+import net.ornithemc.osl.networking.impl.access.ServerNetworkHandlerAccess;
+import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 @Mixin(ServerLoginNetworkHandler.class)
@@ -28,7 +30,8 @@ public class ServerLoginNetworkHandlerMixin {
 	/**
 	 * is the client also running OSL?
 	 */
-	@Unique private boolean ornithe;
+	@Unique
+	private boolean ornithe;
 
 	@Inject(
 		method = "handleHandshake",
@@ -55,7 +58,10 @@ public class ServerLoginNetworkHandlerMixin {
 				ServerPlayNetworkingImpl.sendNoCheck(player, HandshakePayload.CHANNEL, HandshakePayload.server());
 			}
 
-			ServerConnectionEvents.LOGIN.invoker().accept(server, player);
+			ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) player.networkHandler;
+			ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+			ServerConnectionEvents.LOGIN.invoker().accept(connectionContext);
 		}
 	}
 }
