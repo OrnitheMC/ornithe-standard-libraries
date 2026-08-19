@@ -2,8 +2,10 @@ package net.ornithemc.osl.blocks.impl.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.Block;
@@ -25,6 +27,21 @@ public class BlockMixin_13w02a {
 		)
 	)
 	private void osl$blocks$autoAssignTranslationKey(CallbackInfoReturnable<String> cir) {
+		this.ensureTranslationKeyExists();
+	}
+
+	@Inject(
+		method = "registerSprites",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$blocks$autoAssignTranslationKey(CallbackInfo ci) {
+		this.ensureTranslationKeyExists();
+	}
+
+	@Unique
+	private void ensureTranslationKeyExists() {
 		if (this.key == null) {
 			NamespacedIdentifier identifier = BlockRegistry.getIdentifier((Block) (Object) this);
 
