@@ -7,7 +7,9 @@
 	"mixins": [
 		"common.AchievementsMixin",
 		"common.AxisBlockMixin",
-		"common.BlockItemAccess",
+		"common.BlockAccess",
+		"common.BlockItemMixinNew",
+		"common.BlockItemMixinOld",
 		"common.BlockMixin_DropItem",
 		"common.BlockMixin_SilkTouchDropItem",
 		"common.BlockMixin",
@@ -18,6 +20,7 @@
 		"common.FurnaceBlockEntityMixinNew",
 		"common.FurnaceBlockEntityMixinOld",
 		"common.GravelBlockMixin",
+		"common.ItemAccess",
 		"common.ItemMixin_1_3_1_13w01a",
 		"common.ItemMixin_13w02a",
 		"common.ItemMixin_b1_0_1_3",

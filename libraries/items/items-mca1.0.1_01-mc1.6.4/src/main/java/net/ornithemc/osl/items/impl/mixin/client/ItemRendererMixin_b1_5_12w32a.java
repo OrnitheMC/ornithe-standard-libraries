@@ -15,7 +15,7 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
-import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
+import net.ornithemc.osl.items.impl.access.BlockItemAccess;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin_b1_5_12w32a {
@@ -43,6 +43,6 @@ public class ItemRendererMixin_b1_5_12w32a {
 		)
 	)
 	private Block osl$items$fixBlockCheck(Block[] BY_ID, int id, Operation<Block> op, @Local(ordinal = 0) int item) {
-		return Item.BY_ID[item] instanceof BlockItem ? op.call(BY_ID, ((BlockItemAccess) Item.BY_ID[item]).accessBlock()) : null;
+		return Item.BY_ID[item] instanceof BlockItem ? op.call(BY_ID, ((BlockItemAccess) Item.BY_ID[item]).osl$items$getBlock()) : null;
 	}
 }

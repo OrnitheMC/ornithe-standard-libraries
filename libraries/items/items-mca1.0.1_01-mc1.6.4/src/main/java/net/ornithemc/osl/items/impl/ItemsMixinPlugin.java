@@ -129,6 +129,14 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.common.LootEntryMixinOld".equals(mixinClassName)) {
 			return LOOT_ENTRIES_EXIST && !LOOT_ENTRY_USES_ITEM_STACK;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.BlockAccess".equals(mixinClassName)
+			|| "net.ornithemc.osl.items.impl.mixin.common.BlockItemMixinOld".equals(mixinClassName)
+			|| "net.ornithemc.osl.items.impl.mixin.common.ItemAccess".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("13w02a") < 0;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.common.BlockItemMixinNew".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("13w02a") >= 0;
+		}
 
 		return true;
 	}

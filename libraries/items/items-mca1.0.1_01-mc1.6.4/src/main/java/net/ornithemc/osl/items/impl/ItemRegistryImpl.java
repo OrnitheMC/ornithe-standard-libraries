@@ -12,8 +12,8 @@ import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.items.api.ItemEvents;
+import net.ornithemc.osl.items.impl.access.BlockItemAccess;
 import net.ornithemc.osl.items.impl.item.ItemIdFixer;
-import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
 import net.ornithemc.osl.registries.api.registry.Registries;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
@@ -69,7 +69,7 @@ public final class ItemRegistryImpl {
 	}
 
 	public static <T extends BlockItem> T register(T item) {
-		return register(BlockRegistry.getBlock(((BlockItemAccess) item).accessBlock()), item);
+		return register(BlockRegistry.getBlock(((BlockItemAccess) item).osl$items$getBlock()), item);
 	}
 
 	public static <T extends Item> T register(Block block, T item) {
@@ -81,7 +81,7 @@ public final class ItemRegistryImpl {
 			BLOCK_ITEMS.put(block, item);
 
 			if (item instanceof BlockItem) {
-				((BlockItemAccess) item).setBlock(block.id);
+				((BlockItemAccess) item).osl$items$setBlock(block);
 			}
 		}
 

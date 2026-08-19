@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
-import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
+import net.ornithemc.osl.items.impl.access.BlockItemAccess;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixinNew {
@@ -24,6 +24,6 @@ public class MinecraftMixinNew {
 		)
 	)
 	private int osl$items$fixBlockId(int item) {
-		return Item.BY_ID[item] instanceof BlockItem ? ((BlockItemAccess) Item.BY_ID[item]).accessBlock() : 0;
+		return Item.BY_ID[item] instanceof BlockItem ? ((BlockItemAccess) Item.BY_ID[item]).osl$items$getBlock() : 0;
 	}
 }

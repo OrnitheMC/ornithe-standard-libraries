@@ -15,7 +15,7 @@ import net.minecraft.client.render.entity.PlayerRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 
-import net.ornithemc.osl.items.impl.mixin.common.BlockItemAccess;
+import net.ornithemc.osl.items.impl.access.BlockItemAccess;
 
 @Mixin(PlayerRenderer.class)
 public class PlayerRendererMixinNew {
@@ -45,6 +45,6 @@ public class PlayerRendererMixinNew {
 		)
 	)
 	private Block osl$items$fixBlockCheck(Block[] BY_ID, int id, Operation<Block> op, @Local(ordinal = 1) ItemStack item) {
-		return item.getItem() instanceof BlockItem ? op.call(BY_ID, ((BlockItemAccess) item.getItem()).accessBlock()) : null;
+		return item.getItem() instanceof BlockItem ? op.call(BY_ID, ((BlockItemAccess) item.getItem()).osl$items$getBlock()) : null;
 	}
 }
