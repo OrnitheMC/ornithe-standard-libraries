@@ -43,11 +43,17 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.client.MinecraftMixinOld".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("b1.8-pre2") >= 0 && MinecraftVersion.resolve().compareTo("1.2.5") < 0;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.client.ItemInHandRendererMixin_12w30b".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w30b") <= 0;
+		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.ItemRendererMixin_b1_4_01_12w34a_13w01a".equals(mixinClassName)) {
 			return (MinecraftVersion.resolve().compareTo("b1.5") < 0) || (MinecraftVersion.resolve().compareTo("12w34a") >= 0 && MinecraftVersion.resolve().compareTo("13w01a") <= 0);
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.ItemRendererMixin_b1_5_12w32a".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("b1.5") >= 0 && MinecraftVersion.resolve().compareTo("12w32a") <= 0;
+		}
+		if ("net.ornithemc.osl.items.impl.mixin.client.ItemRendererMixin_12w30b".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w30b") <= 0;
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.ItemRendererMixin_12w50a".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w50a") >= 0;

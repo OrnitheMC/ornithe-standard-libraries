@@ -46,9 +46,11 @@
 	"client": [
 		"client.BlockMixin_PickItem",
 		"client.CustomizeFlatWorldScreen_LayerListWidgetMixin",
+		"client.ItemInHandRendererMixin_12w30b",
 		"client.ItemInHandRendererMixin",
 		"client.ItemRendererMixin_b1_4_01_12w34a_13w01a",
 		"client.ItemRendererMixin_b1_5_12w32a",
+		"client.ItemRendererMixin_12w30b",
 		"client.ItemRendererMixin_12w50a",
 		"client.ItemRendererMixin_13w02a",
 		"client.ItemRendererMixin_1_6",
