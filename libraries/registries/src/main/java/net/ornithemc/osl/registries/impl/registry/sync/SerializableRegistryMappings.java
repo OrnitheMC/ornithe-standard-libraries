@@ -100,7 +100,7 @@ public class SerializableRegistryMappings implements RegistryMappings {
 		// the saved mappings may be incomplete for the current mod set
 		// but no entries should be dropped, so assign a new id
 		if (source == RegistryMappingSource.WORLD_SAVE) {
-			int nextId = this.mappings.values().intStream().max().getAsInt() + 1;
+			int nextId = this.mappings.values().intStream().max().orElse(-1) + 1;
 
 			for (NamespacedIdentifier identifier : this.unmappings.keySet()) {
 				if (!this.mappings.containsKey(identifier)) {
