@@ -40,7 +40,8 @@
 		"common.ShapelessRecipeMixin",
 		"common.SmeltingManagerMixin",
 		"common.SmeltingManagerMixinNew",
-		"common.StatsMixin"
+		"common.StatsMixin",
+		"common.WorldAccess"
 	],
 	"client": [
 		"client.BlockMixin_PickItem",

@@ -58,6 +58,8 @@ public class ItemMixin implements ItemExtension {
 		}
 		if (MinecraftVersion.resolve().compareTo("12w18a") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/bonus_chest"), LootTableMapper.of(ServerWorld.BONUS_CHEST_LOOT_ENTRIES));
+		} else if (MinecraftVersion.resolve().compareTo("12w16a") >= 0) {
+			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/bonus_chest"), LootTableMapper.of(WorldAccess.osl$items$getBonusChestLootEntries()));
 		}
 		if (MinecraftVersion.resolve().compareTo("13w18a") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/dungeon"), LootTableMapper.of(DungeonFeature.LOOT_ENTRIES));
@@ -70,8 +72,9 @@ public class ItemMixin implements ItemExtension {
 		}
 		if (MinecraftVersion.resolve().compareTo("b1.8-pre1") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/stronghold_library"), LootTableMapper.of(Library.LOOT_ENTRIES));
+			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/stronghold_store_room"), LootTableMapper.of(RoomCrossing.LOOT_ENTRIES));
 		}
-		if (MinecraftVersion.resolve().compareTo("b1.9-pre3") >= 0) {
+		if (MinecraftVersion.resolve().compareTo("12w21a") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/desert_pyramid"), LootTableMapper.of(DesertPyramid.LOOT_ENTRIES));
 		}
 		if (MinecraftVersion.resolve().compareTo("12w22a") >= 0) {
@@ -83,7 +86,6 @@ public class ItemMixin implements ItemExtension {
 		}
 		if (MinecraftVersion.resolve().compareTo("b1.8-pre1") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/mineshaft"), LootTableMapper.of(MineshaftPieces.LOOT_ENTRIES));
-			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/stronghold_store_room"), LootTableMapper.of(RoomCrossing.LOOT_ENTRIES));
 		}
 	}
 
