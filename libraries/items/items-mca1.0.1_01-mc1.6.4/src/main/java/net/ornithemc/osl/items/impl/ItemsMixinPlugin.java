@@ -31,8 +31,11 @@ public class ItemsMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.items.impl.mixin.client.CustomizeFlatWorldScreen_LayerListWidgetMixin".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w37a") >= 0;
 		}
+		if ("net.ornithemc.osl.items.impl.mixin.client.MinecraftMixinNewNew".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("12w34a") >= 0;
+		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.MinecraftMixinNew".equals(mixinClassName)) {
-			return MinecraftVersion.resolve().compareTo("12w15a") >= 0;
+			return MinecraftVersion.resolve().compareTo("12w15a") >= 0 && MinecraftVersion.resolve().compareTo("12w34a") < 0;
 		}
 		if ("net.ornithemc.osl.items.impl.mixin.client.MinecraftMixinMid".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("1.2.5") == 0;

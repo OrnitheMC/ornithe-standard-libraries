@@ -54,6 +54,7 @@
 		"client.ItemRendererMixin",
 		"client.MinecraftMixinMid",
 		"client.MinecraftMixinNew",
+		"client.MinecraftMixinNewNew",
 		"client.MinecraftMixinOld",
 		"client.PlayerRendererMixin",
 		"client.PlayerRendererMixinNew",
