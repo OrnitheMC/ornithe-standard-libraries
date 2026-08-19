@@ -54,6 +54,31 @@ public class SyncedRegistry {
 		this.mappings.reset();
 	}
 
+	public void runMappersAndFixers(boolean apply) {
+		for (Map.Entry<NamespacedIdentifier, IdMapper> e : this.mappers.entrySet()) {
+			IdMapper mapper = e.getValue();
+
+			try {
+				if (apply) {
+					mapper.apply(this.mappings);
+				} else {
+					mapper.undo(this.mappings);
+				}
+			} catch (Throwable t) {
+				throw new RuntimeException("error running ID mapper " + this.registry.identifier() + "/" + e.getKey());
+			}
+		}
+		for (Map.Entry<NamespacedIdentifier, IdFixer> e : this.fixers.entrySet()) {
+			IdFixer fixer = e.getValue();
+
+			try {
+				fixer.apply();
+			} catch (Throwable t) {
+				throw new RuntimeException("error running ID fixer " + this.registry.identifier() + "/" + e.getKey());
+			}
+		}
+	}
+
 	public NamespacedIdentifier identifier() {
 		return this.registry.identifier();
 	}

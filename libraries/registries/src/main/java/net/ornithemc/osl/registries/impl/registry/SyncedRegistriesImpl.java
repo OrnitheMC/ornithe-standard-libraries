@@ -7,7 +7,6 @@ import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.sync.IdFixer;
 import net.ornithemc.osl.registries.api.registry.sync.IdMapper;
-import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
 import net.ornithemc.osl.registries.impl.registry.sync.RegistryMapper;
 
 public final class SyncedRegistriesImpl {
@@ -75,27 +74,13 @@ public final class SyncedRegistriesImpl {
 
 	public static void applyMappings() {
 		for (SyncedRegistry registry : SYNCED_REGISTRIES) {
-			RegistryMappings mappings = registry.getMappings();
-
-			for (IdMapper mapper : registry.getMappers()) {
-				mapper.apply(mappings);
-			}
-			for (IdFixer fixer : registry.getFixers()) {
-				fixer.apply();
-			}
+			registry.runMappersAndFixers(true);
 		}
 	}
 
 	public static void undoMappings() {
 		for (SyncedRegistry registry : SYNCED_REGISTRIES) {
-			RegistryMappings mappings = registry.getMappings();
-
-			for (IdMapper mapper : registry.getMappers()) {
-				mapper.undo(mappings);
-			}
-			for (IdFixer fixer : registry.getFixers()) {
-				fixer.apply();
-			}
+			registry.runMappersAndFixers(false);
 		}
 	}
 }
