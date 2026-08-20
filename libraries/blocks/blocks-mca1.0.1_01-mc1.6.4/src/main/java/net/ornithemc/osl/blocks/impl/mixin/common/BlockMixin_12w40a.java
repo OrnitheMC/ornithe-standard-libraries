@@ -18,7 +18,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 import net.ornithemc.osl.registries.api.registry.sync.BooleanArrayMapper;
-import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicBooleanArray;
 
 @Mixin(Block.class)
 public abstract class BlockMixin_12w40a implements BlockExtension {
@@ -33,7 +33,7 @@ public abstract class BlockMixin_12w40a implements BlockExtension {
 		)
 	)
 	private static void osl$blocks$registerArrayMappers(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/uses_neighbor_light"), BooleanArrayMapper.of(USES_NEIGHBOR_LIGHT));
+		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/uses_neighbor_light"), BooleanArrayMapper.of(() -> USES_NEIGHBOR_LIGHT, a -> USES_NEIGHBOR_LIGHT = a));
 	}
 
 	@Inject(
@@ -48,6 +48,6 @@ public abstract class BlockMixin_12w40a implements BlockExtension {
 	private void osl$blocks$growArrays(int id, Material material, CallbackInfo ci) {
 		int capacity = id + 1;
 
-		USES_NEIGHBOR_LIGHT = DynamicArrays.grow(USES_NEIGHBOR_LIGHT, capacity);
+		USES_NEIGHBOR_LIGHT = DynamicBooleanArray.grow(USES_NEIGHBOR_LIGHT, capacity);
 	}
 }

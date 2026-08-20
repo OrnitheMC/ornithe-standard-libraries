@@ -67,7 +67,7 @@ public class BlockMixin implements BlockExtension {
 		)
 	)
 	private static void osl$blocks$registerArrayMappers(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/enderman_holdable"), BooleanArrayMapper.of(EndermanEntity.HOLDABLE_BLOCKS));
+		SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("block/enderman_holdable"), BooleanArrayMapper.of(() -> EndermanEntity.HOLDABLE_BLOCKS, a -> EndermanEntity.HOLDABLE_BLOCKS = a));
 	}
 
 	@Inject(

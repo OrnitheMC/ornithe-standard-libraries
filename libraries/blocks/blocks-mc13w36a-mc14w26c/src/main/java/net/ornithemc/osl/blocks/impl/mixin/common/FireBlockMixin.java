@@ -13,7 +13,7 @@ import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicIntArray;
 import net.ornithemc.osl.registries.api.registry.sync.IntArrayMapper;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
@@ -34,8 +34,8 @@ public class FireBlockMixin implements BlockPostInit {
 	private void osl$blocks$growArrays(int block, int flammability, int burnChance, CallbackInfo ci) {
 		int capacity = block + 1;
 
-		this.flammability = DynamicArrays.grow(this.flammability, capacity);
-		this.burnChance = DynamicArrays.grow(this.burnChance, capacity);
+		this.flammability = DynamicIntArray.grow(this.flammability, capacity);
+		this.burnChance = DynamicIntArray.grow(this.burnChance, capacity);
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class FireBlockMixin implements BlockPostInit {
 		if (identifier == null) {
 			RegistriesImpl.LOGGER.warn("Unable to register FireBlock array mappers for unregistered block {}", block);
 		} else {
-			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, identifier.suffixed("/flammability"), IntArrayMapper.of(this.flammability));
-			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, identifier.suffixed("/burn_chance"), IntArrayMapper.of(this.burnChance));
+			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, identifier.suffixed("/flammability"), IntArrayMapper.of(() -> this.flammability, a -> this.flammability = a));
+			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, identifier.suffixed("/burn_chance"), IntArrayMapper.of(() -> this.burnChance, a -> this.burnChance = a));
 		}
 	}
 }

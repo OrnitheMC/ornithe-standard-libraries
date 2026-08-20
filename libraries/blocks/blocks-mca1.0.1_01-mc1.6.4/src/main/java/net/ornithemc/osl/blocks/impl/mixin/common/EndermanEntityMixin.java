@@ -5,14 +5,14 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.living.mob.monster.EndermanEntity;
 
-import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicBooleanArray;
 
 @Mixin(EndermanEntity.class)
 public class EndermanEntityMixin {
@@ -32,6 +32,6 @@ public class EndermanEntityMixin {
 	private static void osl$blocks$growArray(CallbackInfo ci) {
 		int capacity = Block.BY_ID.length;
 
-		HOLDABLE_BLOCKS = DynamicArrays.grow(HOLDABLE_BLOCKS, capacity);
+		HOLDABLE_BLOCKS = DynamicBooleanArray.grow(HOLDABLE_BLOCKS, capacity);
 	}
 }

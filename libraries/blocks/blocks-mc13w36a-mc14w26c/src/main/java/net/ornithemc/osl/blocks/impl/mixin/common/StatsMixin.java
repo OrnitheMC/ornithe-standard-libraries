@@ -1,9 +1,10 @@
-package net.ornithemc.osl.blocks.impl.mixin.common;
+ package net.ornithemc.osl.blocks.impl.mixin.common;
 
 import java.util.Map;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,15 +17,15 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
 import net.ornithemc.osl.registries.impl.registry.sync.StatsMapper;
 
 @Mixin(Stats.class)
 public class StatsMixin {
 
-	@Shadow @Final
+	@Shadow @Final @Mutable
 	private static Map<String, Stat> BY_KEY;
-	@Shadow @Final
+	@Shadow @Final @Mutable
 	private static Stat[] BLOCKS_MINED;
 
 	@Inject(
@@ -36,9 +37,9 @@ public class StatsMixin {
 	)
 	private static void osl$items$registerStatsMapper(CallbackInfo ci) {
 		if (MinecraftVersion.resolve().compareTo("14w06a") < 0) {
-			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("stats/mined"), StatsMapper.of(BY_KEY, BLOCKS_MINED));
+			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("stats/mined"), StatsMapper.of(BY_KEY, () -> BLOCKS_MINED, a -> BLOCKS_MINED = a));
 		} else {
-			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("stats/mined"), ObjectArrayMapper.of(BLOCKS_MINED));
+			SyncedRegistries.registerMapper(RegistryKeys.BLOCK, NamespacedIdentifiers.from("stats/mined"), ArrayMapper.of(() -> BLOCKS_MINED, a -> BLOCKS_MINED = a));
 		}
 	}
 }
