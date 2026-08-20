@@ -33,9 +33,9 @@ import net.ornithemc.osl.items.impl.VanillaItems;
 import net.ornithemc.osl.items.impl.item.LootTableMapper;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
+import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicArray;
 import net.ornithemc.osl.registries.api.registry.sync.IntegerMapMapper;
-import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 
 @Mixin(Item.class)
 public class ItemMixin implements ItemExtension {
@@ -50,7 +50,7 @@ public class ItemMixin implements ItemExtension {
 		)
 	)
 	private static void osl$items$registerArrayMappers(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item/by_id"), ObjectArrayMapper.of(BY_ID));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item/by_id"), ArrayMapper.of(() -> BY_ID, a -> BY_ID = a));
 
 		if (MinecraftVersion.resolve().compareTo("12w21a") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("trade/buy_offer"), IntegerMapMapper.of(VillagerEntity.BUY_OFFERS));
@@ -103,7 +103,7 @@ public class ItemMixin implements ItemExtension {
 		if (id == AUTO_ASSIGN_ID) {
 			// the Item[] array must contain all items so this should
 			// give us a valid ID for the Item registry to use.
-			id = DynamicArrays.length(BY_ID);
+			id = DynamicArray.length(BY_ID);
 
 			// keep 0-255 free for all Vanilla block items
 			if (id <= VanillaBlockItems.MAX_ID) {
@@ -130,6 +130,6 @@ public class ItemMixin implements ItemExtension {
 		// the constructor logic adds 256
 		int capacity = (id + VanillaItems.ITEM_ID_OFFSET) + 1;
 
-		BY_ID = DynamicArrays.grow(BY_ID, capacity);
+		BY_ID = DynamicArray.grow(BY_ID, capacity);
 	}
 }
