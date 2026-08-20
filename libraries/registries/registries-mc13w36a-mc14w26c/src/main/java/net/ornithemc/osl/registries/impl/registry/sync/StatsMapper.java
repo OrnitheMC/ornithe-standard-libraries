@@ -1,35 +1,44 @@
 package net.ornithemc.osl.registries.impl.registry.sync;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 
 import net.minecraft.stat.Stat;
 
+import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicArray;
 import net.ornithemc.osl.registries.api.registry.sync.IdMapper;
-import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
 import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
 import net.ornithemc.osl.registries.impl.mixin.common.StatAccess;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
 public class StatsMapper implements IdMapper {
 
-	public static StatsMapper of(Map<String, Stat> stats, Stat[] registry) {
+	public static StatsMapper of(Map<String, Stat> stats, Supplier<Stat[]> getter, Consumer<Stat[]> setter) {
+		return new StatsMapper(stats, DynamicArray.of(getter, setter));
+	}
+
+	public static StatsMapper of(Map<String, Stat> stats, DynamicArray<Stat> registry) {
 		return new StatsMapper(stats, registry);
 	}
 
-	private final ObjectArrayMapper registryMapper;
+	private final IdMapper registryMapper;
 
-	private final Stat[] registry;
+	private final DynamicArray<Stat> registry;
 	private final Map<String, Stat> stats;
 	private final Map<String, Stat> missing;
 
 	private boolean applied;
 
-	private StatsMapper(Map<String, Stat> stats, Stat[] registry) {
-		this.registryMapper = ObjectArrayMapper.of(registry);
+	private StatsMapper(Map<String, Stat> stats, DynamicArray<Stat> registry) {
+		this.registryMapper = ArrayMapper.of(registry);
 
 		this.registry = registry;
 		this.stats = stats;
@@ -59,11 +68,14 @@ public class StatsMapper implements IdMapper {
 	}
 
 	private void fixKeys(Int2IntFunction mapper, boolean storeMissingStats) {
+		// some blocks/items share a single Stat!
+		Set<Stat> visited = Collections.newSetFromMap(new IdentityHashMap<>());
 		Map<String, Stat> fixed = new HashMap<>();
 
-		// some blocks/items share a single Stat!
-		Arrays.stream(this.registry).distinct().forEach(stat -> {
-			if (stat == null) {
+		for (int index = 0; index < this.registry.length(); index++) {
+			Stat stat = this.registry.get(index);
+
+			if (stat == null || !visited.add(stat)) {
 				return;
 			}
 
@@ -90,7 +102,7 @@ public class StatsMapper implements IdMapper {
 			} catch (NumberFormatException e) {
 				RegistriesImpl.LOGGER.warn("Stat key {} does not follow expected format of 'statType.<id>'", stat.key);
 			}
-		});
+		}
 
 		this.stats.putAll(fixed);
 	}

@@ -1,6 +1,7 @@
 package net.ornithemc.osl.registries.api.registry.sync;
 
-import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * An {@linkplain IdMapper} implementation for boolean arrays ({@code boolean[]}
@@ -8,35 +9,41 @@ import java.util.Arrays;
  * index (the old ID) to the new index (the new ID) within the same array. Since
  * {@code boolean} is a primitive type, {@code false} is used as the default or
  * "empty" value.
+ * 
+ * @see DynamicBooleanArray
  */
 public class BooleanArrayMapper implements IdMapper {
 
-	public static BooleanArrayMapper of(boolean[] registry) {
+	public static BooleanArrayMapper of(Supplier<boolean[]> getter, Consumer<boolean[]> setter) {
+		return new BooleanArrayMapper(DynamicBooleanArray.of(getter, setter));
+	}
+
+	public static BooleanArrayMapper of(DynamicBooleanArray registry) {
 		return new BooleanArrayMapper(registry);
 	}
 
-	private final boolean[] registry;
-	private final boolean[] backup;
+	private final DynamicBooleanArray registry;
+	private final DynamicBooleanArray backup;
 
 	private boolean applied;
 
-	private <T> BooleanArrayMapper(boolean[] registry) {
+	private BooleanArrayMapper(DynamicBooleanArray registry) {
 		this.registry = registry;
-		this.backup = new boolean[registry.length];
+		this.backup = DynamicBooleanArray.of(registry.capacity());
 	}
 
 	@Override
 	public void apply(RegistryMappings mappings) {
-		Arrays.fill(this.backup, false);
-		System.arraycopy(this.registry, 0, this.backup, 0, this.backup.length);
+		this.backup.clear();
+		this.backup.addAll(this.registry);
 
-		Arrays.fill(this.registry, false);
+		this.registry.clear();
 
-		for (int oldId = 0; oldId < this.backup.length; oldId++) {
+		for (int oldId = 0; oldId < this.backup.length(); oldId++) {
 			int newId = mappings.remap(oldId);
 
 			if (newId >= 0) {
-				this.registry[newId] = this.backup[oldId];
+				this.registry.add(newId, this.backup.get(oldId));
 			}
 		}
 
@@ -46,8 +53,8 @@ public class BooleanArrayMapper implements IdMapper {
 	@Override
 	public void undo(RegistryMappings mappings) {
 		if (this.applied) {
-			Arrays.fill(this.registry, false);
-			System.arraycopy(this.backup, 0, this.registry, 0, this.registry.length);
+			this.registry.clear();
+			this.registry.addAll(this.backup);
 		}
 
 		this.applied = false;

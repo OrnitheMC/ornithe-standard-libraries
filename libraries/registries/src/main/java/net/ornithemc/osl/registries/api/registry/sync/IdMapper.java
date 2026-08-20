@@ -21,7 +21,7 @@ package net.ornithemc.osl.registries.api.registry.sync;
  * @see IntArrayMapper
  * @see IntegerMapMapper
  * @see ListMapper
- * @see ObjectArrayMapper
+ * @see ArrayMapper
  */
 public interface IdMapper {
 

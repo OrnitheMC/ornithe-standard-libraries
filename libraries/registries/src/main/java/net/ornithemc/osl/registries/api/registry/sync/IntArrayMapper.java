@@ -1,6 +1,7 @@
 package net.ornithemc.osl.registries.api.registry.sync;
 
-import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * An {@linkplain IdMapper} implementation for int arrays ({@code int[]} where
@@ -8,35 +9,41 @@ import java.util.Arrays;
  * (the old ID) to the new index (the new ID) within the same array. Since
  * {@code int} is a primitive type, {@code 0} is used as the default or "empty"
  * value.
+ * 
+ * @see DynamicIntArray
  */
 public class IntArrayMapper implements IdMapper {
 
-	public static IntArrayMapper of(int[] registry) {
+	public static IntArrayMapper of(Supplier<int[]> getter, Consumer<int[]> setter) {
+		return new IntArrayMapper(DynamicIntArray.of(getter, setter));
+	}
+
+	public static IntArrayMapper of(DynamicIntArray registry) {
 		return new IntArrayMapper(registry);
 	}
 
-	private final int[] registry;
-	private final int[] backup;
+	private final DynamicIntArray registry;
+	private final DynamicIntArray backup;
 
 	private boolean applied;
 
-	private <T> IntArrayMapper(int[] registry) {
+	private IntArrayMapper(DynamicIntArray registry) {
 		this.registry = registry;
-		this.backup = new int[registry.length];
+		this.backup = DynamicIntArray.of(registry.capacity());
 	}
 
 	@Override
 	public void apply(RegistryMappings mappings) {
-		Arrays.fill(this.backup, 0);
-		System.arraycopy(this.registry, 0, this.backup, 0, this.backup.length);
+		this.backup.clear();
+		this.backup.addAll(this.registry);
 
-		Arrays.fill(this.registry, 0);
+		this.registry.clear();
 
-		for (int oldId = 0; oldId < this.backup.length; oldId++) {
+		for (int oldId = 0; oldId < this.backup.length(); oldId++) {
 			int newId = mappings.remap(oldId);
 
 			if (newId >= 0) {
-				this.registry[newId] = this.backup[oldId];
+				this.registry.add(newId, this.backup.get(oldId));
 			}
 		}
 
@@ -46,8 +53,8 @@ public class IntArrayMapper implements IdMapper {
 	@Override
 	public void undo(RegistryMappings mappings) {
 		if (this.applied) {
-			Arrays.fill(this.registry, 0);
-			System.arraycopy(this.backup, 0, this.registry, 0, this.registry.length);
+			this.registry.clear();
+			this.registry.addAll(this.backup);
 		}
 
 		this.applied = false;
