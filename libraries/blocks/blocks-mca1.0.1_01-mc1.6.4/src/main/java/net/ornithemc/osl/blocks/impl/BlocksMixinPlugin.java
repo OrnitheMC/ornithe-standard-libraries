@@ -50,7 +50,8 @@ public class BlocksMixinPlugin implements IMixinConfigPlugin {
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_12w40a".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("12w40a") >= 0;
 		}
-		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_13w02a".equals(mixinClassName)) {
+		if ("net.ornithemc.osl.blocks.impl.mixin.client.BlockMixin_13w02a".equals(mixinClassName)
+			|| "net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_13w02a".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("13w02a") >= 0;
 		}
 		if ("net.ornithemc.osl.blocks.impl.mixin.common.BlockMixin_a1_1_0_12w06a".equals(mixinClassName)) {

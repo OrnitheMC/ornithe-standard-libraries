@@ -1,4 +1,4 @@
-package net.ornithemc.osl.blocks.impl.mixin.common;
+package net.ornithemc.osl.blocks.impl.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,7 @@ public class BlockMixin_13w02a {
 	private String key;
 
 	@Inject(
-		method = "getTranslationKey",
+		method = "registerSprites",
 		at = @At(
 			value = "HEAD"
 		)
