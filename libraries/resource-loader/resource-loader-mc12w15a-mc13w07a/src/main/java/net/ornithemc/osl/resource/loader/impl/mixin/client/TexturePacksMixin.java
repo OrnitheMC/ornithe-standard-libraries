@@ -21,6 +21,7 @@ import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
 import net.minecraft.client.resource.pack.ZippedTexturePack;
 
+import net.ornithemc.osl.lifecycle.api.client.MinecraftInstance;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
@@ -42,14 +43,14 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private static TexturePack DEFAULT_PACK;
 
 	@Shadow
-	private Minecraft minecraft;
-	@Shadow
 	private List<TexturePack> availablePacks;
 	@Shadow
 	private Map<String, TexturePack> availablePacksByKey;
 	@Shadow
 	private TexturePack selected;
 
+	@Unique // cannot shadow this field as it did not exist in 12w15a-12w17a
+	private Minecraft minecraft;
 	@Unique
 	private SimpleResourcePackRepository packRepository;
 	@Unique
@@ -75,6 +76,8 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		)
 	)
 	private void osl$resource_loader$initResourcePackRepository(CallbackInfo ci) {
+		this.minecraft = MinecraftInstance.get();
+
 		this.packRepository = SimpleResourcePackRepository.client();
 		// wrap the ResourceManager into a texture pack, and set this as selected
 		// this way we don't have to redirect every call to TexturePack::getResource!
