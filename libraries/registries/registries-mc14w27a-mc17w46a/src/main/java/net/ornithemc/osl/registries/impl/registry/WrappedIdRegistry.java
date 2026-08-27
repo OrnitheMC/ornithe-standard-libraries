@@ -36,7 +36,7 @@ public class WrappedIdRegistry<T> implements ClearableRegistry<T> {
 	}
 
 	Identifier deserializeKey(NamespacedIdentifier identifier) {
-		return identifier == null ? null : (identifier instanceof Identifier ? (Identifier) identifier : new Identifier(identifier.namespace(), identifier.identifier()));
+		return identifier == null ? null : (identifier instanceof Identifier ? (Identifier) identifier : new Identifier(0, identifier.namespace(), identifier.identifier()));
 	}
 
 	ResourceKey<T> resourceKey(NamespacedIdentifier identifier) {
