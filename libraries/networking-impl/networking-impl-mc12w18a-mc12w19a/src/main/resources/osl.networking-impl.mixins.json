@@ -5,7 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.ConnectionMixin",
-		"common.CustomPayloadPacketMixin"
+		"common.CustomPayloadPacketMixin",
 		"common.ServerLoginNetworkHandlerMixin",
 		"common.ServerPlayNetworkHandlerMixin"
 	],
