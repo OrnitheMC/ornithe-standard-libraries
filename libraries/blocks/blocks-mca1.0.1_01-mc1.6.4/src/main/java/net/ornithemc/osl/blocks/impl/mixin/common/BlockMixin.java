@@ -18,6 +18,7 @@ import net.minecraft.entity.living.mob.monster.EndermanEntity;
 
 import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
+import net.ornithemc.osl.blocks.impl.BlocksMixinPlugin;
 import net.ornithemc.osl.blocks.impl.VanillaBlocks;
 import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
@@ -115,6 +116,12 @@ public abstract class BlockMixin implements BlockExtension {
 	)
 	private int osl$blocks$handleAutoAssignId(int id) {
 		if (id == AUTO_ASSIGN_ID) {
+			if (!BlocksMixinPlugin.BLOCK_IDS_BEYOND_255_SUPPORTED) {
+				throw new IllegalStateException("Automatic block ID assignment is not supported at this time!"
+						+ " Block IDs should be limited to the range 0-255"
+						+ " unless the save format and packet format have been modified to support IDs beyond 255.");
+			}
+
 			// the Block[] array must contain all blocks so this should
 			// give us a valid ID for the Block registry to use.
 			id = DynamicArray.length(BY_ID);

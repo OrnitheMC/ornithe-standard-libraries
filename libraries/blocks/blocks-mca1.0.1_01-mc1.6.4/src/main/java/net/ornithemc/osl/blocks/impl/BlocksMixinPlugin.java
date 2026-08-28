@@ -17,6 +17,7 @@ public class BlocksMixinPlugin implements IMixinConfigPlugin {
 
 	public static final boolean CLIENT_SIDE = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
 	public static final boolean BLOCK_IS_METHOD_PRESENT = MinecraftVersion.resolve().compareTo("13w01a") >= 0;
+	public static final boolean BLOCK_IDS_BEYOND_255_SUPPORTED = MinecraftVersion.resolve().compareTo("12w07a") >= 0;
 
 	@Override
 	public void onLoad(String mixinPackage) {
