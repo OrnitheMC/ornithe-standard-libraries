@@ -9,107 +9,98 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.17-SNAPSHOT' apply false
-	id 'ploceus' version '1.17-SNAPSHOT' apply false
+	id 'fabric-loom' version '1.17-SNAPSHOT'
+	id 'ploceus' version '1.17-SNAPSHOT'
 }
 
 import net.fabricmc.loader.api.SemanticVersion
 import net.fabricmc.loader.impl.game.minecraft.McVersionLookup
 
-setUpJar(project)
+base {
+	archivesName = "${project.mod_id_long}"
+}
+version = "${project.mod_version}"
+group = "${project.mod_maven_group}"
 
-def setUpJar(project) {
-	project.apply plugin: 'java-library'
-	project.apply plugin: 'eclipse'
-	project.apply plugin: 'idea'
-	project.apply plugin: 'fabric-loom'
-	project.apply plugin: 'ploceus'
+ploceus {
+	setIntermediaryGeneration(2)
+}
 
-	project.base {
-		archivesName = "${project.rootProject.mod_id_long}"
+repositories {
+	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/release'
 	}
-	project.version = "${project.rootProject.mod_version}"
-	project.group = "${project.rootProject.mod_maven_group}"
+}
 
-	project.ploceus {
-		setIntermediaryGeneration(2)
+dependencies {
+	// dummy mc dependency to keep loom happy
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	mappings ploceus.featherMappings(project.feather_build)
+}
+
+tasks.register('generateModJson', net.fabricmc.loom.task.FabricModJsonV1Task) {
+	fillModJson(project, it)
+
+	json {
+		modId = "${project.mod_id_short}" // use short id for backwards compat
+		name = "${project.mod_name_long}"
+		description = "${project.mod_description}"
+
+		icon "assets/${project.mod_id_long}/icon.png"
+
+		environment = "*"
+		depends "minecraft", "*"
 	}
+}
 
-	project.repositories {
-		maven {
-			name = 'Quilt'
-			url = 'https://maven.quiltmc.org/repository/release'
-		}
+tasks.withType(GenerateModuleMetadata) {
+	enabled = false
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	it.options.release = 8
+}
+
+java {
+	// Still required by IDEs such as Eclipse and Visual Studio Code
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+	from(file('LICENSE')) {
+		rename { "${it}_${base.archivesName.get()}" }
 	}
+}
 
-	project.dependencies {
-		// dummy mc dependency to keep loom happy
-		minecraft "com.mojang:minecraft:${project.rootProject.minecraft_version}"
-		mappings project.ploceus.featherMappings(project.rootProject.feather_build)
-		modImplementation "net.fabricmc:fabric-loader:${project.rootProject.loader_version}"
-	}
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId project.mod_artifact_id
 
-	project.tasks.register('generateModJson', net.fabricmc.loom.task.FabricModJsonV1Task) {
-		fillModJson(project, it)
-
-		json {
-			modId = "${project.rootProject.mod_id_short}" // use short id for backwards compat
-			name = "${project.rootProject.mod_name_long}"
-			description = "${project.rootProject.mod_description}"
-
-			icon "assets/${project.rootProject.mod_id_long}/icon.png"
-
-			environment = "*"
-			depends "minecraft", "*"
-		}
-	}
-
-	project.tasks.withType(GenerateModuleMetadata) {
-		enabled = false
-	}
-
-	project.tasks.withType(JavaCompile).configureEach {
-		it.options.encoding = 'UTF-8'
-		it.options.release = 8
-	}
-
-	project.java {
-		// Still required by IDEs such as Eclipse and Visual Studio Code
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
-	}
-
-	project.jar {
-		from(project.rootProject.file('LICENSE')) {
-			rename { "${it}_${project.base.archivesName.get()}" }
-		}
-	}
-
-	project.publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				artifactId project.mod_artifact_id
-	
-				pom.withXml {
-					asNode().appendNode('dependencies')
-				}
+			pom.withXml {
+				asNode().appendNode('dependencies')
 			}
 		}
-		repositories {
-			def ENV = System.getenv()
-	
-			if (ENV.MAVEN_URL) {
-				maven {
-					url ENV.MAVEN_URL
-	
-					credentials {
-						username ENV.MAVEN_USERNAME
-						password ENV.MAVEN_PASSWORD
-					}
+	}
+	repositories {
+		def ENV = System.getenv()
+
+		if (ENV.MAVEN_URL) {
+			maven {
+				url ENV.MAVEN_URL
+
+				credentials {
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
 				}
-			} else {
-				mavenLocal()
 			}
+		} else {
+			mavenLocal()
 		}
 	}
 }
