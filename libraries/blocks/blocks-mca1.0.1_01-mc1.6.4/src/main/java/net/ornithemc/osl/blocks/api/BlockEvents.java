@@ -22,7 +22,7 @@ public final class BlockEvents {
 	 * <pre>
 	 * {@code
 	 * BlockEvents.REGISTER_BLOCKS.register(() -> {
-	 * 	BlockRegistry.register(99, NamespacedIdentifiers.from("example", "cookie"), new CookieBlock(99));
+	 * 	BlockRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieBlock());
 	 * });
 	 * }
 	 * </pre>
