@@ -1,0 +1,16 @@
+classTweaker	v1	named
+
+transitive-accessible	method	net/minecraft/world/biome/Biome	<init>	(Lnet/minecraft/world/biome/Biome$Settings;)V
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	temperature	(F)Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	downfall	(F)Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	depth	(F)Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	scale	(F)Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	hasRain	()Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	snowy	()Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	waterColor	(I)Lnet/minecraft/world/biome/Biome$Settings;
+transitive-accessible	method	net/minecraft/world/biome/Biome$Settings	parent	(Ljava/lang/String;)Lnet/minecraft/world/biome/Biome$Settings;
+
+transitive-inject-interface	net/minecraft/world/biome/Biome	net/ornithemc/osl/biomes/impl/biome/BiomeExtensionImpl
+transitive-inject-interface	net/minecraft/world/biome/Biome$Settings	net/ornithemc/osl/biomes/impl/biome/BiomeExtensionImpl$SettingsExtensionImpl
+
+inject-interface	net/minecraft/world/biome/Biome	net/ornithemc/osl/biomes/impl/access/BiomeAccess
