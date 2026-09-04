@@ -23,7 +23,12 @@ public interface NamespacedIdentifier {
 	 * The separator between the namespace and identifier in the {@code String}
 	 * representation of a {@code NamespacedIdentifier}.
 	 */
-	static char SEPARATOR = ':';
+	char SEPARATOR = ':';
+
+	/**
+	 * The {@code minecraft} namespace, used for Vanilla resources and ids.
+	 */
+	String VANILLA_NAMESPACE = "minecraft";
 
 	/**
 	 * @return the namespace of this {@code NamespacedIdentifier}.
@@ -31,8 +36,13 @@ public interface NamespacedIdentifier {
 	String namespace();
 
 	/**
-	 * @return the identifier of this {@code NamespacedIdentifier}.
+	 * @return the path of this {@code NamespacedIdentifier}.
 	 */
-	String identifier();
+	String path();
+
+	@Deprecated
+	default String identifier() {
+		return this.path();
+	}
 
 }

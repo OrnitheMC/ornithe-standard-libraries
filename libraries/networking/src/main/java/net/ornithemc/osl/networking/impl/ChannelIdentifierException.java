@@ -4,7 +4,6 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
 @SuppressWarnings("serial")
 public class ChannelIdentifierException extends RuntimeException {
-
 	private ChannelIdentifierException(String message) {
 		super(message);
 	}
@@ -25,7 +24,7 @@ public class ChannelIdentifierException extends RuntimeException {
 		return new ChannelIdentifierException("\'" + namespace + "\' is not a valid namespace: " + reason);
 	}
 
-	public static ChannelIdentifierException invalidIdentifier(String identifier, String reason) {
-		return new ChannelIdentifierException("\'" + identifier + "\' is not a valid identifier: " + reason);
+	public static ChannelIdentifierException invalidPath(String path, String reason) {
+		return new ChannelIdentifierException("\'" + path + "\' is not a valid path: " + reason);
 	}
 }

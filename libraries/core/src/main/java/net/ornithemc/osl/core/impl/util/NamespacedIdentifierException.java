@@ -4,7 +4,6 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
 @SuppressWarnings("serial")
 public class NamespacedIdentifierException extends RuntimeException {
-
 	private NamespacedIdentifierException(String message) {
 		super(message);
 	}
@@ -25,7 +24,7 @@ public class NamespacedIdentifierException extends RuntimeException {
 		return new NamespacedIdentifierException("\'" + namespace + "\' is not a valid namespace: " + reason);
 	}
 
-	public static NamespacedIdentifierException invalidIdentifier(String identifier, String reason) {
-		return new NamespacedIdentifierException("\'" + identifier + "\' is not a valid identifier: " + reason);
+	public static NamespacedIdentifierException invalidPath(String path, String reason) {
+		return new NamespacedIdentifierException("\'" + path + "\' is not a valid path: " + reason);
 	}
 }

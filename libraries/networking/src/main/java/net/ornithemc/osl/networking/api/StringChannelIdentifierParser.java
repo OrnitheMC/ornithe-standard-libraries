@@ -13,7 +13,7 @@ public final class StringChannelIdentifierParser {
 	/**
 	 * The maximum allowed length for the {@code String} representation of a channel identifier.
 	 */
-	public static final int MAX_LENGTH = ChannelIdentifiers.MAX_LENGTH_NAMESPACE + 1 + ChannelIdentifiers.MAX_LENGTH_IDENTIFIER;
+	public static final int MAX_LENGTH = ChannelIdentifiers.MAX_LENGTH_NAMESPACE + 1 + ChannelIdentifiers.MAX_LENGTH_PATH;
 
 	/**
 	 * Convert the given {@code String} to a channel identifier.
