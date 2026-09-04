@@ -16,11 +16,11 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 
 	private final String namespace;
-	private final String identifier;
+	private final String path;
 
-	public NamespacedIdentifierImpl(String namespace, String identifier) {
+	public NamespacedIdentifierImpl(String namespace, String path) {
 		this.namespace = namespace;
-		this.identifier = identifier;
+		this.path = path;
 	}
 
 	@Override
@@ -37,12 +37,12 @@ public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 	@Override
 	public int hashCode() {
 		// this impl matches Vanilla Identifier's impl
-		return 31 * namespace.hashCode() + identifier.hashCode();
+		return 31 * namespace.hashCode() + path.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return namespace + SEPARATOR + identifier;
+		return namespace + SEPARATOR + path;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 	}
 
 	@Override
-	public String identifier() {
-		return identifier;
+	public String path() {
+		return path;
 	}
 }

@@ -13,20 +13,13 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
 @Mixin(Identifier.class)
 public class IdentifierMixin implements NamespacedIdentifier {
-
 	@Shadow
 	private String namespace;
+
 	@Shadow
 	private String path;
 
-	@Inject(
-		method = "equals",
-		remap = false,
-		cancellable = true,
-		at = @At(
-			value = "HEAD"
-		)
-	)
+	@Inject(method = "equals", at = @At(value = "HEAD"), cancellable = true, remap = false)
 	private void osl$core$equalsNamespacedIdentifier(Object o, CallbackInfoReturnable<Boolean> cir) {
 		if (o instanceof NamespacedIdentifier) {
 			cir.setReturnValue(NamespacedIdentifiers.equals(this, (NamespacedIdentifier) o));
@@ -39,7 +32,7 @@ public class IdentifierMixin implements NamespacedIdentifier {
 	}
 
 	@Override
-	public String identifier() {
+	public String path() {
 		return path;
 	}
 }

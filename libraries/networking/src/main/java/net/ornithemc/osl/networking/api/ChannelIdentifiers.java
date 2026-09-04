@@ -12,12 +12,11 @@ import net.ornithemc.osl.networking.impl.ChannelIdentifierException;
  * Utility methods for creating and validating channel identifiers.
  */
 public final class ChannelIdentifiers {
-
 	/**
 	 * The default namespace of channel identifiers.
 	 * It is recommended to use a custom namespace for your own identifiers.
 	 */
-	public static final String DEFAULT_NAMESPACE = NamespacedIdentifiers.DEFAULT_NAMESPACE;
+	public static final String DEFAULT_NAMESPACE = NamespacedIdentifier.VANILLA_NAMESPACE;
 
 	/**
 	 * The maximum length of a channel identifier's namespace string.
@@ -26,23 +25,20 @@ public final class ChannelIdentifiers {
 	/**
 	 * The maximum length of a channel identifier's identifier string.
 	 */
-	public static final int MAX_LENGTH_IDENTIFIER = Byte.MAX_VALUE;
+	public static final int MAX_LENGTH_PATH = Byte.MAX_VALUE;
 
 	/**
-	 * Construct and validate a channel identifier with the default namespace and the given identifier.
+	 * Construct and validate a channel identifier with the default namespace and the given path.
 	 */
-	public static NamespacedIdentifier from(String identifier) {
-		return from(DEFAULT_NAMESPACE, identifier);
+	public static NamespacedIdentifier from(String path) {
+		return from(DEFAULT_NAMESPACE, path);
 	}
 
 	/**
-	 * Construct and validate a channel identifier from the given namespace and identifier.
+	 * Construct and validate a channel identifier from the given namespace and path.
 	 */
-	public static NamespacedIdentifier from(String namespace, String identifier) {
-		return NamespacedIdentifiers.from(
-			validateNamespace(namespace),
-			validateIdentifier(identifier)
-		);
+	public static NamespacedIdentifier from(String namespace, String path) {
+		return NamespacedIdentifiers.from(validateNamespace(namespace), validatePath(path));
 	}
 
 	/**
@@ -51,11 +47,10 @@ public final class ChannelIdentifiers {
 	public static NamespacedIdentifier validate(NamespacedIdentifier id) {
 		try {
 			validateNamespace(id.namespace());
-			validateIdentifier(id.identifier());
-
+			validatePath(id.path());
 			return id;
-		} catch (ChannelIdentifierException e) {
-			throw ChannelIdentifierException.invalid(id, e);
+		} catch (ChannelIdentifierException exception) {
+			throw ChannelIdentifierException.invalid(id, exception);
 		}
 	}
 
@@ -66,9 +61,11 @@ public final class ChannelIdentifiers {
 		if (namespace == null || namespace.isEmpty()) {
 			throw ChannelIdentifierException.invalidNamespace(namespace, "null or empty");
 		}
+
 		if (namespace.length() > MAX_LENGTH_NAMESPACE) {
 			throw ChannelIdentifierException.invalidNamespace(namespace, "length " + namespace.length() + " is greater than maximum allowed " + MAX_LENGTH_NAMESPACE);
 		}
+
 		if (!namespace.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'))) {
 			throw ChannelIdentifierException.invalidNamespace(namespace, "contains illegal characters - only [a-z0-9-._] are allowed");
 		}
@@ -77,20 +74,22 @@ public final class ChannelIdentifiers {
 	}
 
 	/**
-	 * Check that the given identifier is valid for a channel identifier.
+	 * Check that the given path is valid for a channel identifier.
 	 */
-	public static String validateIdentifier(String identifier) {
-		if (identifier == null || identifier.isEmpty()) {
-			throw ChannelIdentifierException.invalidIdentifier(identifier, "null or empty");
-		}
-		if (identifier.length() > MAX_LENGTH_IDENTIFIER) {
-			throw ChannelIdentifierException.invalidIdentifier(identifier, "length " + identifier.length() + " is greater than maximum allowed " + MAX_LENGTH_IDENTIFIER);
-		}
-		if (!identifier.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'))) {
-			throw ChannelIdentifierException.invalidIdentifier(identifier, "contains illegal characters - only [a-z0-9-._/] are allowed");
+	public static String validatePath(String path) {
+		if (path == null || path.isEmpty()) {
+			throw ChannelIdentifierException.invalidPath(path, "null or empty");
 		}
 
-		return NamespacedIdentifiers.validateIdentifier(identifier);
+		if (path.length() > MAX_LENGTH_PATH) {
+			throw ChannelIdentifierException.invalidPath(path, "length " + path.length() + " is greater than maximum allowed " + MAX_LENGTH_PATH);
+		}
+
+		if (!path.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'))) {
+			throw ChannelIdentifierException.invalidPath(path, "contains illegal characters - only [a-z0-9-._/] are allowed");
+		}
+
+		return NamespacedIdentifiers.validatePath(path);
 	}
 
 	public static Set<NamespacedIdentifier> dropInvalid(Set<NamespacedIdentifier> channels) {
