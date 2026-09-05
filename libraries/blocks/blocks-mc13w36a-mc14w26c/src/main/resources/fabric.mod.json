@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-blocks",
-  "version": "0.2.0-alpha.14+mc13w36a-mc14w26c",
+  "version": "0.2.0-alpha.15+mc13w36a-mc14w26c",
   "environment": "*",
   "entrypoints": {
     "init": [
