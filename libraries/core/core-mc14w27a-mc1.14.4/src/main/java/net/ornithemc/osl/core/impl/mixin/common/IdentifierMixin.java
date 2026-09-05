@@ -44,12 +44,12 @@ public class IdentifierMixin implements NamespacedIdentifier {
 	}
 
 	@Override
-	public NamespacedIdentifier prefixed(String prefix) {
+	public Identifier prefixed(String prefix) {
 		return new Identifier(namespace, prefix + path);
 	}
 
 	@Override
-	public NamespacedIdentifier suffixed(String suffix) {
+	public Identifier suffixed(String suffix) {
 		return new Identifier(namespace, path + suffix);
 	}
 }
