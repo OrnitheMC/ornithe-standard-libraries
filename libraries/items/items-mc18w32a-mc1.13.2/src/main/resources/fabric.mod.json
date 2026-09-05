@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-items",
-  "version": "0.2.0-alpha.20+mc18w32a-mc1.13.2",
+  "version": "0.2.0-alpha.21+mc18w32a-mc1.13.2",
   "environment": "*",
   "entrypoints": {
     "init": [

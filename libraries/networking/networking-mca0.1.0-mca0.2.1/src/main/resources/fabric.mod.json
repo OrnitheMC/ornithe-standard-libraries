@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-networking",
-  "version": "0.10.0-alpha.3+mca0.1.0-mca0.2.1",
+  "version": "0.10.0-alpha.4+mca0.1.0-mca0.2.1",
   "environment": "server",
   "mixins": [
     "osl.networking.mixins.json"
