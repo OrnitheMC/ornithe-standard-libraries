@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-entities",
-  "version": "0.1.0+mc12w01a-mc1.8.2-pre4",
+  "version": "0.1.0-alpha.1+mc12w01a-mc1.8.2-pre4",
   "environment": "*",
   "entrypoints": {
     "init": [
@@ -22,7 +22,7 @@
     "osl-text-components": "\u003e\u003d0.1.0-",
     "osl-networking": "\u003e\u003d0.10.0",
     "osl-networking-impl": "\u003e\u003d0.2.0",
-    "osl-registries": "\u003e\u003d0.1.0"
+    "osl-registries": "\u003e\u003d0.2.0-"
   },
   "name": "OSL Entities",
   "description": "Entities API and events.",
