@@ -15,15 +15,10 @@
 		"common.BlockMixin_b1_6_tb3_1_4_7",
 		"common.BlockMixin_b1_9_pre5_12w38b",
 		"common.BlockMixin",
-		"common.BlockMixinNew",
-		"common.BlockMixinOld",
 		"common.EndermanEntityMixin",
 		"common.FireBlockMixin",
 		"common.ItemMixin",
-		"common.RedstoneTorchBlockMixin",
-		"common.RepeaterBlockMixin",
-		"common.StatsMixin",
-		"common.WorldMixin"
+		"common.StatsMixin"
 	],
 	"client": [
 		"client.BlockMixin_13w02a",

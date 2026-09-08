@@ -10,14 +10,4 @@ public interface BlockExtension {
 	DefaultedRegistry<Block> REGISTRY = BlockRegistryImpl.REGISTRY;
 	int AUTO_ASSIGN_ID = -172;
 
-	/**
-	 * @return whether this block is air.
-	 */
-	boolean isAir();
-
-	/**
-	 * @return whether this block is the same as the given block.
-	 */
-	boolean is(Block block);
-
 }

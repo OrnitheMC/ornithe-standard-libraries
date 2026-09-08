@@ -3,11 +3,8 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.blocks.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"plugin": "net.ornithemc.osl.blocks.impl.BlocksMixinPlugin",
 	"mixins": [
-		"common.AirBlockMixin",
 		"common.BlockMixin",
-		"common.BlocksMixin",
 		"common.EndermanEntityMixin",
 		"common.FireBlockMixin",
 		"common.StatsMixin"
