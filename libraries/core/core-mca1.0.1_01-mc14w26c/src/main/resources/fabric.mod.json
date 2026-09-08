@@ -9,7 +9,7 @@
   "accessWidener": "osl.core.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
-    "minecraft": "\u003e\u003d1.0.0-alpha.0.1 \u003c\u003d1.8-alpha.14.26.c"
+    "minecraft": "\u003e\u003d1.0.0-alpha.0.1.1 \u003c\u003d1.8-alpha.14.26.c"
   },
   "name": "OSL Core",
   "description": "The core of Ornithe Standard Libraries.",

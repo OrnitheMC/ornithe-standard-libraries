@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath 'net.fabricmc:fabric-loader:0.18.6'
+		classpath 'net.fabricmc:fabric-loader:0.19.5'
 	}
 }
 
@@ -391,7 +391,10 @@ def setUpModule(project) {
 				environment = '*'
 			}
 
-			depends "minecraft", "${project.minecraft_dependency}"
+			def minMcVersion = getMinecraftVersion(project.min_mc_version)
+			def maxMcVersion = getMinecraftVersion(project.max_mc_version)
+
+			depends "minecraft", ">=${minMcVersion} <=${maxMcVersion}"
 
 			if (!isCore) {
 				def deps = findDependencies(project)

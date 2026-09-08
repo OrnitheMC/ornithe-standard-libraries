@@ -14,7 +14,7 @@
   "accessWidener": "osl.blocks.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
-    "minecraft": "\u003e\u003d1.0.0-alpha.0.1 \u003c\u003d1.6.4",
+    "minecraft": "\u003e\u003d1.0.0-alpha.0.1.1 \u003c\u003d1.6.4",
     "osl-core": "\u003e\u003d0.10.0",
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
