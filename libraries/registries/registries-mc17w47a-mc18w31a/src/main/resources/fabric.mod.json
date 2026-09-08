@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-registries",
-  "version": "0.1.0-alpha.1+mc17w47a-mc18w31a",
+  "version": "0.1.0+mc17w47a-mc18w31a",
   "environment": "*",
   "entrypoints": {
     "client-init": [
@@ -20,8 +20,8 @@
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.9.0",
-    "osl-networking-impl": "\u003e\u003d0.1.0"
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0"
   },
   "name": "OSL Registries",
   "description": "Registries API and numerical ID synchronization.",

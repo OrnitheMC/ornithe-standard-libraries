@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-networking-impl",
-  "version": "0.1.1+mca1.0.16-mca1.2.6",
+  "version": "0.2.0+mca1.0.16-mca1.2.6",
   "environment": "client",
   "entrypoints": {
     "init": [
@@ -17,6 +17,7 @@
   "mixins": [
     "osl.networking-impl.mixins.json"
   ],
+  "accessWidener": "osl.networking-impl.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.0.0-alpha.0.16 \u003c\u003d1.0.0-alpha.2.6",
@@ -25,7 +26,7 @@
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.9.0"
+    "osl-networking": "\u003e\u003d0.10.0"
   },
   "name": "OSL Networking Implementation",
   "description": "Implementation details of the Networking API.",

@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "osl-networking",
-  "version": "0.9.0+mcb1.0-mc13w39b",
+  "version": "0.10.0+mcb1.0-mc13w39b",
   "environment": "*",
   "mixins": [
     "osl.networking.mixins.json"
   ],
+  "accessWidener": "osl.networking.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.0.0-beta.0 \u003c\u003d1.7-alpha.13.39.b",
