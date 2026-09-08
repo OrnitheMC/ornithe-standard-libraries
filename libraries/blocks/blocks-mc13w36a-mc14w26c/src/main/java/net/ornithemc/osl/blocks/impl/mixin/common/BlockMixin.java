@@ -11,10 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.living.mob.monster.EndermanEntity;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
-import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
-import net.ornithemc.osl.blocks.impl.BlocksMixinPlugin;
-import net.ornithemc.osl.blocks.impl.block.AirBlock;
 import net.ornithemc.osl.blocks.impl.block.BlockPostInit;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
@@ -24,7 +21,7 @@ import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 import net.ornithemc.osl.registries.api.registry.sync.BooleanArrayMapper;
 
 @Mixin(Block.class)
-public class BlockMixin implements BlockExtension {
+public class BlockMixin {
 
 	@Shadow
 	private String key;
@@ -37,10 +34,6 @@ public class BlockMixin implements BlockExtension {
 	)
 	private static void osl$blocks$unlockBlockRegistry(CallbackInfo ci) {
 		BlockRegistryImpl.unlock();
-
-		if (!BlocksMixinPlugin.AIR_BLOCK_EXISTS) {
-			Block.REGISTRY.register(0, "air", new AirBlock());
-		}
 	}
 
 	@Inject(
@@ -91,10 +84,5 @@ public class BlockMixin implements BlockExtension {
 	@Override
 	public String toString() {
 		return "Block{" + BlockRegistryImpl.getIdentifier((Block) (Object) this) + "}";
-	}
-
-	@Override
-	public boolean isAir() {
-		return false;
 	}
 }

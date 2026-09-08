@@ -21,7 +21,8 @@
     "osl-text-components": "\u003e\u003d0.1.0-",
     "osl-networking": "\u003e\u003d0.10.0",
     "osl-networking-impl": "\u003e\u003d0.2.0",
-    "osl-registries": "\u003e\u003d0.1.0"
+    "osl-registries": "\u003e\u003d0.1.0",
+    "osl-blockstates": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Blocks",
   "description": "Blocks API and events.",
