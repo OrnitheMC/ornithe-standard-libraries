@@ -7,6 +7,10 @@ import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
+/**
+ * @deprecated use Registries API instead
+ */
+@Deprecated
 public class IdBiMap<T> implements Iterable<T> {
 
 	private final Int2ReferenceMap<T> values;

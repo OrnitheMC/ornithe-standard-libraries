@@ -22,7 +22,7 @@ public final class ItemEvents {
 	 * <pre>
 	 * {@code
 	 * ItemEvents.REGISTER_ITEMS.register(() -> {
-	 * 	ItemRegistry.register(999, NamespacedIdentifiers.from("example", "cookie"), new CookieItem());
+	 * 	ItemRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieItem());
 	 * });
 	 * }
 	 * </pre>

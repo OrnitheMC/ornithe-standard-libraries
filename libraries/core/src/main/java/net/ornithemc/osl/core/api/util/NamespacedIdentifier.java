@@ -35,4 +35,14 @@ public interface NamespacedIdentifier {
 	 */
 	String identifier();
 
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} with the given prefix.
+	 */
+	NamespacedIdentifier prefixed(String prefix);
+
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} with the given suffix.
+	 */
+	NamespacedIdentifier suffixed(String suffix);
+
 }

@@ -37,9 +37,8 @@ public class ItemMixinOld {
 			target = "Lnet/minecraft/util/registry/IdRegistry;keySet()Ljava/util/Set;"
 		)
 	)
-	private static void osl$items$initAndLockItemRegistry(CallbackInfo ci) {
-		ItemRegistryImpl.init();
-		ItemRegistryImpl.lock();
+	private static void osl$items$registerItems(CallbackInfo ci) {
+		ItemRegistryImpl.registerItems();
 	}
 
 	@WrapOperation(

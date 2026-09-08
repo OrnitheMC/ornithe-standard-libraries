@@ -42,4 +42,14 @@ public class IdentifierMixin implements NamespacedIdentifier {
 	public String identifier() {
 		return path;
 	}
+
+	@Override
+	public Identifier prefixed(String prefix) {
+		return new Identifier(namespace, prefix + path);
+	}
+
+	@Override
+	public Identifier suffixed(String suffix) {
+		return new Identifier(namespace, path + suffix);
+	}
 }

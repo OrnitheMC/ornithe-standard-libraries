@@ -1,0 +1,5 @@
+setUpLibrary(project)
+
+dependencies {
+	implementation 'it.unimi.dsi:fastutil:8.5.9'
+}
