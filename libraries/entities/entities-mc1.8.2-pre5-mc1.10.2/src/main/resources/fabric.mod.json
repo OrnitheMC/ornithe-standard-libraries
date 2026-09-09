@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-entities",
+  "version": "0.1.0+mc1.8.2-pre5-mc1.10.2",
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.entities.impl.EntityTypeRegistryImpl::init"
+    ]
+  },
+  "mixins": [
+    "osl.entities.mixins.json"
+  ],
+  "accessWidener": "osl.entities.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.8.2-rc.5 \u003c\u003d1.10.2",
+    "osl-core": "\u003e\u003d0.9.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.1.0"
+  },
+  "name": "OSL Entities",
+  "description": "Entities API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
