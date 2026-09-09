@@ -1,0 +1,28 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.blockstates.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.BlockMixin",
+		"common.RedstoneTorchBlockMixin",
+		"common.RepeaterBlockMixin",
+		"common.WorldChunkSectionMixin",
+		"common.WorldChunkMixin",
+		"common.WorldMixin",
+		"common.WorldRegionMixin",
+		"common.WorldViewMixin"
+	],
+	"client": [
+		"client.WorldRegionMixin"
+	],
+	"server": [
+		"server.WorldMixin",
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"mixinextras": {
+		"minVersion": "0.5.0"
+	}
+}

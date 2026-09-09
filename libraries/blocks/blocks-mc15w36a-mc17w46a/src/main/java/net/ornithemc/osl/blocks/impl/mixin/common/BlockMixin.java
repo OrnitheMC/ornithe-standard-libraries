@@ -10,13 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.block.Block;
 
 import net.ornithemc.osl.blocks.api.BlockRegistry;
-import net.ornithemc.osl.blocks.api.block.BlockExtension;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.impl.util.Util;
 
 @Mixin(Block.class)
-public class BlockMixin implements BlockExtension {
+public class BlockMixin {
 
 	@Shadow
 	private String key;
@@ -58,10 +57,5 @@ public class BlockMixin implements BlockExtension {
 				this.key = Util.makeTranslationKey(identifier);
 			}
 		}
-	}
-
-	@Override
-	public boolean isAir() {
-		return false;
 	}
 }
