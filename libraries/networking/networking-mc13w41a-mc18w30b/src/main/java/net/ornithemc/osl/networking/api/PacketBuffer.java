@@ -23,7 +23,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Identifier;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
