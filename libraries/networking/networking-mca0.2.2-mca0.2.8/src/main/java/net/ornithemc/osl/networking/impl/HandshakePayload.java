@@ -5,15 +5,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.networking.api.ChannelIdentifiers;
-import net.ornithemc.osl.networking.api.ChannelRegistry;
 import net.ornithemc.osl.networking.api.PacketBuffer;
 import net.ornithemc.osl.networking.api.PacketPayload;
+import net.ornithemc.osl.networking.api.StringChannelIdentifierParser;
 import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 public class HandshakePayload implements PacketPayload {
 
-	public static final NamespacedIdentifier CHANNEL = ChannelRegistry.register(Constants.OSL_HANDSHAKE_CHANNEL);
+	public static final NamespacedIdentifier CHANNEL = Constants.OSL_HANDSHAKE_CHANNEL;
 
 	public byte protocol;
 	public Set<NamespacedIdentifier> channels;
@@ -23,10 +22,7 @@ public class HandshakePayload implements PacketPayload {
 
 	public HandshakePayload(Set<NamespacedIdentifier> channels) {
 		this.protocol = Constants.OSL_HANDSHAKE_PROTOCOL;
-		// we allow registering listeners on channels that do not conform to OSL spec
-		// but payloads sent over these channels aren't sent via OSL so we can ignore
-		// them for the OSL handshake.
-		this.channels = ChannelIdentifiers.dropInvalid(channels);
+		this.channels = channels;
 	}
 
 	public static HandshakePayload server() {
@@ -41,7 +37,7 @@ public class HandshakePayload implements PacketPayload {
 		int channelCount = buffer.readInt();
 
 		for (int i = 0; i < channelCount; i++) {
-			channels.add(buffer.readNamespacedIdentifier());
+			channels.add(StringChannelIdentifierParser.fromString(buffer.readString()));
 		}
 	}
 
@@ -51,7 +47,7 @@ public class HandshakePayload implements PacketPayload {
 		buffer.writeInt(channels.size());
 
 		for (NamespacedIdentifier channel : channels) {
-			buffer.writeNamespacedIdentifier(channel);
+			buffer.writeString(StringChannelIdentifierParser.toString(channel));
 		}
 	}
 }

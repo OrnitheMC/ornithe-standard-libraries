@@ -34,7 +34,7 @@ public final class IdentifierChannelIdentifierParser {
 	 */
 	public static NamespacedIdentifier fromIdentifierOrThrow(Identifier id) {
 		try {
-			return ChannelIdentifiers.from(id.getNamespace(), id.getPath());
+			return ChannelIdentifiers.validate(id);
 		} catch (ChannelIdentifierException e) {
 			throw ChannelIdentifierParseException.invalid(id.toString(), e);
 		}

@@ -23,6 +23,6 @@ public final class Constants {
 	/**
 	 * The channel identifier for OSL's handshake payload.
 	 */
-	public static final NamespacedIdentifier OSL_HANDSHAKE_CHANNEL = ChannelIdentifiers.from("osl", "handshake");
+	public static final NamespacedIdentifier OSL_HANDSHAKE_CHANNEL = ChannelIdentifiers.register("osl", "handshake");
 
 }
