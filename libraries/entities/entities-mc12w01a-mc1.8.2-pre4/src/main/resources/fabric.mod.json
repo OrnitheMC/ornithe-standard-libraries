@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-entities",
-  "version": "0.1.0-alpha.1+mc12w01a-mc1.8.2-pre4",
+  "version": "0.1.0-alpha.2+mc12w01a-mc1.8.2-pre4",
   "environment": "*",
   "entrypoints": {
     "init": [
