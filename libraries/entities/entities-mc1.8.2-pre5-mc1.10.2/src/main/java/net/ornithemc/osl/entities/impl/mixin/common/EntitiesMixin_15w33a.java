@@ -39,7 +39,7 @@ public class EntitiesMixin_15w33a {
 			if (legacyKey == null) {
 				throw new IllegalArgumentException("Entity type " + type.getSimpleName() + " is not registered!");
 			}
-			if (!SPAWN_EGG_DATA.containsKey(legacyKey)) {
+			if (SPAWN_EGG_DATA.containsKey(legacyKey)) {
 				throw new IllegalArgumentException("Duplicate entity type legacy key " + legacyKey + " in spawn egg data registry!");
 			}
 

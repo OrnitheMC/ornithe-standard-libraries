@@ -86,7 +86,7 @@ public final class EntityTypeRegistryImpl {
 			if (identifier == null) {
 				throw new IllegalArgumentException("Entity type " + type.getSimpleName() + " is not registered!");
 			}
-			if (!Entities.SPAWN_EGG_DATA.containsKey(identifier)) {
+			if (Entities.SPAWN_EGG_DATA.containsKey(identifier)) {
 				throw new IllegalArgumentException("Duplicate entity type identifier " + identifier + " in spawn egg data registry!");
 			}
 

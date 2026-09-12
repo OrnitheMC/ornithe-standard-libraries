@@ -102,7 +102,7 @@ public final class EntityTypeRegistryImpl {
 			if (id < 0) {
 				throw new IllegalArgumentException("Entity type " + type.getSimpleName() + " is not registered!");
 			}
-			if (!SPAWN_EGG_DATA.containsKey(id)) {
+			if (SPAWN_EGG_DATA.containsKey(id)) {
 				throw new IllegalArgumentException("Duplicate entity type ID " + id + " in spawn egg data registry!");
 			}
 
