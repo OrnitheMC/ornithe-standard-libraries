@@ -19,16 +19,16 @@ public enum Direction {
 	EAST ( "east",  3, 5, 4, Axis.X, AxisDirection.POSITIVE);
 
 	private final String name;
-	private final int data3d;
 	private final int data2d;
+	private final int data3d;
 	private final int opposite;
 	private final Axis axis;
 	private final AxisDirection axisDirection;
 
 	private Direction(String name, int data2d, int data3d, int opposite, Axis axis, AxisDirection axisDirection) {
 		this.name = name;
-		this.data3d = data2d;
-		this.data2d = data3d;
+		this.data2d = data2d;
+		this.data3d = data3d;
 		this.opposite = opposite;
 		this.axis = axis;
 		this.axisDirection = axisDirection;
