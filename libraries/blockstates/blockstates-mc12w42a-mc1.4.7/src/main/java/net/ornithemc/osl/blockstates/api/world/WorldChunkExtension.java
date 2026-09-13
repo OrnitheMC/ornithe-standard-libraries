@@ -1,5 +1,7 @@
 package net.ornithemc.osl.blockstates.api.world;
 
+import net.minecraft.block.entity.BlockEntity;
+
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
 import net.ornithemc.osl.core.api.util.math.BlockPos;
 
@@ -12,5 +14,9 @@ public interface WorldChunkExtension {
 	BlockState setBlockState(BlockPos pos, BlockState state);
 
 	BlockState setBlockState(int x, int y, int z, BlockState state);
+
+	BlockEntity getBlockEntity(BlockPos pos);
+
+	void setBlockEntity(BlockPos pos, BlockEntity blockEntity);
 
 }

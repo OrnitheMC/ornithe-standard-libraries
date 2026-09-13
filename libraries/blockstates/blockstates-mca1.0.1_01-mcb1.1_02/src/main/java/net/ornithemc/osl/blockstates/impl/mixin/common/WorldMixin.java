@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
 
@@ -24,6 +25,10 @@ public class WorldMixin implements WorldExtension {
 	private WorldChunk getChunk(int x, int z) { return null; }
 	@Shadow
 	private void onBlockChanged(int x, int y, int z, int block) { }
+	@Shadow
+	private BlockEntity getBlockEntity(int x, int y, int z) { return null; }
+	@Shadow
+	private void setBlockEntity(int x, int y, int z, BlockEntity blockEntity) { }
 
 	@ModifyVariable(
 		method = "canPlace",
@@ -80,5 +85,15 @@ public class WorldMixin implements WorldExtension {
 		}
 
 		return true;
+	}
+
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return this.getBlockEntity(pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	public void setBlockEntity(BlockPos pos, BlockEntity blockEntity) {
+		this.setBlockEntity(pos.x(), pos.y(), pos.z(), blockEntity);
 	}
 }

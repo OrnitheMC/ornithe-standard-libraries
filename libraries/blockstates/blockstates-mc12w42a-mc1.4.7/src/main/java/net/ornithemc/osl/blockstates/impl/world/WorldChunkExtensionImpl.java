@@ -1,5 +1,7 @@
 package net.ornithemc.osl.blockstates.impl.world;
 
+import net.minecraft.block.entity.BlockEntity;
+
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
 import net.ornithemc.osl.blockstates.api.world.WorldChunkExtension;
 import net.ornithemc.osl.core.api.util.math.BlockPos;
@@ -23,6 +25,16 @@ public interface WorldChunkExtensionImpl extends WorldChunkExtension {
 
 	@Override
 	default BlockState setBlockState(int x, int y, int z, BlockState state) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
+	default BlockEntity getBlockEntity(BlockPos pos) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
+	default void setBlockEntity(BlockPos pos, BlockEntity blockEntity) {
 		throw new AbstractMethodError();
 	}
 }

@@ -1,5 +1,7 @@
 package net.ornithemc.osl.blockstates.api.world;
 
+import net.minecraft.block.entity.BlockEntity;
+
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
 import net.ornithemc.osl.core.api.util.math.BlockPos;
 
@@ -11,6 +13,8 @@ public interface WorldViewExtension {
 	BlockState getBlockState(BlockPos pos);
 
 	BlockState getBlockState(int x, int y, int z);
+
+	BlockEntity getBlockEntity(BlockPos pos);
 
 	static boolean isInsideWorldHeight(BlockPos pos) {
 		return isInsideWorldHeight(pos.y());

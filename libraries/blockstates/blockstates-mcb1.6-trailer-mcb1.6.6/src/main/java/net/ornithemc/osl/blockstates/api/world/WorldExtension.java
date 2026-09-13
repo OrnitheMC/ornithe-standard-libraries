@@ -1,5 +1,6 @@
 package net.ornithemc.osl.blockstates.api.world;
 
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.chunk.WorldChunk;
 
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
@@ -14,6 +15,8 @@ public interface WorldExtension extends WorldViewExtension {
 	boolean setBlockState(BlockPos pos, BlockState state, boolean notify);
 
 	boolean setBlockState(int x, int y, int z, BlockState state, boolean notify);
+
+	void setBlockEntity(BlockPos pos, BlockEntity blockEntity);
 
 	static boolean isInsideWorld(BlockPos pos) {
 		return isInsideWorld(pos.x(), pos.y(), pos.z());

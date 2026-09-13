@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
@@ -27,6 +28,10 @@ public class WorldMixin implements WorldExtension {
 	private void notifyBlockChanged(int x, int y, int z) { }
 	@Shadow
 	private void onBlockChanged(int x, int y, int z, int block) { }
+	@Shadow
+	private BlockEntity getBlockEntity(int x, int y, int z) { return null; }
+	@Shadow
+	private void setBlockEntity(int x, int y, int z, BlockEntity blockEntity) { }
 
 	@Override
 	public WorldChunk getChunk(BlockPos pos) {
@@ -83,5 +88,15 @@ public class WorldMixin implements WorldExtension {
 		}
 
 		return true;
+	}
+
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return this.getBlockEntity(pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	public void setBlockEntity(BlockPos pos, BlockEntity blockEntity) {
+		this.setBlockEntity(pos.x(), pos.y(), pos.z(), blockEntity);
 	}
 }

@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportCategory;
@@ -39,6 +40,10 @@ public class WorldMixin implements WorldExtension {
 	private void notifyBlockChanged(int x, int y, int z) { }
 	@Shadow
 	private void onBlockChanged(int x, int y, int z, int block) { }
+	@Shadow
+	private BlockEntity getBlockEntity(int x, int y, int z) { return null; }
+	@Shadow
+	private void setBlockEntity(int x, int y, int z, BlockEntity blockEntity) { }
 
 	@Definition(
 		id = "block",
@@ -123,5 +128,15 @@ public class WorldMixin implements WorldExtension {
 		}
 
 		return true;
+	}
+
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return this.getBlockEntity(pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	public void setBlockEntity(BlockPos pos, BlockEntity blockEntity) {
+		this.setBlockEntity(pos.x(), pos.y(), pos.z(), blockEntity);
 	}
 }
