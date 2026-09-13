@@ -5,7 +5,9 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.osl.biomes.impl.BiomesMixinPlugin",
 	"mixins": [
-		"common.BiomeMixin"
+		"common.BiomeMixin",
+		"common.BiomeMixinNew",
+		"common.BiomeMixinOld"
 	],
 	"client": [
 	],
