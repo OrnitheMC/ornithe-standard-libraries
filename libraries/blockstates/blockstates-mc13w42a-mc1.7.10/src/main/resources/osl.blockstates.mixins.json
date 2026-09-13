@@ -6,6 +6,7 @@
 	"mixins": [
 		"common.AirBlockMixin",
 		"common.BlockMixin",
+		"common.BlockEntityMixin",
 		"common.WorldChunkMixin",
 		"common.WorldChunkSectionMixin",
 		"common.WorldMixin",

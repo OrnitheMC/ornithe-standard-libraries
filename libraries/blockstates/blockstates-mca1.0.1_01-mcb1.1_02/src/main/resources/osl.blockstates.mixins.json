@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.BlockMixin",
+		"common.BlockEntityMixin",
 		"common.RedstoneTorchBlockMixin",
 		"common.WorldChunkMixin",
 		"common.WorldMixin",

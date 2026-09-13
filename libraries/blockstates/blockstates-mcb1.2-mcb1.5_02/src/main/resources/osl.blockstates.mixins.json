@@ -6,6 +6,7 @@
 	"plugin": "net.ornithemc.osl.blockstates.impl.BlockStatesMixinPlugin",
 	"mixins": [
 		"common.BlockMixin",
+		"common.BlockEntityMixin",
 		"common.RedstoneTorchBlockMixin",
 		"common.RepeaterBlockMixin",
 		"common.WorldChunkMixin",
