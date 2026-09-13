@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-blockstates",
-  "version": "0.1.0-alpha.1+mcb1.8-pre1-mcb1.9-pre3",
+  "version": "0.1.0-alpha.2+mcb1.8-pre1-mcb1.9-pre3",
   "environment": "*",
   "mixins": [
     "osl.blockstates.mixins.json"
