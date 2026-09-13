@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockWithBlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.player.PlayerEntity;
@@ -20,20 +21,18 @@ import net.ornithemc.osl.core.api.util.math.BlockPos;
 import net.ornithemc.osl.core.api.util.math.Direction;
 
 /**
- * A base implementation of {@linkplain Block} that is designed to be used with {@linkplain BlockState}s.
- * All methods that make use of int coordinates, int directions, and int data values, have their calls
- * forwarded to equivalent methods provided by OSL that make use of {@linkplain BlockPos},
- * {@linkplain Direction}, and {@linkplain BlockState} instead. This allows sub-classes to place all
- * their logic in these methods without the need to duplicate it for interoperability with most Vanilla
- * systems.
+ * A base implementation of {@linkplain BlockWithBlockEntity} that is designed
+ * to be used with {@linkplain BlockState}s.
+ * 
+ * @see StatefulBlock
  */
-public class StatefulBlock extends Block {
+public abstract class StatefulBlockWithBlockEntity extends BlockWithBlockEntity {
 
-	public StatefulBlock(int id, Material material) {
+	protected StatefulBlockWithBlockEntity(int id, Material material) {
 		super(id, material);
 	}
 
-	public StatefulBlock(int id, int sprite, Material material) {
+	protected StatefulBlockWithBlockEntity(int id, int sprite, Material material) {
 		super(id, sprite, material);
 	}
 

@@ -32,6 +32,10 @@ public class StatefulBlock extends Block {
 		super(id, material);
 	}
 
+	public StatefulBlock(int id, int sprite, Material material) {
+		super(id, sprite, material);
+	}
+
 	@Override
 	public void buildStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 	}

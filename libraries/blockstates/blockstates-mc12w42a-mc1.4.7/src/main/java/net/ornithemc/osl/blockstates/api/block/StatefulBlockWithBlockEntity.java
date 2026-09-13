@@ -1,10 +1,10 @@
 package net.ornithemc.osl.blockstates.api.block;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockWithBlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.player.PlayerEntity;
@@ -20,20 +20,18 @@ import net.ornithemc.osl.core.api.util.math.BlockPos;
 import net.ornithemc.osl.core.api.util.math.Direction;
 
 /**
- * A base implementation of {@linkplain Block} that is designed to be used with {@linkplain BlockState}s.
- * All methods that make use of int coordinates, int directions, and int data values, have their calls
- * forwarded to equivalent methods provided by OSL that make use of {@linkplain BlockPos},
- * {@linkplain Direction}, and {@linkplain BlockState} instead. This allows sub-classes to place all
- * their logic in these methods without the need to duplicate it for interoperability with most Vanilla
- * systems.
+ * A base implementation of {@linkplain BlockWithBlockEntity} that is designed
+ * to be used with {@linkplain BlockState}s.
+ * 
+ * @see StatefulBlock
  */
-public class StatefulBlock extends Block {
+public abstract class StatefulBlockWithBlockEntity extends BlockWithBlockEntity {
 
-	public StatefulBlock(int id, Material material) {
+	protected StatefulBlockWithBlockEntity(int id, Material material) {
 		super(id, material);
 	}
 
-	public StatefulBlock(int id, int sprite, Material material) {
+	protected StatefulBlockWithBlockEntity(int id, int sprite, Material material) {
 		super(id, sprite, material);
 	}
 
@@ -86,6 +84,28 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
+	public int getLightColor(WorldView world, int x, int y, int z) {
+		return this.getLightColor(world, BlockPos.pooled(x, y, z));
+	}
+
+	@Override
+	public int getLightColor(WorldView world, BlockPos pos) {
+		return super.getLightColor(world, pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	@Deprecated
+	public float getAmbientOcclusionLight(WorldView world, int x, int y, int z) {
+		return this.getAmbientOcclusionLight(world, BlockPos.pooled(x, y, z));
+	}
+
+	@Override
+	public float getAmbientOcclusionLight(WorldView world, BlockPos pos) {
+		return super.getAmbientOcclusionLight(world, pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	@Deprecated
 	public boolean hasSignal(WorldView world, int x, int y, int z, int dir) {
 		return this.hasSignal(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), Direction.byData3d(dir));
 	}
@@ -97,12 +117,34 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
-	public boolean hasDirectSignal(World world, int x, int y, int z, int dir) {
+	public float getMiningTime(World world, int x, int y, int z) {
+		return this.getMiningTime(world, BlockPos.pooled(x, y, z));
+	}
+
+	@Override
+	public float getMiningTime(World world, BlockPos pos) {
+		return super.getMiningTime(world, pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	@Deprecated
+	public float getMiningSpeed(PlayerEntity player, World world, int x, int y, int z) {
+		return this.getMiningSpeed(player, world, BlockPos.pooled(x, y, z));
+	}
+
+	@Override
+	public float getMiningSpeed(PlayerEntity player, World world, BlockPos pos) {
+		return super.getMiningSpeed(player, world, pos.x(), pos.y(), pos.z());
+	}
+
+	@Override
+	@Deprecated
+	public boolean hasDirectSignal(WorldView world, int x, int y, int z, int dir) {
 		return this.hasDirectSignal(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), Direction.byData3d(dir));
 	}
 
 	@Override
-	public boolean hasDirectSignal(World world, BlockPos pos, BlockState state, Direction dir) {
+	public boolean hasDirectSignal(WorldView world, BlockPos pos, BlockState state, Direction dir) {
 		return super.hasDirectSignal(world, pos.x(), pos.y(), pos.z(), dir.data3d());
 	}
 
@@ -141,13 +183,13 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
-	public void addCollisions(World world, int x, int y, int z, Box shape, ArrayList collisions) {
-		this.addCollisions(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), shape, collisions);
+	public void addCollisions(World world, int x, int y, int z, Box shape, List collisions, Entity entity) {
+		this.addCollisions(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), shape, collisions, entity);
 	}
 
 	@Override
-	public void addCollisions(World world, BlockPos pos, BlockState state, Box shape, List<Box> collisions) {
-		super.addCollisions(world, pos.x(), pos.y(), pos.z(), shape, collisions instanceof ArrayList ? (ArrayList<Box>) collisions : new ArrayList<>(collisions));
+	public void addCollisions(World world, BlockPos pos, BlockState state, Box shape, List<Box> collisions, Entity entity) {
+		super.addCollisions(world, pos.x(), pos.y(), pos.z(), shape, collisions, entity);
 	}
 
 	@Override
@@ -159,6 +201,17 @@ public class StatefulBlock extends Block {
 	@Override
 	public HitResult rayTrace(World world, BlockPos pos, Vec3d from, Vec3d to) {
 		return super.rayTrace(world, pos.x(), pos.y(), pos.z(), from, to);
+	}
+
+	@Override
+	@Deprecated
+	public boolean canWalkThrough(WorldView world, int x, int y, int z) {
+		return this.canWalkThrough(world, BlockPos.pooled(x, y, z));
+	}
+
+	@Override
+	public boolean canWalkThrough(WorldView world, BlockPos pos) {
+		return super.canWalkThrough(world, pos.x(), pos.y(), pos.z());
 	}
 
 	@Override
@@ -207,13 +260,13 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
-	public void onRemoved(World world, int x, int y, int z) {
-		this.onRemoved(world, BlockPos.pooled(x, y, z), this.defaultState()); // TODO: is this ok? or should the BlockState arg just be removed?
+	public void onRemoved(World world, int x, int y, int z, int block, int metadata) {
+		this.onRemoved(world, BlockPos.pooled(x, y, z), Block.BY_ID[block].getStateFromMetadata(metadata));
 	}
 
 	@Override
 	public void onRemoved(World world, BlockPos pos, BlockState state) {
-		super.onRemoved(world, pos.x(), pos.y(), pos.z());
+		super.onRemoved(world, pos.x(), pos.y(), pos.z(), state.getBlock().id, state.getBlock().getMetadataFromState(state));
 	}
 
 	@Override
@@ -239,31 +292,31 @@ public class StatefulBlock extends Block {
 	}
 
 	@Override
-	// Block::dropItems(World, int, int, int, int) is final!
-	public final void dropItems(World world, BlockPos pos, BlockState state) {
-		this.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state));
+	// Block::dropItems(World, int, int, int, int, int) is final!
+	public final void dropItems(World world, BlockPos pos, BlockState state, int fortuneLevel) {
+		this.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state), fortuneLevel);
 	}
 
 	@Override
 	@Deprecated
-	public void dropItems(World world, int x, int y, int z, int metadata, float luck) {
-		this.dropItems(world, BlockPos.pooled(x, y, z), this.getStateFromMetadata(metadata), luck);
+	public void dropItems(World world, int x, int y, int z, int metadata, float luck, int fortuneLevel) {
+		this.dropItems(world, BlockPos.pooled(x, y, z), this.getStateFromMetadata(metadata), luck, fortuneLevel);
 	}
 
 	@Override
-	public void dropItems(World world, BlockPos pos, BlockState state, float luck) {
-		super.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state), luck);
+	public void dropItems(World world, BlockPos pos, BlockState state, float luck, int fortuneLevel) {
+		super.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state), luck, fortuneLevel);
 	}
 
 	@Override
 	@Deprecated
-	public boolean use(World world, int x, int y, int z, PlayerEntity player) {
-		return this.use(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), player);
+	public boolean use(World world, int x, int y, int z, PlayerEntity player, int face, float faceX, float faceY, float faceZ) {
+		return this.use(world, BlockPos.pooled(x, y, z), world.getBlockState(x, y, z), player, Direction.byData3d(face), faceX, faceY, faceZ);
 	}
 
 	@Override
-	public boolean use(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		return super.use(world, pos.x(), pos.y(), pos.z(), player);
+	public boolean use(World world, BlockPos pos, BlockState state, PlayerEntity player, Direction face, float faceX, float faceY, float faceZ) {
+		return super.use(world, pos.x(), pos.y(), pos.z(), player, face.data3d(), faceX, faceY, faceZ);
 	}
 
 	@Override
