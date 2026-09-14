@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.ResourceKeys;
 import net.ornithemc.osl.registries.impl.registry.SimpleRegistry;
@@ -70,7 +71,7 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 
 	private String constructLegacyKey(NamespacedIdentifier identifier) {
 		return this.legacyKeys.computeIfAbsent(identifier, key -> {
-			if (identifier.namespace().equals(NamespacedIdentifiers.DEFAULT_NAMESPACE)) {
+			if (identifier.namespace().equals(NamespacedIdentifiers.MINECRAFT_NAMESPACE)) {
 				String legacyKey = VanillaEntityTypes.IDENTIFIERS.inverse().get(identifier.identifier());
 
 				if (legacyKey != null) {
@@ -78,7 +79,7 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 				}
 			}
 
-			return identifier.toString();
+			return LegacyStringIds.fromIdentifier(identifier);
 		});
 	}
 
@@ -87,27 +88,10 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 			String identifier = VanillaEntityTypes.IDENTIFIERS.get(legacyKey);
 
 			if (identifier != null) {
-				return NamespacedIdentifiers.from(identifier);
+				return NamespacedIdentifiers.from(NamespacedIdentifiers.MINECRAFT_NAMESPACE, identifier);
 			}
 
-			StringBuilder sb = new StringBuilder();
-
-			// convert PascalCase to snake_case
-			for (int i = 0; i < legacyKey.length(); i++) {
-				char chr = legacyKey.charAt(i);
-
-				if (Character.isUpperCase(chr)) {
-					chr = Character.toLowerCase(chr);
-
-					if (i != 0) {
-						sb.append('_');
-					}
-				}
-
-				sb.append(chr);
-			}
-
-			return NamespacedIdentifiers.from(sb.toString());
+			return LegacyStringIds.toIdentifier(legacyKey);
 		});
 	}
 

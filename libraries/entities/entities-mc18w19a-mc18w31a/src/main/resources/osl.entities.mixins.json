@@ -4,6 +4,7 @@
 	"package": "net.ornithemc.osl.entities.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.EntityIdFixMixin",
 		"common.EntityTypeMixin"
 	],
 	"client": [
