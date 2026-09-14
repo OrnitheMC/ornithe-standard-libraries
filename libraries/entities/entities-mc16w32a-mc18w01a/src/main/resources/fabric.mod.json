@@ -11,6 +11,7 @@
   "mixins": [
     "osl.entities.mixins.json"
   ],
+  "accessWidener": "osl.entities.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.11-alpha.16.32.a \u003c\u003d1.13-alpha.18.1.a",

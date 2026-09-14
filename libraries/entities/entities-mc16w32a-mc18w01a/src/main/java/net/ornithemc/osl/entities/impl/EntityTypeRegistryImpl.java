@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.entities.api.EntityEvents;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
@@ -57,7 +58,13 @@ public final class EntityTypeRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, identifier, type);
+			type = Registry.register(REGISTRY, identifier, type);
+
+			if (type != null) {
+				setName(type);
+			}
+
+			return type;
 		}
 	}
 
@@ -65,7 +72,38 @@ public final class EntityTypeRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, key, type);
+			type = Registry.register(REGISTRY, key, type);
+
+			if (type != null) {
+				setName(type);
+			}
+
+			return type;
+		}
+	}
+
+	private static void setName(Class<? extends Entity> type) {
+		registerName(type, Util.makeTranslationKey(REGISTRY.getIdentifier(type)));
+	}
+
+	public static void registerName(Class<? extends Entity> type, String name) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			NamespacedIdentifier identifier = REGISTRY.getIdentifier(type);
+			int id = REGISTRY.getId(type);
+
+			while (Entities.NAMES.size() <= id) {
+				Entities.NAMES.add(null);
+			}
+
+			String registeredName = Entities.NAMES.get(id);
+
+			if (registeredName != null) {
+				throw new IllegalStateException("Name for entity type " + identifier + " was already set (" + registeredName + ")!");
+			} else {
+				Entities.NAMES.set(id, name);
+			}
 		}
 	}
 
@@ -81,6 +119,7 @@ public final class EntityTypeRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
+			// get a Vanilla Identifier since we need it anyway for the SpawnEggData constructor
 			Identifier identifier = EntityTypeIdRegistry.REGISTRY.getKey(type);
 
 			if (identifier == null) {
