@@ -238,11 +238,10 @@ public class StatefulBlock extends Block {
 		super.onEntityCollision(world, pos.x(), pos.y(), pos.z(), entity);
 	}
 
-	@Override
-	// Block::dropItems(World, int, int, int, int) is final!
-	public final void dropItems(World world, BlockPos pos, BlockState state) {
-		this.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state));
-	}
+//	@Override
+//	public final void dropItems(World world, BlockPos pos, BlockState state) {
+//		this.dropItems(world, pos.x(), pos.y(), pos.z(), this.getMetadataFromState(state));
+//	}
 
 	@Override
 	@Deprecated
