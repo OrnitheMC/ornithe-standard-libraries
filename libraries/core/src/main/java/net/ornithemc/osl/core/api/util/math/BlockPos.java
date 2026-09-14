@@ -233,7 +233,11 @@ public class BlockPos implements Comparable<BlockPos> {
 		}
 
 		public Mutable(int x, int y, int z) {
-			super(x, y, z);
+			super(0, 0, 0);
+
+			this.x = x;
+			this.y = y;
+			this.z = z;
 		}
 
 		@Override
