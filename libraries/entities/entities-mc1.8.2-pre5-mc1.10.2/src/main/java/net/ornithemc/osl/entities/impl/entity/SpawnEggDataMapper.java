@@ -11,6 +11,7 @@ import net.minecraft.entity.Entities.SpawnEggData;
 
 import net.ornithemc.osl.entities.impl.mixin.common.SpawnEggDataAccessOld;
 import net.ornithemc.osl.registries.api.registry.sync.IdMapper;
+import net.ornithemc.osl.registries.api.registry.sync.IntegerMapMapper;
 import net.ornithemc.osl.registries.api.registry.sync.RegistryMappings;
 
 public class SpawnEggDataMapper implements IdMapper {
@@ -19,12 +20,16 @@ public class SpawnEggDataMapper implements IdMapper {
 		return new SpawnEggDataMapper(spawnEggData);
 	}
 
+	private final IdMapper registryMapper;
+
 	private final Map<Integer, SpawnEggData> spawnEggData;
 	private final Set<SpawnEggData> missing;
 
 	private boolean applied;
 
 	private SpawnEggDataMapper(Map<Integer, SpawnEggData> spawnEggData) {
+		this.registryMapper = IntegerMapMapper.of(spawnEggData);
+
 		this.spawnEggData = spawnEggData;
 		this.missing = Collections.newSetFromMap(new IdentityHashMap<>());
 	}
@@ -34,11 +39,15 @@ public class SpawnEggDataMapper implements IdMapper {
 		this.missing.clear();
 		this.fixSpawnEggData(mappings::remap, true);
 
+		this.registryMapper.apply(mappings);
+
 		this.applied = true;
 	}
 
 	@Override
 	public void undo(RegistryMappings mappings) {
+		this.registryMapper.undo(mappings);
+
 		if (this.applied) {
 			this.fixSpawnEggData(mappings::unmap, false);
 			this.missing.clear();
