@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.impl.block;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.render.texture.Sprite;
@@ -63,21 +66,25 @@ public interface BlockExtensionImpl extends BlockExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColor(BlockState state) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColorTint(WorldView world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default Sprite getSprite(BlockState state, Direction face) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getLightColor(WorldView world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
@@ -113,11 +120,13 @@ public interface BlockExtensionImpl extends BlockExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default Box getOutlineShape(World world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		throw new AbstractMethodError();
 	}

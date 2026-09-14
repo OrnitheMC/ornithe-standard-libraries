@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.api.block;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -61,44 +64,52 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public int getColor(int metadata) {
 		return this.getColor(this.getStateFromMetadata(metadata));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColor(BlockState state) {
 		return super.getColor(this.getMetadataFromState(state));
 	}
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public int getColor(WorldView world, int x, int y, int z) {
 		return this.getColorTint(world, BlockPos.pooled(x, y, z));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColorTint(WorldView world, BlockPos pos) {
 		return super.getColor(world, pos.x(), pos.y(), pos.z());
 	}
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public Sprite getSprite(int face, int metadata) {
 		return this.getSprite(this.getStateFromMetadata(metadata), Direction.byData3d(face));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Sprite getSprite(BlockState state, Direction face) {
 		return super.getSprite(face.data3d(), this.getMetadataFromState(state));
 	}
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public int getLightColor(WorldView world, int x, int y, int z) {
 		return this.getLightColor(world, BlockPos.pooled(x, y, z));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getLightColor(WorldView world, BlockPos pos) {
 		return super.getLightColor(world, pos.x(), pos.y(), pos.z());
 	}
@@ -160,22 +171,26 @@ public class StatefulBlock extends Block {
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, int x, int y, int z) {
 		return this.getOutlineShape(world, BlockPos.pooled(x, y, z));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, BlockPos pos) {
 		return super.getOutlineShape(world, pos.x(), pos.y(), pos.z());
 	}
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderFace(WorldView world, int x, int y, int z, int face) {
 		return this.shouldRenderFace(world, BlockPos.pooled(x, y, z), Direction.byData3d(face));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		return super.shouldRenderFace(world, pos.x(), pos.y(), pos.z(), face.data3d());
 	}

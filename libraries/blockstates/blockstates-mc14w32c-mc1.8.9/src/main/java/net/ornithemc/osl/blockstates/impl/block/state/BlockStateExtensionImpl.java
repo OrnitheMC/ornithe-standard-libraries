@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.impl.block.state;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -47,6 +50,7 @@ public interface BlockStateExtensionImpl extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default boolean isTranslucent() {
 		throw new AbstractMethodError();
 	}
@@ -82,21 +86,25 @@ public interface BlockStateExtensionImpl extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColor() {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColorTint(WorldView world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getLightColor(WorldView world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default float getAmbientOcclusionLight() {
 		throw new AbstractMethodError();
 	}
@@ -157,16 +165,19 @@ public interface BlockStateExtensionImpl extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default BlockState getStateForItemModel() {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default Box getOutlineShape(World world, BlockPos pos) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		throw new AbstractMethodError();
 	}

@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.api.block;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.render.texture.Sprite;
@@ -43,12 +46,16 @@ public interface BlockExtension {
 
 	MapColor getMapColor(BlockState state);
 
+	@Environment(EnvType.CLIENT)
 	int getColor(BlockState state);
 
+	@Environment(EnvType.CLIENT)
 	int getColorTint(WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	Sprite getSprite(BlockState state, Direction face);
 
+	@Environment(EnvType.CLIENT)
 	int getLightColor(WorldView world, BlockPos pos);
 
 	int getSignal(WorldView world, BlockPos pos, BlockState state, Direction dir);
@@ -63,8 +70,10 @@ public interface BlockExtension {
 
 	BlockState resolveVirtualProperties(BlockState state, WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	Box getOutlineShape(World world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face);
 
 	Box getCollisionShape(World world, BlockPos pos, BlockState state);

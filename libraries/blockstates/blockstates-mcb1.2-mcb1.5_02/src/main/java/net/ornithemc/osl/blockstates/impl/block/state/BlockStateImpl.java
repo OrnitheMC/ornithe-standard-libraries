@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.impl.block.state;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -77,11 +80,13 @@ public class BlockStateImpl extends AbstractState<Block, BlockState> implements 
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColorTint(WorldView world, BlockPos pos) {
 		return this.owner.getColorTint(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getSprite(Direction face) {
 		return this.owner.getSprite(this, face);
 	}
@@ -117,6 +122,7 @@ public class BlockStateImpl extends AbstractState<Block, BlockState> implements 
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, BlockPos pos) {
 		return this.owner.getOutlineShape(world, pos);
 	}

@@ -2,6 +2,9 @@ package net.ornithemc.osl.blockstates.api.block.state;
 
 import java.util.List;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.mob.player.PlayerEntity;
@@ -36,14 +39,18 @@ public interface BlockProperties {
 
 	int getRenderType();
 
+	@Environment(EnvType.CLIENT)
 	int getColor();
 
+	@Environment(EnvType.CLIENT)
 	int getColorTint(WorldView world, BlockPos pos);
 
 	int getSprite(Direction face);
 
+	@Environment(EnvType.CLIENT)
 	int getLightColor(WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	float getAmbientOcclusionLight(WorldView world, BlockPos pos);
 
 	boolean isSignalSource();
@@ -60,8 +67,10 @@ public interface BlockProperties {
 
 	BlockState resolveVirtualProperties(WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	Box getOutlineShape(World world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face);
 
 	boolean isSolidRender();

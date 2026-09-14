@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.player.PlayerEntity;
@@ -117,17 +120,21 @@ public class BlockMixin implements BlockExtension {
 	}
 
 	@Shadow
+	@Environment(EnvType.CLIENT)
 	public int getColor(int metadata) { return 0; }
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColor(BlockState state) {
 		return this.getColor(this.getMetadataFromState(state));
 	}
 
 	@Shadow
+	@Environment(EnvType.CLIENT)
 	public int getColor(WorldView world, int x, int y, int z) { return 0; }
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColorTint(WorldView world, BlockPos pos) {
 		return this.getColor(world, pos.x(), pos.y(), pos.z());
 	}
@@ -162,17 +169,21 @@ public class BlockMixin implements BlockExtension {
 	}
 
 	@Shadow
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, int x, int y, int z) { return null; }
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, BlockPos pos) {
 		return this.getOutlineShape(world, pos.x(), pos.y(), pos.z());
 	}
 
 	@Shadow
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderFace(WorldView world, int x, int y, int z, int face) { return false; }
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		return this.shouldRenderFace(world, pos.x(), pos.y(), pos.z(), face.data3d());
 	}

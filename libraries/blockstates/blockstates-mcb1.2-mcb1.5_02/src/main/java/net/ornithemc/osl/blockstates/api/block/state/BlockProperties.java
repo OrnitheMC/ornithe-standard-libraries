@@ -2,6 +2,9 @@ package net.ornithemc.osl.blockstates.api.block.state;
 
 import java.util.List;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.mob.player.PlayerEntity;
 import net.minecraft.util.math.Box;
@@ -31,8 +34,10 @@ public interface BlockProperties {
 
 	int getRenderType();
 
+	@Environment(EnvType.CLIENT)
 	int getColorTint(WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	int getSprite(Direction face);
 
 	boolean isSolid();
@@ -47,6 +52,7 @@ public interface BlockProperties {
 
 	BlockState resolveVirtualProperties(WorldView world, BlockPos pos);
 
+	@Environment(EnvType.CLIENT)
 	Box getOutlineShape(World world, BlockPos pos);
 
 	boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face);

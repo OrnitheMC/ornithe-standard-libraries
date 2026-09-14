@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithBlockEntity;
 import net.minecraft.block.material.Material;
@@ -52,22 +55,26 @@ public abstract class StatefulBlockWithBlockEntity extends BlockWithBlockEntity 
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public int getColor(WorldView world, int x, int y, int z) {
 		return this.getColorTint(world, BlockPos.pooled(x, y, z));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColorTint(WorldView world, BlockPos pos) {
 		return super.getColor(world, pos.x(), pos.y(), pos.z());
 	}
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public int getSprite(int face, int metadata) {
 		return this.getSprite(this.getStateFromMetadata(metadata), Direction.byData3d(face));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getSprite(BlockState state, Direction face) {
 		return super.getSprite(face.data3d(), this.getMetadataFromState(state));
 	}
@@ -96,11 +103,13 @@ public abstract class StatefulBlockWithBlockEntity extends BlockWithBlockEntity 
 
 	@Override
 	@Deprecated
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, int x, int y, int z) {
 		return this.getOutlineShape(world, BlockPos.pooled(x, y, z));
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, BlockPos pos) {
 		return super.getOutlineShape(world, pos.x(), pos.y(), pos.z());
 	}

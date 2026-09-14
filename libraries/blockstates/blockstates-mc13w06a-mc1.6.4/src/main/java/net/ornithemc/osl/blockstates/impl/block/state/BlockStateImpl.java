@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.impl.block.state;
 import java.util.List;
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -89,26 +92,31 @@ public class BlockStateImpl extends AbstractState<Block, BlockState> implements 
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColor() {
 		return this.owner.getColor(this);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getColorTint(WorldView world, BlockPos pos) {
 		return this.owner.getColorTint(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Sprite getSprite(Direction face) {
 		return this.owner.getSprite(this, face);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public int getLightColor(WorldView world, BlockPos pos) {
 		return this.owner.getLightColor(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public float getAmbientOcclusionLight(WorldView world, BlockPos pos) {
 		return this.owner.getAmbientOcclusionLight(world, pos);
 	}
@@ -164,11 +172,13 @@ public class BlockStateImpl extends AbstractState<Block, BlockState> implements 
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public Box getOutlineShape(World world, BlockPos pos) {
 		return this.owner.getOutlineShape(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		return this.owner.shouldRenderFace(world, pos, face);
 	}

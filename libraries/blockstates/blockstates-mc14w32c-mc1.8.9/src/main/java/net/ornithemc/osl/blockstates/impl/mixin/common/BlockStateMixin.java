@@ -6,6 +6,9 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -54,6 +57,7 @@ public interface BlockStateMixin extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default boolean isTranslucent() {
 		return this.getBlock().isTranslucent();
 	}
@@ -89,21 +93,25 @@ public interface BlockStateMixin extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColor() {
 		return this.getBlock().getColor((BlockState) this);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getColorTint(WorldView world, BlockPos pos) {
 		return this.getBlock().getColor(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default int getLightColor(WorldView world, BlockPos pos) {
 		return this.getBlock().getLightColor(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default float getAmbientOcclusionLight() {
 		return this.getBlock().getAmbientOcclusionLight();
 	}
@@ -164,16 +172,19 @@ public interface BlockStateMixin extends BlockStateExtension {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default BlockState getStateForItemModel() {
 		return this.getBlock().getStateForRendering((BlockState) this);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default Box getOutlineShape(World world, BlockPos pos) {
 		return this.getBlock().getOutlineShape(world, pos);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	default boolean shouldRenderFace(WorldView world, BlockPos pos, Direction face) {
 		return this.getBlock().shouldRenderFace(world, pos, face);
 	}
