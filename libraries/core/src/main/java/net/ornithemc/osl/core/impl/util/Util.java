@@ -8,6 +8,46 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
 public final class Util {
 
+	public static String pascalCaseToSnakeCase(String s) {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < s.length(); i++) {
+			char chr = s.charAt(i);
+
+			if (Character.isUpperCase(chr)) {
+				chr = Character.toLowerCase(chr);
+
+				// add _ if prev char is not upper case (this keeps abbreviations like TNT together)
+				if (i != 0 && !Character.isUpperCase(s.charAt(i - 1))) {
+					sb.append('_');
+				}
+			}
+
+			sb.append(chr);
+		}
+
+		return sb.toString();
+	}
+
+	public static String snakeCaseToPascalCase(String s) {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < s.length(); i++) {
+			char chr = s.charAt(i);
+
+			if (chr != '_') {
+				// convert first char and every char after _
+				if (i == 0 || s.charAt(i - 1) == '_') {
+					chr = Character.toUpperCase(chr);
+				}
+
+				sb.append(chr);
+			}
+		}
+
+		return sb.toString();
+	}
+
 	public static String makeTranslationKey(NamespacedIdentifier identifier) {
 		return identifier.namespace() + "." + identifier.identifier().replace('/', '.');
 	}
