@@ -17,8 +17,9 @@ public final class Util {
 			if (Character.isUpperCase(chr)) {
 				chr = Character.toLowerCase(chr);
 
-				// add _ if prev char is not upper case (this keeps abbreviations like TNT together)
-				if (i != 0 && !Character.isUpperCase(s.charAt(i - 1))) {
+				// add _ if prev char is not upper case or if the next char is not upper case
+				// (this keeps abbreviations like TNT together in IDs like TNTMinecart)
+				if (i != 0 && (!Character.isUpperCase(s.charAt(i - 1)) || (i != s.length() - 1 && !Character.isUpperCase(s.charAt(i + 1))))) {
 					sb.append('_');
 				}
 			}
