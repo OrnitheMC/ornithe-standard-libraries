@@ -23,7 +23,7 @@ public abstract class ModRecipesProvider extends RecipesProvider {
     public void run(HashCache cache) throws IOException {
         Path path = this.generator.getOutput();
         Set<Identifier> set = Sets.newHashSet();
-        this.buildRecipes((c_23159014) -> {
+        this.generateRecipes((c_23159014) -> {
             if (!set.add(c_23159014.m_80989661())) {
                 throw new IllegalStateException("Duplicate recipe " + c_23159014.m_80989661());
             } else {
@@ -37,7 +37,7 @@ public abstract class ModRecipesProvider extends RecipesProvider {
         });
     }
 
-    protected abstract void buildRecipes(Consumer<C_23159014> consumer);
+    protected abstract void generateRecipes(Consumer<C_23159014> consumer);
 
     @Override
     public String getName() {
