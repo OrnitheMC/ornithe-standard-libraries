@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-data-gen",
+  "version": "0.1.0-alpha.1+mc1.13-pre6-mc1.14.4",
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.datagen.impl.DataGeneratorInit"
+    ]
+  },
+  "mixins": [
+    "osl.data-gen.mixins.json"
+  ],
+  "accessWidener": "osl.data-gen.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.13-rc.6 \u003c\u003d1.14.4",
+    "osl-core": "\u003e\u003d0.8.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.1.0",
+    "osl-resource-loader": "\u003e\u003d0.8.0"
+  },
+  "name": "OSL Data Gen",
+  "description": "Data Generator api.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
