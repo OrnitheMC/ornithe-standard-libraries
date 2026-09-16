@@ -9,7 +9,7 @@ import net.minecraft.entity.Entities.SpawnEggData;
 public interface SpawnEggDataAccessNew {
 
 	@Invoker("<init>")
-	static SpawnEggData of(String legacyKey, int baseColor, int spotsColor) {
+	static SpawnEggData of(String legacyId, int baseColor, int spotsColor) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,10 +1,13 @@
 package net.ornithemc.osl.entities.impl;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.Entities.SpawnEggData;
 
-@FunctionalInterface
 public interface SpawnEggDataRegistry {
 
-	void register(Class<? extends Entity> type, int baseColor, int spotsColor);
+	void put(int id, String legacyId, int baseColor, int spotsColor);
+
+	boolean contains(int id, String legacyId);
+
+	SpawnEggData get(int id, String legacyId);
 
 }

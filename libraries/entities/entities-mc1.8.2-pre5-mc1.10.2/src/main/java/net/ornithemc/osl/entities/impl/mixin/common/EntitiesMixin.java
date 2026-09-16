@@ -19,8 +19,8 @@ public class EntitiesMixin {
 			value = "TAIL"
 		)
 	)
-	private static void osl$entities$register(Class<? extends Entity> type, String legacyKey, int id, CallbackInfo ci) {
-		EntityTypeRegistryImpl.REGISTRY.register(id, legacyKey, type);
+	private static void osl$entities$register(Class<? extends Entity> type, String legacyId, int id, CallbackInfo ci) {
+		EntityTypeRegistryImpl.REGISTRY.register(id, legacyId, type);
 	}
 
 	@Inject(

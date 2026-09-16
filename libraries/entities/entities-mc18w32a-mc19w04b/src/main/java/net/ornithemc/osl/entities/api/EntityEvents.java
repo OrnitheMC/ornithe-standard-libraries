@@ -1,6 +1,7 @@
 package net.ornithemc.osl.entities.api;
 
 import net.ornithemc.osl.core.api.events.Event;
+import net.ornithemc.osl.entities.api.entity.EntityTypes;
 
 /**
  * Events related to the entities lifecycle.
@@ -28,6 +29,7 @@ public final class EntityEvents {
 	 * </pre>
 	 * 
 	 * @see EntityTypeRegistry
+	 * @see EntityTypes
 	 */
 	public static final Event<Runnable> REGISTER_ENTITY_TYPES = Event.runnable();
 

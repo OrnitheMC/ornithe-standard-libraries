@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.entities.api.EntityEvents;
+import net.ornithemc.osl.entities.api.entity.EntityType;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
@@ -19,83 +20,85 @@ public final class EntityTypeRegistryImpl {
 	/*
 	 * Entities.SPAWN_EGG_DATA changes key type from Integer to String in 15w33a so we can't reference it directly.
 	 */
-	public static SpawnEggDataRegistry SPAWN_EGG_DATA_REGISTRY;
+	public static SpawnEggDataRegistry SPAWN_EGG_DATA;
 
 	private static boolean locked = true;
 
-	public static int getId(Class<? extends Entity> type) {
+	public static int getId(EntityType<?> type) {
 		return REGISTRY.getId(type);
 	}
 
-	public static NamespacedIdentifier getIdentifier(Class<? extends Entity> type) {
+	public static NamespacedIdentifier getIdentifier(EntityType<?> type) {
 		return REGISTRY.getIdentifier(type);
 	}
 
-	public static ResourceKey<Class<? extends Entity>> getKey(Class<? extends Entity> type) {
+	public static ResourceKey<EntityType<?>> getKey(EntityType<?> type) {
 		return REGISTRY.getKey(type);
 	}
 
-	public static String getLegacyKey(Class<? extends Entity> type) {
-		return REGISTRY.getLegacyKey(type);
+	public static String getLegacyId(Class<? extends Entity> type) {
+		return REGISTRY.getLegacyId(type);
 	}
 
-	public static Class<? extends Entity> getEntityType(int id) {
+	public static EntityType<?> getEntityType(int id) {
 		return REGISTRY.get(id);
 	}
 
-	public static Class<? extends Entity> getEntityType(NamespacedIdentifier identifier) {
+	public static EntityType<?> getEntityType(NamespacedIdentifier identifier) {
 		return REGISTRY.get(identifier);
 	}
 
-	public static Class<? extends Entity> getEntityType(ResourceKey<Class<? extends Entity>> key) {
+	public static EntityType<?> getEntityType(ResourceKey<EntityType<?>> key) {
 		return REGISTRY.get(key);
 	}
 
-	public static Class<? extends Entity> getEntityType(String legacyKey) {
-		return REGISTRY.get(legacyKey);
+	public static Class<? extends Entity> getEntityType(String legacyId) {
+		return REGISTRY.get(legacyId);
 	}
 
 	public static Set<NamespacedIdentifier> identifierSet() {
 		return REGISTRY.identifierSet();
 	}
 
-	public static Set<ResourceKey<Class<? extends Entity>>> keySet() {
+	public static Set<ResourceKey<EntityType<?>>> keySet() {
 		return REGISTRY.keySet();
 	}
 
-	public static Set<String> legacyKeySet() {
-		return REGISTRY.legacyKeySet();
+	public static Set<String> legacyIdSet() {
+		return REGISTRY.legacyIdSet();
 	}
 
-	public static <T extends Entity> Class<T> register(NamespacedIdentifier identifier, Class<T> type) {
+	public static <T extends Entity> EntityType<T> register(NamespacedIdentifier identifier, EntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, identifier, type);
+			return Registry.register(REGISTRY, identifier, type.build());
 		}
 	}
 
-	public static <T extends Entity> Class<T> register(ResourceKey<Class<? extends Entity>> key, Class<T> type) {
+	public static <T extends Entity> EntityType<T> register(ResourceKey<EntityType<?>> key, EntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, key, type);
+			return Registry.register(REGISTRY, key, type.build());
 		}
 	}
 
-	public static void registerSpawnEggData(NamespacedIdentifier identifier, int baseColor, int spotsColor) {
-		registerSpawnEggData(getEntityType(identifier), baseColor, spotsColor);
-	}
-
-	public static void registerSpawnEggData(ResourceKey<Class<? extends Entity>> key, int baseColor, int spotsColor) {
-		registerSpawnEggData(getEntityType(key), baseColor, spotsColor);
-	}
-
-	public static void registerSpawnEggData(Class<? extends Entity> type, int baseColor, int spotsColor) {
+	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			SPAWN_EGG_DATA_REGISTRY.register(type, baseColor, spotsColor);
+			int id = REGISTRY.getId(type);
+			String legacyId = REGISTRY.getLegacyId(type.getType());
+
+			if (id < 0) {
+				throw new IllegalArgumentException("Entity type " + type.getType().getSimpleName() + " is not registered!");
+			}
+			if (SPAWN_EGG_DATA.contains(id, legacyId)) {
+				throw new IllegalArgumentException("Duplicate entity type ID " + id + " in spawn egg data registry!");
+			}
+
+			SPAWN_EGG_DATA.put(id, legacyId, baseColor, spotsColor);
 		}
 	}
 

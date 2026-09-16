@@ -11,16 +11,18 @@ import net.minecraft.entity.Entity;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+import net.ornithemc.osl.entities.api.entity.EntityType;
+import net.ornithemc.osl.entities.impl.entity.EntityTypeImpl;
 import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.ResourceKeys;
 import net.ornithemc.osl.registries.impl.registry.SimpleRegistry;
 
-public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends Entity>> {
+public class WrappedEntityTypeRegistry extends SimpleRegistry<EntityType<?>> {
 
 	private static final boolean VANILLA_TRACKS_KEY_TO_ID = MinecraftVersion.resolve().compareTo("12w06a") >= 0;
 
-	private final BiMap<NamespacedIdentifier, String> legacyKeys = HashBiMap.create();
+	private final BiMap<NamespacedIdentifier, String> legacyIds = HashBiMap.create();
 
 	private boolean skipEntitiesRegister;
 
@@ -28,9 +30,10 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 		super(identifier);
 	}
 
-	public void register(int id, String legacyKey, Class<? extends Entity> type) {
-		NamespacedIdentifier identifier = this.constructIdentifier(legacyKey);
-		ResourceKey<Class<? extends Entity>> key = ResourceKeys.from(this.identifier(), identifier);
+	public void register(int id, String legacyId, Class<? extends Entity> classType) {
+		NamespacedIdentifier identifier = this.constructIdentifier(legacyId);
+		ResourceKey<EntityType<?>> key = ResourceKeys.from(this.identifier(), identifier);
+		EntityType<?> type = EntityTypeImpl.Builder.of(classType).build();
 
 		this.skipEntitiesRegister = true;
 		this.register(id, key, type);
@@ -38,36 +41,37 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 	}
 
 	@Override
-	public <V extends Class<? extends Entity>> V register(int id, ResourceKey<Class<? extends Entity>> key, V type) {
+	public <V extends EntityType<?>> V register(int id, ResourceKey<EntityType<?>> key, V type) {
 		type = super.register(id, key, type);
 
 		if (!this.skipEntitiesRegister) {
 			NamespacedIdentifier identifier = key.identifier();
-			String legacyKey = this.constructLegacyKey(identifier);
+			String legacyId = this.constructLegacyId(identifier);
+			Class<? extends Entity> classType = type.getType();
 
-			if (Entities.KEY_TO_TYPE.containsKey(legacyKey)) {
-				throw new IllegalStateException("Duplicate legacy Entity type key " + legacyKey);
+			if (Entities.KEY_TO_TYPE.containsKey(legacyId)) {
+				throw new IllegalStateException("Duplicate legacy Entity type ID " + legacyId);
 			}
 
-			Entities.KEY_TO_TYPE.put(legacyKey, type);
-			Entities.TYPE_TO_KEY.put(type, legacyKey);
-			Entities.ID_TO_TYPE.put(id, type);
-			Entities.TYPE_TO_ID.put(type, id);
+			Entities.KEY_TO_TYPE.put(legacyId, classType);
+			Entities.TYPE_TO_KEY.put(classType, legacyId);
+			Entities.ID_TO_TYPE.put(id, classType);
+			Entities.TYPE_TO_ID.put(classType, id);
 			if (VANILLA_TRACKS_KEY_TO_ID) {
-				Entities.KEY_TO_ID.put(legacyKey, id);
+				Entities.KEY_TO_ID.put(legacyId, id);
 			}
 		}
 
 		return type;
 	}
 
-	private String constructLegacyKey(NamespacedIdentifier identifier) {
-		return this.legacyKeys.computeIfAbsent(identifier, key -> {
+	private String constructLegacyId(NamespacedIdentifier identifier) {
+		return this.legacyIds.computeIfAbsent(identifier, key -> {
 			if (identifier.namespace().equals(NamespacedIdentifiers.MINECRAFT_NAMESPACE)) {
-				String legacyKey = VanillaEntityTypes.IDENTIFIERS.inverse().get(identifier.identifier());
+				String legacyId = VanillaEntityTypes.IDENTIFIERS.inverse().get(identifier.identifier());
 
-				if (legacyKey != null) {
-					return legacyKey;
+				if (legacyId != null) {
+					return legacyId;
 				}
 			}
 
@@ -75,30 +79,28 @@ public class WrappedEntityTypeRegistry extends SimpleRegistry<Class<? extends En
 		});
 	}
 
-	private NamespacedIdentifier constructIdentifier(String legacyKey) {
-		return this.legacyKeys.inverse().computeIfAbsent(legacyKey, key -> {
-			String identifier = VanillaEntityTypes.IDENTIFIERS.get(legacyKey);
+	private NamespacedIdentifier constructIdentifier(String legacyId) {
+		return this.legacyIds.inverse().computeIfAbsent(legacyId, key -> {
+			String identifier = VanillaEntityTypes.IDENTIFIERS.get(legacyId);
 
 			if (identifier != null) {
 				return NamespacedIdentifiers.from(NamespacedIdentifiers.MINECRAFT_NAMESPACE, identifier);
 			}
 
-			return LegacyStringIds.toIdentifier(legacyKey);
+			return LegacyStringIds.toIdentifier(legacyId);
 		});
 	}
 
-	public Class<? extends Entity> get(String legacyKey) {
-		NamespacedIdentifier identifier = this.legacyKeys.inverse().get(legacyKey);
-		return identifier == null ? null : this.get(identifier);
+	public Class<? extends Entity> get(String legacyId) {
+		return Entities.KEY_TO_TYPE.get(legacyId);
 	}
 
-	public String getLegacyKey(Class<? extends Entity> type) {
-		NamespacedIdentifier identifier = this.getIdentifier(type);
-		return identifier == null ? null : this.legacyKeys.get(identifier);
+	public String getLegacyId(Class<? extends Entity> type) {
+		return Entities.TYPE_TO_KEY.get(type);
 	}
 
-	public Set<String> legacyKeySet() {
-		return this.legacyKeys.values();
+	public Set<String> legacyIdSet() {
+		return this.legacyIds.values();
 	}
 
 	@Override

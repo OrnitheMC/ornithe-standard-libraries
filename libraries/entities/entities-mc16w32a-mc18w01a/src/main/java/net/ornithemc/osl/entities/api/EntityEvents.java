@@ -1,6 +1,7 @@
 package net.ornithemc.osl.entities.api;
 
 import net.ornithemc.osl.core.api.events.Event;
+import net.ornithemc.osl.entities.api.entity.EntityTypes;
 
 /**
  * Events related to the entities lifecycle.
@@ -22,12 +23,13 @@ public final class EntityEvents {
 	 * <pre>
 	 * {@code
 	 * EntityEvents.REGISTER_ENTITY_TYPES.register(() -> {
-	 * 	EntityTypeRegistry.register(NamespacedIdentifiers.from("example", "cookie_monster"), CookieMonsterEntity.class);
+	 * 	EntityTypeRegistry.register(NamespacedIdentifiers.from("example", "cookie_monster"), EntityTypes.builder(CookieMonsterEntity.class, CookieMonsterEntity::new));
 	 * });
 	 * }
 	 * </pre>
 	 * 
 	 * @see EntityTypeRegistry
+	 * @see EntityTypes
 	 */
 	public static final Event<Runnable> REGISTER_ENTITY_TYPES = Event.runnable();
 

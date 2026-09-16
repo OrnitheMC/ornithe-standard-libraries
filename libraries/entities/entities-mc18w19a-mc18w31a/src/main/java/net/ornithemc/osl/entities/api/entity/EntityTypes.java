@@ -1,4 +1,4 @@
-package net.ornithemc.osl.entities.api;
+package net.ornithemc.osl.entities.api.entity;
 
 import java.util.function.Function;
 

@@ -8,123 +8,92 @@ import net.minecraft.entity.Entity;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
-import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.entities.api.EntityEvents;
+import net.ornithemc.osl.entities.api.entity.EntityType;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.impl.registry.VanillaRegistries;
+import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 
 public final class EntityTypeRegistryImpl {
 
-	public static final Registry<Class<? extends Entity>> REGISTRY = VanillaRegistries.registerSimple(RegistryKeys.ENTITY_TYPE, EntityTypeIdRegistry.REGISTRY, () -> Entities.REGISTRY);
+	public static final WrappedEntityTypeRegistry REGISTRY = RegistriesImpl.register(RegistryKeys.ENTITY_TYPE, new WrappedEntityTypeRegistry(RegistryKeys.ENTITY_TYPE.identifier()), () -> Entities.REGISTRY.getClass());
 
 	private static boolean locked = true;
 
-	public static int getId(Class<? extends Entity> type) {
+	public static int getId(EntityType<?> type) {
 		return REGISTRY.getId(type);
 	}
 
-	public static NamespacedIdentifier getIdentifier(Class<? extends Entity> type) {
+	public static NamespacedIdentifier getIdentifier(EntityType<?> type) {
 		return REGISTRY.getIdentifier(type);
 	}
 
-	public static ResourceKey<Class<? extends Entity>> getKey(Class<? extends Entity> type) {
+	public static ResourceKey<EntityType<?>> getKey(EntityType<?> type) {
 		return REGISTRY.getKey(type);
 	}
 
-	public static Class<? extends Entity> getEntityType(int id) {
+	public static String getLegacyId(Class<? extends Entity> type) {
+		return REGISTRY.getLegacyId(type);
+	}
+
+	public static EntityType<?> getEntityType(int id) {
 		return REGISTRY.get(id);
 	}
 
-	public static Class<? extends Entity> getEntityType(NamespacedIdentifier identifier) {
+	public static EntityType<?> getEntityType(NamespacedIdentifier identifier) {
 		return REGISTRY.get(identifier);
 	}
 
-	public static Class<? extends Entity> getEntityType(ResourceKey<Class<? extends Entity>> key) {
+	public static EntityType<?> getEntityType(ResourceKey<EntityType<?>> key) {
 		return REGISTRY.get(key);
+	}
+
+	public static Class<? extends Entity> getEntityType(String legacyId) {
+		return REGISTRY.get(legacyId);
 	}
 
 	public static Set<NamespacedIdentifier> identifierSet() {
 		return REGISTRY.identifierSet();
 	}
 
-	public static Set<ResourceKey<Class<? extends Entity>>> keySet() {
+	public static Set<ResourceKey<EntityType<?>>> keySet() {
 		return REGISTRY.keySet();
 	}
 
-	public static <T extends Entity> Class<T> register(NamespacedIdentifier identifier, Class<T> type) {
+	public static Set<String> legacyIdSet() {
+		return REGISTRY.legacyIdSet();
+	}
+
+	public static <T extends Entity> EntityType<T> register(NamespacedIdentifier identifier, EntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			type = Registry.register(REGISTRY, identifier, type);
-
-			if (type != null) {
-				setName(type);
-			}
-
-			return type;
+			return Registry.register(REGISTRY, identifier, type.build());
 		}
 	}
 
-	public static <T extends Entity> Class<T> register(ResourceKey<Class<? extends Entity>> key, Class<T> type) {
+	public static <T extends Entity> EntityType<T> register(ResourceKey<EntityType<?>> key, EntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			type = Registry.register(REGISTRY, key, type);
-
-			if (type != null) {
-				setName(type);
-			}
-
-			return type;
+			return Registry.register(REGISTRY, key, type.build());
 		}
 	}
 
-	private static void setName(Class<? extends Entity> type) {
-		registerName(type, Util.makeTranslationKey(REGISTRY.getIdentifier(type)));
-	}
-
-	public static void registerName(Class<? extends Entity> type, String name) {
+	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			NamespacedIdentifier identifier = REGISTRY.getIdentifier(type);
-			int id = REGISTRY.getId(type);
+			ResourceKey<EntityType<?>> key = REGISTRY.getKey(type);
 
-			while (Entities.NAMES.size() <= id) {
-				Entities.NAMES.add(null);
+			if (key == null) {
+				throw new IllegalArgumentException("Entity type " + type.getType().getSimpleName() + " is not registered!");
 			}
 
-			String registeredName = Entities.NAMES.get(id);
+			Identifier identifier = new Identifier(key.identifier().namespace(), key.identifier().identifier());
 
-			if (registeredName != null) {
-				throw new IllegalStateException("Name for entity type " + identifier + " was already set (" + registeredName + ")!");
-			} else {
-				Entities.NAMES.set(id, name);
-			}
-		}
-	}
-
-	public static void registerSpawnEggData(NamespacedIdentifier identifier, int baseColor, int spotsColor) {
-		registerSpawnEggData(getEntityType(identifier), baseColor, spotsColor);
-	}
-
-	public static void registerSpawnEggData(ResourceKey<Class<? extends Entity>> key, int baseColor, int spotsColor) {
-		registerSpawnEggData(getEntityType(key), baseColor, spotsColor);
-	}
-
-	public static void registerSpawnEggData(Class<? extends Entity> type, int baseColor, int spotsColor) {
-		if (locked) {
-			throw new IllegalStateException("register called too early: registry locked!");
-		} else {
-			// get a Vanilla Identifier since we need it anyway for the SpawnEggData constructor
-			Identifier identifier = EntityTypeIdRegistry.REGISTRY.getKey(type);
-
-			if (identifier == null) {
-				throw new IllegalArgumentException("Entity type " + type.getSimpleName() + " is not registered!");
-			}
 			if (Entities.SPAWN_EGG_DATA.containsKey(identifier)) {
 				throw new IllegalArgumentException("Duplicate entity type identifier " + identifier + " in spawn egg data registry!");
 			}

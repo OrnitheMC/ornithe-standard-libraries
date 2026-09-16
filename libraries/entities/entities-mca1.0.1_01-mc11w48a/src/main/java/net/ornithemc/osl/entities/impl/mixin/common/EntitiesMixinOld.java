@@ -21,7 +21,7 @@ public class EntitiesMixinOld {
 			value = "TAIL"
 		)
 	)
-	private static void osl$entities$register(CallbackInfo ci, @Local Class<? extends Entity> type, @Local String legacyKey) {
-		EntityTypeRegistryImpl.REGISTRY.register(legacyKey, type);
+	private static void osl$entities$register(CallbackInfo ci, @Local Class<? extends Entity> type, @Local String legacyId) {
+		EntityTypeRegistryImpl.REGISTRY.register(legacyId, type);
 	}
 }

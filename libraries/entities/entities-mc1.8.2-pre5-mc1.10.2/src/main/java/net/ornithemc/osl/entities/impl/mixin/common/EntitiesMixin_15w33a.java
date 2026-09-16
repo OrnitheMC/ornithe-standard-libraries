@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.entity.Entities;
 import net.minecraft.entity.Entities.SpawnEggData;
 
-import net.ornithemc.osl.entities.api.EntityTypeRegistry;
 import net.ornithemc.osl.entities.impl.EntityTypeRegistryImpl;
+import net.ornithemc.osl.entities.impl.SpawnEggDataRegistry;
 
 @Mixin(Entities.class)
 public class EntitiesMixin_15w33a {
@@ -33,17 +33,22 @@ public class EntitiesMixin_15w33a {
 		)
 	)
 	private static void osl$entities$registerSpawnEggDataRegistry(CallbackInfo ci) {
-		EntityTypeRegistryImpl.SPAWN_EGG_DATA_REGISTRY = (type, baseColor, spotsColor) -> {
-			String legacyKey = EntityTypeRegistry.getLegacyKey(type);
+		EntityTypeRegistryImpl.SPAWN_EGG_DATA = new SpawnEggDataRegistry() {
 
-			if (legacyKey == null) {
-				throw new IllegalArgumentException("Entity type " + type.getSimpleName() + " is not registered!");
-			}
-			if (SPAWN_EGG_DATA.containsKey(legacyKey)) {
-				throw new IllegalArgumentException("Duplicate entity type legacy key " + legacyKey + " in spawn egg data registry!");
+			@Override
+			public void put(int id, String legacyId, int baseColor, int spotsColor) {
+				SPAWN_EGG_DATA.put(legacyId, new SpawnEggData(id, baseColor, spotsColor));
 			}
 
-			SPAWN_EGG_DATA.put(legacyKey, SpawnEggDataAccessNew.of(legacyKey, baseColor, spotsColor));
+			@Override
+			public boolean contains(int id, String legacyId) {
+				return SPAWN_EGG_DATA.containsKey(legacyId);
+			}
+
+			@Override
+			public SpawnEggData get(int id, String legacyId) {
+				return SPAWN_EGG_DATA.get(legacyId);
+			}
 		};
 	}
 }
