@@ -1,0 +1,10 @@
+classTweaker	v1	named
+
+transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_22877789 (Lnet/minecraft/block/Block;)Lnet/minecraft/advancement/criterion/EnterBlockTrigger$Instance;
+transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_87855158 (Lnet/minecraft/advancement/criterion/NumberPredicate$Ints;Lnet/minecraft/item/ItemLike;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
+transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_04657628 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
+transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_53363402 (Lnet/minecraft/tag/Tag;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
+transitive-accessible field net/minecraft/data/recipe/RecipesProvider generator Lnet/minecraft/data/DataGenerator;
+
+accessible method net/minecraft/data/recipe/RecipesProvider save (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V
+accessible method net/minecraft/data/recipe/RecipesProvider saveAdvancement (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V
