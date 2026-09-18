@@ -6,5 +6,9 @@ transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_0465762
 transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_53363402 (Lnet/minecraft/tag/Tag;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
 transitive-accessible field net/minecraft/data/recipe/RecipesProvider generator Lnet/minecraft/data/DataGenerator;
 
+transitive-inject-interface net/minecraft/data/DataGenerator net/ornithemc/osl/datagen/api/PackGenerator
+transitive-inject-interface net/minecraft/data/DataProvider net/ornithemc/osl/datagen/api/provider/PackProvider
+transitive-inject-interface net/minecraft/data/HashCache net/ornithemc/osl/datagen/api/PackCache
+
 accessible method net/minecraft/data/recipe/RecipesProvider save (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V
 accessible method net/minecraft/data/recipe/RecipesProvider saveAdvancement (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V

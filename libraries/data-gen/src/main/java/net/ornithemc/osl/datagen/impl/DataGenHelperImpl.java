@@ -25,8 +25,6 @@ public class DataGenHelperImpl {
      */
     public static final String MOD_ID_FILTER = System.getProperty("fabric-api.datagen.modid");
 
-    public static final String ENTRYPOINT_KEY = "datagen";
-
     public static Path getOutputDir() {
         return Paths.get(Objects.requireNonNull(OUTPUT_DIR, "No output dir provided with the 'fabric-api.datagen.output-dir' property"));
     }
