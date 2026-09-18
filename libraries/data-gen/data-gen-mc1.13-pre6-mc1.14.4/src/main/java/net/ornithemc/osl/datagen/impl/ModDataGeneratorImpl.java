@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.data.DataGenerator;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.datagen.api.ModDataGenerator;
+import net.ornithemc.osl.datagen.api.PackGenerator;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ModDataGeneratorImpl implements ModDataGenerator<DataGenerator> {
+public class ModDataGeneratorImpl implements ModDataGenerator {
     private final Path basePath;
     private final ModContainer modContainer;
     private final List<DataGenerator> generators;
@@ -23,14 +24,14 @@ public class ModDataGeneratorImpl implements ModDataGenerator<DataGenerator> {
     }
 
     @Override
-    public DataGenerator createPack() {
+    public PackGenerator createPack() {
         DataGenerator generator = new PackDataGeneratorImpl(basePath, Collections.emptySet(), modContainer.getMetadata().getDescription());
         generators.add(generator);
         return generator;
     }
 
     @Override
-    public DataGenerator createBuiltinResourcePack(NamespacedIdentifier id) {
+    public PackGenerator createBuiltinResourcePack(NamespacedIdentifier id) {
         DataGenerator generator = new PackDataGeneratorImpl(basePath.resolve(id.prefixed("resourcepacks/").identifier()), Collections.emptySet(), id.toString());
         generators.add(generator);
         return generator;
