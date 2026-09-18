@@ -6,6 +6,7 @@ import net.minecraft.world.biome.Biome;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.biomes.api.BiomeEvents;
 import net.ornithemc.osl.biomes.impl.biome.BiomeIdFixer;
 import net.ornithemc.osl.registries.api.registry.Registries;
@@ -58,7 +59,13 @@ public final class BiomeRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, biome.id, identifier, biome);
+			biome = Registry.register(REGISTRY, biome.id, identifier, biome);
+
+			if (biome != null) {
+				setName(biome);
+			}
+
+			return biome;
 		}
 	}
 
@@ -67,7 +74,13 @@ public final class BiomeRegistryImpl {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, biome.id, key, biome);
+			biome = Registry.register(REGISTRY, biome.id, key, biome);
+
+			if (biome != null) {
+				setName(biome);
+			}
+
+			return biome;
 		}
 	}
 
@@ -80,7 +93,33 @@ public final class BiomeRegistryImpl {
 				throw new IllegalArgumentException("ID " + id + " does not match biome ID " + biome.id + " for " + key);
 			}
 
-			return Registry.register(REGISTRY, id, key, biome);
+			biome = Registry.register(REGISTRY, id, key, biome);
+
+			if (biome != null) {
+				setName(biome);
+			}
+
+			return biome;
+		}
+	}
+
+	private static void setName(Biome biome) {
+		if (biome.name == null) {
+			registerName(biome, Util.makeTranslationKey("biome", REGISTRY.getIdentifier(biome)));
+		}
+	}
+
+	public static void registerName(Biome biome, String name) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			NamespacedIdentifier identifier = REGISTRY.getIdentifier(biome);
+
+			if (biome.name != null) {
+				throw new IllegalStateException("Name for biome " + identifier + " was already set (" + biome.name + ")!");
+			} else {
+				biome.setName(name);
+			}
 		}
 	}
 

@@ -1,5 +1,6 @@
 package net.ornithemc.osl.biomes.api;
 
+import net.ornithemc.osl.biomes.api.biome.BiomeSettings;
 import net.ornithemc.osl.core.api.events.Event;
 
 /**
@@ -22,12 +23,13 @@ public final class BiomeEvents {
 	 * <pre>
 	 * {@code
 	 * BiomeEvents.REGISTER_BIOMES.register(() -> {
-	 * 	BiomeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieBiome());
+	 * 	BiomeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieBiome(BiomeSettings.builder()));
 	 * });
 	 * }
 	 * </pre>
 	 * 
 	 * @see BiomeRegistry
+	 * @see BiomeSettings
 	 */
 	public static final Event<Runnable> REGISTER_BIOMES = Event.runnable();
 

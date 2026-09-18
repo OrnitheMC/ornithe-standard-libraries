@@ -25,11 +25,16 @@ public class BiomesMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if ("net.ornithemc.osl.biomes.impl.mixin.common.BiomeMixinNew".equals(mixinClassName)) {
+		if ("net.ornithemc.osl.biomes.impl.mixin.client.DebugOverlayMixin".equals(mixinClassName)
+			|| "net.ornithemc.osl.biomes.impl.mixin.common.BiomeMixinNew".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("14w05a") >= 0;
 		}
-		if ("net.ornithemc.osl.biomes.impl.mixin.common.BiomeMixinOld".equals(mixinClassName)) {
+		if ("net.ornithemc.osl.biomes.impl.mixin.client.GameGuiMixin".equals(mixinClassName)
+			|| "net.ornithemc.osl.biomes.impl.mixin.common.BiomeMixinOld".equals(mixinClassName)) {
 			return MinecraftVersion.resolve().compareTo("14w05a") < 0;
+		}
+		if ("net.ornithemc.osl.biomes.impl.mixin.client.CustomizeWorldScreenMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("14w17a") >= 0;
 		}
 
 		return true;

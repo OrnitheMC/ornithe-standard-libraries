@@ -8,6 +8,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+
 public class BiomesMixinPlugin implements IMixinConfigPlugin {
 
 	public static final boolean BIOME_IDS_BEYOND_255_SUPPORTED = false;
@@ -23,6 +25,10 @@ public class BiomesMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		if ("net.ornithemc.osl.biomes.impl.mixin.client.GameGuiMixin".equals(mixinClassName)) {
+			return MinecraftVersion.resolve().compareTo("1.2") >= 0;
+		}
+
 		return true;
 	}
 

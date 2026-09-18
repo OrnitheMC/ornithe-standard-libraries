@@ -8,6 +8,8 @@
 		"common.BiomeMixin"
 	],
 	"client": [
+		"client.CustomizeWorldScreenMixin",
+		"client.DebugOverlayMixin"
 	],
 	"server": [
 	],

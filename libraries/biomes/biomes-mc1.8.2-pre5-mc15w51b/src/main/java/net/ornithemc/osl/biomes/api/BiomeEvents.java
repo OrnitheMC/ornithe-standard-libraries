@@ -22,7 +22,7 @@ public final class BiomeEvents {
 	 * <pre>
 	 * {@code
 	 * BiomeEvents.REGISTER_BIOMES.register(() -> {
-	 * 	BiomeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieBiome());
+	 * 	BiomeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), new CookieBiome(Biome.AUTO_ASSIGN_ID));
 	 * });
 	 * }
 	 * </pre>

@@ -8,6 +8,7 @@
 		"common.BiomeMixin"
 	],
 	"client": [
+		"client.GameGuiMixin"
 	],
 	"server": [
 	],
