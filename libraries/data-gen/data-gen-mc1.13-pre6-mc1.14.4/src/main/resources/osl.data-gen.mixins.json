@@ -6,7 +6,10 @@
   "plugin": "net.ornithemc.osl.datagen.impl.DataGenMixinPlugin",
   "mixins": [
     "C_23159014NewMixin",
-    "C_23159014OldMixin"
+    "C_23159014OldMixin",
+    "DataGeneratorMixin",
+    "DataProviderMixin",
+    "HashCacheMixin"
   ],
   "client": [
   ],

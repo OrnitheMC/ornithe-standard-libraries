@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.resource.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.datagen.api.PackGenerator;
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 
@@ -17,15 +18,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public abstract class ModLanguageProvider extends ModDataProvider {
+public abstract class ModLanguageProvider extends GsonPackProvider {
     private final String languageCode;
 
-    protected ModLanguageProvider(DataGenerator generator, ModContainer mod, String languageCode) {
+    protected ModLanguageProvider(PackGenerator generator, ModContainer mod, String languageCode) {
         super(generator, mod);
         this.languageCode = languageCode;
     }
 
-    protected ModLanguageProvider(DataGenerator generator, ModContainer mod) {
+    protected ModLanguageProvider(PackGenerator generator, ModContainer mod) {
         this(generator, mod, "en_us");
     }
 
@@ -45,12 +46,12 @@ public abstract class ModLanguageProvider extends ModDataProvider {
 
     @Override
     protected Path getPath(NamespacedIdentifier id) {
-        return this.generator.getOutput().resolve(ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, id.prefixed("lang").suffixed(".json")));
+        return this.generator.getOutputPath().resolve(ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, id.prefixed("lang").suffixed(".json")));
     }
 
     @Override
-    public String getName() {
-        return String.format("Mod Language (%s)", this.languageCode);
+    public String getProviderName() {
+        return String.format("Language (%s)", this.languageCode);
     }
 
     public interface TranslationBuilder {

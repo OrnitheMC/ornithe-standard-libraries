@@ -20,7 +20,7 @@ public abstract class ModRecipesProvider extends RecipesProvider {
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(HashCache cache) {
         Path path = this.generator.getOutput();
         Set<Identifier> set = Sets.newHashSet();
         this.generateRecipes((c_23159014) -> {
@@ -41,6 +41,6 @@ public abstract class ModRecipesProvider extends RecipesProvider {
 
     @Override
     public String getName() {
-        return "Mod Recipes";
+        return "Recipes";
     }
 }
