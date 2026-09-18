@@ -54,9 +54,9 @@ public final class Locale implements net.ornithemc.osl.text.impl.Locale {
 	@Override
 	public String get(String key) {
 		if (this.map != null) {
-			return this.map.get(key);
+			return this.map.getOrDefault(key, key);
 		} else if (this.properties != null) {
-			return this.properties.getProperty(key);
+			return this.properties.getProperty(key, key);
 		} else {
 			return key;
 		}
