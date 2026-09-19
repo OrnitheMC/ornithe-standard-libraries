@@ -4,6 +4,7 @@ import java.util.Set;
 
 import net.minecraft.block.entity.BlockEntity;
 
+import net.ornithemc.osl.blockentities.api.blockentity.BlockEntityType;
 import net.ornithemc.osl.blockentities.impl.BlockEntityTypeRegistryImpl;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.registries.api.registry.Registry;
@@ -14,48 +15,62 @@ import net.ornithemc.osl.registries.api.registry.ResourceKey;
  */
 public final class BlockEntityTypeRegistry {
 
-	public static final Registry<Class<? extends BlockEntity>> REGISTRY = BlockEntityTypeRegistryImpl.REGISTRY;
+	public static final Registry<BlockEntityType<?>> REGISTRY = BlockEntityTypeRegistryImpl.REGISTRY;
 
 	/**
 	 * @return the numerical ID assigned to the given block entity type.
 	 */
-	public static int getId(Class<? extends BlockEntity> type) {
+	public static int getId(BlockEntityType<?> type) {
 		return BlockEntityTypeRegistryImpl.getId(type);
 	}
 
 	/**
 	 * @return the namespaced ID assigned to the given block entity type.
 	 */
-	public static NamespacedIdentifier getIdentifier(Class<? extends BlockEntity> type) {
+	public static NamespacedIdentifier getIdentifier(BlockEntityType<?> type) {
 		return BlockEntityTypeRegistryImpl.getIdentifier(type);
 	}
 
 	/**
 	 * @return the resource key assigned to the given block entity type.
 	 */
-	public static ResourceKey<Class<? extends BlockEntity>> getKey(Class<? extends BlockEntity> type) {
+	public static ResourceKey<BlockEntityType<?>> getKey(BlockEntityType<?> type) {
 		return BlockEntityTypeRegistryImpl.getKey(type);
+	}
+
+	/**
+	 * @return the legacy {@linkplain String} ID assigned to the given block entity type.
+	 */
+	public static String getLegacyId(Class<? extends BlockEntity> type) {
+		return BlockEntityTypeRegistryImpl.getLegacyId(type);
 	}
 
 	/**
 	 * @return the block entity type mapped to the given numerical ID.
 	 */
-	public static Class<? extends BlockEntity> getBlockEntityType(int id) {
+	public static BlockEntityType<?> getBlockEntityType(int id) {
 		return BlockEntityTypeRegistryImpl.getBlockEntityType(id);
 	}
 
 	/**
 	 * @return the block entity type mapped to the given namespaced ID.
 	 */
-	public static Class<? extends BlockEntity> getBlockEntityType(NamespacedIdentifier identifier) {
+	public static BlockEntityType<?> getBlockEntityType(NamespacedIdentifier identifier) {
 		return BlockEntityTypeRegistryImpl.getBlockEntityType(identifier);
 	}
 
 	/**
 	 * @return the block entity type mapped to the given resource key.
 	 */
-	public static Class<? extends BlockEntity> getBlockEntityType(ResourceKey<Class<? extends BlockEntity>> key) {
+	public static BlockEntityType<?> getBlockEntityType(ResourceKey<BlockEntityType<?>> key) {
 		return BlockEntityTypeRegistryImpl.getBlockEntityType(key);
+	}
+
+	/**
+	 * @return the block entity type mapped to the given legacy {@linkplain String} ID.
+	 */
+	public static Class<? extends BlockEntity> getBlockEntityType(String legacyId) {
+		return BlockEntityTypeRegistryImpl.getBlockEntityType(legacyId);
 	}
 
 	/**
@@ -68,27 +83,34 @@ public final class BlockEntityTypeRegistry {
 	/**
 	 * @return a set containing all resource keys in the registry.
 	 */
-	public static Set<ResourceKey<Class<? extends BlockEntity>>> keySet() {
+	public static Set<ResourceKey<BlockEntityType<?>>> keySet() {
 		return BlockEntityTypeRegistryImpl.keySet();
+	}
+
+	/**
+	 * @return a set containing all legacy {@linkplain String} IDs in the registry.
+	 */
+	public static Set<String> legacyIdSet() {
+		return BlockEntityTypeRegistryImpl.legacyIdSet();
 	}
 
 	/**
 	 * @param <T>        the block entity type.
 	 * @param identifier the namespaced ID of the block entity type.
-	 * @param type       the block entity type to register.
+	 * @param type       the builder for the block entity type to register.
 	 * @return the registered block entity type.
 	 */
-	public static <T extends BlockEntity> Class<T> register(NamespacedIdentifier identifier, Class<T> type) {
+	public static <T extends BlockEntity> BlockEntityType<T> register(NamespacedIdentifier identifier, BlockEntityType.Builder<T> type) {
 		return BlockEntityTypeRegistryImpl.register(identifier, type);
 	}
 
 	/**
 	 * @param <T>   the block entity type.
 	 * @param key   the resource key of the block entity type.
-	 * @param type  the block entity type to register.
+	 * @param type  the builder for the block entity type to register.
 	 * @return the registered block entity type.
 	 */
-	public static <T extends BlockEntity> Class<T> register(ResourceKey<Class<? extends BlockEntity>> key, Class<T> type) {
+	public static <T extends BlockEntity> BlockEntityType<T> register(ResourceKey<BlockEntityType<?>> key, BlockEntityType.Builder<T> type) {
 		return BlockEntityTypeRegistryImpl.register(key, type);
 	}
 }

@@ -7,6 +7,8 @@ import com.google.common.collect.HashBiMap;
 
 import net.minecraft.block.entity.BlockEntity;
 
+import net.ornithemc.osl.blockentities.api.blockentity.BlockEntityType;
+import net.ornithemc.osl.blockentities.impl.blockentity.BlockEntityTypeImpl;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
@@ -14,7 +16,7 @@ import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.ResourceKeys;
 import net.ornithemc.osl.registries.impl.registry.SimpleRegistry;
 
-public class WrappedBlockEntityTypeRegistry extends SimpleRegistry<Class<? extends BlockEntity>> {
+public class WrappedBlockEntityTypeRegistry extends SimpleRegistry<BlockEntityType<?>> {
 
 	private final BiMap<NamespacedIdentifier, String> legacyIds = HashBiMap.create();
 
@@ -24,9 +26,10 @@ public class WrappedBlockEntityTypeRegistry extends SimpleRegistry<Class<? exten
 		super(identifier);
 	}
 
-	public void register(String legacyId, Class<? extends BlockEntity> type) {
+	public void register(String legacyId, Class<? extends BlockEntity> classType) {
 		NamespacedIdentifier identifier = this.constructIdentifier(legacyId);
-		ResourceKey<Class<? extends BlockEntity>> key = ResourceKeys.from(this.identifier(), identifier);
+		ResourceKey<BlockEntityType<?>> key = ResourceKeys.from(this.identifier(), identifier);
+		BlockEntityType<?> type = BlockEntityTypeImpl.Builder.of(classType).build();
 
 		this.skipBlockEntityRegister = true;
 		this.register(key, type);
@@ -34,19 +37,20 @@ public class WrappedBlockEntityTypeRegistry extends SimpleRegistry<Class<? exten
 	}
 
 	@Override
-	public <V extends Class<? extends BlockEntity>> V register(int id, ResourceKey<Class<? extends BlockEntity>> key, V type) {
+	public <V extends BlockEntityType<?>> V register(int id, ResourceKey<BlockEntityType<?>> key, V type) {
 		type = super.register(id, key, type);
 
 		if (!this.skipBlockEntityRegister) {
 			NamespacedIdentifier identifier = key.identifier();
 			String legacyId = this.constructLegacyId(identifier);
+			Class<? extends BlockEntity> classType = type.getType();
 
 			if (BlockEntity.ID_TO_TYPE.containsKey(legacyId)) {
 				throw new IllegalStateException("Duplicate legacy BlockEntity type ID " + legacyId);
 			}
 
-			BlockEntity.ID_TO_TYPE.put(legacyId, type);
-			BlockEntity.TYPE_TO_ID.put(type, legacyId);
+			BlockEntity.ID_TO_TYPE.put(legacyId, classType);
+			BlockEntity.TYPE_TO_ID.put(classType, legacyId);
 		}
 
 		return type;
@@ -79,13 +83,11 @@ public class WrappedBlockEntityTypeRegistry extends SimpleRegistry<Class<? exten
 	}
 
 	public Class<? extends BlockEntity> get(String legacyId) {
-		NamespacedIdentifier identifier = this.legacyIds.inverse().get(legacyId);
-		return identifier == null ? null : this.get(identifier);
+		return BlockEntity.ID_TO_TYPE.get(legacyId);
 	}
 
 	public String getLegacyId(Class<? extends BlockEntity> type) {
-		NamespacedIdentifier identifier = this.getIdentifier(type);
-		return identifier == null ? null : this.legacyIds.get(identifier);
+		return BlockEntity.TYPE_TO_ID.get(type);
 	}
 
 	public Set<String> legacyIdSet() {

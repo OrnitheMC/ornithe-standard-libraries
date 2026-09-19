@@ -1,5 +1,6 @@
 package net.ornithemc.osl.blockentities.api;
 
+import net.ornithemc.osl.blockentities.api.blockentity.BlockEntityTypes;
 import net.ornithemc.osl.core.api.events.Event;
 
 /**
@@ -22,12 +23,13 @@ public final class BlockEntityEvents {
 	 * <pre>
 	 * {@code
 	 * BlockEntityEvents.REGISTER_BLOCK_ENTITY_TYPES.register(() -> {
-	 * 	BlockEntityTypeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), CookieBlockEntity.class);
+	 * 	BlockEntityTypeRegistry.register(NamespacedIdentifiers.from("example", "cookie"), BlockEntityTypes.builder(CookieBlockEntity.class, CookieBlockEntity::new));
 	 * });
 	 * }
 	 * </pre>
 	 * 
 	 * @see BlockEntityTypeRegistry
+	 * @see BlockEntityTypes
 	 */
 	public static final Event<Runnable> REGISTER_BLOCK_ENTITY_TYPES = Event.runnable();
 

@@ -1,4 +1,4 @@
-package net.ornithemc.osl.blockentities.api;
+package net.ornithemc.osl.blockentities.api.blockentity;
 
 import java.util.function.Supplier;
 

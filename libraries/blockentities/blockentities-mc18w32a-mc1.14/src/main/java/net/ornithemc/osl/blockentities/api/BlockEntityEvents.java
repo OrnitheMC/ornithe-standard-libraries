@@ -1,5 +1,6 @@
 package net.ornithemc.osl.blockentities.api;
 
+import net.ornithemc.osl.blockentities.api.blockentity.BlockEntityTypes;
 import net.ornithemc.osl.core.api.events.Event;
 
 /**

@@ -3,30 +3,24 @@ package net.ornithemc.osl.blockentities.impl.mixin.common;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.resource.Identifier;
-import net.minecraft.util.registry.IdRegistry;
 
-import net.ornithemc.osl.blockentities.impl.BlockEntityTypeIdRegistry;
 import net.ornithemc.osl.blockentities.impl.BlockEntityTypeRegistryImpl;
 
 @Mixin(BlockEntity.class)
 public class BlockEntityMixin {
 
-	@Redirect(
-		method = "<clinit>",
+	@Inject(
+		method = "register",
 		at = @At(
-			value = "NEW",
-			target = "net/minecraft/util/registry/IdRegistry"
+			value = "TAIL"
 		)
 	)
-	private static IdRegistry<Identifier, Class<? extends BlockEntity>> osl$blockentities$replaceIdRegistry() {
-		// this allows us to register the block entity type registry in
-		// the API entrypoint without triggering a BlockEntity class load
-		return BlockEntityTypeIdRegistry.REGISTRY;
+	private static void osl$blockentities$register(String key, Class<? extends BlockEntity> type, CallbackInfo ci) {
+		BlockEntityTypeRegistryImpl.REGISTRY.register(new Identifier(key), type);
 	}
 
 	@Inject(

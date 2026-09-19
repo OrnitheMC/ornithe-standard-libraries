@@ -5,6 +5,7 @@ import java.util.Set;
 import net.minecraft.block.entity.BlockEntity;
 
 import net.ornithemc.osl.blockentities.api.BlockEntityEvents;
+import net.ornithemc.osl.blockentities.api.blockentity.BlockEntityType;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
@@ -18,51 +19,63 @@ public final class BlockEntityTypeRegistryImpl {
 
 	private static boolean locked = true;
 
-	public static int getId(Class<? extends BlockEntity> type) {
+	public static int getId(BlockEntityType<?> type) {
 		return REGISTRY.getId(type);
 	}
 
-	public static NamespacedIdentifier getIdentifier(Class<? extends BlockEntity> type) {
+	public static NamespacedIdentifier getIdentifier(BlockEntityType<?> type) {
 		return REGISTRY.getIdentifier(type);
 	}
 
-	public static ResourceKey<Class<? extends BlockEntity>> getKey(Class<? extends BlockEntity> type) {
+	public static ResourceKey<BlockEntityType<?>> getKey(BlockEntityType<?> type) {
 		return REGISTRY.getKey(type);
 	}
 
-	public static Class<? extends BlockEntity> getBlockEntityType(int id) {
+	public static String getLegacyId(Class<? extends BlockEntity> type) {
+		return REGISTRY.getLegacyId(type);
+	}
+
+	public static BlockEntityType<?> getBlockEntityType(int id) {
 		return REGISTRY.get(id);
 	}
 
-	public static Class<? extends BlockEntity> getBlockEntityType(NamespacedIdentifier identifier) {
+	public static BlockEntityType<?> getBlockEntityType(NamespacedIdentifier identifier) {
 		return REGISTRY.get(identifier);
 	}
 
-	public static Class<? extends BlockEntity> getBlockEntityType(ResourceKey<Class<? extends BlockEntity>> key) {
+	public static BlockEntityType<?> getBlockEntityType(ResourceKey<BlockEntityType<?>> key) {
 		return REGISTRY.get(key);
+	}
+
+	public static Class<? extends BlockEntity> getBlockEntityType(String legacyId) {
+		return REGISTRY.get(legacyId);
 	}
 
 	public static Set<NamespacedIdentifier> identifierSet() {
 		return REGISTRY.identifierSet();
 	}
 
-	public static Set<ResourceKey<Class<? extends BlockEntity>>> keySet() {
+	public static Set<ResourceKey<BlockEntityType<?>>> keySet() {
 		return REGISTRY.keySet();
 	}
 
-	public static <T extends BlockEntity> Class<T> register(NamespacedIdentifier identifier, Class<T> type) {
+	public static Set<String> legacyIdSet() {
+		return REGISTRY.legacyIdSet();
+	}
+
+	public static <T extends BlockEntity> BlockEntityType<T> register(NamespacedIdentifier identifier, BlockEntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, identifier, type);
+			return Registry.register(REGISTRY, identifier, type.build());
 		}
 	}
 
-	public static <T extends BlockEntity> Class<T> register(ResourceKey<Class<? extends BlockEntity>> key, Class<T> type) {
+	public static <T extends BlockEntity> BlockEntityType<T> register(ResourceKey<BlockEntityType<?>> key, BlockEntityType.Builder<T> type) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
-			return Registry.register(REGISTRY, key, type);
+			return Registry.register(REGISTRY, key, type.build());
 		}
 	}
 
