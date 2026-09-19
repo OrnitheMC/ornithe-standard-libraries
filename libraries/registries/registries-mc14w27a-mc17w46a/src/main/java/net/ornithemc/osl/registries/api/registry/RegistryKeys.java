@@ -1,7 +1,6 @@
 package net.ornithemc.osl.registries.api.registry;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.Biome;
@@ -18,7 +17,7 @@ public final class RegistryKeys {
 
 	public static final ResourceKey<Registry<Block>> BLOCK = from("block");
 	public static final ResourceKey<Registry<Item>> ITEM = from("item");
-	public static final ResourceKey<Registry<Class<? extends BlockEntity>>> BLOCK_ENTITY_TYPE = from("block_entity_type");
+	public static final ResourceKey/*<Registry<BlockEntityType<?>>>*/ BLOCK_ENTITY_TYPE = from("block_entity_type");
 	public static final ResourceKey<Registry<Class<? extends Entity>>> ENTITY_TYPE = from("entity_type");
 	public static final ResourceKey<Registry<Biome>> BIOME = from("biome");
 
