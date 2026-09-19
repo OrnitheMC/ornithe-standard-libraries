@@ -65,7 +65,7 @@ public class SyncedRegistry {
 					mapper.undo(this.mappings);
 				}
 			} catch (Throwable t) {
-				throw new RuntimeException("error running ID mapper " + this.registry.identifier() + "/" + e.getKey());
+				throw new RuntimeException("error running ID mapper " + this.registry.identifier() + "/" + e.getKey(), t);
 			}
 		}
 		for (Map.Entry<NamespacedIdentifier, IdFixer> e : this.fixers.entrySet()) {
@@ -74,7 +74,7 @@ public class SyncedRegistry {
 			try {
 				fixer.apply();
 			} catch (Throwable t) {
-				throw new RuntimeException("error running ID fixer " + this.registry.identifier() + "/" + e.getKey());
+				throw new RuntimeException("error running ID fixer " + this.registry.identifier() + "/" + e.getKey(), t);
 			}
 		}
 	}
