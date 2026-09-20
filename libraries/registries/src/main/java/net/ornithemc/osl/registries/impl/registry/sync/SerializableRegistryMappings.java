@@ -103,8 +103,20 @@ public class SerializableRegistryMappings implements RegistryMappings {
 			int nextId = this.mappings.values().intStream().max().orElse(-1) + 1;
 
 			for (NamespacedIdentifier identifier : this.unmappings.keySet()) {
+				int id = this.unmappings.getInt(identifier);
+
 				if (!this.mappings.containsKey(identifier)) {
-					this.mappings.put(identifier, nextId++);
+					// some registries do not simply count up IDs but use clusters within
+					// a certain range, which leaves gaps of unused IDs - this can increase
+					// IDs unnecessarily when updating a world to a newer version, so try
+					// to re-use the old ID from the registry if possible
+					if (this.mappings.values().contains(id)) {
+						id = nextId++;
+					} else if (id >= nextId) {
+						nextId = id + 1;
+					}
+
+					this.mappings.put(identifier, id);
 				}
 			}
 		}
