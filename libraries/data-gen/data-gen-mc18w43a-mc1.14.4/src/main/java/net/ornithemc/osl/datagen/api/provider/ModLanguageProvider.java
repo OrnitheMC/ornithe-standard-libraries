@@ -31,7 +31,7 @@ public abstract class ModLanguageProvider extends GsonPackProvider {
     }
 
     @Override
-    protected void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer) {
+    protected final void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer) {
         Map<String, String> translations = new HashMap<>();
 
         generateTranslations(translations::put);
