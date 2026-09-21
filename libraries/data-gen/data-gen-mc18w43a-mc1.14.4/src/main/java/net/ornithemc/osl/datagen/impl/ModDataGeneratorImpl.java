@@ -37,6 +37,11 @@ public class ModDataGeneratorImpl implements ModDataGenerator {
         return generator;
     }
 
+    @Override
+    public ModContainer getMod() {
+        return modContainer;
+    }
+
     public void run() {
         for (DataGenerator generator : generators) {
             try {

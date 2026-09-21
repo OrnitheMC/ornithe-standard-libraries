@@ -7,6 +7,7 @@ import net.minecraft.data.HashCache;
 import net.minecraft.data.recipe.RecipesProvider;
 import net.minecraft.resource.Identifier;
 import net.minecraft.unmapped.C_23159014;
+import net.ornithemc.osl.datagen.api.PackGenerator;
 import net.ornithemc.osl.datagen.impl.access.RecipeBuilderAccess;
 
 import java.io.IOException;
@@ -15,12 +16,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class ModRecipesProvider extends RecipesProvider {
-    public ModRecipesProvider(DataGenerator generator) {
-        super(generator);
+    public ModRecipesProvider(PackGenerator generator) {
+        super((DataGenerator) generator);
     }
 
     @Override
-    public void run(HashCache cache) {
+    public final void run(HashCache cache) {
         Path path = this.generator.getOutput();
         Set<Identifier> set = Sets.newHashSet();
         this.generateRecipes((c_23159014) -> {
@@ -38,9 +39,4 @@ public abstract class ModRecipesProvider extends RecipesProvider {
     }
 
     protected abstract void generateRecipes(Consumer<C_23159014> consumer);
-
-    @Override
-    public String getName() {
-        return "Recipes";
-    }
 }

@@ -142,4 +142,4 @@ include ':libraries:text-components:text-components-mca1.0.1_01-mc1.6.4'
 include ':libraries:text-components:text-components-mc13w36a-mc1.14.4'
 
 include ':libraries:data-gen'
-include ':libraries:data-gen:data-gen-mc1.13-pre6-mc1.14.4'
+include ':libraries:data-gen:data-gen-mc18w43a-mc1.14.4'
