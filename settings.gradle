@@ -194,4 +194,4 @@ include ':libraries:text-components:text-components-mc13w21a-mc1.6.4'
 include ':libraries:text-components:text-components-mc13w36a-mc1.14.4'
 
 include ':libraries:data-gen'
-include ':libraries:data-gen:data-gen-mc1.13-pre6-mc1.14.4'
+include ':libraries:data-gen:data-gen-mc18w43a-mc1.14.4'
