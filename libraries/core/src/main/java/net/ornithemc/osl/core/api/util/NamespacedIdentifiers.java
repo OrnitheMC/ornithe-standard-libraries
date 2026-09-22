@@ -141,6 +141,6 @@ public final class NamespacedIdentifiers {
 	}
 
 	public static boolean equals(NamespacedIdentifier a, NamespacedIdentifier b) {
-		return a.namespace().equals(b.namespace()) && a.identifier().equals(b.identifier());
+		return a.separator() == b.separator() && a.namespace().equals(b.namespace()) && a.identifier().equals(b.identifier());
 	}
 }

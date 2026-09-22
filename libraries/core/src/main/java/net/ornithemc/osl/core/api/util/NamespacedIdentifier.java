@@ -23,7 +23,14 @@ public interface NamespacedIdentifier {
 	 * The separator between the namespace and identifier in the {@code String}
 	 * representation of a {@code NamespacedIdentifier}.
 	 */
-	static char SEPARATOR = ':';
+	char SEPARATOR = ':';
+
+	/**
+	 * @return the separator for the {@linkplain String}-representation of this {@code NamespacedIdentifier}.
+	 */
+	default char separator() {
+		return SEPARATOR;
+	}
 
 	/**
 	 * @return the namespace of this {@code NamespacedIdentifier}.
