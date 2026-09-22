@@ -1,6 +1,6 @@
 package net.ornithemc.osl.datagen.api.provider;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.world.gen.loot.LootTable;
 import net.minecraft.world.gen.loot.LootTables;
@@ -18,7 +18,7 @@ public abstract class ModLootTablesProvider extends GsonPackProvider {
     }
 
     @Override
-    protected final void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer) {
+    protected final void generate(BiConsumer<NamespacedIdentifier, JsonElement> consumer) {
         generateLootTables((id, lootTable) -> consumer.accept(id, LootTables.m_19064268(lootTable.m_74891066()).getAsJsonObject()));
     }
 
