@@ -1,9 +1,9 @@
 package net.ornithemc.osl.datagen.api.provider;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.Block;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.resource.Identifier;
@@ -31,7 +31,7 @@ public abstract class ModLanguageProvider extends GsonPackProvider {
     }
 
     @Override
-    protected final void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer) {
+    protected final void generate(BiConsumer<NamespacedIdentifier, JsonElement> consumer) {
         Map<String, String> translations = new HashMap<>();
 
         generateTranslations(translations::put);
