@@ -40,6 +40,8 @@ public class DataGeneratorInit implements ModInitializer {
             for (ModDataGeneratorImpl generator : generators) {
                 generator.run();
             }
+
+            System.exit(0);
         });
     }
 }

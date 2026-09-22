@@ -2,7 +2,7 @@ package net.ornithemc.osl.datagen.api.provider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import net.fabricmc.loader.api.ModContainer;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.datagen.api.PackGenerator;
@@ -39,7 +39,7 @@ public abstract class GsonPackProvider implements PackProvider {
         });
     }
 
-    protected abstract void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer);
+    protected abstract void generate(BiConsumer<NamespacedIdentifier, JsonElement> consumer);
 
     protected abstract Path getPath(NamespacedIdentifier id);
 }
