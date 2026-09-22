@@ -1,6 +1,6 @@
 package net.ornithemc.osl.datagen.api.provider;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.advancement.Advancement;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
@@ -18,7 +18,7 @@ public abstract class ModAdvancementProvider extends GsonPackProvider {
     }
 
     @Override
-    protected final void generate(BiConsumer<NamespacedIdentifier, JsonObject> consumer) {
+    protected final void generate(BiConsumer<NamespacedIdentifier, JsonElement> consumer) {
         Consumer<Advancement> advancementConsumer = advancement -> {
             consumer.accept(advancement.getId(), advancement.builder().toJson());
         };
