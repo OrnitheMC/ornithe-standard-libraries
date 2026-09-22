@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.ornithemc.osl.datagen.impl.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "net.ornithemc.osl.datagen.impl.DataGenMixinPlugin",
+  "mixins": [
+    "C_23159014NewMixin",
+    "C_23159014OldMixin",
+    "DataGeneratorMixin",
+    "DataProviderMixin",
+    "HashCacheMixin"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}
