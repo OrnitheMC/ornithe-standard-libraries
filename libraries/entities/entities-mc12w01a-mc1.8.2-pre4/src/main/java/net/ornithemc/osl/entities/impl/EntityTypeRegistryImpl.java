@@ -86,6 +86,15 @@ public final class EntityTypeRegistryImpl {
 		}
 	}
 
+	@Deprecated
+	public static <T extends Entity> EntityType<T> register(int id, NamespacedIdentifier key, EntityType.Builder<T> type) {
+		if (locked) {
+			throw new IllegalStateException("register called too early: registry locked!");
+		} else {
+			return Registry.register(REGISTRY, id, key, type.build());
+		}
+	}
+
 	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");

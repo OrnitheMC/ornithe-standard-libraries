@@ -115,6 +115,21 @@ public final class EntityTypeRegistry {
 	}
 
 	/**
+	 * @param <T>   the entity type.
+	 * @param id    the numerical ID of the entity type.
+	 * @param key   the namespaced ID of the entity type.
+	 * @param type  the builder for the entity type to register.
+	 * @return the registered entity type.
+	 * 
+	 * @deprecated use {@linkplain #register(NamespacedIdentifier, EntityType.Builder)}
+	 *             or {@linkplain #register(ResourceKey, EntityType.Builder)} instead.
+	 */
+	@Deprecated
+	public static <T extends Entity> EntityType<T> register(int id, NamespacedIdentifier key, EntityType.Builder<T> type) {
+		return EntityTypeRegistryImpl.register(id, key, type);
+	}
+
+	/**
 	 * Registers spawn egg colors for the given entity type.
 	 * 
 	 * @param type       the entity type for which to register the spawn egg colors.
