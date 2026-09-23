@@ -16,7 +16,7 @@ import net.minecraft.client.resource.model.BakedModel;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.Int2ObjectMapMapper;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicInt2ObjectMapMapper;
 
 @Mixin(ItemModelShaper.class)
 public class ItemModelShaperMixin {
@@ -33,7 +33,7 @@ public class ItemModelShaperMixin {
 		)
 	)
 	private void osl$items$registerModelRegistryMapper(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model_location"), Int2ObjectMapMapper.of(this.models));
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model"), Int2ObjectMapMapper.of(this.modelCache));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model_location"), DynamicInt2ObjectMapMapper.of(this.models));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model"), DynamicInt2ObjectMapMapper.of(this.modelCache));
 	}
 }

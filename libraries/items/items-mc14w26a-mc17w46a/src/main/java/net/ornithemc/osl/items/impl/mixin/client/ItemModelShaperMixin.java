@@ -14,7 +14,7 @@ import net.minecraft.client.resource.ModelIdentifier;
 import net.minecraft.client.resource.model.BakedModel;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
-import net.ornithemc.osl.items.impl.item.ItemModelRegistryMapper;
+import net.ornithemc.osl.items.impl.item.ItemModelCacheMapper;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 
@@ -33,7 +33,7 @@ public class ItemModelShaperMixin {
 		)
 	)
 	private void osl$items$registerModelRegistryMapper(CallbackInfo ci) {
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model_location"), ItemModelRegistryMapper.of(this.models));
-		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model"), ItemModelRegistryMapper.of(this.modelCache));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model_location"), ItemModelCacheMapper.of(this.models));
+		SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("item_model"), ItemModelCacheMapper.of(this.modelCache));
 	}
 }
