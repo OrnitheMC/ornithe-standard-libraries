@@ -455,7 +455,7 @@ public final class Style {
 			HoverEvent hoverEvent = null;
 
 			if (styleJson.has(COLOR)) {
-				color = TextColor.fromFormatting(context.deserialize(styleJson.get(COLOR), Formatting.class));
+				color = TextColor.deserialize(styleJson.get(COLOR).getAsString());
 			}
 			if (styleJson.has(BOLD)) {
 				bold = styleJson.get(BOLD).getAsBoolean();
@@ -538,10 +538,10 @@ public final class Style {
 				json.addProperty(OBFUSCATED, style.obfuscated);
 			}
 			if (style.color != null) {
-				json.add(COLOR, context.serialize(style.color));
+				json.addProperty(COLOR, style.color.serialize());
 			}
 			if (style.insertion != null) {
-				json.add(INSERTION, context.serialize(style.insertion));
+				json.addProperty(INSERTION, style.insertion);
 			}
 			if (style.clickEvent != null) {
 				JsonObject ceJson = new JsonObject();
