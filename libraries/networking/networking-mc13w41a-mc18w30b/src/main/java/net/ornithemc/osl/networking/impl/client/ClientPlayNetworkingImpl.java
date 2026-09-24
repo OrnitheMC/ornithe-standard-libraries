@@ -115,30 +115,32 @@ public final class ClientPlayNetworkingImpl {
 			ChannelListener.Context ctx = new ChannelListener.Context();
 			PacketBuffer data = p.osl$networking$getData();
 
-			try {
-				handlePayload(channel, listener, ctx, data);
-			} catch (NotOnMainThreadException e) {
-				if (USE_EVENT_LOOP_FOR_ASYNC_HANDLING) {
-					// use built-in task queue like other packets do (14w21a+)
-					minecraft.execute(() -> handlePayload(channel, listener, ctx, data));
-				} else {
-					// rethrow so packet is added to the read queue (14w20b-)
-					throw e;
-				}
-			}
-
-			return true;
+			return handlePayload(channel, listener, ctx, data);
 		}
 
 		return false;
 	}
 
-	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
+	private static boolean handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
 		try {
 			listener.handle(ctx, data);
+		} catch (NotOnMainThreadException e) {
+			data.retain();
+
+			if (USE_EVENT_LOOP_FOR_ASYNC_HANDLING) {
+				// use built-in task queue like other packets do (14w21a+)
+				ctx.minecraft().execute(() -> handlePayload(channel, listener, ctx, data));
+			} else {
+				// rethrow so packet is added to the read queue (14w20b-)
+				throw e;
+			}
 		} catch (IOException e) {
 			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		} finally {
+			data.release();
 		}
+
+		return true;
 	}
 
 	public static boolean isPlayReady() {
