@@ -1,6 +1,7 @@
 package net.ornithemc.osl.text.api;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TextColor {
@@ -23,6 +24,8 @@ public class TextColor {
 	public static final TextColor LIGHT_PURPLE = new TextColor(Formatting.LIGHT_PURPLE);
 	public static final TextColor YELLOW = new TextColor(Formatting.YELLOW);
 	public static final TextColor WHITE = new TextColor(Formatting.WHITE);
+
+	public static final char CUSTOM_COLOR_PREFIX = '#';
 
 	private final Formatting formatting;
 	private final int color;
@@ -51,6 +54,14 @@ public class TextColor {
 		return this.formatting;
 	}
 
+	public String serialize() {
+		if (this.isFormatting()) {
+			return this.formatting.name().toLowerCase(Locale.ROOT); 
+		} else {
+			return CUSTOM_COLOR_PREFIX + Integer.toHexString(this.color);
+		}
+	}
+
 	public static TextColor of(int color) {
 		return new TextColor(color);
 	}
@@ -66,6 +77,20 @@ public class TextColor {
 			throw new IllegalStateException("could not resolve text color " + formatting.name());
 		} else {
 			return null;
+		}
+	}
+
+	public static TextColor deserialize(String s) {
+		if (s.startsWith(String.valueOf(CUSTOM_COLOR_PREFIX))) {
+			try {
+				int color = Integer.parseInt(s.substring(1), 16);
+				return TextColor.of(color);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		} else {
+			Formatting formatting = Formatting.valueOf(s.toUpperCase(Locale.ROOT));
+			return formatting == null ? null : BY_FORMATTING.get(formatting);
 		}
 	}
 }
