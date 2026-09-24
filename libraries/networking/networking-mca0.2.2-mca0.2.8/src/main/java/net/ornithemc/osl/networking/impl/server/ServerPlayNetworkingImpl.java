@@ -70,15 +70,29 @@ public final class ServerPlayNetworkingImpl {
 
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ServerPacketListener.Payload<T> listener) {
 		registerListenerInternal(channel, (context, bytes) -> {
-			T payload = initializer.get();
-			payload.read(PacketBuffers.wrap(bytes));
+			PacketBuffer data = PacketBuffers.wrap(bytes);
 
-			listener.handle(context, payload);
+			try {
+				T payload = initializer.get();
+				payload.read(data);
+
+				listener.handle(context, payload);
+			} finally {
+				data.release();
+			}
 		});
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Buffer listener) {
-		registerListenerInternal(channel, (context, bytes) -> listener.handle(context, PacketBuffers.wrap(bytes)));
+		registerListenerInternal(channel, (context, bytes) -> {
+			PacketBuffer data = PacketBuffers.wrap(bytes);
+
+			try {
+				listener.handle(context, data);
+			} finally {
+				data.release();
+			}
+		});
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ServerPacketListener.Bytes listener) {
