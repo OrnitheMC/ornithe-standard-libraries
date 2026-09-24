@@ -26,6 +26,7 @@ public final class PacketBuffers {
 	public static byte[] unwrap(PacketBuffer buffer) {
 		byte[] bytes = new byte[buffer.writerIndex()];
 		buffer.getBytes(0, bytes);
+		buffer.release();
 		return bytes;
 	}
 

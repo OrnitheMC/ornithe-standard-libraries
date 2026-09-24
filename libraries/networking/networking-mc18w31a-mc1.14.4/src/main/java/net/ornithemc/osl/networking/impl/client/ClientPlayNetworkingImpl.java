@@ -111,24 +111,25 @@ public final class ClientPlayNetworkingImpl {
 			ChannelListener.Context ctx = new ChannelListener.Context();
 			PacketBuffer data = p.osl$networking$getData();
 
-			try {
-				handlePayload(channel, listener, ctx, data);
-			} catch (NotOnMainThreadException e) {
-				minecraft.execute(() -> handlePayload(channel, listener, ctx, data));
-			}
-
-			return true;
+			return handlePayload(channel, listener, ctx, data);
 		}
 
 		return false;
 	}
 
-	private static void handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
+	private static boolean handlePayload(NamespacedIdentifier channel, ChannelListener listener, ChannelListener.Context ctx, PacketBuffer data) {
 		try {
 			listener.handle(ctx, data);
+		} catch (NotOnMainThreadException e) {
+			data.retain();
+			ctx.minecraft().execute(() -> handlePayload(channel, listener, ctx, data));
 		} catch (IOException e) {
 			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		} finally {
+			data.release();
 		}
+
+		return true;
 	}
 
 	public static boolean isPlayReady() {
