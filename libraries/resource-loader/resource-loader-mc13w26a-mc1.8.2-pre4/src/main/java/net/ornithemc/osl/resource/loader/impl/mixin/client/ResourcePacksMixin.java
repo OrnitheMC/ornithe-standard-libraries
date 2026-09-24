@@ -141,9 +141,8 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 				PackPosition.TOP
 			);
 
-			this.availablePacksById.put(summary.getId(), pack);
-
 			if (summary != null) {
+				this.availablePacksById.put(summary.getId(), pack);
 				consumer.accept(summary);
 			}
 		}
