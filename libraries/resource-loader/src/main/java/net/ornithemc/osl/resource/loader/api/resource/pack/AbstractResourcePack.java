@@ -42,7 +42,7 @@ public abstract class AbstractResourcePack implements ResourcePack {
 					return metadata.getSection(name, serializer);
 				}
 			} catch (Exception e) {
-				ResourceLoader.LOGGER.error("Could not load {} {} metadata: {}", this.getName(), name, e);
+				ResourceLoader.LOGGER.error("Could not load " + this.getName() + " " + name + " metadata", e);
 			}
 		}
 
