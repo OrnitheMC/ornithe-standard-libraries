@@ -6,9 +6,9 @@ import net.minecraft.world.biome.Biome;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
-import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.biomes.api.BiomeEvents;
 import net.ornithemc.osl.biomes.impl.biome.BiomeIdFixer;
+import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
 import net.ornithemc.osl.registries.api.registry.Registries;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
@@ -105,7 +105,7 @@ public final class BiomeRegistryImpl {
 
 	private static void setName(Biome biome) {
 		if (biome.name == null) {
-			registerName(biome, Util.makeTranslationKey("biome", REGISTRY.getIdentifier(biome)));
+			registerName(biome, LegacyStringIds.fromIdentifier(REGISTRY.getIdentifier(biome)));
 		}
 	}
 

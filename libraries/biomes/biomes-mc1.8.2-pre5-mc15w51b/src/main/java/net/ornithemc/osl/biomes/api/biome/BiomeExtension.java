@@ -10,4 +10,6 @@ public interface BiomeExtension {
 	Registry<Biome> REGISTRY = BiomeRegistryImpl.REGISTRY;
 	int AUTO_ASSIGN_ID = -172;
 
+	String getName();
+
 }

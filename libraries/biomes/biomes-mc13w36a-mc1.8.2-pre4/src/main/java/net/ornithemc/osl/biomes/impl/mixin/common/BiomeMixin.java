@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.world.biome.Biome;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.core.impl.util.Util;
+import net.ornithemc.osl.localization.api.L10n;
+import net.ornithemc.osl.biomes.api.BiomeRegistry;
 import net.ornithemc.osl.biomes.api.biome.BiomeExtension;
 import net.ornithemc.osl.biomes.impl.BiomesMixinPlugin;
 import net.ornithemc.osl.biomes.impl.VanillaBiomes;
@@ -28,6 +32,12 @@ public class BiomeMixin implements BiomeExtension {
 
 	@Shadow @Final @Mutable
 	private static Biome[] BY_ID;
+
+	@Shadow
+	private String name;
+
+	@Unique
+	private String key;
 
 	@Inject(
 		method = "<clinit>",
@@ -83,5 +93,14 @@ public class BiomeMixin implements BiomeExtension {
 		int capacity = id + 1;
 
 		BY_ID = DynamicArray.grow(BY_ID, capacity);
+	}
+
+	@Override
+	public String getName() {
+		if (this.key == null) {
+			this.key = Util.makeTranslationKey("biome", BiomeRegistry.getIdentifier((Biome) (Object) this));
+		}
+
+		return L10n.getOrDefault(this.key, this.name);
 	}
 }

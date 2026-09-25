@@ -9,8 +9,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.GameGui;
 import net.minecraft.world.biome.Biome;
 
-import net.ornithemc.osl.localization.api.L10n;
-
 @Mixin(GameGui.class)
 public class GameGuiMixin {
 
@@ -22,6 +20,6 @@ public class GameGuiMixin {
 		)
 	)
 	private String osl$biomes$translateBiomeName(Biome biome, Operation<String> op) {
-		return L10n.get(op.call(biome));
+		return biome.getName();
 	}
 }

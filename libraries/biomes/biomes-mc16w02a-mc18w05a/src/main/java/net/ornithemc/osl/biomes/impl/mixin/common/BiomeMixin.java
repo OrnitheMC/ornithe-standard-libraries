@@ -2,6 +2,7 @@ package net.ornithemc.osl.biomes.impl.mixin.common;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,6 +28,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.localization.api.L10n;
+import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
 import net.ornithemc.osl.registries.api.registry.sync.Id2ObjectBiMapMapper;
@@ -39,7 +41,7 @@ public class BiomeMixin implements BiomeExtension, BiomeAccess {
 
 	@Shadow @Final
 	private String parent;
-	@Shadow @Final
+	@Shadow @Final @Mutable
 	private String name;
 
 	@Unique
@@ -90,11 +92,14 @@ public class BiomeMixin implements BiomeExtension, BiomeAccess {
 	)
 	private void osl$biomes$autoAssignTranslationKey(CallbackInfoReturnable<String> cir) {
 		if (this.name == null) {
-			if (this.key == null) {
-				this.key = Util.makeTranslationKey("biome", BiomeRegistry.getIdentifier((Biome) (Object) this));
-			}
+			this.name = LegacyStringIds.fromIdentifier(BiomeRegistry.getIdentifier((Biome) (Object) this));
+		}
+		if (this.key == null) {
+			this.key = Util.makeTranslationKey("biome", BiomeRegistry.getIdentifier((Biome) (Object) this));
+		}
 
-			cir.setReturnValue(L10n.get(this.key + ".name"));
+		if (L10n.has(this.key)) {
+			cir.setReturnValue(L10n.get(this.key));
 		}
 	}
 
