@@ -95,7 +95,7 @@ public final class EntityTypeRegistryImpl {
 		}
 	}
 
-	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
+	public static void registerSpawnEgg(EntityType<?> type, int baseColor, int spotsColor) {
 		if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {

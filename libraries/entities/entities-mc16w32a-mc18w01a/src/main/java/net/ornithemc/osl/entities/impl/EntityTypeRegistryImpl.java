@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.entities.api.EntityEvents;
 import net.ornithemc.osl.entities.api.entity.EntityType;
 import net.ornithemc.osl.registries.api.registry.Registry;
@@ -19,6 +20,8 @@ import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 public final class EntityTypeRegistryImpl {
 
 	public static final WrappedEntityTypeRegistry REGISTRY = RegistriesImpl.register(RegistryKeys.ENTITY_TYPE, new WrappedEntityTypeRegistry(RegistryKeys.ENTITY_TYPE.identifier()), () -> Entities.REGISTRY.getClass());
+
+	private static final boolean SPAWN_EGG_DATA_REGISTRY_EXISTS = MinecraftVersion.resolve().compareTo("17w47a") < 0;
 
 	private static boolean locked = true;
 
@@ -82,8 +85,10 @@ public final class EntityTypeRegistryImpl {
 		}
 	}
 
-	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
-		if (locked) {
+	public static void registerSpawnEgg(EntityType<?> type, int baseColor, int spotsColor) {
+		if (!SPAWN_EGG_DATA_REGISTRY_EXISTS) {
+			throw new UnsupportedOperationException("There is no spawn egg registry in this version! You must register your spawn eggs through the item registry.");
+		} else if (locked) {
 			throw new IllegalStateException("register called too early: registry locked!");
 		} else {
 			ResourceKey<EntityType<?>> key = REGISTRY.getKey(type);

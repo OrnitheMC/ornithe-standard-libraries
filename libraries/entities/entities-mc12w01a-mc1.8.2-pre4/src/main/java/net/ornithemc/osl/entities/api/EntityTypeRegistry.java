@@ -130,13 +130,13 @@ public final class EntityTypeRegistry {
 	}
 
 	/**
-	 * Registers spawn egg colors for the given entity type.
+	 * Registers a spawn egg for the given entity type with the given colors.
 	 * 
-	 * @param type       the entity type for which to register the spawn egg colors.
+	 * @param type       the entity type for which to register the spawn egg.
 	 * @param baseColor  the base color of the spawn egg.
 	 * @param spotsColor the color of the spots on the spawn egg.
 	 */
-	public static void registerSpawnEggColors(EntityType<?> type, int baseColor, int spotsColor) {
-		EntityTypeRegistryImpl.registerSpawnEggColors(type, baseColor, spotsColor);
+	public static void registerSpawnEgg(EntityType<?> type, int baseColor, int spotsColor) {
+		EntityTypeRegistryImpl.registerSpawnEgg(type, baseColor, spotsColor);
 	}
 }
