@@ -19,6 +19,7 @@ import net.minecraft.client.render.world.WorldRenderer;
 
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
+import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
@@ -98,7 +99,7 @@ public class MinecraftMixin implements MinecraftExtension {
 
 		this.reloadResources();
 
-		this.resourceManager.addReloadedReloader((ResourceReloader) this.textureManager);
+		this.resourceManager.registerReloadedReloader(AssetsReloaders.TEXTURE_MANAGER, (ResourceReloader) this.textureManager);
 
 		this.resourceManager.init();
 		// Vanilla reloaders are triggered when registered
