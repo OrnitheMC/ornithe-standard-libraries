@@ -10,11 +10,21 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.crafting.CraftingManager;
 import net.minecraft.resource.manager.ReloadableResourceManager;
+import net.minecraft.resource.manager.ResourceReloadListener;
 import net.minecraft.resource.pack.repository.PackRepository;
 import net.minecraft.resource.pack.repository.UnopenedPack;
+import net.minecraft.server.AdvancementManager;
+import net.minecraft.server.FunctionManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tag.TagManager;
+import net.minecraft.world.gen.loot.LootTables;
+import net.minecraft.world.gen.structure.template.StructureManager;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.resource.loader.api.server.resource.reload.DataReloaders;
+import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourcePackRepositoryAdapter;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
@@ -28,6 +38,17 @@ public class MinecraftServerMixin {
 	private PackRepository<UnopenedPack> packRepository;
 	@Shadow @Final @Mutable
 	private ReloadableResourceManager resourceManager;
+
+	@Shadow
+	private TagManager tags;
+	@Shadow
+	private CraftingManager craftingManager;
+	@Shadow
+	private LootTables lootTables;
+	@Shadow
+	private FunctionManager functions;
+	@Shadow
+	private AdvancementManager advancements;
 
 	@Unique
 	private SimpleResourcePackRepository actualPackRepository;
@@ -62,7 +83,7 @@ public class MinecraftServerMixin {
 	)
 	private void osl$resource_loader$setResourceManager(CallbackInfo ci) {
 		this.actualResourceManager = SimpleReloadableResourceManager.server();
-		this.resourceManager = new ResourceManagerAdapter(this.actualResourceManager);
+		this.resourceManager = new ResourceManagerAdapter(this.actualResourceManager, this::identifyReloadListener);
 
 		this.actualResourceManager.reset();
 //		this.actualResourceManager.addAll(this.actualPackRepository.openSelectedPacks()); // handled by Vanilla
@@ -104,5 +125,25 @@ public class MinecraftServerMixin {
 	private void osl$resource_loader$initResourcePackRepository(CallbackInfo ci) {
 		this.actualPackRepository.init();
 //		this.actualPackRepository.reload(); // handled by Vanilla
+	}
+
+	private NamespacedIdentifier identifyReloadListener(ResourceReloadListener listener) {
+		if (listener == this.tags) {
+			return DataReloaders.TAG_MANAGER;
+		} else if (listener == this.craftingManager) {
+			return DataReloaders.CRAFTING_MANAGER;
+		} else if (listener == this.lootTables) {
+			return DataReloaders.LOOT_TABLE_MANAGER;
+		} else if (listener == this.functions) {
+			return DataReloaders.FUNCTION_MANAGER;
+		} else if (listener == this.advancements) {
+			return DataReloaders.ADVANCEMENT_MANAGER;
+		} else if (listener instanceof StructureManager) {
+			return DataReloaders.STRUCTURE_MANAGER;
+		} else {
+			ResourceLoader.LOGGER.debug("Unknown resource reload listener {}/{}", listener.getClass().getSimpleName(), listener);
+		}
+
+		return null;
 	}
 }

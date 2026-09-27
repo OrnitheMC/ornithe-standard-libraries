@@ -29,9 +29,11 @@ import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableR
 public class ResourceManagerAdapter implements net.minecraft.resource.manager.ReloadableResourceManager {
 
 	private final SimpleReloadableResourceManager resourceManager;
+	private final ResourceReloaderIdentifier reloaderIdentifier;
 
-	public ResourceManagerAdapter(SimpleReloadableResourceManager resourceManager) {
+	public ResourceManagerAdapter(SimpleReloadableResourceManager resourceManager, ResourceReloaderIdentifier reloaderIdentifier) {
 		this.resourceManager = resourceManager;
+		this.reloaderIdentifier = reloaderIdentifier;
 	}
 
 	@Override
@@ -66,7 +68,14 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public void addListener(net.minecraft.resource.manager.ResourceReloadListener listener) {
-		this.resourceManager.addReloader(new WrappedResourceReloadListener(listener));
+		NamespacedIdentifier identifier = this.reloaderIdentifier.identify(listener);
+		ResourceReloader reloader = new WrappedResourceReloadListener(listener);
+
+		if (identifier == null) {
+			this.resourceManager.addReloader(reloader);
+		} else {
+			this.resourceManager.registerReloader(identifier, reloader);
+		}
 	}
 
 	@Override
