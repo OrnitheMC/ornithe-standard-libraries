@@ -5,11 +5,13 @@ import java.util.Set;
 import net.minecraft.world.biome.Biome;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.biomes.api.BiomeEvents;
 import net.ornithemc.osl.registries.api.registry.Registry;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.ResourceKey;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
+import net.ornithemc.osl.registries.api.registry.sync.Id2ObjectBiMapMapper;
 import net.ornithemc.osl.registries.impl.registry.VanillaRegistries;
 
 public final class BiomeRegistryImpl {
@@ -87,6 +89,7 @@ public final class BiomeRegistryImpl {
 
 	public static void init() {
 		SyncedRegistries.register(RegistryKeys.BIOME);
+		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(Biome.MUTATED_BIOMES));
 	}
 
 	public static void unlock() {

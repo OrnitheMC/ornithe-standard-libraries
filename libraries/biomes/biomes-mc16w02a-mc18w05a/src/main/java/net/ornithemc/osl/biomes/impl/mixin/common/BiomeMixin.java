@@ -15,7 +15,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.resource.Identifier;
-import net.minecraft.util.Id2ObjectBiMap;
 import net.minecraft.util.registry.IdRegistry;
 import net.minecraft.world.biome.Biome;
 
@@ -29,15 +28,9 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.impl.util.Util;
 import net.ornithemc.osl.localization.api.L10n;
 import net.ornithemc.osl.registries.api.registry.LegacyStringIds;
-import net.ornithemc.osl.registries.api.registry.RegistryKeys;
-import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.Id2ObjectBiMapMapper;
 
 @Mixin(Biome.class)
 public class BiomeMixin implements BiomeExtension, BiomeAccess {
-
-	@Shadow @Final
-	public static Id2ObjectBiMap<Biome> MUTATED_BIOMES;
 
 	@Shadow @Final
 	private String parent;
@@ -76,10 +69,8 @@ public class BiomeMixin implements BiomeExtension, BiomeAccess {
 			value = "TAIL"
 		)
 	)
-	private static void osl$biomes$registerBiomesAndMappers(CallbackInfo ci) {
+	private static void osl$biomes$registerBiomes(CallbackInfo ci) {
 		BiomeRegistryImpl.registerBiomes();
-
-		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(MUTATED_BIOMES));
 	}
 
 	@Environment(EnvType.CLIENT)
