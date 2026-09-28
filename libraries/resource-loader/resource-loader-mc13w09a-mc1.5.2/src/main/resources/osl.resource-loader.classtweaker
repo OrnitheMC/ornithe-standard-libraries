@@ -1,5 +1,10 @@
 classTweaker	v1	named
 
 extendable	method	net/minecraft/client/resource/pack/AbstractTexturePack loadIcon	()V
+accessible	method	net/minecraft/world/storage/AlphaWorldStorage	getDirectory	()Ljava/io/File;
 
 transitive-inject-interface	net/minecraft/client/Minecraft	net/ornithemc/osl/resource/loader/impl/client/MinecraftExtensionImpl
+transitive-inject-interface	net/minecraft/world/WorldData	net/ornithemc/osl/resource/loader/impl/world/WorldDataExtensionImpl
+transitive-inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/resource/loader/impl/server/MinecraftServerExtensionImpl
+
+inject-interface	net/minecraft/world/storage/WorldStorage	net/ornithemc/osl/resource/loader/impl/world/WorldStorageExtensionImpl

@@ -1,0 +1,11 @@
+package net.ornithemc.osl.resource.loader.impl.server;
+
+import net.ornithemc.osl.resource.loader.api.server.MinecraftServerExtension;
+
+public interface MinecraftServerExtensionImpl extends MinecraftServerExtension {
+
+	@Override
+	default void reloadResources() {
+		throw new AbstractMethodError();
+	}
+}

@@ -33,6 +33,7 @@ import net.minecraft.client.sound.system.SoundEngine;
 import net.minecraft.client.sound.system.SoundManager;
 import net.minecraft.client.world.color.FoliageColorReloader;
 import net.minecraft.client.world.color.GrassColorReloader;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
@@ -68,6 +69,9 @@ public class MinecraftMixin {
 	private BuiltInResourcePack defaultResourcePack;
 	@Shadow
 	private ReloadableResourceManager resourceManager;
+
+	@Shadow
+	private IntegratedServer server;
 
 	@Shadow
 	private LanguageManager languageManager;
@@ -178,6 +182,18 @@ public class MinecraftMixin {
 		// Vanilla reloaders are triggered when registered
 		// OSL reloaders are queued and reloaded at once
 		this.actualResourceManager.partialReload();
+	}
+
+	@Inject(
+		method = "reloadResources",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$resource_loader$reloadServerResources(CallbackInfo ci) {
+		if (this.server != null) {
+			this.server.reloadResources();
+		}
 	}
 
 	@Inject(
