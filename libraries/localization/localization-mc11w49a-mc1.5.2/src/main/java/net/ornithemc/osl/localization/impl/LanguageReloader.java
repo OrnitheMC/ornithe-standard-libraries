@@ -1,6 +1,7 @@
 package net.ornithemc.osl.localization.impl;
 
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
+import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
 
@@ -8,7 +9,7 @@ public class LanguageReloader implements ResourceReloadListener {
 
 	public static void init() {
 		ClientResourceLoaderEvents.INIT_RESOURCE_MANAGER.register(resourceManager -> {
-			resourceManager.addReloader(new LanguageReloader());
+			resourceManager.registerReloader(AssetsReloaders.LANGUAGE_MANAGER, new LanguageReloader());
 		});
 		ClientResourceLoaderEvents.START_RESOURCE_RELOAD.register((resourceManager, context) -> {
 			Localization.getLanguageManager().reload(context.resourcePacks());
