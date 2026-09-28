@@ -1,6 +1,7 @@
 package net.ornithemc.osl.biomes.impl;
 
 import net.minecraft.resource.Identifier;
+import net.minecraft.util.Id2ObjectBiMap;
 import net.minecraft.util.registry.IdRegistry;
 import net.minecraft.world.biome.Biome;
 
@@ -16,5 +17,6 @@ import net.minecraft.world.biome.Biome;
 public final class BiomeIdRegistry {
 
 	public static final IdRegistry<Identifier, Biome> REGISTRY = new IdRegistry<>();
+	public static final Id2ObjectBiMap<Biome> MUTATED_BIOMES = new Id2ObjectBiMap<>();
 
 }

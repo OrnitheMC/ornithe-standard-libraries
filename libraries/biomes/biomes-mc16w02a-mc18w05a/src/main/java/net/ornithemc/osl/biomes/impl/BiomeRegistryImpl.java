@@ -16,7 +16,7 @@ import net.ornithemc.osl.registries.impl.registry.VanillaRegistries;
 
 public final class BiomeRegistryImpl {
 
-	public static final Registry<Biome> REGISTRY = VanillaRegistries.registerSimple(RegistryKeys.BIOME, BiomeIdRegistry.REGISTRY, () -> Biome.REGISTRY);
+	public static final Registry<Biome> REGISTRY = VanillaRegistries.registerSimple(RegistryKeys.BIOME, BiomeIdRegistry.REGISTRY);
 
 	private static boolean locked = true;
 
@@ -89,7 +89,7 @@ public final class BiomeRegistryImpl {
 
 	public static void init() {
 		SyncedRegistries.register(RegistryKeys.BIOME);
-		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(Biome.MUTATED_BIOMES));
+		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(BiomeIdRegistry.MUTATED_BIOMES));
 	}
 
 	public static void unlock() {

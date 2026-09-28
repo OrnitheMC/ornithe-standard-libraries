@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.resource.Identifier;
+import net.minecraft.util.Id2ObjectBiMap;
 import net.minecraft.util.registry.IdRegistry;
 import net.minecraft.world.biome.Biome;
 
@@ -36,6 +37,19 @@ public class BiomeMixin implements BiomeExtension, BiomeAccess {
 		// this allows us to register the biome registry in
 		// the API entrypoint without triggering a Biome class load
 		return BiomeIdRegistry.REGISTRY;
+	}
+
+	@Redirect(
+		method = "<clinit>",
+		at = @At(
+			value = "NEW",
+			target = "net/minecraft/util/Id2ObjectBiMap"
+		)
+	)
+	private static Id2ObjectBiMap<Biome> osl$biomes$replaceIdMap() {
+		// this allows us to register the muated biomes mapper in
+		// the API entrypoint without triggering a Biome class load
+		return BiomeIdRegistry.MUTATED_BIOMES;
 	}
 
 	@Inject(
