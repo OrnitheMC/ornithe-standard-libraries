@@ -6,11 +6,19 @@
 	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
 		"common.AdvancementManagerMixin",
-		"common.CraftingManagerMixin"
+		"common.CraftingManagerMixin",
+		"common.FunctionManagerMixin",
+		"common.LootTablesMixin",
+		"common.LootTablesMixin$CacheLoaderMixin",
+		"common.MinecraftServerMixin",
+		"common.ServerWorldMixin",
+		"common.StructureManagerMixin",
+		"common.WorldDataMixin"
 	],
 	"client": [
 		"client.BuiltInResourcePackMixin",
 		"client.CustomResourcePackAccess",
+		"client.IntegratedServerMixin",
 		"client.LegacyResourcePackAccess",
 		"client.MinecraftMixin",
 		"client.ResourcePacksMixin",

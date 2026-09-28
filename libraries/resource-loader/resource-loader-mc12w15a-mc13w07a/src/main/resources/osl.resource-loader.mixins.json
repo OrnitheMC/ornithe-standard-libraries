@@ -4,10 +4,13 @@
 	"package": "net.ornithemc.osl.resource.loader.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.MinecraftServerMixin",
+		"common.WorldDataMixin"
 	],
 	"client": [
 		"client.AbstractTexturePackAccess",
 		"client.AbstractTexturePackMixin",
+		"client.IntegratedServerMixin",
 		"client.MinecraftMixin",
 		"client.TextureManagerMixin",
 		"client.TexturePackListMixin",
@@ -16,6 +19,7 @@
 	"server": [
 	],
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 1,
+		"maxShiftBy": 2
 	}
 }
