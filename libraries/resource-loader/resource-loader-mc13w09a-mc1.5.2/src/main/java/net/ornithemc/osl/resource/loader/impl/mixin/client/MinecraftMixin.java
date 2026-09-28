@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.texture.TextureManager;
 import net.minecraft.client.render.world.WorldRenderer;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import net.ornithemc.osl.crashreports.impl.crash.ModifiableCrashReportSection;
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
@@ -30,6 +31,9 @@ public class MinecraftMixin implements MinecraftExtension {
 	private TextureManager textureManager;
 	@Shadow
 	private WorldRenderer worldRenderer;
+
+	@Shadow
+	private IntegratedServer server;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -113,6 +117,10 @@ public class MinecraftMixin implements MinecraftExtension {
 
 	@Override
 	public void reloadResources() {
+		if (this.server != null) {
+			this.server.reloadResources();
+		}
+
 		this.packRepository.reload();
 
 		try { 

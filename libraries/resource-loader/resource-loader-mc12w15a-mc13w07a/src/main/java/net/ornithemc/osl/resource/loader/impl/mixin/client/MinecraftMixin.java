@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.texture.TextureManager;
 import net.minecraft.client.render.world.WorldRenderer;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
@@ -32,11 +33,16 @@ import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResource
 public class MinecraftMixin implements MinecraftExtension {
 
 	private static final boolean TEXTURE_PACK_IN_CRASH_REPORT = MinecraftVersion.resolve().compareTo("1.3.1") >= 0;
+	private static final boolean INTEGRATED_SERVER_EXISTS = MinecraftVersion.resolve().compareTo("12w21a") >= 0;
 
 	@Shadow
 	private TextureManager textureManager;
 	@Shadow
 	private WorldRenderer worldRenderer;
+
+	@Conditional(minecraftVersion = @Version(">=12w21a"))
+	@Shadow
+	private IntegratedServer server;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -126,6 +132,10 @@ public class MinecraftMixin implements MinecraftExtension {
 
 	@Override
 	public void reloadResources() {
+		if (INTEGRATED_SERVER_EXISTS && this.server != null) {
+			this.server.reloadResources();
+		}
+
 		this.packRepository.reload();
 
 		try { 
