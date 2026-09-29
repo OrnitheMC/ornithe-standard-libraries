@@ -7,6 +7,9 @@ import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 
 /**
  * A resource reloader handles the actual reloading of specific resources.
+ * 
+ * @see ResourceReloadListener
+ * @see SimpleResourceReloader
  */
 public interface ResourceReloader {
 
