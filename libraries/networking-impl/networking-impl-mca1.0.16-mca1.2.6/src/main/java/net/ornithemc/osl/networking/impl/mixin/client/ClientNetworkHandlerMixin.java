@@ -47,21 +47,27 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 	private Set<NamespacedIdentifier> serverChannels;
 
 	@Inject(
+		method = "<init>*",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$networking$initConnectionContext(CallbackInfo ci) {
+		SocketAddress address = connection.socket.getRemoteSocketAddress();
+
+		String serverAddress = AddressParser.getAddress(address);
+		int serverPort = AddressParser.getPort(address);
+
+		connectionContext = new ClientConnectionContext(minecraft, serverAddress, serverPort);
+	}
+
+	@Inject(
 		method = "handleLogin",
 		at = @At(
 			value = "TAIL"
 		)
 	)
 	private void osl$networking$handleLogin(CallbackInfo ci) {
-		{
-			SocketAddress address = connection.socket.getRemoteSocketAddress();
-
-			String serverAddress = AddressParser.getAddress(address);
-			int serverPort = AddressParser.getPort(address);
-
-			connectionContext = new ClientConnectionContext(minecraft, serverAddress, serverPort);
-		}
-
 		ClientConnectionEvents.LOGIN.invoker().accept(connectionContext);
 	}
 

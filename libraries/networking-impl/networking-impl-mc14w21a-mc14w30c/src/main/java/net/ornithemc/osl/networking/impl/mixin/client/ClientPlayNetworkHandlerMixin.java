@@ -46,12 +46,12 @@ public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess
 	private Set<NamespacedIdentifier> serverChannels;
 
 	@Inject(
-		method = "handleLogin",
+		method = "<init>*",
 		at = @At(
 			value = "TAIL"
 		)
 	)
-	private void osl$networking$handleLogin(CallbackInfo ci) {
+	private void osl$networking$initConnectionContext(CallbackInfo ci) {
 		if (minecraft.isIntegratedServerRunning()) {
 			IntegratedServer server = minecraft.getServer();
 			String worldName = server.getWorldName();
@@ -65,7 +65,15 @@ public class ClientPlayNetworkHandlerMixin implements ClientNetworkHandlerAccess
 
 			connectionContext = new ClientConnectionContext(minecraft, serverAddress, serverPort);
 		}
+	}
 
+	@Inject(
+		method = "handleLogin",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$networking$handleLogin(CallbackInfo ci) {
 		// send channel registration data as soon as login occurs
 		ClientPlayNetworkingImpl.sendNoCheck(HandshakePayload.CHANNEL, HandshakePayload.client());
 
