@@ -1,28 +1,43 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Collections;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.render.texture.TextureManager;
 import net.minecraft.client.render.world.WorldRenderer;
 
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
+import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
+import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
+import net.ornithemc.osl.resource.loader.impl.TexturePack;
+import net.ornithemc.osl.resource.loader.impl.TexturePackDetector;
+import net.ornithemc.osl.resource.loader.impl.access.GameOptionsAccess;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.BundledModResourcePacks;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.DirectoryPackSource;
 import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin implements MinecraftExtension {
 
+	@Shadow
+	private File gameDir;
+	@Shadow
+	private GameOptions options;
 	@Shadow
 	private TextureManager textureManager;
 	@Shadow
@@ -41,6 +56,8 @@ public class MinecraftMixin implements MinecraftExtension {
 		)
 	)
 	private void osl$resource_loader$initPackRepository(CallbackInfo ci) {
+		Path dir = this.gameDir.toPath();
+
 		this.packRepository = SimpleResourcePackRepository.client();
 
 		this.packRepository.reset();
@@ -48,10 +65,20 @@ public class MinecraftMixin implements MinecraftExtension {
 
 		this.packRepository.addSource(new ClientResourcePacks());
 		this.packRepository.addSource(new BundledModResourcePacks());
-//		this.packRepository.addSource(new DirectoryResourcePackSource()); // TODO
+		this.packRepository.addSource(new DirectoryPackSource(dir.resolve("texturepacks"), new TexturePackDetector()));
 
 		this.packRepository.init();
 		this.packRepository.reload();
+
+		String skin = ((GameOptionsAccess) this.options).osl$resource_loader$getSkin();
+
+		for (ResourcePackSummary summary : this.packRepository.getAvailablePacks()) {
+			ResourcePack pack = summary.open();
+
+			if (pack instanceof TexturePack && pack.getName().equals(skin)) {
+				this.packRepository.setSelectedPacks(Collections.singleton(summary.getId()));
+			}
+		}
 	}
 
 	@Inject(
