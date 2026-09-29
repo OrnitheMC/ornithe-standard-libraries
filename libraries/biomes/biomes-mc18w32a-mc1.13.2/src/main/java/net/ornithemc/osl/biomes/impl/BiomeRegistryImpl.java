@@ -89,7 +89,7 @@ public final class BiomeRegistryImpl {
 
 	public static void init() {
 		SyncedRegistries.register(RegistryKeys.BIOME);
-		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(Biome.MUTATED_BIOMES));
+		SyncedRegistries.registerMapper(RegistryKeys.BIOME, NamespacedIdentifiers.from("mutated_biome"), Id2ObjectBiMapMapper.of(BiomeIdRegistry.MUTATED_BIOMES));
 	}
 
 	public static void unlock() {
