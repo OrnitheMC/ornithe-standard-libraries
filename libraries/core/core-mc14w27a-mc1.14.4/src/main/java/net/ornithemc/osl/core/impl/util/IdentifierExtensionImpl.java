@@ -17,12 +17,27 @@ public interface IdentifierExtensionImpl extends NamespacedIdentifier {
 	}
 
 	@Override
+	default Identifier namespaced(String namespace) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
 	default Identifier prefixed(String prefix) {
 		throw new AbstractMethodError();
 	}
 
 	@Override
 	default Identifier suffixed(String suffix) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
+	default Identifier subidentifier(int beginIndex) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
+	default Identifier subidentifier(int beginIndex, int endIndex) {
 		throw new AbstractMethodError();
 	}
 }
