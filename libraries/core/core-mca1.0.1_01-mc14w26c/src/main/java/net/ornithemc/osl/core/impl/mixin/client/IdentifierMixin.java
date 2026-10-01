@@ -48,6 +48,11 @@ public class IdentifierMixin implements NamespacedIdentifier {
 	}
 
 	@Override
+	public Identifier namespaced(String namespace) {
+		return new Identifier(namespace, path);
+	}
+
+	@Override
 	public Identifier prefixed(String prefix) {
 		return new Identifier(namespace, prefix + path);
 	}
@@ -55,5 +60,15 @@ public class IdentifierMixin implements NamespacedIdentifier {
 	@Override
 	public Identifier suffixed(String suffix) {
 		return new Identifier(namespace, path + suffix);
+	}
+
+	@Override
+	public Identifier subidentifier(int beginIndex) {
+		return new Identifier(namespace, path.substring(beginIndex));
+	}
+
+	@Override
+	public Identifier subidentifier(int beginIndex, int endIndex) {
+		return new Identifier(namespace, path.substring(beginIndex, endIndex));
 	}
 }

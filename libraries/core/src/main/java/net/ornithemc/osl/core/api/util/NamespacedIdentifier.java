@@ -36,6 +36,11 @@ public interface NamespacedIdentifier {
 	String identifier();
 
 	/**
+	 * @return a copy of this {@code NamespacedIdentifier} with the given namespace.
+	 */
+	NamespacedIdentifier namespaced(String namespace);
+
+	/**
 	 * @return a copy of this {@code NamespacedIdentifier} with the given prefix.
 	 */
 	NamespacedIdentifier prefixed(String prefix);
@@ -44,5 +49,15 @@ public interface NamespacedIdentifier {
 	 * @return a copy of this {@code NamespacedIdentifier} with the given suffix.
 	 */
 	NamespacedIdentifier suffixed(String suffix);
+
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} that is a subidentifier of this identifier.
+	 */
+	NamespacedIdentifier subidentifier(int beginIndex);
+
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} that is a subidentifier of this identifier.
+	 */
+	NamespacedIdentifier subidentifier(int beginIndex, int endIndex);
 
 }
