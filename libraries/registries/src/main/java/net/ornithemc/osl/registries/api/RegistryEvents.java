@@ -28,4 +28,6 @@ public final class RegistryEvents {
 	 */
 	public static final Event<Runnable> BOOTSTRAP_REGISTRIES = Event.runnable();
 
+	public static final Event<Runnable> REGISTRIES_FROZEN = Event.runnable();
+
 }
