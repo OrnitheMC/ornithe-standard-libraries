@@ -3,7 +3,7 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.core.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"plugin": "net.ornithemc.osl.core.impl.CoreMixinPlugin",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
 	],
 	"client": [

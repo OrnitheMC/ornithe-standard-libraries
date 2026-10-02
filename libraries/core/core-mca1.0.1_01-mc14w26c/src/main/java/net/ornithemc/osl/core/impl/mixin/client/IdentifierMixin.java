@@ -8,9 +8,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.resource.Identifier;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
+@Conditional(minecraftVersion = @Version(">=13w21a"))
 @Mixin(Identifier.class)
 public class IdentifierMixin implements NamespacedIdentifier {
 
