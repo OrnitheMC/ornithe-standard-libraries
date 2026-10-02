@@ -1,0 +1,8 @@
+classTweaker	v1	named
+
+transitive-accessible	method	net/minecraft/world/biome/Biome	<init>	(Lnet/minecraft/world/biome/Biome$Builder;)V
+
+transitive-inject-interface	net/minecraft/world/biome/Biome	net/ornithemc/osl/biomes/impl/biome/BiomeExtensionImpl
+transitive-inject-interface	net/minecraft/world/biome/Biome$Builder	net/ornithemc/osl/biomes/impl/biome/BiomeExtensionImpl$BuilderExtensionImpl
+
+inject-interface	net/minecraft/world/biome/Biome	net/ornithemc/osl/biomes/impl/access/BiomeAccess
