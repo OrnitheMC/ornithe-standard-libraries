@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.entities.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.osl.entities.impl.EntitiesMixinPlugin",
+	"mixins": [
+		"common.EntitiesMixin",
+		"common.EntitiesMixinNew",
+		"common.EntitiesMixinOld"
+	],
+	"client": [
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
