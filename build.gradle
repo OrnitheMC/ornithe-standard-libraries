@@ -323,6 +323,11 @@ def setUpModule(project) {
 			mappings project.ploceus.featherMappings(project.rootProject.feather_build)
 		}
 
+		implementation "net.ornithemc:conditional-mixin:${project.rootProject.conditional_mixin_version}"
+		if (isCore) {
+			include "net.ornithemc:conditional-mixin:${project.rootProject.conditional_mixin_version}"
+		}
+
 		implementation "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
 		if (isCore) {
 			include "org.quiltmc.parsers:json:${project.rootProject.quilt_parsers_version}"
