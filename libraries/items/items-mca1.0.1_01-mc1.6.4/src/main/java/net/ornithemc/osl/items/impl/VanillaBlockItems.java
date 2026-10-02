@@ -6,9 +6,9 @@ import java.lang.reflect.Modifier;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-import net.ornithemc.osl.blocks.api.block.Blocks;
 import net.ornithemc.osl.blocks.impl.BlockRegistryImpl;
 import net.ornithemc.osl.blocks.impl.VanillaBlocks;
+import net.ornithemc.osl.blockstates.api.block.Blocks;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.items.impl.item.ItemUtil;
 

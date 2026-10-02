@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 
 import net.minecraft.block.Block;
 
-import net.ornithemc.osl.blocks.api.block.Blocks;
+import net.ornithemc.osl.blockstates.api.block.Blocks;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
 public final class VanillaBlocks {
@@ -218,7 +218,7 @@ public final class VanillaBlocks {
 	public static final int MAX_ID = 255;
 
 	static void init() {
-		// Air block added by OSL
+		// Air block added by Block States API
 		register(Blocks.AIR);
 
 		for (Field f : Block.class.getDeclaredFields()) {
@@ -235,13 +235,12 @@ public final class VanillaBlocks {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void register(Block block) {
 		if (block.id >= 0 && block.id < IDENTIFIERS.length) {
 			String identifier = IDENTIFIERS[block.id];
 
 			if (identifier != null) {
-				BlockRegistryImpl.register(block.id, NamespacedIdentifiers.from(identifier), block);
+				BlockRegistryImpl.register(NamespacedIdentifiers.from(identifier), block);
 			}
 		}
 	}

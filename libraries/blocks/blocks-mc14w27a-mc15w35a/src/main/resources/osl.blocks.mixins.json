@@ -4,7 +4,6 @@
 	"package": "net.ornithemc.osl.blocks.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"common.AirBlockMixin",
 		"common.BlockMixin",
 		"common.StatsMixin"
 	],

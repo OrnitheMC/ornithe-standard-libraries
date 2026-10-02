@@ -10,5 +10,3 @@ transitive-accessible	method	net/minecraft/block/Block	setTicksRandomly	(Z)Lnet/
 transitive-accessible	method	net/minecraft/block/Block	setKey	(Ljava/lang/String;)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	disableStats	()Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setCreativeModeTab	(Lnet/minecraft/item/CreativeModeTab;)Lnet/minecraft/block/Block;
-
-transitive-inject-interface	net/minecraft/block/Block	net/ornithemc/osl/blocks/impl/block/BlockExtensionImpl

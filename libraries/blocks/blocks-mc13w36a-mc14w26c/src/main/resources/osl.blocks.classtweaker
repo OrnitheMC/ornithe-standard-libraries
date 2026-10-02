@@ -11,8 +11,5 @@ transitive-accessible	method	net/minecraft/block/Block	setKey	(Ljava/lang/String
 transitive-accessible	method	net/minecraft/block/Block	setCreativeModeTab	(Lnet/minecraft/item/CreativeModeTab;)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setSpriteName	(Ljava/lang/String;)Lnet/minecraft/block/Block;
 
-transitive-inject-interface	net/minecraft/block/Block	net/ornithemc/osl/blocks/impl/block/BlockExtensionImpl
-transitive-inject-interface	net/minecraft/block/Blocks	net/ornithemc/osl/blocks/impl/block/BlocksExtensionImpl
-
 accessible	field	net/minecraft/entity/living/mob/monster/EndermanEntity	HOLDABLE_BLOCKS	[Z
 

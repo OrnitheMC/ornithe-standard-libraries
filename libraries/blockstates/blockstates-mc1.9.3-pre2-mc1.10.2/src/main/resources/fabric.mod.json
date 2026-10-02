@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-blockstates",
+  "version": "0.1.0-alpha.1+mc1.9.3-pre2-mc1.10.2",
+  "environment": "*",
+  "mixins": [
+    "osl.blockstates.mixins.json"
+  ],
+  "accessWidener": "osl.blockstates.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.9.3-rc.2 \u003c\u003d1.10.2",
+    "osl-core": "\u003e\u003d0.8.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0-",
+    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-networking-impl": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.1.0"
+  },
+  "name": "OSL Block States",
+  "description": "Block States API.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
