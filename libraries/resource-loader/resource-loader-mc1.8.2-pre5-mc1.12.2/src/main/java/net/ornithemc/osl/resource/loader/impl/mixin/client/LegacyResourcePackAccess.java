@@ -6,7 +6,10 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import net.minecraft.client.resource.pack.LegacyResourcePack;
 import net.minecraft.client.resource.pack.ResourcePack;
 
-// only exists in 15w31a+
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+@Conditional(minecraftVersion = @Version(">=16w32a"))
 @Mixin(LegacyResourcePack.class)
 public interface LegacyResourcePackAccess {
 

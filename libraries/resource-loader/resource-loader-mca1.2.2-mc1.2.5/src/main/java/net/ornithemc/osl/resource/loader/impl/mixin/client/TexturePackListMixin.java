@@ -7,8 +7,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
 
+@Conditional(minecraftVersion = @Version(">=b1.3"))
 @Mixin(targets = "net/minecraft/client/gui/screen/TexturePacksScreen$TexturePackList")
 public class TexturePackListMixin {
 
