@@ -70,6 +70,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 		this.packRepository.addSource(this); // resourcepacks/ directory source
 
 		this.packRepository.init();
+//		this.packRepository.reload(); // handled by Vanilla
 	}
 
 	@Inject(

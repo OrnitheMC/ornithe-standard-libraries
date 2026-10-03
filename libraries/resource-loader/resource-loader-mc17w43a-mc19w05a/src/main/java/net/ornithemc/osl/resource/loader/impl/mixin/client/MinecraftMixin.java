@@ -48,6 +48,7 @@ public class MinecraftMixin {
 		this.packRepository = new ResourcePackRepositoryAdapter<>(this.packRepository.factory, this.actualPackRepository);
 
 		this.actualPackRepository.reset();
+		this.actualPackRepository.setCallbacks(null, null);
 	}
 
 	@Inject(
@@ -74,6 +75,7 @@ public class MinecraftMixin {
 	)
 	private void osl$resource_loader$initResourcePackRepository(CallbackInfo ci) {
 		this.actualPackRepository.init();
+//		this.actualPackRepository.reload(); // handled by Vanilla
 	}
 
 	@Inject(
@@ -90,6 +92,7 @@ public class MinecraftMixin {
 		this.resourceManager = new ResourceManagerAdapter(this.actualResourceManager);
 
 		this.actualResourceManager.reset();
+//		this.actualResourceManager.addAll(this.actualPackRepository.openSelectedPacks()); // handled by Vanilla
 	}
 
 	@Inject(
@@ -101,6 +104,8 @@ public class MinecraftMixin {
 	)
 	private void osl$resource_loader$initResourceManager(CallbackInfo ci) {
 		this.actualResourceManager.init();
+		// Vanilla reloaders are triggered when registered
+		// OSL reloaders are queued and reloaded at once
 		this.actualResourceManager.partialReload();
 	}
 }

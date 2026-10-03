@@ -1,3 +1,5 @@
 classTweaker	v1	named
 
 extendable	method	net/minecraft/client/resource/pack/AbstractTexturePack loadIcon	()V
+
+transitive-inject-interface	net/minecraft/client/Minecraft	net/ornithemc/osl/resource/loader/impl/client/MinecraftExtensionImpl
