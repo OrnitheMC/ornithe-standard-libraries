@@ -52,6 +52,7 @@ public class MinecraftMixin {
 		this.resourceManager = new ResourceManagerAdapter(this.resourceMetadataSerializerRegistry, this.actualResourceManager);
 
 		this.actualResourceManager.reset();
+//		this.actualResourceManager.addAll(this.packRepository.openSelectedPacks()); // handled by Vanilla
 	}
 
 	@Inject(
@@ -63,6 +64,8 @@ public class MinecraftMixin {
 	)
 	private void osl$resource_loader$initResourceManager(CallbackInfo ci) {
 		this.actualResourceManager.init();
+		// Vanilla reloaders are triggered when registered
+		// OSL reloaders are queued and reloaded at once
 		this.actualResourceManager.partialReload();
 	}
 
