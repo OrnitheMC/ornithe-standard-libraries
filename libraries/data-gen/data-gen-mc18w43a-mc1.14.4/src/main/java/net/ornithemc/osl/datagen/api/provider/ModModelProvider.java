@@ -13,7 +13,7 @@ import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
-public abstract class ModModelProvider extends GsonPackProvider{
+public abstract class ModModelProvider extends GsonPackProvider {
     protected ModModelProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
     }
