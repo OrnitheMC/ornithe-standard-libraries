@@ -2,6 +2,7 @@ package net.ornithemc.osl.datagen.impl;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.minecraft.Bootstrap;
 import net.ornithemc.osl.datagen.api.DataGeneratorInitializer;
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
 import net.ornithemc.osl.registries.api.RegistryEvents;
@@ -16,6 +17,8 @@ public class DataGeneratorInit implements ModInitializer {
         if (!DataGenHelperImpl.ENABLED) return;
 
         RegistryEvents.REGISTRIES_FROZEN.register(() -> {
+            Bootstrap.init();
+
             Path basePath = DataGenHelperImpl.getOutputDir();
 
             List<EntrypointContainer<DataGeneratorInitializer>> entrypoints = FabricLoader.getInstance()
