@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "net.ornithemc.osl.datagen.impl.mixin",
   "compatibilityLevel": "JAVA_8",
-  "plugin": "net.ornithemc.osl.datagen.impl.DataGenMixinPlugin",
+  "plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
   "mixins": [
     "C_23159014NewMixin",
     "C_23159014OldMixin",
