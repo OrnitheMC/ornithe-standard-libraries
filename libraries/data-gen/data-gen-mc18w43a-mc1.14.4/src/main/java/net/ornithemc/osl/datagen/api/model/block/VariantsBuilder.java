@@ -6,13 +6,28 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.resource.model.ModelRotation;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
+/**
+ * Represents block model definition variants.
+ */
 public interface VariantsBuilder {
     JsonElement build();
 
+    /**
+     * Creates a variant builder with the specified model location.
+     *
+     * @param modelLocation the model location
+     * @return the variant builder
+     */
     static VariantBuilder of(NamespacedIdentifier modelLocation) {
         return new VariantBuilder(modelLocation);
     }
 
+    /**
+     * Creates a multi-variant builder with the specified variants.
+     *
+     * @param variants the variants
+     * @return the multi-variant builder
+     */
     static VariantsBuilder multi(VariantBuilder... variants) {
         if (variants.length == 0) {
             throw new IllegalArgumentException("Must provide at least one variant");
@@ -32,6 +47,12 @@ public interface VariantsBuilder {
             this.modelLocation = modelLocation;
         }
 
+        /**
+         * Sets the x rotation of the model.
+         *
+         * @param x the x rotation
+         * @return the variant builder
+         */
         public VariantBuilder x(int x) {
             ModelRotation rotation = ModelRotation.by(x, y);
 
@@ -43,6 +64,12 @@ public interface VariantsBuilder {
             return this;
         }
 
+        /**
+         * Sets the y rotation of the model.
+         *
+         * @param y the y rotation
+         * @return the variant builder
+         */
         public VariantBuilder y(int y) {
             ModelRotation rotation = ModelRotation.by(x, y);
 
@@ -54,11 +81,23 @@ public interface VariantsBuilder {
             return this;
         }
 
+        /**
+         * Sets whether the UV coordinates of the model should be locked.
+         *
+         * @param lockUV whether the UV coordinates should be locked
+         * @return the variant builder
+         */
         public VariantBuilder lockedUV(boolean lockUV) {
             this.lockedUV = lockUV;
             return this;
         }
 
+        /**
+         * Sets the weight of the variant.
+         *
+         * @param weight the weight
+         * @return the variant builder
+         */
         public VariantBuilder weight(int weight) {
             if (weight <= 0) {
                 throw new IllegalArgumentException("Weight must be greater than 0");

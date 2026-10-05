@@ -12,6 +12,9 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * A PackProvider for generating advancements.
+ */
 public abstract class ModAdvancementProvider extends GsonPackProvider {
     protected ModAdvancementProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
@@ -26,6 +29,13 @@ public abstract class ModAdvancementProvider extends GsonPackProvider {
         generateAdvancements(advancementConsumer);
     }
 
+    /**
+     * Generates advancements.
+     * <p>
+     * Use {@link Advancement#builder()} to create advancements before passing them to the consumer.
+     *
+     * @param consumer the consumer to accept the advancements
+     */
     public abstract void generateAdvancements(Consumer<Advancement> consumer);
 
     @Override
