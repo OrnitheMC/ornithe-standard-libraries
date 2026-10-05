@@ -10,26 +10,53 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents block model definition selector conditions.
+ */
 public interface ConditionsBuilder {
     JsonObject build();
 
+    /**
+     * Creates an inverted property predicate with the specified property and values.
+     *
+     * @param property the property
+     * @param mainMatch the main match value
+     * @param extraPossibleMatch the extra possible match values
+     * @param <T> the type of the property
+     * @return the property builder
+     */
     @SafeVarargs
-    static <T extends Comparable<T>> PropertyBuilder<T> propertyNegated(Property<T> property, @NotNull T mainMatch, T... extraPossibleMatch) {
+    static <T extends Comparable<T>> PropertyPredicate<T> propertyInverted(Property<T> property, @NotNull T mainMatch, T... extraPossibleMatch) {
         List<T> valueList = new ArrayList<>();
         valueList.add(mainMatch);
         valueList.addAll(Arrays.asList(extraPossibleMatch));
-        return new PropertyBuilder<>(false, property, valueList);
+        return new PropertyPredicate<>(false, property, valueList);
     }
 
+    /**
+     * Creates a property predicate with the specified property and values.
+     *
+     * @param property the property
+     * @param mainMatch the main match value
+     * @param extraPossibleMatch the extra possible match values
+     * @param <T> the type of the property
+     * @return the property builder
+     */
     @SafeVarargs
-    static <T extends Comparable<T>> PropertyBuilder<T> property(Property<T> property, @NotNull T mainMatch, T... extraPossibleMatch) {
+    static <T extends Comparable<T>> PropertyPredicate<T> property(Property<T> property, @NotNull T mainMatch, T... extraPossibleMatch) {
         List<T> valueList = new ArrayList<>();
         valueList.add(mainMatch);
         valueList.addAll(Arrays.asList(extraPossibleMatch));
-        return new PropertyBuilder<>(false, property, valueList);
+        return new PropertyPredicate<>(false, property, valueList);
     }
 
-    static ConditionsBuilder properties(PropertyBuilder<?>...properties) {
+    /**
+     * Creates a simple conditions builder with the specified properties.
+     *
+     * @param properties the properties
+     * @return the conditions builder
+     */
+    static ConditionsBuilder properties(PropertyPredicate<?>...properties) {
         if (properties.length == 0) {
             throw new IllegalArgumentException("Must provide at least one property");
         }
@@ -37,6 +64,12 @@ public interface ConditionsBuilder {
         return new PropertyConditionBuilder(properties);
     }
 
+    /**
+     * Creates a "or" conditions builder with the specified conditions.
+     *
+     * @param conditions the conditions
+     * @return the conditions builder
+     */
     static ConditionsBuilder or(ConditionsBuilder...conditions) {
         if (conditions.length == 0) {
             throw new IllegalArgumentException("Must provide at least one condition");
@@ -45,6 +78,12 @@ public interface ConditionsBuilder {
         return new OrConditonBuilder(conditions);
     }
 
+    /**
+     * Creates a "and" conditions builder with the specified conditions.
+     *
+     * @param conditions the conditions
+     * @return the conditions builder
+     */
     static ConditionsBuilder and(ConditionsBuilder...conditions) {
         if (conditions.length == 0) {
             throw new IllegalArgumentException("Must provide at least one condition");
@@ -53,26 +92,26 @@ public interface ConditionsBuilder {
         return new AndConditonBuilder(conditions);
     }
 
-    class PropertyBuilder<T extends Comparable<T>> {
-        private final boolean negated;
+    class PropertyPredicate<T extends Comparable<T>> {
+        private final boolean inverted;
         private final Property<T> property;
         private final List<T> values;
 
-        private PropertyBuilder(boolean negated, Property<T> property, List<T> values) {
-            this.negated = negated;
+        private PropertyPredicate(boolean inverted, Property<T> property, List<T> values) {
+            this.inverted = inverted;
             this.property = property;
             this.values = values;
         }
 
         private void write(JsonObject object) {
-            object.addProperty(property.getName(), (negated ? "!" : "") + values.stream().map(property::getName).collect(Collectors.joining("|")));
+            object.addProperty(property.getName(), (inverted ? "!" : "") + values.stream().map(property::getName).collect(Collectors.joining("|")));
         }
     }
 
     class PropertyConditionBuilder implements ConditionsBuilder {
-        private final PropertyBuilder<?>[] properties;
+        private final PropertyPredicate<?>[] properties;
 
-        private PropertyConditionBuilder(PropertyBuilder<?>[] properties) {
+        private PropertyConditionBuilder(PropertyPredicate<?>[] properties) {
             this.properties = properties;
         }
 
@@ -80,8 +119,8 @@ public interface ConditionsBuilder {
         public JsonObject build() {
             JsonObject object = new JsonObject();
 
-            for (PropertyBuilder<?> propertyBuilder : properties) {
-                propertyBuilder.write(object);
+            for (PropertyPredicate<?> propertyPredicate : properties) {
+                propertyPredicate.write(object);
             }
 
             return object;

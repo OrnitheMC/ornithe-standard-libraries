@@ -16,6 +16,9 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * A PackProvider for generating recipes.
+ */
 public abstract class ModRecipesProvider extends RecipesProvider {
     public ModRecipesProvider(PackGenerator generator) {
         super((DataGenerator) generator);
@@ -39,5 +42,11 @@ public abstract class ModRecipesProvider extends RecipesProvider {
         });
     }
 
+    /**
+     * Generates recipes.
+     * @see RecipesProvider#buildShapelessRecipes(Consumer) for usage examples.
+     *
+     * @param consumer the consumer to accept the recipes
+     */
     protected abstract void generateRecipes(Consumer<C_23159014> consumer);
 }
