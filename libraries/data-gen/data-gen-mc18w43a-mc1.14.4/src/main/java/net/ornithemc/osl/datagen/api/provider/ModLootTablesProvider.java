@@ -12,6 +12,9 @@ import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
+/**
+ * A PackProvider to generate loot tables.
+ */
 public abstract class ModLootTablesProvider extends GsonPackProvider {
     protected ModLootTablesProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
@@ -22,6 +25,11 @@ public abstract class ModLootTablesProvider extends GsonPackProvider {
         generateLootTables((id, lootTable) -> consumer.accept(id, LootTables.m_19064268(lootTable.m_74891066()).getAsJsonObject()));
     }
 
+    /**
+     * Generates loot tables.
+     *
+     * @param consumer the consumer to accept the loot tables
+     */
     public abstract void generateLootTables(BiConsumer<NamespacedIdentifier, LootTable.C_96647086> consumer);
 
     @Override
