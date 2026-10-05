@@ -13,19 +13,7 @@ import java.nio.file.Path;
 @Mixin(DataGenerator.class)
 public abstract class DataGeneratorMixin implements PackGenerator {
     @Shadow
-    public abstract void addProvider(DataProvider provider);
-
-    @Shadow
     public abstract Path getOutput();
-
-    @Override
-    public void addProvider(PackProvider provider) {
-        if (provider instanceof DataProvider) {
-            addProvider((DataProvider) provider);
-        } else {
-            addProvider(new PackProviderWrapper(provider));
-        }
-    }
 
     @Override
     public Path getOutputPath() {

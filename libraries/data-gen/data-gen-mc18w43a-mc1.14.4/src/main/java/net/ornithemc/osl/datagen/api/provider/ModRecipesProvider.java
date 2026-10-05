@@ -2,6 +2,7 @@ package net.ornithemc.osl.datagen.api.provider;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.recipe.RecipesProvider;

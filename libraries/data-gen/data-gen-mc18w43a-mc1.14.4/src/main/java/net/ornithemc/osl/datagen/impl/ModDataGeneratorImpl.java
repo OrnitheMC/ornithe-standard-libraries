@@ -25,14 +25,14 @@ public class ModDataGeneratorImpl implements ModDataGenerator {
 
     @Override
     public PackGenerator createPack() {
-        DataGenerator generator = new PackDataGeneratorImpl(basePath, Collections.emptySet(), modContainer.getMetadata().getDescription());
+        DataGenerator generator = new PackDataGeneratorImpl(basePath, Collections.emptySet(), modContainer.getMetadata().getDescription(), modContainer);
         generators.add(generator);
         return generator;
     }
 
     @Override
     public PackGenerator createBuiltinResourcePack(NamespacedIdentifier id) {
-        DataGenerator generator = new PackDataGeneratorImpl(basePath.resolve(id.prefixed("resourcepacks/").identifier()), Collections.emptySet(), id.toString());
+        DataGenerator generator = new PackDataGeneratorImpl(basePath.resolve(id.prefixed("resourcepacks/").identifier()), Collections.emptySet(), id.toString(), modContainer);
         generators.add(generator);
         return generator;
     }
