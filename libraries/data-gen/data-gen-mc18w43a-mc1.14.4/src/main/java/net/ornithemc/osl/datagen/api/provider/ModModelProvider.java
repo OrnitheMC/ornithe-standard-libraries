@@ -13,6 +13,9 @@ import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
+/**
+ * A PackProvider to generate block and item models.
+ */
 public abstract class ModModelProvider extends GsonPackProvider {
     protected ModModelProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
@@ -24,20 +27,49 @@ public abstract class ModModelProvider extends GsonPackProvider {
         generateModels(modelGenerator);
     }
 
+    /**
+     * Generates block and item models.
+     *
+     * @param generator the generator to register the models
+     */
     public abstract void generateModels(ModelGenerator generator);
 
+    /**
+     * Prefixes the given identifier with "block/".
+     *
+     * @param id the identifier to prefix
+     * @return the prefixed identifier
+     */
     public NamespacedIdentifier block(NamespacedIdentifier id) {
         return id.suffixed("block/");
     }
 
+    /**
+     * Prefixes the given path with "block/".
+     *
+     * @param path the path to prefix
+     * @return the prefixed path as a NamespacedIdentifier
+     */
     public NamespacedIdentifier block(String path) {
         return block(NamespacedIdentifiers.parse(path));
     }
 
+    /**
+     * Prefixes the given identifier with "item/".
+     *
+     * @param id the identifier to prefix
+     * @return the prefixed identifier
+     */
     public NamespacedIdentifier item(NamespacedIdentifier id) {
         return id.suffixed("item/");
     }
 
+    /**
+     * Prefixes the given path with "item/".
+     *
+     * @param path the path to prefix
+     * @return the prefixed path as a NamespacedIdentifier
+     */
     public NamespacedIdentifier item(String path) {
         return item(NamespacedIdentifiers.parse(path));
     }
