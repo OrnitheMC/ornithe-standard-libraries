@@ -202,5 +202,5 @@ include ':libraries:text-components:text-components-mca1.0.1_01-mc13w19a'
 include ':libraries:text-components:text-components-mc13w21a-mc1.6.4'
 include ':libraries:text-components:text-components-mc13w36a-mc1.14.4'
 
-include ':libraries:data-gen'
-include ':libraries:data-gen:data-gen-mc18w43a-mc1.14.4'
+include ':libraries:datagen'
+include ':libraries:datagen:datagen-mc18w43a-mc1.14.4'
