@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.effects.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.StatusEffectMixin"
+	],
+	"client": [
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
