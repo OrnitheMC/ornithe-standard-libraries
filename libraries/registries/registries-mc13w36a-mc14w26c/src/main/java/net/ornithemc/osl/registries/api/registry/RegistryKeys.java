@@ -1,6 +1,8 @@
 package net.ornithemc.osl.registries.api.registry;
 
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.living.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.Biome;
 
@@ -19,6 +21,8 @@ public final class RegistryKeys {
 	public static final ResourceKey/*<Registry<BlockEntityType<?>>>*/ BLOCK_ENTITY_TYPE = from("block_entity_type");
 	public static final ResourceKey/*<Registry<EntityType<?>>>*/ ENTITY_TYPE = from("entity_type");
 	public static final ResourceKey<Registry<Biome>> BIOME = from("biome");
+	public static final ResourceKey<Registry<Enchantment>> ENCHANTMENT = from("enchantment");
+	public static final ResourceKey<Registry<StatusEffect>> STATUS_EFFECT = from("mob_effect");
 
 	/**
 	 * Constructs a registry key with the default namespace and the given identifier.
