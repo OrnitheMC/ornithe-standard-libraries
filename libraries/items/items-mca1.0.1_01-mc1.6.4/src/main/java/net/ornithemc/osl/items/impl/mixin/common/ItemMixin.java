@@ -67,7 +67,7 @@ public class ItemMixin implements ItemExtension {
 		if (MinecraftVersion.resolve().compareTo("12w01a") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/village_blacksmith"), LootTableMapper.of(BlacksmithHouse.LOOT_ENTRIES));
 		}
-		if (MinecraftVersion.resolve().compareTo("b1.9-pre3") >= 0) {
+		if (MinecraftVersion.resolve().compareTo("b1.9-pre4") >= 0) {
 			SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("loot/stronghold_corridor_altar"), LootTableMapper.of(ChestCorridor.LOOT_ENTRIES));
 		}
 		if (MinecraftVersion.resolve().compareTo("b1.8-pre1") >= 0) {
