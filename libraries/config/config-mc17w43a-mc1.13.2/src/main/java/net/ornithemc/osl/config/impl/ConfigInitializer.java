@@ -15,7 +15,7 @@ public class ConfigInitializer implements ModInitializer {
 		MinecraftServerEvents.LOAD_WORLD.register(server -> {
 			String worldSaveName = server.getWorldSaveName();
 			WorldStorageSource storageSource = server.getWorldStorageSource();
-			WorldStorage storage = storageSource.get(worldSaveName, server);
+			WorldStorage storage = storageSource.get(worldSaveName, null);
 
 			ConfigManagerImpl.setUp(ConfigScope.WORLD, storage.getDirectory().toPath());
 			ConfigManagerImpl.load(ConfigScope.WORLD, LoadingPhase.START);
