@@ -10,8 +10,14 @@ import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -163,6 +169,21 @@ public class PacketBuffer extends ByteBuf {
 		return type.getEnumConstants()[this.readVarInt()];
 	}
 
+	public <T, C extends Collection<T>> C readCollection(IntFunction<C> constructor, Function<PacketBuffer, T> reader) {
+		int size = this.readVarInt();
+		C collection = constructor.apply(size);
+
+		for (int i = 0; i < size; i++) {
+			collection.add(reader.apply(this));
+		}
+
+		return collection;
+	}
+
+	public <T> List<T> readList(Function<PacketBuffer, T> reader) {
+		return this.readCollection(ArrayList::new, reader);
+	}
+
 	public Date readDate() {
 		return new Date(this.readLong());
 	}
@@ -266,6 +287,16 @@ public class PacketBuffer extends ByteBuf {
 
 	public ByteBuf writeEnum(Enum<?> value) {
 		this.writeVarInt(value.ordinal());
+
+		return this;
+	}
+
+	public <T> ByteBuf writeCollection(Collection<T> collection, BiConsumer<PacketBuffer, T> writer) {
+		this.writeVarInt(collection.size());
+
+		for (T value : collection) {
+			writer.accept(this, value);
+		}
 
 		return this;
 	}
