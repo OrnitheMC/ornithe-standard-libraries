@@ -110,7 +110,7 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$resource_loader$registerModResources(CallbackInfo ci) {
-		this.actualPackRepository.addSource(new BundledModResourcePacks());
+		this.actualPackRepository.addSource(BundledModResourcePacks.server());
 	}
 
 	@Inject(
