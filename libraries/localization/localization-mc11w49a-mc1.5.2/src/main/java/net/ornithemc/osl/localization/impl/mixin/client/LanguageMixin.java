@@ -90,10 +90,9 @@ public class LanguageMixin {
 		// each ServerPlayerEntity also holds an instance of this class
 		if ((Language) (Object) this == INSTANCE) {
 			Localization.getLocale().loadLanguage(ResourceManager.client(), language);
+		} else {
+			op.call(self, translations, language);
 		}
-
-		// no need to run the original operation
-		// op.call(self, translations, language);
 	}
 
 	@Inject(
