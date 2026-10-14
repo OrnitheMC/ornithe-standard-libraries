@@ -27,6 +27,13 @@ and snake case for the identifier.
 public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.from("example", "cookie");
 ```
 
+In 1.13-pre2 and below, the game did not validate channel names, so Minecraft itself used names like `MC|Brand`. If you require a channel name with this convention, you can use the `fromLegacy` factory methods instead.
+
+```java
+ChannelIdentifiers.from("example", "cookie"); // -> "example:cookie"
+ChannelIdentifiers.fromLegacy("EXAMPLE", "Cookie"); // -> "EXAMPLE|Cookie"
+```
+
 You are expected to register your channels through the `ChannelRegistry`.
 
 ```java
