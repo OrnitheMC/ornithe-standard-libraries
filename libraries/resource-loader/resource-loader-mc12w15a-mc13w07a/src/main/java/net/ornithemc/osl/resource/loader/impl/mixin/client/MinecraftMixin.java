@@ -1,5 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.util.stream.Collectors;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,6 +18,9 @@ import net.minecraft.client.render.world.WorldRenderer;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+import net.ornithemc.osl.crashreports.api.crash.CrashReportDetail;
+import net.ornithemc.osl.crashreports.impl.crash.ModifiableCrashReportSection;
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
@@ -26,6 +31,8 @@ import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResource
 @Mixin(Minecraft.class)
 public class MinecraftMixin implements MinecraftExtension {
 
+	private static final boolean TEXTURE_PACK_IN_CRASH_REPORT = MinecraftVersion.resolve().compareTo("1.3.1") >= 0;
+
 	@Shadow
 	private TextureManager textureManager;
 	@Shadow
@@ -35,6 +42,38 @@ public class MinecraftMixin implements MinecraftExtension {
 	private SimpleResourcePackRepository packRepository;
 	@Unique
 	private SimpleReloadableResourceManager resourceManager;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$resource_loader$modifyCrashReports(CallbackInfo ci) {
+		Minecraft minecraft = (Minecraft) (Object) this;
+
+		minecraft.addCrashListener((report, section) -> {
+			ModifiableCrashReportSection modifiableSection = (ModifiableCrashReportSection) section;
+			CrashReportDetail<String> detail = () -> {
+				return this.packRepository.getSelectedPacks().stream()
+						.map(summary -> {
+							String s = summary.getId();
+							if (!summary.getCompatibility().isCompatible()) {
+								s += " (incompatible)";
+							}
+
+							return s;
+						})
+						.collect(Collectors.joining(", "));
+			};
+
+			if (TEXTURE_PACK_IN_CRASH_REPORT) {
+				modifiableSection.replaceDetail("Texture Pack", "Resource Packs", detail);
+			} else {
+				modifiableSection.addDetail("Resource Packs", detail);
+			}
+		});
+	}
 
 	@Inject(
 		method = "init",
