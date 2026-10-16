@@ -54,6 +54,23 @@ public class MinecraftServerMixin implements MainThreadExecutor, MinecraftServer
 	private void osl$resource_loader$initDataPacks(CallbackInfo ci) {
 		this.packRepository = SimpleResourcePackRepository.server();
 		this.resourceManager = SimpleReloadableResourceManager.server();
+
+		MinecraftServer server = (MinecraftServer) (Object) this;
+
+		server.addCrashListener((report, section) -> {
+			section.addDetail("Data Packs", () -> {
+				return this.packRepository.getSelectedPacks().stream()
+					.map(summary -> {
+						String s = summary.getId();
+						if (!summary.getCompatibility().isCompatible()) {
+							s += " (incompatible)";
+						}
+
+						return s;
+					})
+					.collect(Collectors.joining(", "));
+			});
+		});
 	}
 
 	@Inject(
