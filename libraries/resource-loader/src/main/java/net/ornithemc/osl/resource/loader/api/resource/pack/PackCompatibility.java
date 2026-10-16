@@ -9,6 +9,10 @@ public enum PackCompatibility {
 
 	COMPATIBLE, TOO_OLD, TOO_NEW;
 
+	public boolean isCompatible() {
+		return this == COMPATIBLE;
+	}
+
 	/**
 	 * @return a format number representing this compatibility status.
 	 */
