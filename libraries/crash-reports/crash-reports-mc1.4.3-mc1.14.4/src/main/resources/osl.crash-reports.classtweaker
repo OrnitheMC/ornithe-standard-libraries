@@ -1,0 +1,8 @@
+classTweaker	v1	named
+
+transitive-inject-interface	net/minecraft/util/crash/CrashReport	net/ornithemc/osl/crashreports/impl/crash/CrashReportExtensionImpl
+transitive-inject-interface	net/minecraft/util/crash/CrashReportCategory	net/ornithemc/osl/crashreports/impl/crash/CrashReportCategoryExtensionImpl
+transitive-inject-interface	net/minecraft/client/Minecraft	net/ornithemc/osl/crashreports/impl/crash/CrashReportPopulatorImpl
+transitive-inject-interface	net/minecraft/world/World	net/ornithemc/osl/crashreports/impl/crash/CrashReportPopulatorImpl
+transitive-inject-interface	net/minecraft/world/WorldData	net/ornithemc/osl/crashreports/impl/crash/CrashReportPopulatorImpl
+transitive-inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/crashreports/impl/crash/CrashReportPopulatorImpl
