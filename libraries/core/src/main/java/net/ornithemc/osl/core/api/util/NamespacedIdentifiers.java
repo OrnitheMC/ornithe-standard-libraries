@@ -140,6 +140,36 @@ public final class NamespacedIdentifiers {
 		return identifier;
 	}
 
+	/**
+	 * @return whether the given {@linkplain NamespacedIdentifier} is valid.
+	 */
+	public static boolean isValid(NamespacedIdentifier identifier) {
+		return isValidNamespace(identifier.namespace()) && isValidIdentifier(identifier.identifier());
+	}
+
+	/**
+	 * @return whether the given {@linkplain String} is a valid namespace.
+	 */
+	public static boolean isValidNamespace(String namespace) {
+		return namespace != null && !namespace.isEmpty()
+			&& namespace.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'));
+	}
+
+	/**
+	 * @return whether the given {@linkplain String} is a valid identifier.
+	 */
+	public static boolean isValidIdentifier(String identifier) {
+		return identifier != null && !identifier.isEmpty()
+			&& identifier.chars().allMatch(chr -> chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'));
+	}
+
+	/**
+	 * @return whether the given character is allowed in a {@linkplain NamespacedIdentifier}
+	 */
+	public static boolean isCharAllowed(int chr) {
+		return (chr == ':' || chr == '-' || chr == '.' || chr == '_' || chr == '/' || (chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9'));
+	}
+
 	public static boolean equals(NamespacedIdentifier a, NamespacedIdentifier b) {
 		return a.separator() == b.separator() && a.namespace().equals(b.namespace()) && a.identifier().equals(b.identifier());
 	}
