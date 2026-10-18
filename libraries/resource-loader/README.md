@@ -151,8 +151,8 @@ public class ExampleInitializer implements ClientModInitializer {
 	@Override
 	public void initClient() {
 		ClientResourceLoaderEvents.INIT_RESOURCE_MANAGER.register(resourceManager -> {
-			resourceManager.addReloader(new CookiesManager());
-			resourceManager.addReloader(new ExampleReloadListener());
+			resourceManager.registerReloader(CookiesManager.IDENTIFIER, new CookiesManager());
+			resourceManager.registerReloader(ExampleReloadListener.IDENTIFIER, new ExampleReloadListener());
 		});
 	}
 }
@@ -161,10 +161,14 @@ public class ExampleInitializer implements ClientModInitializer {
 ```java
 package com.example;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.reload.SimpleResourceReloader;
 
 public class CookiesManager implements SimpleResourceReloader<Cookies> {
+
+	public static final NamespacedIdentifier IDENTIFIER = NamespacedIdentifiers.from("example", "cookies");
 
 	private Cookies cookies;
 
@@ -190,10 +194,14 @@ public class CookiesManager implements SimpleResourceReloader<Cookies> {
 ```java
 package com.example;
 
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
 
 public class ExampleReloadListener implements ResourceReloadListener {
+
+	public static final NamespacedIdentifier IDENTIFIER = NamespacedIdentifiers.from("example", "example");
 
 	@Override
 	public void resourcesReloaded(ResourceManager manager) {
