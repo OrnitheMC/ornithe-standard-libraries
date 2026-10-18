@@ -56,6 +56,11 @@ public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 	}
 
 	@Override
+	public NamespacedIdentifier namespaced(String namespace) {
+		return new NamespacedIdentifierImpl(namespace, identifier);
+	}
+
+	@Override
 	public NamespacedIdentifier prefixed(String prefix) {
 		return new NamespacedIdentifierImpl(namespace, prefix + identifier);
 	}
@@ -63,5 +68,15 @@ public final class NamespacedIdentifierImpl implements NamespacedIdentifier {
 	@Override
 	public NamespacedIdentifier suffixed(String suffix) {
 		return new NamespacedIdentifierImpl(namespace, identifier + suffix);
+	}
+
+	@Override
+	public NamespacedIdentifier subidentifier(int beginIndex) {
+		return new NamespacedIdentifierImpl(namespace, identifier.substring(beginIndex));
+	}
+
+	@Override
+	public NamespacedIdentifier subidentifier(int beginIndex, int endIndex) {
+		return new NamespacedIdentifierImpl(namespace, identifier.substring(beginIndex, endIndex));
 	}
 }
