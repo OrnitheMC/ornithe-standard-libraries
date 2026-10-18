@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-localization",
-  "version": "0.1.3+mc11w49a-mc1.5.2",
+  "version": "0.2.0-alpha.1+mc11w49a-mc1.5.2",
   "environment": "*",
   "entrypoints": {
     "client-init": [
@@ -19,7 +19,7 @@
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-resource-loader": "\u003e\u003d0.8.0"
+    "osl-resource-loader": "\u003e\u003d0.9.0-"
   },
   "name": "OSL Localization",
   "description": "Localization API and events.",
