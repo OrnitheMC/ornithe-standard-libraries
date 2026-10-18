@@ -7,20 +7,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.texture.TextureManager;
 
+import net.ornithemc.osl.lifecycle.api.client.MinecraftInstance;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
-import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
-import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
 @Mixin(TextureManager.class)
 public class TextureManagerMixin implements ResourceReloadListener {
 
 	@Unique
-	private SimpleResourcePackRepository packRepository;
-	@Unique
-	private SimpleReloadableResourceManager resourceManager;
+	private Minecraft minecraft;
 
 	@Unique
 	private boolean vanillaReloading;
@@ -39,15 +37,7 @@ public class TextureManagerMixin implements ResourceReloadListener {
 		)
 	)
 	private void osl$resource_loader$initResourceManager(CallbackInfo ci) {
-		this.packRepository = SimpleResourcePackRepository.client();
-		this.resourceManager = SimpleReloadableResourceManager.client();
-
-		this.resourceManager.reset();
-		// ensure the selected packs have been applied
-		this.resourceManager.reload(this.packRepository.openSelectedPacks());
-
-		// let this class act as the texture reloader
-		this.resourceManager.addReloadedReloader(this);
+		this.minecraft = MinecraftInstance.get();
 	}
 
 	@Inject(
@@ -62,7 +52,7 @@ public class TextureManagerMixin implements ResourceReloadListener {
 			this.vanillaReloading = true;
 
 			if (!this.reloading) {
-				this.resourceManager.reload(this.packRepository.openSelectedPacks());
+				this.minecraft.reloadResources();
 
 				// cancel this call as the resource manager will trigger
 				// another recursive call through this.resourcesReloaded

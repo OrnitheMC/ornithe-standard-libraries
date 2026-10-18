@@ -8,8 +8,12 @@ import net.minecraft.client.gui.screen.TexturePacksScreen;
 import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
 
+@Conditional(minecraftVersion = @Version("<b1.3"))
 @Mixin(TexturePacksScreen.class)
 public class TexturePacksScreenMixin {
 

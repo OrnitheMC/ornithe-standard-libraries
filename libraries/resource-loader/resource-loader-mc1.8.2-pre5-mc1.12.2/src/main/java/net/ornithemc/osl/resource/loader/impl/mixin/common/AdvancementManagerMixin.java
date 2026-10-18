@@ -14,8 +14,12 @@ import net.fabricmc.loader.api.ModContainer;
 
 import net.minecraft.server.AdvancementManager;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 
+@Conditional(minecraftVersion = @Version(">=17w13a"))
 @Mixin(AdvancementManager.class)
 public class AdvancementManagerMixin {
 
