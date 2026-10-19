@@ -10,9 +10,11 @@ import net.minecraft.resource.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.datagen.api.PackGenerator;
+import net.ornithemc.osl.datagen.impl.provider.LanguageProviderHelper;
 import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -126,6 +128,16 @@ public abstract class ModLanguageProvider extends GsonDataProvider {
          */
         default void add(Biome biome, String value) {
             this.add(biome.getTranslationKey(), value);
+        }
+
+        /**
+         * Adds translations from the specified language file.
+         *
+         * @param languageFilePath the path to the language file
+         * @throws IOException if an I/O error occurs
+         */
+        default void add(Path languageFilePath) throws IOException {
+            LanguageProviderHelper.collectFrom(languageFilePath, this::add);
         }
     }
 }
