@@ -1,5 +1,8 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +17,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.sugar.Local;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resource.pack.DirectoryTexturePack;
 import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.resource.pack.TexturePacks;
-import net.minecraft.client.resource.pack.ZippedTexturePack;
+
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
 
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
@@ -28,6 +34,7 @@ import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSourc
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
+import net.ornithemc.osl.resource.loader.impl.DirectoryTexturePack;
 import net.ornithemc.osl.resource.loader.impl.access.TexturePacksAccess;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
 import net.ornithemc.osl.resource.loader.impl.adapter.WrappedTexturePack;
@@ -50,6 +57,8 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private TexturePack defaultPack;
 	@Shadow
 	private TexturePack selected;
+	@Shadow
+	private String selectedName;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -157,6 +166,43 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		}
 	}
 
+	@Conditional(minecraftVersion = @Version("<12w08a"))
+	@Inject(
+		method = "reload",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/io/File;isFile()Z"
+		)
+	)
+	private void osl$resource_loader$supportDirectoryTexturePacks(CallbackInfo ci, @Local  ArrayList<TexturePack> packs, @Local File file) {
+		if (file.isDirectory() && new File(file, "pack.txt").exists()) {
+			String key = file.getName() + ":folder:" + file.lastModified();
+
+			try {
+				if (!this.availablePacksByKey.containsKey(key)) {
+					TexturePack pack = new DirectoryTexturePack(file);
+					pack.key = key;
+					this.availablePacksByKey.put(key, pack);
+					pack.load(this.minecraft);
+				}
+
+				TexturePack pack = this.availablePacksByKey.get(key);
+				if (pack.name.equals(this.selectedName)) {
+					this.selected = pack;
+				}
+
+				packs.add(pack);
+			} catch (Throwable t) {
+				// throws clause patches are missing but TexturePack.load could throw an IOException
+				if (t instanceof IOException) {
+					t.printStackTrace();
+				} else {
+					throw t;
+				}
+			}
+		}
+	}
+
 	@Inject(
 		method = "reload",
 		at = @At(
@@ -241,10 +287,12 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 	private String packId(TexturePack pack) {
 		if (pack == this.defaultPack) {
 			return ClientPackSource.DEFAULT_PACK_ID;
-		} else if (pack instanceof ZippedTexturePack) {
+		} else if (pack instanceof ZippedTexturePackAccess) {
 			return DirectoryPackSource.packId(((ZippedTexturePackAccess) pack).accessFile().toPath());
-		} else if (DIRECTORY_TEXTURE_PACKS_SUPPORTED && pack instanceof DirectoryTexturePack) {
+		} else if (DIRECTORY_TEXTURE_PACKS_SUPPORTED && pack instanceof DirectoryTexturePackAccess) {
 			return DirectoryPackSource.packId(((DirectoryTexturePackAccess) pack).accessFile().toPath());
+		} else if (!DIRECTORY_TEXTURE_PACKS_SUPPORTED && pack instanceof DirectoryTexturePack) {
+			return DirectoryPackSource.packId(((DirectoryTexturePack) pack).file.toPath());
 		} else {
 			return "texturepack/" + pack.name;
 		}
