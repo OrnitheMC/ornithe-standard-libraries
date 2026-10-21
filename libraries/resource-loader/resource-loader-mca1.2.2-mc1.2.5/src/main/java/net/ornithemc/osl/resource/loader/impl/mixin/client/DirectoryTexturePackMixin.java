@@ -7,15 +7,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
 import net.minecraft.client.resource.pack.BuiltInTexturePack;
 import net.minecraft.client.resource.pack.DirectoryTexturePack;
 
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
 
+import net.ornithemc.osl.resource.loader.api.resource.ResourcePath;
+
 @Conditional(minecraftVersion = @Version(">=12w08a"))
 @Mixin(DirectoryTexturePack.class)
 public class DirectoryTexturePackMixin {
+
+	@WrapOperation(
+		method = "load",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/resource/pack/DirectoryTexturePack;getResource(Ljava/lang/String;)Ljava/io/InputStream;"
+		)
+	)
+	private InputStream osl$resource_loader$fixResourcePath(DirectoryTexturePack pack, String path, Operation<InputStream> op) {
+		return op.call(pack, ResourcePath.absolute(path));
+	}
 
 	@Inject(
 		method = "getResource",
