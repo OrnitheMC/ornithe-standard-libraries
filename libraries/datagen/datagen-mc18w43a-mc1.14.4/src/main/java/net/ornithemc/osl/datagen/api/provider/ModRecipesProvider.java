@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * A PackProvider for generating recipes.
+ * A DataProvider for generating recipes.
  */
 public abstract class ModRecipesProvider extends RecipesProvider {
     public ModRecipesProvider(PackGenerator generator) {

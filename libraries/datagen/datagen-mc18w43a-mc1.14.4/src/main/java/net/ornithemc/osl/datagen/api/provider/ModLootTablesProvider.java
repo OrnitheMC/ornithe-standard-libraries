@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 /**
- * A PackProvider to generate loot tables.
+ * A DataProvider to generate loot tables.
  */
 public abstract class ModLootTablesProvider extends GsonDataProvider {
     protected ModLootTablesProvider(PackGenerator generator, ModContainer mod) {
