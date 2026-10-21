@@ -13,10 +13,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * A PackProvider for generating advancements.
+ * A DataProvider for generating advancements.
  */
-public abstract class ModAdvancementProvider extends GsonDataProvider {
-    protected ModAdvancementProvider(PackGenerator generator, ModContainer mod) {
+public abstract class ModAdvancementsProvider extends GsonDataProvider {
+    protected ModAdvancementsProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
     }
 
