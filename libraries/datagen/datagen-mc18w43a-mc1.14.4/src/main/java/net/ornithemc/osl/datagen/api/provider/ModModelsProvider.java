@@ -14,10 +14,10 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 /**
- * A PackProvider to generate block and item models.
+ * A DataProvider to generate block and item models.
  */
-public abstract class ModModelProvider extends GsonDataProvider {
-    protected ModModelProvider(PackGenerator generator, ModContainer mod) {
+public abstract class ModModelsProvider extends GsonDataProvider {
+    protected ModModelsProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
     }
 
