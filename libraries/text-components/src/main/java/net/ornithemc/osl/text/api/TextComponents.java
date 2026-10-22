@@ -8,6 +8,7 @@ import net.ornithemc.osl.text.api.TextComponent.Serializer;
 import net.ornithemc.osl.text.api.TextComponent.Serializer.LowercaseEnumTypeAdapterFactory;
 import net.ornithemc.osl.text.impl.LiteralTextComponent;
 import net.ornithemc.osl.text.impl.TextComponentBuilder;
+import net.ornithemc.osl.text.impl.TextConverters;
 import net.ornithemc.osl.text.impl.TextResolvers;
 import net.ornithemc.osl.text.impl.TranslatableTextComponent;
 
@@ -68,5 +69,9 @@ public final class TextComponents {
 
 	public static JsonElement toJsonTree(TextComponent t) {
 		return GSON.toJsonTree(t);
+	}
+
+	public static <T> T convert(TextComponent t, Class<T> type) {
+		return TextConverters.convert(t, type);
 	}
 }

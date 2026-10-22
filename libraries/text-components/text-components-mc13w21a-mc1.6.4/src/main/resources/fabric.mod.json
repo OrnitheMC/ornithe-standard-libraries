@@ -5,7 +5,7 @@
   "environment": "*",
   "entrypoints": {
     "init": [
-      "net.ornithemc.osl.text.impl.TextResolversInit"
+      "net.ornithemc.osl.text.impl.TextInit"
     ]
   },
   "mixins": [
