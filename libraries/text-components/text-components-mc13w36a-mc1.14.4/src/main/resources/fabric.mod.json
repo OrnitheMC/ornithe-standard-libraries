@@ -11,6 +11,7 @@
   "mixins": [
     "osl.text-components.mixins.json"
   ],
+  "accessWidener": "osl.text-components.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.7-alpha.13.36.a \u003c\u003d1.14.4",

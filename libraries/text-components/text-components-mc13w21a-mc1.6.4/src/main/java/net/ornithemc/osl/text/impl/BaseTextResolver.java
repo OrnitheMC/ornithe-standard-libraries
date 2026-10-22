@@ -4,6 +4,7 @@ import net.ornithemc.osl.text.api.Formatting;
 import net.ornithemc.osl.text.api.Style;
 import net.ornithemc.osl.text.api.TextComponent;
 import net.minecraft.text.Text;
+
 import net.ornithemc.osl.text.api.TextComponents;
 
 import java.util.List;
