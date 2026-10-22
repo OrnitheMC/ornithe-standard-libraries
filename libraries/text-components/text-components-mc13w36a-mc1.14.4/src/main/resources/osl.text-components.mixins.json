@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
+		"common.CommandSourceMixin",
 		"common.StyleMixin"
 	],
 	"client": [
