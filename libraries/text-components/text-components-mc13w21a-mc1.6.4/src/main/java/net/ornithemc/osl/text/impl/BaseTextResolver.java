@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BaseTextResolver implements TextResolver<Text> {
+
 	@Override
 	public TextComponent resolve(Text o) {
 		List<Text> siblings = o.getSiblings();
