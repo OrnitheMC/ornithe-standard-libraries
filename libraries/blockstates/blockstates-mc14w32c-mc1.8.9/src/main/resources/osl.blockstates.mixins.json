@@ -7,7 +7,9 @@
 		"common.AirBlockMixin",
 		"common.BlockMixin",
 		"common.BlockEntityMixin",
-		"common.BlockStateMixin"
+		"common.BlockStateMixin",
+		"common.PropertyMixin",
+		"common.StateDefinitionMixin"
 	],
 	"client": [
 	],
