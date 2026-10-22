@@ -3,6 +3,7 @@ package net.ornithemc.osl.blockstates.api.state.property;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class IntegerProperty extends AbstractProperty<Integer> {
 
@@ -55,6 +56,20 @@ public class IntegerProperty extends AbstractProperty<Integer> {
 	@Override
 	public List<Integer> values() {
 		return this.values;
+	}
+
+	@Override
+	public Optional<Integer> getValue(String name) {
+		try {
+			int value = Integer.parseInt(name);
+
+			if (value >= this.min && value <= this.max) {
+				return Optional.of(value);
+			}
+		} catch (NumberFormatException e) {
+		}
+
+		return Optional.empty();
 	}
 
 	@Override
