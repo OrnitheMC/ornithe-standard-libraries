@@ -196,6 +196,14 @@ def setUpLibrary(project) {
 			name = 'Quilt'
 			url = 'https://maven.quiltmc.org/repository/release'
 		}
+		maven {
+			name = 'Minecraft Libraries'
+			url = 'https://libraries.minecraft.net'
+			metadataSources {
+				artifact()
+				ignoreGradleMetadataRedirection()
+			}
+		}
 		mavenCentral()
 	}
 
