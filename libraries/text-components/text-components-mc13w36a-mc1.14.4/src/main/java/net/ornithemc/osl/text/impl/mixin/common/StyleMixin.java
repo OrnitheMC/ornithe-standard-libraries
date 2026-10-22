@@ -8,6 +8,9 @@ import net.minecraft.text.Formatting;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.text.impl.access.StyleAccess;
 
 @Mixin(Style.class)
@@ -29,6 +32,9 @@ public abstract class StyleMixin implements StyleAccess {
 	private ClickEvent clickEvent;
 	@Shadow
 	private HoverEvent hoverEvent;
+	@Conditional(minecraftVersion = @Version(">=14w02a"))
+	@Shadow
+	private String insertion;
 
 	@Override
 	public Formatting osl$text$color() {
@@ -68,5 +74,11 @@ public abstract class StyleMixin implements StyleAccess {
 	@Override
 	public HoverEvent osl$text$hoverEvent() {
 		return this.hoverEvent;
+	}
+
+	@Conditional(minecraftVersion = @Version(">=14w02a"))
+	@Override
+	public String osl$text$insertion() {
+		return this.insertion;
 	}
 }
