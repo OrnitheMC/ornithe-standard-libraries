@@ -189,5 +189,6 @@ include ':libraries:resource-loader:resource-loader-mc17w43a-mc19w05a'
 include ':libraries:resource-loader:resource-loader-mc19w07a-mc1.14.4'
 
 include ':libraries:text-components'
-include ':libraries:text-components:text-components-mca1.0.1_01-mc1.6.4'
+include ':libraries:text-components:text-components-mca1.0.1_01-mc13w19a'
+include ':libraries:text-components:text-components-mc13w21a-mc1.6.4'
 include ':libraries:text-components:text-components-mc13w36a-mc1.14.4'
