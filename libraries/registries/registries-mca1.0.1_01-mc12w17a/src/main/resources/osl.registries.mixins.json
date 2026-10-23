@@ -7,6 +7,7 @@
 	"mixins": [
 		"common.AlphaWorldStorageMixin",
 		"common.NbtCompoundAccess",
+		"common.WorldAccessOld",
 		"common.WorldMixinNew",
 		"common.WorldMixinOld"
 	],
@@ -15,8 +16,7 @@
 		"client.MinecraftMixin",
 		"client.MinecraftMixinNew",
 		"client.MinecraftMixinOld",
-		"client.WorldAccessNew",
-		"client.WorldAccessOld"
+		"client.WorldAccessNew"
 	],
 	"server": [
 		"server.MinecraftServerMixin",

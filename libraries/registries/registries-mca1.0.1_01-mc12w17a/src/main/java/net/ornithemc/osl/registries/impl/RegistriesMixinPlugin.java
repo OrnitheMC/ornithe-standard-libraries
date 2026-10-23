@@ -17,6 +17,7 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 
 	private static final boolean OLD_WORLD_FORMAT = MinecraftVersion.resolve().compareTo("b1.3") < 0;
 	private static final boolean DIMENSIONS_EXIST = MinecraftVersion.resolve().compareTo(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ? "a1.2.0" : "a0.2.2") >= 0;
+	private static final boolean SERVER_SUPPORTS_NETHER = MinecraftVersion.resolve().compareTo("b1.5_02") > 0;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -30,14 +31,13 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 		if ("net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinOld".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.client.WorldAccessOld".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.common.WorldAccessOld".equals(mixinClassName)
 			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinOld".equals(mixinClassName)) {
 			return OLD_WORLD_FORMAT;
 		}
 		if ("net.ornithemc.osl.registries.impl.mixin.common.AlphaWorldStorageMixin".equals(mixinClassName)
 			|| "net.ornithemc.osl.registries.impl.mixin.client.WorldAccessNew".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinNew".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinNew".equals(mixinClassName)) {
+			|| "net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinNew".equals(mixinClassName)) {
 			return !OLD_WORLD_FORMAT;
 		}
 		if ("net.ornithemc.osl.registries.impl.mixin.common.WorldMixinNew".equals(mixinClassName)) {
@@ -45,6 +45,12 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 		}
 		if ("net.ornithemc.osl.registries.impl.mixin.common.WorldMixinOld".equals(mixinClassName)) {
 			return OLD_WORLD_FORMAT && !DIMENSIONS_EXIST;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinNew".equals(mixinClassName)) {
+			return OLD_WORLD_FORMAT && !SERVER_SUPPORTS_NETHER;
+		}
+		if ("net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinNewNew".equals(mixinClassName)) {
+			return OLD_WORLD_FORMAT && SERVER_SUPPORTS_NETHER;
 		}
 
 		return true;

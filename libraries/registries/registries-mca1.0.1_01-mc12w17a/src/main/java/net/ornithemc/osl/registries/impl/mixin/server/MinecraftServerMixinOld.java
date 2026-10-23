@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
-import net.ornithemc.osl.registries.impl.mixin.client.WorldAccessOld;
+import net.ornithemc.osl.registries.impl.mixin.common.WorldAccessOld;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingStorage;
 
