@@ -1,5 +1,7 @@
 package net.ornithemc.osl.blockstates.impl.block.entity;
 
+import net.minecraft.block.Block;
+
 import net.ornithemc.osl.blockstates.api.block.entity.BlockEntityExtension;
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
 import net.ornithemc.osl.core.api.util.math.BlockPos;
@@ -13,6 +15,11 @@ public interface BlockEntityExtensionImpl extends BlockEntityExtension {
 
 	@Override
 	default void setPos(BlockPos pos) {
+		throw new AbstractMethodError();
+	}
+
+	@Override
+	default Block getBlock() {
 		throw new AbstractMethodError();
 	}
 

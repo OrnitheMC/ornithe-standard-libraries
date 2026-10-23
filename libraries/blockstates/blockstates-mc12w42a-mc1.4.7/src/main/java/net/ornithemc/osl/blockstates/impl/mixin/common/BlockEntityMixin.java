@@ -3,8 +3,15 @@ package net.ornithemc.osl.blockstates.impl.mixin.common;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.world.World;
+
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
 
 import net.ornithemc.osl.blockstates.api.block.entity.BlockEntityExtension;
 import net.ornithemc.osl.blockstates.api.block.state.BlockState;
@@ -14,14 +21,16 @@ import net.ornithemc.osl.core.api.util.math.BlockPos;
 public class BlockEntityMixin implements BlockEntityExtension {
 
 	@Shadow
+	private World world;
+	@Shadow
 	private int x;
 	@Shadow
 	private int y;
 	@Shadow
 	private int z;
-
 	@Shadow
-	private Block getBlock() { return null; }
+	private Block block;
+
 	@Shadow
 	private int getBlockMetadata() { return 0; }
 
@@ -35,6 +44,17 @@ public class BlockEntityMixin implements BlockEntityExtension {
 		this.x = pos.x();
 		this.y = pos.y();
 		this.z = pos.z();
+	}
+
+	@Conditional(minecraftVersion = @Version("<12w42b"))
+	@Environment(EnvType.SERVER)
+	@Override
+	public Block getBlock() {
+		if (this.block == null) {
+			this.block = Block.BY_ID[this.world.getBlock(this.x, this.y, this.z)];
+		}
+
+		return this.block;
 	}
 
 	@Override
