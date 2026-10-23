@@ -30,6 +30,8 @@ import net.minecraft.nbt.NbtIo;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.text.api.TextComponent;
+import net.ornithemc.osl.text.api.TextComponents;
 
 public class PacketBuffer extends ByteBuf {
 
@@ -38,6 +40,8 @@ public class PacketBuffer extends ByteBuf {
 	private static final int VAR_PARITY_VALUE = 1 << VAR_VALUE_BITS;
 	private static final int VAR_INT_MAX_BYTES = 5;
 	private static final int VAR_LONG_MAX_BYTES = 10;
+
+	private static final int TEXT_JSON_MAX_LENGTH = 0x40000;
 
 	final ByteBuf delegate;
 
@@ -199,6 +203,10 @@ public class PacketBuffer extends ByteBuf {
 		return NamespacedIdentifiers.parse(this.readString());
 	}
 
+	public TextComponent readTextComponent() {
+		return TextComponents.fromJson(this.readString(TEXT_JSON_MAX_LENGTH));
+	}
+
 	public NbtCompound readNbtCompound() {
 		int readerIndex = this.readerIndex();
 		byte firstByte = this.readByte();
@@ -316,6 +324,10 @@ public class PacketBuffer extends ByteBuf {
 
 	public ByteBuf writeNamespacedIdentifier(NamespacedIdentifier id) {
 		return this.writeString(id.toString());
+	}
+
+	public ByteBuf writeTextComponent(TextComponent text) {
+		return this.writeString(TextComponents.toJson(text), TEXT_JSON_MAX_LENGTH);
 	}
 
 	public ByteBuf writeNbtCompound(NbtCompound nbt) {

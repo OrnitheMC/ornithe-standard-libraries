@@ -32,6 +32,8 @@ import net.minecraft.util.math.BlockPos;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
+import net.ornithemc.osl.text.api.TextComponent;
+import net.ornithemc.osl.text.api.TextComponents;
 
 public class PacketBuffer extends ByteBuf {
 
@@ -227,6 +229,10 @@ public class PacketBuffer extends ByteBuf {
 		return Text.Serializer.fromJson(this.readString(TEXT_JSON_MAX_LENGTH));
 	}
 
+	public TextComponent readTextComponent() {
+		return TextComponents.fromJson(this.readString(TEXT_JSON_MAX_LENGTH));
+	}
+
 	public NbtCompound readNbtCompound() {
 		return this.delegate.readNbtCompound();
 	}
@@ -353,6 +359,10 @@ public class PacketBuffer extends ByteBuf {
 
 	public ByteBuf writeText(Text text) {
 		return this.writeString(Text.Serializer.toJson(text), TEXT_JSON_MAX_LENGTH);
+	}
+
+	public ByteBuf writeTextComponent(TextComponent text) {
+		return this.writeString(TextComponents.toJson(text), TEXT_JSON_MAX_LENGTH);
 	}
 
 	public ByteBuf writeNbtCompound(NbtCompound nbt) {
