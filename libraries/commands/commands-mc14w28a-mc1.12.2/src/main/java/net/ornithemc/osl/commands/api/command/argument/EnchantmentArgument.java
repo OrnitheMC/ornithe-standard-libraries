@@ -13,9 +13,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.commands.api.command.SharedSuggestionProvider;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.enchantments.api.EnchantmentRegistry;
 import net.ornithemc.osl.text.api.TextComponents;
 
 public class EnchantmentArgument implements ArgumentType<Enchantment> {
@@ -35,8 +36,8 @@ public class EnchantmentArgument implements ArgumentType<Enchantment> {
 	public Enchantment parse(StringReader reader) throws CommandSyntaxException {
 		int startCursor = reader.getCursor();
 
-		Identifier key = IdentifierParser.parseIdentifier(reader);
-		Enchantment enchantment = Enchantment.REGISTRY.get(key);
+		NamespacedIdentifier key = IdentifierParser.parse(reader);
+		Enchantment enchantment = EnchantmentRegistry.getEnchantment(key);
 
 		if (enchantment == null) {
 			reader.setCursor(startCursor);
@@ -48,7 +49,7 @@ public class EnchantmentArgument implements ArgumentType<Enchantment> {
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
-		return SharedSuggestionProvider.suggestResource(Enchantment.REGISTRY.keySet(), builder);
+		return SharedSuggestionProvider.suggestResource(EnchantmentRegistry.identifierSet(), builder);
 	}
 
 	@Override

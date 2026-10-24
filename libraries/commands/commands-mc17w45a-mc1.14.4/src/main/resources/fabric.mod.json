@@ -20,7 +20,9 @@
     "osl-blockstates": "\u003e\u003d0.1.0",
     "osl-blocks": "\u003e\u003d0.3.0",
     "osl-items": "\u003e\u003d0.3.0",
-    "osl-entities": "\u003e\u003d0.1.0"
+    "osl-entities": "\u003e\u003d0.1.0",
+    "osl-effects": "\u003e\u003d0.1.0-",
+    "osl-enchantments": "\u003e\u003d0.1.0-"
   },
   "name": "OSL Commands",
   "description": "A commands library.",

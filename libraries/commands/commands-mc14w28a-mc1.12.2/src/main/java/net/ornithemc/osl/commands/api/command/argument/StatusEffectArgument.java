@@ -13,9 +13,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 import net.minecraft.entity.living.effect.StatusEffect;
-import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.commands.api.command.SharedSuggestionProvider;
+import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
+import net.ornithemc.osl.effects.api.StatusEffectRegistry;
 import net.ornithemc.osl.text.api.TextComponents;
 
 public class StatusEffectArgument implements ArgumentType<StatusEffect> {
@@ -35,8 +36,8 @@ public class StatusEffectArgument implements ArgumentType<StatusEffect> {
 	public StatusEffect parse(StringReader reader) throws CommandSyntaxException {
 		int startCursor = reader.getCursor();
 
-		Identifier key = IdentifierParser.parseIdentifier(reader);
-		StatusEffect effect = StatusEffect.REGISTRY.get(key);
+		NamespacedIdentifier key = IdentifierParser.parse(reader);
+		StatusEffect effect = StatusEffectRegistry.getStatusEffect(key);
 
 		if (effect == null) {
 			reader.setCursor(startCursor);
@@ -48,7 +49,7 @@ public class StatusEffectArgument implements ArgumentType<StatusEffect> {
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
-		return SharedSuggestionProvider.suggestResource(StatusEffect.REGISTRY.keySet(), builder);
+		return SharedSuggestionProvider.suggestResource(StatusEffectRegistry.identifierSet(), builder);
 	}
 
 	@Override
