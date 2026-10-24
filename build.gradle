@@ -325,10 +325,17 @@ def setUpModule(project) {
 			serverNests project.ploceus.nests(project.server_nests_build, 'server')
 		}
 
-		if (project.hasProperty('feather_build')) {
-			mappings project.ploceus.featherMappings(project.feather_build)
-		} else {
-			mappings project.ploceus.featherMappings(project.rootProject.feather_build)
+		mappings project.ploceus.layeredMappings {
+			def build = project.hasProperty('feather_build') ? project.feather_build : project.rootProject.feather_build
+			def overrides = project.file('mappings.tiny')
+
+			mappings project.ploceus.featherMappingsSpec(project.feather_build), {
+				containsUnpick()
+			}
+
+			if (overrides.exists()) {
+				mappings overrides
+			}
 		}
 
 		implementation "net.ornithemc:conditional-mixin:${project.rootProject.conditional_mixin_version}"
