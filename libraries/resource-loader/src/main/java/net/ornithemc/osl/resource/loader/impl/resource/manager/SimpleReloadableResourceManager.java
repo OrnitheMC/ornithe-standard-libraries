@@ -84,6 +84,8 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		}
 
 		this.registerReloaderDependencies(ResourceReloaders.AFTER_VANILLA, this.lastVanillaReloader);
+
+		this.lastVanillaReloader = ResourceReloaders.AFTER_VANILLA;
 	}
 
 	public void reset() {
@@ -95,11 +97,11 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		this.resourceManagers.clear();
 		this.legacyResourceManager.clear();
 
+		this.lastVanillaReloader = ResourceReloaders.BEFORE_VANILLA;
+
 		this.registerReloader(ResourceReloaders.BEFORE_VANILLA, NoOpResourceReloader.INSTANCE);
 		this.registerReloader(ResourceReloaders.AFTER_VANILLA, NoOpResourceReloader.INSTANCE);
 		this.registerReloaderDependencies(ResourceReloaders.AFTER_VANILLA, ResourceReloaders.BEFORE_VANILLA);
-
-		this.lastVanillaReloader = ResourceReloaders.BEFORE_VANILLA;
 	}
 
 	public void addAll(Iterable<ResourcePack> packs) {
@@ -287,6 +289,10 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	}
 
 	private ResourceReload startReload(Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, List<ResourceReloader> reloaders) {
+		if (this.lastVanillaReloader != ResourceReloaders.AFTER_VANILLA) {
+			this.registerReloaderDependencies(ResourceReloaders.AFTER_VANILLA, this.lastVanillaReloader);
+		}
+
 		reloaders = this.sortReloaders(reloaders);
 		this.recentlyRegisteredReloaders.clear();
 
