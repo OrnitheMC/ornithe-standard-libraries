@@ -37,7 +37,7 @@ public class EntitiesMixin_15w33a {
 
 			@Override
 			public void put(int id, String legacyId, int baseColor, int spotsColor) {
-				SPAWN_EGG_DATA.put(legacyId, new SpawnEggData(id, baseColor, spotsColor));
+				SPAWN_EGG_DATA.put(legacyId, SpawnEggDataAccessNew.of(legacyId, baseColor, spotsColor));
 			}
 
 			@Override
