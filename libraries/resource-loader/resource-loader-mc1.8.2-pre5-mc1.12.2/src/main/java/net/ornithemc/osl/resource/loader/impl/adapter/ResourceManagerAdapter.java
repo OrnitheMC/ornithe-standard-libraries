@@ -52,10 +52,14 @@ public class ResourceManagerAdapter implements net.minecraft.client.resource.man
 		NamespacedIdentifier identifier = this.reloaderIdentifier.identify(listener);
 		ResourceReloader reloader = new WrappedResourceReloadListener(listener);
 
+		// Vanilla's reload listeners are triggered immediately after registering
+		// We must emulate this or the game's initialization will fail
 		if (identifier == null) {
 			this.resourceManager.addReloadedReloader(reloader);
+			this.resourceManager.singleReload(reloader);
 		} else {
 			this.resourceManager.registerReloadedReloader(identifier, reloader);
+			this.resourceManager.singleReload(identifier);
 		}
 	}
 
@@ -100,10 +104,6 @@ public class ResourceManagerAdapter implements net.minecraft.client.resource.man
 
 		private WrappedResourceReloadListener(net.minecraft.client.resource.manager.ResourceReloadListener listener) {
 			this.listener = listener;
-
-			// Vanilla's reload listeners are triggered immediately after registering
-			// We must emulate this or the game's initialization will fail
-			this.listener.reload(ResourceManagerAdapter.this);
 		}
 
 		@Override

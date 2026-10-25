@@ -340,4 +340,36 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 		return reloaders;
 	}
+
+	public void singleReload(NamespacedIdentifier identifier) {
+		ResourceReloader reloader = this.identifiableReloaders.get(identifier);
+
+		if (reloader == null) {
+			throw new IllegalStateException("no such ResourceReloader: " + identifier);
+		} else {
+			this.singleReload(reloader);
+		}
+	}
+
+	public void singleReload(ResourceReloader reloader) {
+		ResourceReload reload = this.startSingleReload(reloader, Runnable::run, Runnable::run);
+
+		if (reload.isDone()) {
+			reload.checkExceptions();
+		}
+	}
+
+	public ResourceReload startSingleReload(NamespacedIdentifier identifier, Executor backgroundExecutor, Executor mainThreadExecutor) {
+		ResourceReloader reloader = this.identifiableReloaders.get(identifier);
+
+		if (reloader == null) {
+			throw new IllegalStateException("no such ResourceReloader: " + identifier);
+		} else {
+			return this.startSingleReload(reloader, backgroundExecutor, mainThreadExecutor);
+		}
+	}
+
+	public ResourceReload startSingleReload(ResourceReloader reloader, Executor backgroundExecutor, Executor mainThreadExecutor) {
+		return ResourceReload.start(this, reloader, backgroundExecutor, mainThreadExecutor);
+	}
 }
