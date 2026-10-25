@@ -1,6 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.resource.reload;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -16,13 +17,22 @@ import net.ornithemc.osl.resource.loader.api.resource.reload.ReloadStep;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReload;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader.SharedState;
+import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 
 public class SimpleResourceReload<R> implements ResourceReload {
 
 	public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, Runnable finalTask) {
-		SimpleResourceReload<Void> reload = new SimpleResourceReload<>();
-		reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask, finalTask);
-		return reload;
+		if (ResourceLoader.LOGGER.isDebugEnabled()) {
+			return ProfiledResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
+		} else {
+			SimpleResourceReload<Void> reload = new SimpleResourceReload<>();
+			reload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, TaskFactory.SIMPLE, initialTask, finalTask);
+			return reload;
+		}
+	}
+
+	public static ResourceReload start(ResourceManager manager, ResourceReloader reloader, Executor backgroundExecutor, Executor mainThreadExecutor) {
+		return start(manager, Collections.singletonList(reloader), backgroundExecutor, mainThreadExecutor, CompletableFuture.completedFuture(Unit.INSTANCE), () -> {});
 	}
 
 	private static final int RELOAD_PROGRESS_WEIGHT = 2;
