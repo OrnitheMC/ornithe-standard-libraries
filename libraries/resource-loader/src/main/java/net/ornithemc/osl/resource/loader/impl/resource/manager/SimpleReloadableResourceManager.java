@@ -22,6 +22,7 @@ import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.core.api.util.Unit;
 import net.ornithemc.osl.core.api.util.sort.TopoSort;
+import net.ornithemc.osl.executors.impl.Executors;
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.resource.Resource;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
@@ -254,19 +255,21 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 
 	@Override
 	public void reload(List<ResourcePack> packs) {
-		ResourceReload reload = this.startReload(packs, Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
+		Executor executor = Executors.newReentrantDirectExecutor();
 
-		if (reload.isDone()) {
-			reload.checkExceptions();
-		}
+		executor.execute(() -> {
+			ResourceReload reload = this.startReload(packs, executor, executor, CompletableFuture.completedFuture(Unit.INSTANCE));
+			executor.execute(reload::checkExceptions);
+		});
 	}
 
 	public void partialReload() {
-		ResourceReload reload = this.startPartialReload(Runnable::run, Runnable::run, CompletableFuture.completedFuture(Unit.INSTANCE));
+		Executor executor = Executors.newReentrantDirectExecutor();
 
-		if (reload.isDone()) {
-			reload.checkExceptions();
-		}
+		executor.execute(() -> {
+			ResourceReload reload = this.startPartialReload(executor, executor, CompletableFuture.completedFuture(Unit.INSTANCE));
+			executor.execute(reload::checkExceptions);
+		});
 	}
 
 	@Override
@@ -352,11 +355,12 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 	}
 
 	public void singleReload(ResourceReloader reloader) {
-		ResourceReload reload = this.startSingleReload(reloader, Runnable::run, Runnable::run);
+		Executor executor = Executors.newReentrantDirectExecutor();
 
-		if (reload.isDone()) {
-			reload.checkExceptions();
-		}
+		executor.execute(() -> {
+			ResourceReload reload = this.startSingleReload(reloader, executor, executor);
+			executor.execute(reload::checkExceptions);
+		});
 	}
 
 	public ResourceReload startSingleReload(NamespacedIdentifier identifier, Executor backgroundExecutor, Executor mainThreadExecutor) {
