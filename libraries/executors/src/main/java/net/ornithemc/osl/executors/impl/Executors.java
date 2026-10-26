@@ -93,4 +93,8 @@ public final class Executors {
 		} catch (InterruptedException ignored) {
 		}
 	}
+
+	public static Executor newReentrantDirectExecutor() {
+		return new ReentrantDirectExecutor();
+	}
 }
