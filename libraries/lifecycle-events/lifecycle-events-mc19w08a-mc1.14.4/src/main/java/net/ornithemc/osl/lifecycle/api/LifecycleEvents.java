@@ -4,7 +4,10 @@ import net.ornithemc.osl.core.api.events.Event;
 
 /**
  * Events related to the registry bootstrap on game start-up.
+ * 
+ * @deprecated use {@linkplain net.ornithemc.osl.registries.api.RegistryEvents.BOOTSTRAP_REGISTRIES} instead.
  */
+@Deprecated
 public final class LifecycleEvents {
 
 	/**
