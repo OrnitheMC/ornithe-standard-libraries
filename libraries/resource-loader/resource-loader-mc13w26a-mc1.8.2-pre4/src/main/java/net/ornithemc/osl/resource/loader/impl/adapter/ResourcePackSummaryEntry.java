@@ -9,12 +9,16 @@ import javax.imageio.ImageIO;
 import net.minecraft.client.gui.screen.ResourcePacksScreen;
 import net.minecraft.client.gui.screen.resourcepack.ResourcePackEntry;
 import net.minecraft.client.render.texture.DynamicTexture;
+import net.minecraft.client.render.texture.TextureUtil;
 import net.minecraft.resource.Identifier;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 
 class ResourcePackSummaryEntry extends ResourcePackEntry {
+
+	private static final boolean TEXTURE_UTIL_READ_IMAGE_EXISTS = MinecraftVersion.resolve().compareTo("14w02a") >= 0;
 
 	private final ResourcePackSummary summary;
 	private final Identifier iconLocation;
@@ -25,7 +29,11 @@ class ResourcePackSummaryEntry extends ResourcePackEntry {
 		BufferedImage icon = null;
 
 		try (InputStream is = summary.open().getResource(ResourcePack.ICON_FILE)) {
-			icon = ImageIO.read(is);
+			if (TEXTURE_UTIL_READ_IMAGE_EXISTS) {
+				icon = TextureUtil.readImage(is);
+			} else {
+				icon = ImageIO.read(is);
+			}
 		} catch (IOException e) {
 			try {
 				icon = this.minecraft.getResourcePacks().defaultPack.getIcon();
