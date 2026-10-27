@@ -4,10 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
 import net.minecraft.client.gui.screen.ResourcePacksScreen;
 import net.minecraft.client.gui.screen.resourcepack.ResourcePackEntry;
 import net.minecraft.client.render.texture.DynamicTexture;
-import net.minecraft.client.render.texture.TextureUtil;
 import net.minecraft.resource.Identifier;
 
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
@@ -24,7 +25,7 @@ class ResourcePackSummaryEntry extends ResourcePackEntry {
 		BufferedImage icon = null;
 
 		try (InputStream is = summary.open().getResource(ResourcePack.ICON_FILE)) {
-			icon = TextureUtil.readImage(is);
+			icon = ImageIO.read(is);
 		} catch (IOException e) {
 			try {
 				icon = this.minecraft.getResourcePacks().defaultPack.getIcon();
