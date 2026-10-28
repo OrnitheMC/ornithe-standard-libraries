@@ -24,7 +24,7 @@ import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 public class MinecraftServerMixinNew {
 
 	@Shadow
-	private ServerWorld[] worlds;
+	private ServerWorld f_58488472;
 
 	@WrapOperation(
 		method = "loadWorld",
@@ -54,7 +54,7 @@ public class MinecraftServerMixinNew {
 		)
 	)
 	private void osl$registries$saveRegistryMappings(CallbackInfo ci) {
-		ServerWorld overworld = this.worlds[0];
+		ServerWorld overworld = this.f_58488472;
 		WorldStorage storage = overworld.getStorage();
 
 		if (storage instanceof WorldStorageAccess) {
