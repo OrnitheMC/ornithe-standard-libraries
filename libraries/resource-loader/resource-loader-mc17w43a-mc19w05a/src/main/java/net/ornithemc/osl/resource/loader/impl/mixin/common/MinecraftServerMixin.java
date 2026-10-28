@@ -94,9 +94,9 @@ public class MinecraftServerMixin {
 	}
 
 	@Inject(
-		method = "<init>",
+		method = "loadDataPacks",
 		at = @At(
-			value = "TAIL" // after last resource reloader is registered
+			value = "HEAD"
 		)
 	)
 	private void osl$resource_loader$initResourceManager(CallbackInfo ci) {
