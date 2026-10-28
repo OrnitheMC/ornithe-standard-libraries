@@ -1,4 +1,4 @@
-package net.ornithemc.osl.registries.impl.mixin.client;
+package net.ornithemc.osl.registries.impl.mixin.common;
 
 import java.io.File;
 

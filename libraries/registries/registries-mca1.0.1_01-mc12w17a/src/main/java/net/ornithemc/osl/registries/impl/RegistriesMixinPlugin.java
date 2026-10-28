@@ -30,7 +30,7 @@ public class RegistriesMixinPlugin implements IMixinConfigPlugin {
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 		if ("net.ornithemc.osl.registries.impl.mixin.client.MinecraftMixinOld".equals(mixinClassName)
-			|| "net.ornithemc.osl.registries.impl.mixin.client.WorldAccessOld".equals(mixinClassName)
+			|| "net.ornithemc.osl.registries.impl.mixin.common.WorldAccessOld".equals(mixinClassName)
 			|| "net.ornithemc.osl.registries.impl.mixin.server.MinecraftServerMixinOld".equals(mixinClassName)) {
 			return OLD_WORLD_FORMAT;
 		}
