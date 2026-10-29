@@ -35,7 +35,7 @@ public final class RegistriesEntrypoint implements ClientModInitializer {
 			}
 		});
 		ClientConnectionEvents.DISCONNECT.register(context -> {
-			if (!context.isServerLocal()) {
+			if (context.isMultiplayer()) {
 				SyncedRegistriesImpl.undoMappings();
 			}
 		});
