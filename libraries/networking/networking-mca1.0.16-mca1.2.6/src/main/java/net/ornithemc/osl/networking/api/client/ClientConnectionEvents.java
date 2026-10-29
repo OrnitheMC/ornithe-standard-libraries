@@ -107,8 +107,17 @@ public final class ClientConnectionEvents {
 
 		/**
 		 * @return whether the server is a local integrated server.
+		 * @deprecated use {@link #isMultiplayer()} instead.
 		 */
-		boolean isServerLocal();
+		default boolean isServerLocal() {
+			return !this.isMultiplayer();
+		}
+
+		/**
+		 * 
+		 * @return whether the connection is to a remote server or a singleplayer game.
+		 */
+		boolean isMultiplayer();
 
 	}
 

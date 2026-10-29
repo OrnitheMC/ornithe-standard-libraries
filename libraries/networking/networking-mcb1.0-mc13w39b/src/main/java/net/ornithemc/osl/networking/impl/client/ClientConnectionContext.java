@@ -57,8 +57,8 @@ public final class ClientConnectionContext implements LoginContext, PlayReadyCon
 	}
 
 	@Override
-	public boolean isServerLocal() {
-		return this.worldName != null;
+	public boolean isMultiplayer() {
+		return this.worldName == null;
 	}
 
 	public void offerDisconnectReason(TextComponent disconnectReason) {
