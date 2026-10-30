@@ -12,13 +12,18 @@ import net.minecraft.network.PacketHandler;
 import net.minecraft.network.RemoteConnection;
 import net.minecraft.network.packet.Packet;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.networking.impl.Connections;
 
 @Mixin(RemoteConnection.class)
-public class RemoteConnectionMixinOld {
+public class RemoteConnectionMixin {
 
-	@Shadow private PacketHandler listener;
+	@Shadow
+	private PacketHandler listener;
 
+	@Conditional(minecraftVersion = @Version("<=1.6.1"))
 	@Inject(
 		method = "read",
 		cancellable = true,
@@ -27,7 +32,22 @@ public class RemoteConnectionMixinOld {
 			target = "Ljava/util/List;add(Ljava/lang/Object;)Z"
 		)
 	)
-	private void osl$networking$asyncCustomPayloads(CallbackInfoReturnable<Boolean> cir, @Local Packet packet) {
+	private void osl$networking$asyncCustomPayloads1(CallbackInfoReturnable<Boolean> cir, @Local Packet packet) {
+		if (Connections.handleAsyncPacket(packet, listener)) {
+			cir.setReturnValue(true);
+		}
+	}
+
+	@Conditional(minecraftVersion = @Version(">1.6.1"))
+	@Inject(
+		method = "read",
+		cancellable = true,
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Queue;add(Ljava/lang/Object;)Z"
+		)
+	)
+	private void osl$networking$asyncCustomPayloads2(CallbackInfoReturnable<Boolean> cir, @Local Packet packet) {
 		if (Connections.handleAsyncPacket(packet, listener)) {
 			cir.setReturnValue(true);
 		}

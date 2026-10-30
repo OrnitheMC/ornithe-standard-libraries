@@ -6,8 +6,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.sugar.Local;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 
@@ -25,12 +26,12 @@ public class MinecraftMixin {
 	private ClientPlayNetworkHandler getNetworkHandler() { return null; }
 
 	@Inject(
-		method = "setWorld(Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/client/gui/screen/Screen;)V",
+		method = "m_62116716",
 		at = @At(
 			value = "HEAD"
 		)
 	)
-	private void osl$networking$disconnect(ClientWorld world, Screen screen, CallbackInfo ci) {
+	private void osl$networking$disconnect(CallbackInfo ci, @Local ClientWorld world) {
 		if (this.world != null && world == null) {
 			ClientNetworkHandlerAccess networkHandler = (ClientNetworkHandlerAccess) getNetworkHandler();
 			ClientConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
