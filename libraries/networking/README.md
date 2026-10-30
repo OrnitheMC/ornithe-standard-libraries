@@ -24,13 +24,13 @@ Channels identifiers should be constructed through the `ChannelIdentifieres` cla
 and snake case for the identifier.
 
 ```java
-public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.from("example", "cookie");
+public static final NamespacedIdentifier COOKIE_CHANNEL = ChannelIdentifiers.register("example", "cookie");
 ```
 
-You are expected to register your channels through the `ChannelRegistry`.
+In 1.13-pre2 and below, the game did not validate channel names, so Minecraft itself used names like `MC|Brand`. If you require a channel name with this convention, you can use the `legacy` factory methods instead.
 
 ```java
-ChannelRegistry.register(COOKIE_CHANNEL);
+ChannelRegistry.register(ChannelIdentifiers.legacy("EXAMPLE", "Cookie")); // -> "EXAMPLE|Cookie"
 ```
 
 You are expected to register your packet listeners in your mod initializer through `ClientPlayNetworking` and `ServerPlayNetworking`.
