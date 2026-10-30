@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-resource-loader",
-  "version": "0.8.1+mc12w15a-mc13w07a",
+  "version": "0.9.0+mc12w15a-mc13w07a",
   "environment": "client",
   "mixins": [
     "osl.resource-loader.mixins.json"
@@ -13,8 +13,8 @@
     "osl-core": "\u003e\u003d0.8.0",
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
-    "osl-executors": "\u003e\u003d0.1.0",
-    "osl-text-components": "\u003e\u003d0.1.0-"
+    "osl-executors": "\u003e\u003d0.1.1",
+    "osl-text-components": "\u003e\u003d0.1.0"
   },
   "name": "OSL Resource Loader",
   "description": "Resource loading API and events.",
