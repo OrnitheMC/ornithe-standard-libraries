@@ -10,7 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.resource.pack.BuiltInTexturePack;
 import net.minecraft.client.resource.pack.DirectoryTexturePack;
 
-// directory packs were added in 12w08a
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+@Conditional(minecraftVersion = @Version(">=12w08a"))
 @Mixin(DirectoryTexturePack.class)
 public class DirectoryTexturePackMixin {
 

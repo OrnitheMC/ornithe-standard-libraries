@@ -6,6 +6,7 @@
   "mixins": [
     "osl.resource-loader.mixins.json"
   ],
+  "accessWidener": "osl.resource-loader.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.0.0-alpha.2.2 \u003c\u003d1.2.5",

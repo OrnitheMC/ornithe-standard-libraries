@@ -90,6 +90,7 @@ public class TexturePacksMixin implements TexturePacksAccess, ResourcePackReposi
 		this.packRepository.addSource(this); // texturepacks/ directory source
 
 		this.packRepository.init();
+//		this.packRepository.reload(); // handled by Vanilla
 	}
 
 	@Inject(

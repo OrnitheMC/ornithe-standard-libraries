@@ -80,6 +80,10 @@ public class SimpleReloadableResourceManager implements ReloadableResourceManage
 		this.legacyResourceManager.clear();
 	}
 
+	public void addAll(Iterable<ResourcePack> packs) {
+		packs.forEach(this::add);
+	}
+
 	public void add(ResourcePack pack) {
 		pack.flatStream().forEach(this::addResourcePack);
 	}
