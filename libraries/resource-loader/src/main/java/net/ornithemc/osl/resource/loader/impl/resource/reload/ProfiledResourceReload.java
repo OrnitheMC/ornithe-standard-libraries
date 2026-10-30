@@ -53,7 +53,9 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
 		long blockingTasks = 0L;
 		long blockingTime = 0L;
 
-		ResourceLoader.LOGGER.info("Resource Reload finished in {} ms", this.stopwatch.elapsed(TimeUnit.MILLISECONDS));
+		if (results.size() > 1) {
+			ResourceLoader.LOGGER.info("Resource Reload finished in {} ms", this.stopwatch.elapsed(TimeUnit.MILLISECONDS));
+		}
 
 		for (ProfileResult result : results) {
 			String reloaderName = result.reloaderName;
@@ -74,7 +76,9 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
 			blockingTime += applicationTime;
 		}
 
-		ResourceLoader.LOGGER.info("Blocking {} tasks/{} ms", blockingTasks, blockingTime);
+		if (results.size() > 1) {
+			ResourceLoader.LOGGER.info("Blocking {} tasks/{} ms", blockingTasks, blockingTime);
+		}
 
 		return results;
 	}

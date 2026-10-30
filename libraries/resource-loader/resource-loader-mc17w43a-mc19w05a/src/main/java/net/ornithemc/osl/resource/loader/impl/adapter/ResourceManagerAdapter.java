@@ -19,14 +19,17 @@ import net.ornithemc.osl.resource.loader.api.resource.Resource;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloadListener;
+import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
 
 public class ResourceManagerAdapter implements net.minecraft.resource.manager.ReloadableResourceManager {
 
 	private final SimpleReloadableResourceManager resourceManager;
+	private final ResourceReloaderIdentifier reloaderIdentifier;
 
-	public ResourceManagerAdapter(SimpleReloadableResourceManager resourceManager) {
+	public ResourceManagerAdapter(SimpleReloadableResourceManager resourceManager, ResourceReloaderIdentifier reloaderIdentifier) {
 		this.resourceManager = resourceManager;
+		this.reloaderIdentifier = reloaderIdentifier;
 	}
 
 	@Override
@@ -51,7 +54,18 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 	@Override
 	public void addListener(net.minecraft.resource.manager.ResourceReloadListener listener) {
-		this.resourceManager.addReloadedReloader(new WrappedResourceReloadListener(listener));
+		NamespacedIdentifier identifier = this.reloaderIdentifier.identify(listener);
+		ResourceReloader reloader = new WrappedResourceReloadListener(listener);
+
+		// Vanilla's reload listeners are triggered immediately after registering
+		// We must emulate this or the game's initialization will fail
+		if (identifier == null) {
+			this.resourceManager.addReloadedReloader(reloader);
+			this.resourceManager.singleReload(reloader);
+		} else {
+			this.resourceManager.registerReloadedReloader(identifier, reloader);
+			this.resourceManager.singleReload(identifier);
+		}
 	}
 
 	@Override
@@ -95,10 +109,6 @@ public class ResourceManagerAdapter implements net.minecraft.resource.manager.Re
 
 		private WrappedResourceReloadListener(net.minecraft.resource.manager.ResourceReloadListener listener) {
 			this.listener = listener;
-
-			// Vanilla's reload listeners are triggered immediately after registering
-			// We must emulate this or the game's initialization will fail
-			this.listener.reload(ResourceManagerAdapter.this);
 		}
 
 		@Override

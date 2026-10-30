@@ -6,8 +6,6 @@ import java.util.concurrent.Executor;
 
 import net.ornithemc.osl.core.api.util.Unit;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
-import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
-import net.ornithemc.osl.resource.loader.impl.resource.reload.ProfiledResourceReload;
 import net.ornithemc.osl.resource.loader.impl.resource.reload.SimpleResourceReload;
 
 /**
@@ -24,12 +22,22 @@ public interface ResourceReload {
 		return start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, () -> {});
 	}
 
+	/**
+	 * Starts a resource reload with the given resource reloaders, and run the given task once finished.
+	 * 
+	 * @return a new resource reload.
+	 */
 	static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor backgroundExecutor, Executor mainThreadExecutor, CompletableFuture<?> initialTask, Runnable finalTask) {
-		if (ResourceLoader.LOGGER.isDebugEnabled()) {
-			return ProfiledResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
-		} else {
-			return SimpleResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
-		}
+		return SimpleResourceReload.start(manager, reloaders, backgroundExecutor, mainThreadExecutor, initialTask, finalTask);
+	}
+
+	/**
+	 * Starts a resource reload with just a single resource reloader.
+	 * 
+	 * @return a new resource reload.
+	 */
+	static ResourceReload start(ResourceManager manager, ResourceReloader reloader, Executor backgroundExecutor, Executor mainThreadExecutor) {
+		return SimpleResourceReload.start(manager, reloader, backgroundExecutor, mainThreadExecutor);
 	}
 
 	/**
