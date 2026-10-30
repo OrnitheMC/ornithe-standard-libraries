@@ -1,0 +1,7 @@
+classTweaker	v1	named
+
+accessible method net/minecraft/text/Text getTranslated ()Ljava/lang/String;
+accessible method net/minecraft/text/Text getSiblings ()Ljava/util/List;
+accessible method net/minecraft/text/Text getText ()Ljava/lang/String;
+
+transitive-inject-interface	net/minecraft/server/command/source/CommandSource	net/ornithemc/osl/text/impl/MessageConsumerImpl

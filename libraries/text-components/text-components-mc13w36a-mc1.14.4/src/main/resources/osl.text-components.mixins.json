@@ -3,10 +3,10 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.text.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"plugin": "net.ornithemc.osl.text.impl.TextComponentsMixinPlugin",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
-		"common.StyleMixin",
-		"common.StyleMixinNew"
+		"common.CommandSourceMixin",
+		"common.StyleMixin"
 	],
 	"client": [
 	],

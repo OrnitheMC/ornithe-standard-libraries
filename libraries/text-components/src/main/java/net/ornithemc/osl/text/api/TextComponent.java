@@ -29,6 +29,9 @@ import com.google.gson.stream.JsonWriter;
 import net.ornithemc.osl.text.impl.LiteralTextComponent;
 import net.ornithemc.osl.text.impl.TranslatableTextComponent;
 
+/**
+ * @see TextComponents
+ */
 public interface TextComponent {
 
 	Style getStyle();
