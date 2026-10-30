@@ -23,7 +23,14 @@ public interface NamespacedIdentifier {
 	 * The separator between the namespace and identifier in the {@code String}
 	 * representation of a {@code NamespacedIdentifier}.
 	 */
-	static char SEPARATOR = ':';
+	char SEPARATOR = ':';
+
+	/**
+	 * @return the separator for the {@linkplain String}-representation of this {@code NamespacedIdentifier}.
+	 */
+	default char separator() {
+		return SEPARATOR;
+	}
 
 	/**
 	 * @return the namespace of this {@code NamespacedIdentifier}.
@@ -36,6 +43,11 @@ public interface NamespacedIdentifier {
 	String identifier();
 
 	/**
+	 * @return a copy of this {@code NamespacedIdentifier} with the given namespace.
+	 */
+	NamespacedIdentifier namespaced(String namespace);
+
+	/**
 	 * @return a copy of this {@code NamespacedIdentifier} with the given prefix.
 	 */
 	NamespacedIdentifier prefixed(String prefix);
@@ -44,5 +56,15 @@ public interface NamespacedIdentifier {
 	 * @return a copy of this {@code NamespacedIdentifier} with the given suffix.
 	 */
 	NamespacedIdentifier suffixed(String suffix);
+
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} that is a subidentifier of this identifier.
+	 */
+	NamespacedIdentifier subidentifier(int beginIndex);
+
+	/**
+	 * @return a copy of this {@code NamespacedIdentifier} that is a subidentifier of this identifier.
+	 */
+	NamespacedIdentifier subidentifier(int beginIndex, int endIndex);
 
 }
