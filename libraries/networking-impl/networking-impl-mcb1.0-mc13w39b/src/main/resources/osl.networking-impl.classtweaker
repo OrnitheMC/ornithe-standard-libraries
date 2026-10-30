@@ -1,0 +1,5 @@
+classTweaker	v1	named
+
+accessible	field	net/minecraft/network/packet/HandshakePacket	username	Ljava/lang/String;
+
+inject-interface	net/minecraft/network/Connection	net/ornithemc/osl/networking/impl/access/ConnectionAccess
