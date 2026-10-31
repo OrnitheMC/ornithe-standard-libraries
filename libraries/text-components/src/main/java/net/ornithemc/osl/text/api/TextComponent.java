@@ -26,13 +26,15 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
+import com.mojang.brigadier.Message;
+
 import net.ornithemc.osl.text.impl.LiteralTextComponent;
 import net.ornithemc.osl.text.impl.TranslatableTextComponent;
 
 /**
  * @see TextComponents
  */
-public interface TextComponent {
+public interface TextComponent extends Message {
 
 	Style getStyle();
 

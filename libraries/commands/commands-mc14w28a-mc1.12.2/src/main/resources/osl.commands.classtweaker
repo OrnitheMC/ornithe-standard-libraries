@@ -1,0 +1,11 @@
+classTweaker	v1	named
+
+accessible	method	net/minecraft/world/World	contains	(Lnet/minecraft/util/math/BlockPos;)Z
+
+transitive-inject-interface	net/minecraft/client/network/handler/ClientPlayNetworkHandler	net/ornithemc/osl/commands/impl/client/network/handler/ClientPlayNetworkHandlerExtensionImpl
+transitive-inject-interface	net/minecraft/entity/Entity	net/ornithemc/osl/commands/impl/entity/EntityExtensionImpl
+
+inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/commands/impl/server/MinecraftServerExtensionImpl
+inject-interface	net/minecraft/server/PlayerManager	net/ornithemc/osl/commands/impl/server/PlayerManagerExtensionImpl
+inject-interface	net/minecraft/block/state/StateDefinition	net/ornithemc/osl/commands/impl/block/state/StateDefinitionExtensionImpl
+inject-interface	net/minecraft/block/state/property/Property	net/ornithemc/osl/commands/impl/block/state/PropertyExtensionImpl

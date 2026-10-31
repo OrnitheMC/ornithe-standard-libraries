@@ -1,0 +1,20 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.commands.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"common.CommandManagerMixin",
+		"common.CommandSourceStackMixin"
+	],
+	"client": [
+		"client.ClientPlayNetworkHandlerMixin",
+		"client.ClientSuggestionProviderMixin",
+		"client.LocalClientPlayerEntityMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -3,6 +3,7 @@ package net.ornithemc.osl.blockstates.api.state.property;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class BooleanProperty extends AbstractProperty<Boolean> {
 
@@ -25,6 +26,16 @@ public class BooleanProperty extends AbstractProperty<Boolean> {
 	@Override
 	public List<Boolean> values() {
 		return this.values;
+	}
+
+	@Override
+	public Optional<Boolean> getValue(String name) {
+		switch (name) {
+		case "true": return Optional.of(Boolean.TRUE);
+		case "false": return Optional.of(Boolean.FALSE);
+		}
+
+		return Optional.empty();
 	}
 
 	@Override
