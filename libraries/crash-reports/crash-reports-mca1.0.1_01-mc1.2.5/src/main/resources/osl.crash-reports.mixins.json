@@ -1,0 +1,22 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.crashreports.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
+	"mixins": [
+		"common.WorldMixin"
+	],
+	"client": [
+		"client.CrashReportMixin",
+		"client.CrashReportPanelMixin",
+		"client.MinecraftMixin",
+		"client.MultiplayerWorldMixin"
+	],
+	"server": [
+		"server.MinecraftServerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

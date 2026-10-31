@@ -39,6 +39,8 @@ public final class MinecraftVersion {
 	// semantic versions for other game versions
 	private final Map<String, SemanticVersion> semanticVersions = new HashMap<>();
 
+	private String friendlyGameVersion;
+
 	private MinecraftVersion(String gameVersion, SemanticVersion semanticVersion) {
 		this.gameVersion = gameVersion;
 		this.semanticVersion = semanticVersion;
@@ -46,6 +48,39 @@ public final class MinecraftVersion {
 
 	public String gameVersion() {
 		return this.gameVersion;
+	}
+
+	public String friendlyGameVersion() {
+		if (this.friendlyGameVersion == null) {
+			String friendlyVersion = this.gameVersion;
+
+			int i = friendlyVersion.indexOf('+');
+			if (i > 0) {
+				friendlyVersion = friendlyVersion.substring(i);
+			}
+
+			char chr = friendlyVersion.charAt(0);
+
+			if (chr == 'b') {
+				friendlyVersion = "Beta " + friendlyVersion.substring(1);
+			} else if (chr == 'a') {
+				friendlyVersion = "Alpha v" + friendlyVersion.substring(1);
+			} else if (chr == 'i') {
+				if (friendlyVersion.charAt(2) == 'f') {
+					friendlyVersion = "Infdev 0.31." + friendlyVersion.substring(4);
+				} else {
+					friendlyVersion = "Indev 0.31." + friendlyVersion.substring(3);
+				}
+			} else if (chr == 'c') {
+				friendlyVersion = "Classic " + friendlyVersion.substring(1);
+			} else if (chr == 'r' || chr == 'p') {
+				friendlyVersion = "Pre-Classic " + friendlyVersion.substring(3);
+			}
+
+			this.friendlyGameVersion = friendlyVersion;
+		}
+
+		return this.friendlyGameVersion;
 	}
 
 	public String semanticVersion() {
