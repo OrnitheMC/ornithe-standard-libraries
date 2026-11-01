@@ -21,7 +21,12 @@ public class BlockModelTemplatesImpl implements BlockModelTemplates {
 
     @Override
     public BlockModelTemplates simpleBlock(Block block, NamespacedIdentifier texture) {
-        NamespacedIdentifier blockModelId = modelGenerator.blockModel(block, BlockModelTemplates.cubeAll(texture));
+        return this.simpleBlock(block, BlockModelTemplates.cubeAll(texture));
+    }
+
+    @Override
+    public BlockModelTemplates simpleBlock(Block block, ModelBuilder model) {
+        NamespacedIdentifier blockModelId = modelGenerator.blockModel(block, model);
         modelGenerator.itemModel(block, ModelBuilder.create(blockModelId));
         modelGenerator.blockstate(block, BlockModelDefinitionBuilder.createSimple(blockModelId));
 
@@ -30,7 +35,12 @@ public class BlockModelTemplatesImpl implements BlockModelTemplates {
 
     @Override
     public BlockModelTemplates simpleBlockWithoutItem(Block block, NamespacedIdentifier texture) {
-        NamespacedIdentifier blockModelId = modelGenerator.blockModel(block, BlockModelTemplates.cubeAll(texture));
+        return this.simpleBlockWithoutItem(block, BlockModelTemplates.cubeAll(texture));
+    }
+
+    @Override
+    public BlockModelTemplates simpleBlockWithoutItem(Block block, ModelBuilder model) {
+        NamespacedIdentifier blockModelId = modelGenerator.blockModel(block, model);
         modelGenerator.blockstate(block, BlockModelDefinitionBuilder.createSimple(blockModelId));
 
         return this;
