@@ -14,6 +14,8 @@ import java.util.function.BiConsumer;
 
 /**
  * A DataProvider to generate loot tables.
+ * <p>
+ * Only available in 1.14 snapshots and later.
  */
 public abstract class ModLootTablesProvider extends GsonDataProvider {
     protected ModLootTablesProvider(PackGenerator generator, ModContainer mod) {
