@@ -18,12 +18,28 @@ public interface BlockModelTemplates {
     BlockModelTemplates simpleBlock(Block block, NamespacedIdentifier texture);
 
     /**
+     * Creates a simple block model, definition, and item model with the given model.
+     *
+     * @param block the block
+     * @param model the model
+     */
+    BlockModelTemplates simpleBlock(Block block, ModelBuilder model);
+
+    /**
      * Creates a simple block model, definition, without an item model with the given texture.
      *
      * @param block the block
      * @param texture the texture
      */
     BlockModelTemplates simpleBlockWithoutItem(Block block, NamespacedIdentifier texture);
+
+    /**
+     * Creates a simple block model, definition, without an item model with the given model.
+     *
+     * @param block the block
+     * @param model the model
+     */
+    BlockModelTemplates simpleBlockWithoutItem(Block block, ModelBuilder model);
 
     /**
      * Creates a slab block model, definition, and item model with the given textures.
