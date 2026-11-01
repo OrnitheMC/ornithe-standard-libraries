@@ -41,7 +41,7 @@ public abstract class ModModelsProvider extends GsonDataProvider {
      * @return the prefixed identifier
      */
     public NamespacedIdentifier block(NamespacedIdentifier id) {
-        return id.suffixed("block/");
+        return id.prefixed("block/");
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class ModModelsProvider extends GsonDataProvider {
      * @return the prefixed identifier
      */
     public NamespacedIdentifier item(NamespacedIdentifier id) {
-        return id.suffixed("item/");
+        return id.prefixed("item/");
     }
 
     /**
