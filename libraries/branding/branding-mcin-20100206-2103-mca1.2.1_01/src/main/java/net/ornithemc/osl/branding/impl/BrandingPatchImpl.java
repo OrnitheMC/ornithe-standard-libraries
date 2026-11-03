@@ -20,15 +20,7 @@ public class BrandingPatchImpl implements ClientModInitializer {
 
 	public static String getGameVersion() {
 		if (gameVersion == null) {
-			gameVersion = MinecraftVersion.resolve().gameVersion();
-
-			if (gameVersion.charAt(0) == 'a') {
-				gameVersion = "Alpha v" + gameVersion.substring(1);
-			} else if (gameVersion.startsWith("inf")) {
-				gameVersion = "Infdev 0.31." + gameVersion.substring(4); 
-			} else if (gameVersion.startsWith("in-")) {
-				gameVersion = "Indev 0.31." + gameVersion.substring(3);
-			}
+			gameVersion = MinecraftVersion.resolve().friendlyGameVersion();
 		}
 
 		return gameVersion;

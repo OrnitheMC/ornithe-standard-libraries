@@ -2,6 +2,7 @@ package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,15 +39,19 @@ import net.ornithemc.conditionalmixin.annotations.Version;
 
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
+import net.ornithemc.osl.crashreports.api.crash.CrashReportDetail;
+import net.ornithemc.osl.crashreports.impl.crash.ModifiableCrashReportSection;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourceManagerAdapter;
 import net.ornithemc.osl.resource.loader.impl.adapter.ResourcePackLists;
 import net.ornithemc.osl.resource.loader.impl.resource.manager.SimpleReloadableResourceManager;
+import net.ornithemc.osl.resource.loader.impl.resource.repository.SimpleResourcePackRepository;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
+	private static final boolean MULTIPLE_RESOURCE_PACKS_SUPPORTED = MinecraftVersion.resolve().compareTo("13w36a") >= 0;
 	private static final boolean SOUND_MANAGER_EXISTS = MinecraftVersion.resolve().compareTo("13w42a") >= 0;
 	private static final boolean TEXT_RENDERERS_ARE_RELOAD_LISTENERS = MinecraftVersion.resolve().compareTo("1.6.2") >= 0;
 	private static final boolean MODEL_MANAGER_EXISTS = MinecraftVersion.resolve().compareTo("14w10a") >= 0;
@@ -97,7 +102,52 @@ public class MinecraftMixin {
 	private WorldRenderer worldRenderer;
 
 	@Unique
+	private SimpleResourcePackRepository packRepository;
+	@Unique
 	private SimpleReloadableResourceManager actualResourceManager;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$resource_loader$modifyCrashReports(CallbackInfo ci) {
+		Minecraft minecraft = (Minecraft) (Object) this;
+
+		minecraft.addCrashListener((report, section) -> {
+			ModifiableCrashReportSection modifiableSection = (ModifiableCrashReportSection) section;
+			CrashReportDetail<String> detail = () -> {
+				return this.packRepository.getSelectedPacks().stream()
+						.map(summary -> {
+							String s = summary.getId();
+							if (!summary.getCompatibility().isCompatible()) {
+								s += " (incompatible)";
+							}
+
+							return s;
+						})
+						.collect(Collectors.joining(", "));
+			};
+
+			if (MULTIPLE_RESOURCE_PACKS_SUPPORTED) {
+				modifiableSection.replaceDetail("Resource Packs", detail);
+			} else {
+				modifiableSection.replaceDetail("Resource Pack", "Resource Packs", detail);
+			}
+		});
+	}
+
+	@Inject(
+		method = "init",
+		at = @At(
+			value = "NEW",
+			target = "net/minecraft/client/resource/pack/ResourcePacks"
+		)
+	)
+	private void osl$resource_loader$initPackRepository(CallbackInfo ci) {
+		this.packRepository = SimpleResourcePackRepository.client();
+	}
 
 	@Inject(
 		method = "init",
