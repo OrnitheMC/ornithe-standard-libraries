@@ -3,6 +3,8 @@ package net.ornithemc.osl.text.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mojang.brigadier.Message;
+
 import net.ornithemc.osl.text.api.TextComponent;
 
 public class TextConverters {
@@ -11,6 +13,7 @@ public class TextConverters {
 
 	static {
 		register(String.class, TextComponent::buildFormattedString);
+		register(Message.class, text -> text);
 	}
 
 	public static <T> void register(Class<T> type, TextConverter<T> resolver) {

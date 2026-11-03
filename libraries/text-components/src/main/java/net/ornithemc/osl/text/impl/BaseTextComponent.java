@@ -27,6 +27,11 @@ abstract class BaseTextComponent implements TextComponent {
 	}
 
 	@Override
+	public String getString() {
+		return this.buildString();
+	}
+
+	@Override
 	public Style getStyle() {
 		return this.style;
 	}
