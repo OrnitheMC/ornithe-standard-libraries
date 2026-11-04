@@ -233,100 +233,100 @@ public class BlockModelTemplatesImpl implements BlockModelTemplates {
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.EAST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_RIGHT),
-                                VariantsBuilder.of(outerId).x(180).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(90).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.WEST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_RIGHT),
-                                VariantsBuilder.of(outerId).x(180).y(180).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(270).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.SOUTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_RIGHT),
-                                VariantsBuilder.of(outerId).x(180).y(90).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.NORTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_RIGHT),
-                                VariantsBuilder.of(outerId).x(180).y(270).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).lockedUV(true)
                         )
                         // Outer Left Top
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.EAST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_LEFT),
-                                VariantsBuilder.of(outerId).x(180).y(270).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.WEST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_LEFT),
-                                VariantsBuilder.of(outerId).x(180).y(90).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.SOUTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_LEFT),
-                                VariantsBuilder.of(outerId).x(180).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(90).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.NORTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.OUTER_LEFT),
-                                VariantsBuilder.of(outerId).x(180).y(180).lockedUV(true)
+                                VariantsBuilder.of(outerId).x(180).y(270).lockedUV(true)
                         )
                         // Inner Right Top
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.EAST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_RIGHT),
-                                VariantsBuilder.of(innerId).x(180).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(90).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.WEST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_RIGHT),
-                                VariantsBuilder.of(innerId).x(180).y(180).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(270).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.SOUTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_RIGHT),
-                                VariantsBuilder.of(innerId).x(180).y(90).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.NORTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_RIGHT),
-                                VariantsBuilder.of(innerId).x(180).y(270).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).lockedUV(true)
                         )
                         // Inner Left Top
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.EAST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_LEFT),
-                                VariantsBuilder.of(innerId).x(180).y(270).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.WEST)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_LEFT),
-                                VariantsBuilder.of(innerId).x(180).y(90).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(180).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.SOUTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_LEFT),
-                                VariantsBuilder.of(innerId).x(180).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(90).lockedUV(true)
                         )
                         .variant(
                                 BlockModelDefinitionBuilder.predicate(StairsBlock.FACING, Direction.NORTH)
                                         .set(StairsBlock.HALF, StairHalf.TOP)
                                         .set(StairsBlock.SHAPE, StairShape.INNER_LEFT),
-                                VariantsBuilder.of(innerId).x(180).y(180).lockedUV(true)
+                                VariantsBuilder.of(innerId).x(180).y(270).lockedUV(true)
                         )
         );
 
