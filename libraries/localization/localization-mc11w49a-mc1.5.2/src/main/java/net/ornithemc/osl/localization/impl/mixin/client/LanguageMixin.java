@@ -54,19 +54,6 @@ public class LanguageMixin {
 	@Inject(
 		method = "loadLanguage",
 		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$localization$setLanguage(CallbackInfo ci) {
-		// each ServerPlayerEntity also holds an instance of this class
-		if ((Language) (Object) this == INSTANCE) {
-			Localization.getLanguageManager().setSelectedLanguage(this.currentCode);
-		}
-	}
-
-	@Inject(
-		method = "loadLanguage",
-		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/locale/Language;loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V"
 		)
@@ -105,6 +92,7 @@ public class LanguageMixin {
 		// each ServerPlayerEntity also holds an instance of this class
 		if ((Language) (Object) this == INSTANCE) {
 			Localization.getLocale().setLastUpdateTime();
+			Localization.getLanguageManager().setSelectedLanguage(this.currentCode);
 		}
 	}
 }
