@@ -1,5 +1,6 @@
 package net.ornithemc.osl.localization.impl;
 
+import net.minecraft.locale.Language;
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
@@ -18,6 +19,7 @@ public class LanguageReloader implements ResourceReloadListener {
 
 	@Override
 	public void resourcesReloaded(ResourceManager resourceManager) {
+		Language.getInstance();// ensure it's loaded
 		Localization.getLanguageManager().reloadLocale(resourceManager);
 	}
 }
