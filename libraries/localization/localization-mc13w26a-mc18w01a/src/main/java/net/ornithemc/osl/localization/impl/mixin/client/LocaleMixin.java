@@ -83,8 +83,7 @@ public class LocaleMixin {
 	@Inject(
 		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resource/manager/ResourceManager;getResources(Lnet/minecraft/resource/Identifier;)Ljava/util/List;"
+			value = "TAIL"
 		)
 	)
 	private void osl$localization$localeReloaded(CallbackInfo ci) {
