@@ -2,9 +2,12 @@ package net.ornithemc.osl.localization.impl.mixin.client;
 
 import java.util.Properties;
 
+import org.objectweb.asm.Opcodes;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -85,7 +88,10 @@ public class LanguageMixin {
 	@Inject(
 		method = "loadLanguage",
 		at = @At(
-			value = "TAIL"
+			value = "FIELD",
+			target = "Lnet/minecraft/locale/Language;currentCode:Ljava/lang/String;",
+			opcode = Opcodes.PUTFIELD,
+			shift = Shift.AFTER
 		)
 	)
 	private void osl$localization$localeReloaded(CallbackInfo ci) {
