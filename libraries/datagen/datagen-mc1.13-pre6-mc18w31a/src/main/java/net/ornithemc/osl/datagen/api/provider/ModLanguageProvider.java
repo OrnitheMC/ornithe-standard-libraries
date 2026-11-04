@@ -70,7 +70,7 @@ public abstract class ModLanguageProvider extends GsonDataProvider {
 
     @Override
     protected Path getPath(NamespacedIdentifier id) {
-        return this.generator.getOutputPath().resolve(ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, id.prefixed("lang").suffixed(".json")));
+        return this.generator.getOutputPath().resolve(ResourcePath.nameOf(ResourceType.CLIENT_ASSETS, id.prefixed("lang/").suffixed(".json")));
     }
 
     @Override
