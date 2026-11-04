@@ -5,6 +5,36 @@ transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_8785515
 transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_04657628 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
 transitive-accessible method net/minecraft/data/recipe/RecipesProvider m_53363402 (Lnet/minecraft/tag/Tag;)Lnet/minecraft/advancement/criterion/InventoryChangedTrigger$Instance;
 transitive-accessible field net/minecraft/data/recipe/RecipesProvider generator Lnet/minecraft/data/DataGenerator;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_93288758 (Lnet/minecraft/item/ItemLike;Lnet/minecraft/unmapped/C_53726905;)Ljava/lang/Object;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_73059353 (Lnet/minecraft/item/ItemLike;Lnet/minecraft/unmapped/C_54245947;)Ljava/lang/Object;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_89014379 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_16781713 (Lnet/minecraft/block/Block;Lnet/minecraft/world/gen/loot/properties/LootEntityProperty$C_99902508;Lnet/minecraft/world/gen/loot/entries/LootPoolEntry$C_09689338;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_89803343 (Lnet/minecraft/block/Block;Lnet/minecraft/world/gen/loot/entries/LootPoolEntry$C_09689338;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_44196159 (Lnet/minecraft/block/Block;Lnet/minecraft/world/gen/loot/entries/LootPoolEntry$C_09689338;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_84478768 (Lnet/minecraft/block/Block;Lnet/minecraft/world/gen/loot/entries/LootPoolEntry$C_09689338;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_14564750 (Lnet/minecraft/block/Block;Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_11766088 (Lnet/minecraft/item/ItemLike;Lnet/minecraft/unmapped/C_31499326;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_07886919 (Lnet/minecraft/block/Block;Lnet/minecraft/item/ItemLike;Lnet/minecraft/unmapped/C_31499326;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_60841190 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_83281118 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_26714110 (Lnet/minecraft/block/Block;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_34157653 (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_72231448 (Lnet/minecraft/block/Block;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_43219701 (Lnet/minecraft/block/Block;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_44463253 (Lnet/minecraft/block/Block;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_20008481 (Lnet/minecraft/block/Block;Lnet/minecraft/item/Item;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_34059040 (Lnet/minecraft/block/Block;Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_58658556 (Lnet/minecraft/block/Block;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_03890930 (Lnet/minecraft/block/Block;Lnet/minecraft/item/Item;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_53307033 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_06233480 (Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;[F)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_00071090 (Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;[F)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_34296225 (Lnet/minecraft/block/Block;Lnet/minecraft/item/Item;Lnet/minecraft/item/Item;Lnet/minecraft/world/gen/loot/properties/LootEntityProperty$C_99902508;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_97099237 (Lnet/minecraft/block/Block;Ljava/util/function/Function;)V
+transitive-accessible method net/minecraft/unmapped/C_63583284 m_77462484 (Lnet/minecraft/block/Block;Lnet/minecraft/world/gen/loot/LootTable$C_96647086;)V
+transitive-accessible method net/minecraft/unmapped/C_89378069 m_25426966 (Lnet/minecraft/item/ItemLike;)Lnet/minecraft/world/gen/loot/LootTable$C_96647086;
+transitive-accessible field net/minecraft/unmapped/C_89378069 f_62141666 Lnet/minecraft/advancement/criterion/EntityPredicate$Builder;
+transitive-accessible method net/minecraft/unmapped/C_89378069 m_62164140 (Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/gen/loot/LootTable$C_96647086;)V
 
 transitive-inject-interface net/minecraft/data/DataGenerator net/ornithemc/osl/datagen/api/PackGenerator
 transitive-inject-interface net/minecraft/data/DataProvider net/ornithemc/osl/datagen/impl/ModDataProviderExtensionImpl
@@ -12,3 +42,5 @@ transitive-inject-interface net/minecraft/data/HashCache net/ornithemc/osl/datag
 
 accessible method net/minecraft/data/recipe/RecipesProvider save (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V
 accessible method net/minecraft/data/recipe/RecipesProvider saveAdvancement (Lnet/minecraft/data/HashCache;Lcom/google/gson/JsonObject;Ljava/nio/file/Path;)V
+accessible field net/minecraft/unmapped/C_63583284 f_14537958 Ljava/util/Map;
+accessible field net/minecraft/unmapped/C_89378069 f_30315066 Ljava/util/Map;
