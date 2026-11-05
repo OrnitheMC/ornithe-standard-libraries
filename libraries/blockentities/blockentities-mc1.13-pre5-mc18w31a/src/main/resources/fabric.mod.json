@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-blockentities",
-  "version": "0.1.0+mc1.13-pre5-mc18w31a",
+  "version": "0.1.1-alpha.1+mc1.13-pre5-mc18w31a",
   "environment": "*",
   "entrypoints": {
     "registry-init": [
@@ -18,10 +18,10 @@
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
-    "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-text-components": "\u003e\u003d0.1.0",
+    "osl-networking": "\u003e\u003d0.12.0",
     "osl-networking-impl": "\u003e\u003d0.2.0",
-    "osl-registries": "\u003e\u003d0.2.0"
+    "osl-registries": "\u003e\u003d0.4.0-"
   },
   "name": "OSL Block Entities",
   "description": "Block Entities API and events.",

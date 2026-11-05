@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-blocks",
-  "version": "0.3.0+mc15w36a-mc17w46a",
+  "version": "0.3.1-alpha.1+mc15w36a-mc17w46a",
   "environment": "*",
   "entrypoints": {
     "registry-init": [
@@ -19,10 +19,10 @@
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
-    "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-text-components": "\u003e\u003d0.1.0",
+    "osl-networking": "\u003e\u003d0.12.0",
     "osl-networking-impl": "\u003e\u003d0.2.0",
-    "osl-registries": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.4.0-",
     "osl-blockstates": "\u003e\u003d0.1.0"
   },
   "name": "OSL Blocks",
