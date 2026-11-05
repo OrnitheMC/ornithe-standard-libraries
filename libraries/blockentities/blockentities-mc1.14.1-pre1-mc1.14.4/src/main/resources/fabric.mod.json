@@ -4,7 +4,7 @@
   "version": "0.1.0+mc1.14.1-pre1-mc1.14.4",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.blockentities.impl.BlockEntityTypeRegistryImpl::init"
     ]
   },

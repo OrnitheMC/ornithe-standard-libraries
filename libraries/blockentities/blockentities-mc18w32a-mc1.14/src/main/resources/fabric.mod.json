@@ -4,7 +4,7 @@
   "version": "0.1.0+mc18w32a-mc1.14",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.blockentities.impl.BlockEntityTypeRegistryImpl::init"
     ]
   },
