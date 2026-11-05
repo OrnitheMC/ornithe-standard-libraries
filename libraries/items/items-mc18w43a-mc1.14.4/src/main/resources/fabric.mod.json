@@ -4,7 +4,7 @@
   "version": "0.3.1+mc18w43a-mc1.14.4",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.items.impl.ItemRegistryImpl::init"
     ]
   },
