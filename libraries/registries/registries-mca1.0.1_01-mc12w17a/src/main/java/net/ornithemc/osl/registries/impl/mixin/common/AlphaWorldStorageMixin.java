@@ -2,6 +2,7 @@ package net.ornithemc.osl.registries.impl.mixin.common;
 
 import java.io.File;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -16,11 +17,11 @@ import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
 @Mixin(AlphaWorldStorage.class)
 public class AlphaWorldStorageMixin implements WorldStorageAccess {
 
-	@Shadow
-	private File getDirectory() { return null; }
+	@Shadow @Final
+	private File dir;
 
 	@Override
 	public File osl$registries$getDirectory() {
-		return this.getDirectory();
+		return this.dir;
 	}
 }
