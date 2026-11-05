@@ -4,7 +4,7 @@
   "version": "0.3.0+mca1.0.1_01-mc1.6.4",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.blocks.impl.BlockRegistryImpl::init"
     ]
   },
