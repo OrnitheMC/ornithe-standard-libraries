@@ -2,6 +2,7 @@ package net.ornithemc.osl.registries.impl;
 
 import net.minecraft.text.LiteralText;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
@@ -12,6 +13,9 @@ import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingSource;
 import net.ornithemc.osl.registries.impl.registry.sync.SyncedRegistriesPacketSerializer;
 
 public final class RegistriesEntrypoint implements ClientModInitializer {
+
+	public static final boolean OLD_CRUDE_IDENTITY_HASH_MAP = MinecraftVersion.resolve().compareTo("15w35a") < 0;
+	public static final boolean ID_2_OBJECT_BI_MAP_EXISTS = MinecraftVersion.resolve().compareTo("15w36a") >= 0;
 
 	@Override
 	public void initClient() {

@@ -1,16 +1,18 @@
 package net.ornithemc.osl.registries.impl.mixin.common;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.world.storage.AlphaWorldStorage;
 
-import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
-import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingStorage;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
 
+import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
+
+@Conditional(minecraftVersion = @Version(">=b1.3"))
 @Mixin(AlphaWorldStorage.class)
 public class AlphaWorldStorageMixin implements WorldStorageAccess {
 
@@ -18,12 +20,7 @@ public class AlphaWorldStorageMixin implements WorldStorageAccess {
 	private File getDirectory() { return null; }
 
 	@Override
-	public void osl$registries$loadRegistryMappings() throws IOException {
-		RegistryMappingStorage.loadRegistryMappings(this.getDirectory());
-	}
-
-	@Override
-	public void osl$registries$saveRegistryMappings() throws IOException {
-		RegistryMappingStorage.saveRegistryMappings(this.getDirectory());
+	public File osl$registries$getDirectory() {
+		return this.getDirectory();
 	}
 }
