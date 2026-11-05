@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.Bootstrap;
 import net.minecraft.util.registry.Registry;
+
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 

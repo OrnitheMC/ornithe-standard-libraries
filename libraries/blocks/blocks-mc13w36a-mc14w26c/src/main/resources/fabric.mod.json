@@ -4,7 +4,7 @@
   "version": "0.3.0+mc13w36a-mc14w26c",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.blocks.impl.BlockRegistryImpl::init"
     ]
   },

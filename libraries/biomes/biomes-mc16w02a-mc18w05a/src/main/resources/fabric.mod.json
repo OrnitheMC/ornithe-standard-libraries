@@ -4,7 +4,7 @@
   "version": "0.1.0+mc16w02a-mc18w05a",
   "environment": "*",
   "entrypoints": {
-    "init": [
+    "registry-init": [
       "net.ornithemc.osl.biomes.impl.BiomeRegistryImpl::init"
     ]
   },
