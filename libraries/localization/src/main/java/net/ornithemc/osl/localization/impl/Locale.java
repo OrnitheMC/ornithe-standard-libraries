@@ -111,12 +111,12 @@ public final class Locale implements net.ornithemc.osl.text.impl.Locale {
 	}
 
 	public void loadLanguage(ResourceManager resourceManager, String language) {
+		String languageLowercase = language.toLowerCase(java.util.Locale.ROOT);
+
 		String pathFormat = "lang/%s%s";
 		String[] paths;
 
-		if (ResourcePacks.getSupportedFormat() < 3) {
-			String languageLowercase = language.toLowerCase(java.util.Locale.ROOT);
-
+		if (ResourcePacks.getSupportedFormat() < 3 && !language.equals(languageLowercase)) {
 			paths = new String[] {
 				String.format(pathFormat, language, ".lang"),
 				String.format(pathFormat, language, ".json"),
