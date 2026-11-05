@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
-import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
@@ -21,7 +21,7 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 
 	private final NamespacedIdentifier identifier;
 
-	private final Int2ReferenceMap<T> values;
+	private final ObjectList<T> values;
 	private final Reference2IntMap<T> ids;
 	private final Map<NamespacedIdentifier, T> registry;
 	private final Map<T, ResourceKey<T>> keys;
@@ -33,7 +33,7 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 	public SimpleRegistry(NamespacedIdentifier identifier) {
 		this.identifier = identifier;
 
-		this.values = new Int2ReferenceOpenHashMap<>();
+		this.values = new ObjectArrayList<>();
 		this.ids = new Reference2IntOpenHashMap<>();
 		this.registry = new HashMap<>();
 		this.keys = new IdentityHashMap<>();
@@ -55,7 +55,7 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 		if (id < 0) {
 			throw new IllegalStateException("invalid ID " + id + " (must be >= 0)");
 		}
-		if (this.values.containsKey(id)) {
+		if (id < this.values.size() && this.values.get(id) != null) {
 			throw new IllegalStateException("duplicate ID " + id + " (" + this.getIdentifier(this.get(id)) + " and " + key.identifier() + ")");
 		}
 		if (this.registry.containsKey(key.identifier())) {
@@ -65,7 +65,11 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 			throw new IllegalStateException("value registered twice (" + this.getId(value) + ", " + this.getIdentifier(value) + " and " + id + ", " + key.identifier() + ")");
 		}
 
-		this.values.put(id, value);
+		while (this.values.size() <= id) {
+			this.values.add(null);
+		}
+
+		this.values.set(id, value);
 		this.ids.put(value, id);
 		this.registry.put(key.identifier(), value);
 		this.keys.put(value, key);
@@ -123,7 +127,7 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 
 	@Override
 	public Iterator<T> iterator() {
-		return this.registry.values().iterator();
+		return this.values.iterator();
 	}
 
 	@Override
