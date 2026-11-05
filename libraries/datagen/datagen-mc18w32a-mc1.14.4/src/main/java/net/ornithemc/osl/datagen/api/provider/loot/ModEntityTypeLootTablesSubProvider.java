@@ -23,7 +23,7 @@ public abstract class ModEntityTypeLootTablesSubProvider extends C_89378069 {
     }
 
     public void put(NamespacedIdentifier identifier, LootTable.C_96647086 table) {
-        f_30315066.put(identifier, table);
+        f_30315066.put(identifier instanceof Identifier ? (Identifier) identifier : new Identifier(identifier.namespace(), identifier.identifier()), table);
     }
 
     public abstract void add();
