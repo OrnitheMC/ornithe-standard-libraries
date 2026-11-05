@@ -1,9 +1,9 @@
 package net.ornithemc.osl.registries.impl.mixin.common;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -22,9 +22,8 @@ import net.minecraft.world.storage.WorldStorage;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
 
-import net.ornithemc.osl.registries.impl.access.ServerWorldAccess;
-import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
+import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingStorage;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
@@ -38,12 +37,12 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$registries$loadRegistryMappings(CallbackInfo ci, @Local WorldStorage storage) {
-		if (storage instanceof WorldStorageAccess) {
-			try {
-				((WorldStorageAccess) storage).osl$registries$loadRegistryMappings();
-			} catch (IOException e) {
-				throw new CrashException(CrashReport.of(e, "Exception initializing level"));
-			}
+		File dir = storage.getDirectory();
+
+		try {
+			RegistryMappingStorage.loadRegistryMappings(dir);
+		} catch (IOException e) {
+			throw new CrashException(CrashReport.of(e, "Exception initializing level"));
 		}
 	}
 
@@ -56,12 +55,12 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$registries$loadRegistryMappings(CallbackInfo ci, @Local AlphaWorldStorage storage) {
-		if (storage instanceof WorldStorageAccess) {
-			try {
-				((WorldStorageAccess) storage).osl$registries$loadRegistryMappings();
-			} catch (IOException e) {
-				throw new CrashException(CrashReport.of(e, "Exception initializing level"));
-			}
+		File dir = storage.getDirectory();
+
+		try {
+			RegistryMappingStorage.loadRegistryMappings(dir);
+		} catch (IOException e) {
+			throw new CrashException(CrashReport.of(e, "Exception initializing level"));
 		}
 	}
 
@@ -73,7 +72,19 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$registries$saveRegistryMappings(CallbackInfo ci) {
-		this.saveRegistryMappings();
+		@SuppressWarnings("resource")
+		MinecraftServer server = (MinecraftServer) (Object) this;
+
+		ServerWorld overworld = server.getWorld(DimensionType.OVERWORLD);
+		WorldStorage storage = overworld.getStorage();
+
+		File dir = storage.getDirectory();
+
+		try {
+			RegistryMappingStorage.loadRegistryMappings(dir);
+		} catch (IOException e) {
+			RegistriesImpl.LOGGER.error("Exception saving level", e);
+		}
 	}
 
 	@Conditional(minecraftVersion = @Version(">=19w04a"))
@@ -84,23 +95,18 @@ public class MinecraftServerMixin {
 		)
 	)
 	private void osl$registries$saveRegistryMappings(CallbackInfoReturnable<Boolean> cir) {
-		this.saveRegistryMappings();
-	}
-
-	@Unique
-	private void saveRegistryMappings() {
 		@SuppressWarnings("resource")
 		MinecraftServer server = (MinecraftServer) (Object) this;
 
 		ServerWorld overworld = server.getWorld(DimensionType.OVERWORLD);
-		WorldStorageAccess storage = ((ServerWorldAccess) overworld).accessStorage();
+		AlphaWorldStorage storage = ((ServerWorldAccess) overworld).accessStorage();
 
-		if (storage != null) {
-			try {
-				((WorldStorageAccess) storage).osl$registries$saveRegistryMappings();
-			} catch (IOException e) {
-				RegistriesImpl.LOGGER.error("Exception saving level", e);
-			}
+		File dir = storage.getDirectory();
+
+		try {
+			RegistryMappingStorage.loadRegistryMappings(dir);
+		} catch (IOException e) {
+			RegistriesImpl.LOGGER.error("Exception saving level", e);
 		}
 	}
 }

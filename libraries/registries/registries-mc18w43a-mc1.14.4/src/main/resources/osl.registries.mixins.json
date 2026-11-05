@@ -5,7 +5,6 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
-		"common.AlphaWorldStorageMixin",
 		"common.BootstrapMixin",
 		"common.CrudeIncrementalIntIdentityHashMapMixin",
 		"common.DefaultedIdRegistryAccess",
@@ -15,7 +14,7 @@
 		"common.NbtCompoundMixin",
 		"common.PlayerManagerMixin",
 		"common.RegistryMixin",
-		"common.ServerWorldMixin"
+		"common.ServerWorldAccess"
 	],
 	"client": [
 		"client.IntegratedServerMixin"
