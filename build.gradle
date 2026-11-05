@@ -400,6 +400,11 @@ def setUpModule(project) {
 			} else if (project.hasProperty('entrypoint_server_init')) {
 				entrypoint 'server-init', project.entrypoint_server_init
 			}
+			if (library.hasProperty('entrypoint_registry_init')) {
+				entrypoint 'registry-init', library.entrypoint_registry_init
+			} else if (project.hasProperty('entrypoint_registry_init')) {
+				entrypoint 'registry-init', project.entrypoint_registry_init
+			}
 
 			if (ctfile.exists()) {
 				accessWidener = ctfile.getName()

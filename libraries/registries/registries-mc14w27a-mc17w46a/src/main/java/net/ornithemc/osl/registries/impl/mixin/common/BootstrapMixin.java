@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 
 import net.minecraft.Bootstrap;
 
+import net.ornithemc.osl.registries.impl.RegistryEntrypoints;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 
@@ -20,6 +21,10 @@ public class BootstrapMixin {
 	@WrapMethod(method = "init()V")
 	private static void osl$registries$initAndLockRegistries(Operation<Void> op) {
 		boolean wasInitialized = initialized;
+
+		if (!wasInitialized) {
+			RegistryEntrypoints.invoke();
+		}
 
 		// we could skip the call if initialized is already true
 		// but let's not mess with the bootstrap too much, eh
