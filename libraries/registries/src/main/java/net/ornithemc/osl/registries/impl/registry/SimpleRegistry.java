@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Iterators;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -127,7 +130,7 @@ public class SimpleRegistry<T> implements WritableRegistry<T>, ClearableRegistry
 
 	@Override
 	public Iterator<T> iterator() {
-		return this.values.iterator();
+		return Iterators.filter(this.values.iterator(), Objects::nonNull);
 	}
 
 	@Override
