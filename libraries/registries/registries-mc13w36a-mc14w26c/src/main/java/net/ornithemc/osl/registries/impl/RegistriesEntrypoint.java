@@ -2,6 +2,7 @@ package net.ornithemc.osl.registries.impl;
 
 import net.minecraft.text.LiteralText;
 
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
 import net.ornithemc.osl.networking.api.client.ClientConnectionEvents;
 import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
@@ -12,6 +13,8 @@ import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingSource;
 import net.ornithemc.osl.registries.impl.registry.sync.SyncedRegistriesPacketSerializer;
 
 public final class RegistriesEntrypoint implements ClientModInitializer {
+
+	public static final boolean OLD_CRUDE_IDENTITY_HASH_MAP = MinecraftVersion.resolve().compareTo("1.7.10-pre3") < 0 || (MinecraftVersion.resolve().compareTo("14w02a") >= 0 && MinecraftVersion.resolve().compareTo("14w25a") < 0);
 
 	@Override
 	public void initClient() {
