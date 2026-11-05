@@ -16,9 +16,13 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 
 import net.minecraft.util.Id2ObjectBiMap;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.registries.impl.access.Clearable;
 import net.ornithemc.osl.registries.impl.access.Id2ObjectBiMapAccess;
 
+@Conditional(minecraftVersion = @Version(">=15w36a"))
 @Mixin(Id2ObjectBiMap.class)
 public class Id2ObjectBiMapMixin<T> implements Id2ObjectBiMapAccess, Clearable {
 

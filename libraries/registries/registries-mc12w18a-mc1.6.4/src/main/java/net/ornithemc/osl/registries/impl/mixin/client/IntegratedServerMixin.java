@@ -13,9 +13,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.world.storage.WorldStorage;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 
+@Conditional(minecraftVersion = @Version(">=12w25a"))
 @Mixin(IntegratedServer.class)
 public class IntegratedServerMixin {
 
