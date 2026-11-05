@@ -153,12 +153,6 @@ include ':libraries:networking:networking-mcb1.0-mc13w39b'
 include ':libraries:networking:networking-mc13w41a-mc18w30b'
 include ':libraries:networking:networking-mc18w31a-mc1.14.4'
 
-include ':libraries:networking-impl'
-include ':libraries:networking-impl:networking-impl-mca1.0.16-mca1.2.6'
-include ':libraries:networking-impl:networking-impl-mca0.1.2_01-mca0.2.8'
-include ':libraries:networking-impl:networking-impl-mcb1.0-mc13w39b'
-include ':libraries:networking-impl:networking-impl-mc13w41a-mc1.14.4'
-
 include ':libraries:registries'
 include ':libraries:registries:registries-mca1.0.1_01-mc12w17a'
 include ':libraries:registries:registries-mc12w18a-mc1.6.4'
