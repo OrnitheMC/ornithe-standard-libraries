@@ -1,5 +1,6 @@
 package net.ornithemc.osl.datagen.api.model;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class ModelBuilder {
     private NamespacedIdentifier parent;
-    private Map<String, NamespacedIdentifier> textures = new HashMap<>();
+    private Map<String, NamespacedIdentifier> textures = Maps.newLinkedHashMap();
 
     /**
      * Creates a new model builder.
