@@ -9,9 +9,7 @@ import net.minecraft.data.recipe.RecipesProvider;
 import net.minecraft.resource.Identifier;
 import net.minecraft.unmapped.C_23159014;
 import net.ornithemc.osl.datagen.api.PackGenerator;
-import net.ornithemc.osl.datagen.impl.access.RecipeBuilderAccess;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -20,8 +18,11 @@ import java.util.function.Consumer;
  * A DataProvider for generating recipes.
  */
 public abstract class ModRecipesProvider extends RecipesProvider {
-    public ModRecipesProvider(PackGenerator generator) {
+    public final ModContainer mod;
+
+    public ModRecipesProvider(PackGenerator generator, ModContainer mod) {
         super((DataGenerator) generator);
+        this.mod = mod;
     }
 
     @Override
@@ -32,7 +33,7 @@ public abstract class ModRecipesProvider extends RecipesProvider {
             if (!set.add(c_23159014.m_80989661())) {
                 throw new IllegalStateException("Duplicate recipe " + c_23159014.m_80989661());
             } else {
-                this.save(cache, ((RecipeBuilderAccess) c_23159014).getRecipe(), path.resolve("data/" + c_23159014.m_80989661().getNamespace() + "/recipes/" + c_23159014.m_80989661().getPath() + ".json"));
+                this.save(cache, c_23159014.m_13901626(), path.resolve("data/" + c_23159014.m_80989661().getNamespace() + "/recipes/" + c_23159014.m_80989661().getPath() + ".json"));
                 JsonObject jsonObject = c_23159014.m_38911806();
                 if (jsonObject != null) {
                     this.saveAdvancement(cache, jsonObject, path.resolve("data/" + c_23159014.m_80989661().getNamespace() + "/advancements/" + c_23159014.m_66233363().getPath() + ".json"));
@@ -40,6 +41,10 @@ public abstract class ModRecipesProvider extends RecipesProvider {
 
             }
         });
+    }
+
+    public String id(String id) {
+        return this.mod.getMetadata().getId() + ":" + id;
     }
 
     /**

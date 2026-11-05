@@ -20,8 +20,11 @@ import java.util.function.Consumer;
  * A DataProvider for generating recipes.
  */
 public abstract class ModRecipesProvider extends RecipesProvider {
-    public ModRecipesProvider(PackGenerator generator) {
+    public final ModContainer mod;
+
+    public ModRecipesProvider(PackGenerator generator, ModContainer mod) {
         super((DataGenerator) generator);
+        this.mod = mod;
     }
 
     @Override
@@ -40,6 +43,10 @@ public abstract class ModRecipesProvider extends RecipesProvider {
 
             }
         });
+    }
+
+    public String id(String id) {
+        return this.mod.getMetadata().getId() + ":" + id;
     }
 
     /**
