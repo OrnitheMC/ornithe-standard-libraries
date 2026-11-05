@@ -1,5 +1,6 @@
 package net.ornithemc.osl.registries.impl.mixin.client;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,8 +16,8 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.world.storage.WorldStorage;
 
-import net.ornithemc.osl.registries.impl.access.WorldStorageAccess;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
+import net.ornithemc.osl.registries.impl.registry.sync.RegistryMappingStorage;
 
 @Mixin(IntegratedServer.class)
 public class IntegratedServerMixin {
@@ -31,12 +32,12 @@ public class IntegratedServerMixin {
 		)
 	)
 	private void osl$registries$loadRegistryMappings(CallbackInfo ci, @Local WorldStorage storage) {
-		if (storage instanceof WorldStorageAccess) {
-			try {
-				((WorldStorageAccess) storage).osl$registries$loadRegistryMappings();
-			} catch (IOException e) {
-				throw new CrashException(CrashReport.of(e, "Exception initializing level"));
-			}
+		File dir = storage.getDirectory();
+
+		try {
+			RegistryMappingStorage.loadRegistryMappings(dir);
+		} catch (IOException e) {
+			throw new CrashException(CrashReport.of(e, "Exception initializing level"));
 		}
 	}
 

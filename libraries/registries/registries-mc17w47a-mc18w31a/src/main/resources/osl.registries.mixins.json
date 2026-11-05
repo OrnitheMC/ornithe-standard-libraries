@@ -4,7 +4,6 @@
 	"package": "net.ornithemc.osl.registries.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"common.AlphaWorldStorageMixin",
 		"common.BootstrapMixin",
 		"common.CrudeIncrementalIntIdentityHashMapMixin",
 		"common.DefaultedIdRegistryAccess",
