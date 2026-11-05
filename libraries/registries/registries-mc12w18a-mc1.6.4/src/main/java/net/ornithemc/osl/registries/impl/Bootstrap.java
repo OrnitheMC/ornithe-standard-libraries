@@ -11,6 +11,8 @@ public final class Bootstrap {
 		if (!initialized) {
 			initialized = true;
 
+			RegistryEntrypoints.invoke();
+
 			RegistriesImpl.init();
 			SyncedRegistriesImpl.init();
 		}

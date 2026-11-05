@@ -11,7 +11,8 @@
 		"common.Id2ObjectBiMapMixin",
 		"common.IdRegistryMixin",
 		"common.MinecraftServerMixin",
-		"common.PlayerManagerMixin"
+		"common.PlayerManagerMixin",
+		"common.RegistryMixin"
 	],
 	"client": [
 		"client.IntegratedServerMixin"
