@@ -4,10 +4,15 @@
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"common.ConnectionMixin",
+		"common.PacketAccessor"
 	],
 	"client": [
 	],
 	"server": [
+		"server.PlayerManagerMixin",
+		"server.ServerLoginNetworkHandlerMixin",
+		"server.ServerPlayNetworkHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
