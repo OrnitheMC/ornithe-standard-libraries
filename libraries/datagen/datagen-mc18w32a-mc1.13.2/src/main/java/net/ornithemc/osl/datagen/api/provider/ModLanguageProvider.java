@@ -1,5 +1,6 @@
 package net.ornithemc.osl.datagen.api.provider;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.ModContainer;
@@ -51,7 +52,7 @@ public abstract class ModLanguageProvider extends GsonDataProvider {
 
     @Override
     protected final void generate(BiConsumer<NamespacedIdentifier, JsonElement> consumer) {
-        Map<String, String> translations = new HashMap<>();
+        Map<String, String> translations = Maps.newLinkedHashMap();
 
         generateTranslations(translations::put);
 

@@ -1,5 +1,6 @@
 package net.ornithemc.osl.datagen.api.model.block;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.block.state.BlockState;
@@ -13,7 +14,7 @@ import java.util.*;
  * Builder for blockstate model definitions.
  */
 public class BlockModelDefinitionBuilder {
-    private final Map<String, VariantsBuilder> variants = new HashMap<>();
+    private final Map<String, VariantsBuilder> variants = Maps.newLinkedHashMap();
     private final List<SelectorBuilder> selectors = new ArrayList<>();
 
     private BlockModelDefinitionBuilder() {
