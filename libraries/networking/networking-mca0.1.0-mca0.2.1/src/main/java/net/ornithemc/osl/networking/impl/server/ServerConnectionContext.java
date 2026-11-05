@@ -29,7 +29,7 @@ public final class ServerConnectionContext implements LoginContext, PlayReadyCon
 
 	@Override
 	public ServerPlayerEntity player() {
-		return ((ServerNetworkHandlerAccess) this.networkHandler).osl$networkin$player();
+		return this.networkHandler.player;
 	}
 
 	@Override

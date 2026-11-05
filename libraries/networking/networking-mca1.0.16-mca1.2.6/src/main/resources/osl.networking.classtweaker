@@ -1,0 +1,3 @@
+classTweaker	v1	named
+
+accessible	field	net/minecraft/network/Connection	socket	Ljava/net/Socket;

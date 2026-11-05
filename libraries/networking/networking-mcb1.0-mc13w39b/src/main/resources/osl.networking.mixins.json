@@ -3,9 +3,22 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.networking.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
+		"common.CustomPayloadPacketMixin",
+		"common.MinecraftServerMixin",
+		"common.PacketAccessor",
+		"common.PacketHandlerMixin",
+		"common.PlayerManagerMixin",
+		"common.RemoteConnectionMixin",
+		"common.ServerLoginNetworkHandlerMixin",
+		"common.ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
+		"client.ClientNetworkHandlerMixin",
+		"client.HandshakePacketMixin",
+		"client.LocalConnectionMixin",
+		"client.MinecraftMixin"
 	],
 	"server": [
 	],
