@@ -207,7 +207,7 @@ public class BlockModelDefinitionBuilder {
     }
 
     public static class PredicateBuilder {
-        private final Map<Property<?>, Comparable<?>> predicates = new HashMap<>();
+        private final Map<Property<?>, Comparable<?>> predicates = Maps.newLinkedHashMap();
 
         /**
          * Sets the specified property and value.
