@@ -91,6 +91,8 @@ public final class RegistriesImpl {
 		validate();
 
 		LOGGER.info("Bootstrapped {} registries.", BOOTSTRAPS.size());
+
+		RegistryEvents.REGISTRIES_FROZEN.invoker().run();
 	}
 
 	private static void bootstrap() {
