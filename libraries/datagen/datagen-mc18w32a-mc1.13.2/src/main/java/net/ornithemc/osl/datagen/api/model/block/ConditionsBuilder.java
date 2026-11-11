@@ -30,7 +30,7 @@ public interface ConditionsBuilder {
         List<T> valueList = new ArrayList<>();
         valueList.add(mainMatch);
         valueList.addAll(Arrays.asList(extraPossibleMatch));
-        return new PropertyPredicate<>(false, property, valueList);
+        return new PropertyPredicate<>(true, property, valueList);
     }
 
     /**
