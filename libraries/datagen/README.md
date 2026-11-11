@@ -30,6 +30,8 @@ An example is shown below.
 package com.example;
 
 import net.ornithemc.osl.datagen.api.DataGeneratorInitializer;
+import net.ornithemc.osl.datagen.api.ModDataGenerator;
+import net.ornithemc.osl.datagen.api.PackGenerator;
 
 public class ExampleDataGenerator implements DataGeneratorInitializer {
     @Override
@@ -45,12 +47,19 @@ public class ExampleDataGenerator implements DataGeneratorInitializer {
 Mod data providers are used to provide data to the pack generator.
 There are a few builtin providers, such as the model provider, and language provider.
 
-An example for the model provider is shown below.
+An example of the model provider is shown below.
 
 ```java
 package com.example;
 
-public class ExampleModelProvider extends ModModelProvider {
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.block.Blocks;
+import net.ornithemc.osl.datagen.api.model.block.BlockModelTemplates;
+import net.ornithemc.osl.datagen.api.model.ModelGenerator;
+import net.ornithemc.osl.datagen.api.provider.ModModelsProvider;
+import net.ornithemc.osl.datagen.api.PackGenerator;
+
+public class ExampleModelProvider extends ModModelsProvider {
     public ExampleModelProvider(PackGenerator generator, ModContainer mod) {
         super(generator, mod);
     }
@@ -62,5 +71,4 @@ public class ExampleModelProvider extends ModModelProvider {
 }
 ```
 
-Vanilla DataProviders can also be extended to provide data such as tags.
-In the extended constructor, replace DataGenerator with PackGenerator and upcast it back to DataGenerator.
+For the full list of builtin providers, see package `net.ornithemc.osl.datagen.api.provider`.
