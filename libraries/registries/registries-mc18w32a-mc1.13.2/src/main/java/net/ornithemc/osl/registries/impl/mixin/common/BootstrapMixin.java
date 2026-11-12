@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.Bootstrap;
 
-import net.ornithemc.osl.registries.impl.RegistryEntrypoints;
+import net.ornithemc.osl.registries.api.RegistryEvents;
 
 @Mixin(Bootstrap.class)
 public class BootstrapMixin {
@@ -24,7 +24,7 @@ public class BootstrapMixin {
 	)
 	private static void osl$registries$initRegistries(CallbackInfo ci) {
 		if (!initialized) {
-			RegistryEntrypoints.invoke();
+			RegistryEvents.INIT_REGISTRIES.invoker().run();
 		}
 	}
 }

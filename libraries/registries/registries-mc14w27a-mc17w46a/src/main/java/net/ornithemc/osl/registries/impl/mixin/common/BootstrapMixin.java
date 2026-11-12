@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 
 import net.minecraft.Bootstrap;
 
-import net.ornithemc.osl.registries.impl.RegistryEntrypoints;
+import net.ornithemc.osl.registries.api.RegistryEvents;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 
@@ -23,7 +23,7 @@ public class BootstrapMixin {
 		boolean wasInitialized = initialized;
 
 		if (!wasInitialized) {
-			RegistryEntrypoints.invoke();
+			RegistryEvents.INIT_REGISTRIES.invoker().run();
 		}
 
 		// we could skip the call if initialized is already true

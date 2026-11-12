@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.util.registry.Registry;
 
-import net.ornithemc.osl.registries.impl.RegistryEntrypoints;
+import net.ornithemc.osl.registries.api.RegistryEvents;
 
 @Mixin(Registry.class)
 public class RegistryMixin {
@@ -23,6 +23,6 @@ public class RegistryMixin {
 		)
 	)
 	private static void osl$registries$initRegistries(CallbackInfo ci) {
-		RegistryEntrypoints.invoke();
+		RegistryEvents.INIT_REGISTRIES.invoker().run();
 	}
 }

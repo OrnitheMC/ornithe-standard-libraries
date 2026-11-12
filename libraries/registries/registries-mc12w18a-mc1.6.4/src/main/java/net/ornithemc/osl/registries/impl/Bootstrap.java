@@ -1,5 +1,6 @@
 package net.ornithemc.osl.registries.impl;
 
+import net.ornithemc.osl.registries.api.RegistryEvents;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;
 import net.ornithemc.osl.registries.impl.registry.SyncedRegistriesImpl;
 
@@ -11,7 +12,7 @@ public final class Bootstrap {
 		if (!initialized) {
 			initialized = true;
 
-			RegistryEntrypoints.invoke();
+			RegistryEvents.INIT_REGISTRIES.invoker().run();
 
 			RegistriesImpl.init();
 			SyncedRegistriesImpl.init();
