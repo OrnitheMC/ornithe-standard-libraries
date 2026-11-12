@@ -4,8 +4,8 @@
   "version": "0.1.1-alpha.1+mc13w36a-mc1.8.2-pre4",
   "environment": "*",
   "entrypoints": {
-    "registry-init": [
-      "net.ornithemc.osl.biomes.impl.BiomeRegistryImpl::init"
+    "init": [
+      "net.ornithemc.osl.biomes.impl.BiomesInit::init"
     ]
   },
   "mixins": [
