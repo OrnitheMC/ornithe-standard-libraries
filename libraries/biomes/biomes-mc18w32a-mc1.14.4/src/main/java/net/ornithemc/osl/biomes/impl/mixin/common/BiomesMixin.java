@@ -7,8 +7,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.world.biome.Biomes;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.biomes.impl.BiomeRegistryImpl;
 
+@Conditional(minecraftVersion = @Version(">1.13.2"))
 @Mixin(Biomes.class)
 public class BiomesMixin {
 
