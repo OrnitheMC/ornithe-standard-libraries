@@ -4,8 +4,8 @@
   "version": "0.3.2-alpha.1+mc17w47a-mc18w31a",
   "environment": "*",
   "entrypoints": {
-    "registry-init": [
-      "net.ornithemc.osl.items.impl.ItemRegistryImpl::init"
+    "init": [
+      "net.ornithemc.osl.items.impl.ItemsInit::init"
     ]
   },
   "mixins": [
