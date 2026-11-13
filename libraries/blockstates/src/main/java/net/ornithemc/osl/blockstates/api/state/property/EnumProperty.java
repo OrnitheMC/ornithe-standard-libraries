@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -90,6 +91,11 @@ public class EnumProperty<T extends Enum<T>> extends AbstractProperty<T> {
 	@Override
 	public List<T> values() {
 		return this.values;
+	}
+
+	@Override
+	public Optional<T> getValue(String name) {
+		return Optional.ofNullable(this.valuesByName.get(name));
 	}
 
 	@Override

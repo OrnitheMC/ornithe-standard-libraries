@@ -3,6 +3,8 @@ package net.ornithemc.osl.text.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mojang.brigadier.Message;
+
 import net.ornithemc.osl.text.api.TextComponent;
 
 public class TextResolvers {
@@ -11,6 +13,7 @@ public class TextResolvers {
 
 	static {
 		register(String.class, new FormattedStringResolver());
+		register(Message.class, new MessageResolver());
 	}
 
 	public static <T> void register(Class<T> type, TextResolver<T> resolver) {

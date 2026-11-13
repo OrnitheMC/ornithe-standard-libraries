@@ -75,6 +75,10 @@ include ':libraries:branding:branding-mca1.2.2-mc14w29b'
 include ':libraries:branding:branding-mc14w30a-mc16w05a'
 include ':libraries:branding:branding-mc16w05b-mc1.12.2'
 
+include ':libraries:commands'
+include ':libraries:commands:commands-mc14w28a-mc1.12.2'
+include ':libraries:commands:commands-mc17w45a-mc1.14.4'
+
 include ':libraries:config'
 include ':libraries:config:config-mcb1.3-mcb1.7.3'
 include ':libraries:config:config-mc1.3-mc1.6.4'

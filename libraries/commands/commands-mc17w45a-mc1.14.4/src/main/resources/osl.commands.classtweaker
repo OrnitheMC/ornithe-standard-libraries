@@ -1,0 +1,3 @@
+classTweaker	v1	named
+
+transitive-inject-interface	net/minecraft/server/command/source/CommandSourceStack	net/ornithemc/osl/commands/impl/server/command/CommandSourceStackExtensionImpl
