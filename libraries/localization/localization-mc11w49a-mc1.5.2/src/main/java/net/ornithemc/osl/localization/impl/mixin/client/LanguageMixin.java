@@ -2,9 +2,12 @@ package net.ornithemc.osl.localization.impl.mixin.client;
 
 import java.util.Properties;
 
+import org.objectweb.asm.Opcodes;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -54,19 +57,6 @@ public class LanguageMixin {
 	@Inject(
 		method = "loadLanguage",
 		at = @At(
-			value = "HEAD"
-		)
-	)
-	private void osl$localization$setLanguage(CallbackInfo ci) {
-		// each ServerPlayerEntity also holds an instance of this class
-		if ((Language) (Object) this == INSTANCE) {
-			Localization.getLanguageManager().setSelectedLanguage(this.currentCode);
-		}
-	}
-
-	@Inject(
-		method = "loadLanguage",
-		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/locale/Language;loadTranslations(Ljava/util/Properties;Ljava/lang/String;)V"
 		)
@@ -98,13 +88,17 @@ public class LanguageMixin {
 	@Inject(
 		method = "loadLanguage",
 		at = @At(
-			value = "TAIL"
+			value = "FIELD",
+			target = "Lnet/minecraft/locale/Language;currentCode:Ljava/lang/String;",
+			opcode = Opcodes.PUTFIELD,
+			shift = Shift.AFTER
 		)
 	)
 	private void osl$localization$localeReloaded(CallbackInfo ci) {
 		// each ServerPlayerEntity also holds an instance of this class
 		if ((Language) (Object) this == INSTANCE) {
 			Localization.getLocale().setLastUpdateTime();
+			Localization.getLanguageManager().setSelectedLanguage(this.currentCode);
 		}
 	}
 }

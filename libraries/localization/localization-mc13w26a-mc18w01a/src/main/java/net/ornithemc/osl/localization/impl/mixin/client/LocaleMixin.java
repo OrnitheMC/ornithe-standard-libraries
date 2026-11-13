@@ -56,14 +56,16 @@ public class LocaleMixin {
 	)
 	private void osl$localization$loadExtraTranslations(ResourceManager resourceManager, List<String> languageCodes, CallbackInfo ci,
 														@Local(ordinal = 0) String languageCode, @Local(ordinal = 2) String namespace) {
+		String languageCodeLowercase = languageCode.toLowerCase(java.util.Locale.ROOT);
+
 		String pathFormat = "lang/%s%s";
 		String[] paths;
 
-		if (ResourcePacks.getSupportedFormat() < 3) {
+		if (ResourcePacks.getSupportedFormat() < 3 && !languageCode.equals(languageCodeLowercase)) {
 			paths = new String[] {
 				String.format(pathFormat, languageCode, ".json"),
-				String.format(pathFormat, languageCode.toLowerCase(java.util.Locale.ROOT), ".lang"),
-				String.format(pathFormat, languageCode.toLowerCase(java.util.Locale.ROOT), ".json")
+				String.format(pathFormat, languageCodeLowercase, ".lang"),
+				String.format(pathFormat, languageCodeLowercase, ".json")
 			};
 		} else {
 			paths = new String[] {
@@ -83,8 +85,7 @@ public class LocaleMixin {
 	@Inject(
 		method = "load(Lnet/minecraft/client/resource/manager/ResourceManager;Ljava/util/List;)V",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resource/manager/ResourceManager;getResources(Lnet/minecraft/resource/Identifier;)Ljava/util/List;"
+			value = "TAIL"
 		)
 	)
 	private void osl$localization$localeReloaded(CallbackInfo ci) {
