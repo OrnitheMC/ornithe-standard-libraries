@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-items",
-  "version": "0.3.2+mc18w32a-mc1.13.2",
+  "version": "0.3.3-alpha.1+mc18w32a-mc1.13.2",
   "environment": "*",
   "entrypoints": {
     "init": [
@@ -19,7 +19,7 @@
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
     "osl-text-components": "\u003e\u003d0.1.0",
-    "osl-networking": "\u003e\u003d0.12.0",
+    "osl-networking": "\u003e\u003d0.12.1-",
     "osl-registries": "\u003e\u003d0.4.0",
     "osl-blockstates": "\u003e\u003d0.1.0",
     "osl-blocks": "\u003e\u003d0.3.0"
