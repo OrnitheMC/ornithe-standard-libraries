@@ -1,0 +1,27 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.ornithemc.osl.registries.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
+	"mixins": [
+		"common.BootstrapMixin",
+		"common.CrudeIncrementalIntIdentityHashMapMixin",
+		"common.DefaultedIdRegistryAccess",
+		"common.Id2ObjectBiMapMixin",
+		"common.IdRegistryMixin",
+		"common.MinecraftServerMixin",
+		"common.NbtCompoundMixin",
+		"common.PlayerManagerMixin",
+		"common.RegistryMixin",
+		"common.ServerWorldAccess"
+	],
+	"client": [
+		"client.IntegratedServerMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
