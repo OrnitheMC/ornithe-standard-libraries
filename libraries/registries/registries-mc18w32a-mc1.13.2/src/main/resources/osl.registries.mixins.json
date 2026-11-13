@@ -5,6 +5,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"common.AlphaWorldStorageMixin",
+		"common.BootstrapMixin",
 		"common.CrudeIncrementalIntIdentityHashMapMixin",
 		"common.DefaultedIdRegistryAccess",
 		"common.Id2ObjectBiMapMixin",

@@ -1,5 +1,6 @@
 setUpLibrary(project)
 
 dependencies {
-	implementation 'it.unimi.dsi:fastutil:8.5.9'
+	compileOnly 'it.unimi.dsi:fastutil:8.5.9'
+	compileOnly 'com.google.guava:guava:17.0'
 }

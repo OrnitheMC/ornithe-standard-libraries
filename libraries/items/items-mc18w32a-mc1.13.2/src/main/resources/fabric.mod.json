@@ -5,7 +5,7 @@
   "environment": "*",
   "entrypoints": {
     "init": [
-      "net.ornithemc.osl.items.impl.ItemRegistryImpl::init"
+      "net.ornithemc.osl.items.impl.ItemsInit::init"
     ]
   },
   "mixins": [

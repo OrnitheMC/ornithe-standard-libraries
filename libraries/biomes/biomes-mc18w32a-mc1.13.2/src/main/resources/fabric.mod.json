@@ -5,7 +5,7 @@
   "environment": "*",
   "entrypoints": {
     "init": [
-      "net.ornithemc.osl.biomes.impl.BiomeRegistryImpl::init"
+      "net.ornithemc.osl.biomes.impl.BiomesInit::init"
     ]
   },
   "mixins": [

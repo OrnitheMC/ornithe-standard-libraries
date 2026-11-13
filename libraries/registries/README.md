@@ -22,6 +22,8 @@ Block COOKIE = Registry.register(BlockRegistry.REGISTRY, COOKIE_KEY, new CookieB
 
 ## Creating Registries
 
+Registries should be created in a listener to the `INIT_REGISTRIES` event.
+
 Just like with other resources, you must create a `ResourceKey` that uniquely identifies your registry. The `RegistryKeys` class provides some factory methods for creating resource keys for registries.
 
 ```java
@@ -75,12 +77,13 @@ public class CookieRecipes {
 package com.example;
 
 import net.ornithemc.osl.entrypoints.api.ModInitializer;
+import net.ornithemc.osl.registries.api.RegistryEvents;
 
 public class ExampleInitializer implements ModInitializer {
 
 	@Override
 	public void init() {
-		ExampleRegistries.init();
+		RegistryEvents.INIT_REGISTRIES.register(ExampleRegistries::init);
 	}
 }
 ```
