@@ -36,22 +36,22 @@ public class HandshakePayload implements PacketPayload {
 
 	@Override
 	public void read(PacketBuffer buffer) throws IOException {
-		protocol = buffer.readByte();
-		channels = new LinkedHashSet<>();
+		this.protocol = buffer.readByte();
+		this.channels = new LinkedHashSet<>();
 
 		int channelCount = buffer.readInt();
 
 		for (int i = 0; i < channelCount; i++) {
-			channels.add(StringChannelIdentifierParser.fromString(buffer.readString()));
+			this.channels.add(StringChannelIdentifierParser.fromString(buffer.readString()));
 		}
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) throws IOException {
-		buffer.writeByte(protocol);
-		buffer.writeInt(channels.size());
+		buffer.writeByte(this.protocol);
+		buffer.writeInt(this.channels.size());
 
-		for (NamespacedIdentifier channel : channels) {
+		for (NamespacedIdentifier channel : this.channels) {
 			buffer.writeString(StringChannelIdentifierParser.toString(channel));
 		}
 	}
