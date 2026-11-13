@@ -1,5 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.util.stream.Collectors;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,6 +33,31 @@ public class MinecraftMixin implements MinecraftExtension {
 	private SimpleResourcePackRepository packRepository;
 	@Unique
 	private SimpleReloadableResourceManager resourceManager;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$resource_loader$modifyCrashReports(CallbackInfo ci) {
+		Minecraft minecraft = (Minecraft) (Object) this;
+
+		minecraft.addCrashListener((report, section) -> {
+			section.addDetail("Resource Packs", () -> {
+				return this.packRepository.getSelectedPacks().stream()
+					.map(summary -> {
+						String s = summary.getId();
+						if (!summary.getCompatibility().isCompatible()) {
+							s += " (incompatible)";
+						}
+
+						return s;
+					})
+					.collect(Collectors.joining(", "));
+			});
+		});
+	}
 
 	@Inject(
 		method = "init",

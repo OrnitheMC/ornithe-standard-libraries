@@ -84,6 +84,11 @@ include ':libraries:config:config-mc14w27a-mc15w39c'
 include ':libraries:config:config-mc15w40a-mc1.12.2'
 include ':libraries:config:config-mc17w43a-mc1.13.2'
 
+include ':libraries:crash-reports'
+include ':libraries:crash-reports:crash-reports-mca1.0.1_01-mc1.2.5'
+include ':libraries:crash-reports:crash-reports-mc12w15a-mc1.4.2'
+include ':libraries:crash-reports:crash-reports-mc1.4.3-mc1.14.4'
+
 include ':libraries:entities'
 include ':libraries:entities:entities-mca1.0.1_01-mc11w48a'
 include ':libraries:entities:entities-mc12w01a-mc1.8.2-pre4'

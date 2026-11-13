@@ -1,5 +1,7 @@
 package net.ornithemc.osl.resource.loader.impl.mixin.client;
 
+import java.util.stream.Collectors;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.texture.TextureManager;
 import net.minecraft.client.render.world.WorldRenderer;
 
+import net.ornithemc.osl.crashreports.impl.crash.ModifiableCrashReportSection;
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
@@ -32,6 +35,33 @@ public class MinecraftMixin implements MinecraftExtension {
 	private SimpleResourcePackRepository packRepository;
 	@Unique
 	private SimpleReloadableResourceManager resourceManager;
+
+	@Inject(
+		method = "<init>",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private void osl$resource_loader$modifyCrashReports(CallbackInfo ci) {
+		Minecraft minecraft = (Minecraft) (Object) this;
+
+		minecraft.addCrashListener((report, section) -> {
+			ModifiableCrashReportSection modifiableSection = (ModifiableCrashReportSection) section;
+
+			modifiableSection.replaceDetail("Texture Pack", "Resource Packs", () -> {
+				return this.packRepository.getSelectedPacks().stream()
+					.map(summary -> {
+						String s = summary.getId();
+						if (!summary.getCompatibility().isCompatible()) {
+							s += " (incompatible)";
+						}
+
+						return s;
+					})
+					.collect(Collectors.joining(", "));
+			});
+		});
+	}
 
 	@Inject(
 		method = "init",
