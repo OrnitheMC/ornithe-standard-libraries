@@ -9,6 +9,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.GameGui;
 import net.minecraft.world.biome.Biome;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+@Conditional(minecraftVersion = @Version(">=1.2"))
 @Mixin(GameGui.class)
 public class GameGuiMixin {
 

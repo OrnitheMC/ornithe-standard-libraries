@@ -4,13 +4,19 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.util.Id2ObjectBiMap;
 import net.minecraft.world.biome.Biome;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.biomes.api.biome.BiomeExtension;
 import net.ornithemc.osl.biomes.impl.BiomeIdRegistry;
+import net.ornithemc.osl.biomes.impl.BiomeRegistryImpl;
 import net.ornithemc.osl.biomes.impl.access.BiomeAccess;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
@@ -32,6 +38,28 @@ public class BiomeMixin implements BiomeExtension, BiomeAccess {
 		// this allows us to register the muated biomes mapper in
 		// the API entrypoint without triggering a Biome class load
 		return BiomeIdRegistry.MUTATED_BIOMES;
+	}
+
+	@Conditional(minecraftVersion = @Version("<=1.13.2"))
+	@Inject(
+		method = "m_85926046",
+		at = @At(
+			value = "HEAD"
+		)
+	)
+	private static void osl$biomes$unlockBiomeRegistry(CallbackInfo ci) {
+		BiomeRegistryImpl.unlock();
+	}
+
+	@Conditional(minecraftVersion = @Version("<=1.13.2"))
+	@Inject(
+		method = "m_85926046",
+		at = @At(
+			value = "TAIL"
+		)
+	)
+	private static void osl$biomes$registerBiomes(CallbackInfo ci) {
+		BiomeRegistryImpl.registerBiomes();
 	}
 
 	@Override

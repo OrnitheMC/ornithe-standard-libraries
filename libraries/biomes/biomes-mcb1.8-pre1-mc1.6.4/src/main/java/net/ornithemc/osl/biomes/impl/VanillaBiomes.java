@@ -45,6 +45,7 @@ public final class VanillaBiomes {
 	};
 
 	public static final int MAX_ID = 255;
+	public static final boolean IDS_ABOVE_255_SUPPORTED = false;
 
 	static void init() {
 		for (Field f : Biome.class.getDeclaredFields()) {
