@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-crash-reports",
-  "version": "0.1.0-alpha.1+mca1.0.1_01-mc1.2.5",
+  "version": "0.1.0+mca1.0.1_01-mc1.2.5",
   "environment": "*",
   "mixins": [
     "osl.crash-reports.mixins.json"

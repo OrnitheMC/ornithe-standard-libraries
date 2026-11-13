@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "osl-commands",
-  "version": "0.1.0-alpha.1+mc17w45a-mc1.14.4",
+  "version": "0.1.0+mc17w45a-mc1.14.4",
   "environment": "*",
   "mixins": [
     "osl.commands.mixins.json"
@@ -14,10 +14,10 @@
     "osl-entrypoints": "\u003e\u003d0.5.0",
     "osl-lifecycle-events": "\u003e\u003d0.6.0",
     "osl-executors": "\u003e\u003d0.1.0",
-    "osl-text-components": "\u003e\u003d0.1.0-",
-    "osl-networking": "\u003e\u003d0.10.0",
+    "osl-text-components": "\u003e\u003d0.2.0",
+    "osl-networking": "\u003e\u003d0.12.0",
     "osl-networking-impl": "\u003e\u003d0.2.0",
-    "osl-registries": "\u003e\u003d0.2.0",
+    "osl-registries": "\u003e\u003d0.4.0",
     "osl-blockstates": "\u003e\u003d0.1.0",
     "osl-blocks": "\u003e\u003d0.3.0",
     "osl-items": "\u003e\u003d0.3.0",
