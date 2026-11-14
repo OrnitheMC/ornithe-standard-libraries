@@ -4,3 +4,4 @@ accessible	field	net/minecraft/network/packet/HandshakePacket	username	Ljava/lan
 accessible	field	net/minecraft/server/network/handler/ServerPlayNetworkHandler	player	Lnet/minecraft/server/entity/mob/player/ServerPlayerEntity;
 
 inject-interface	net/minecraft/network/Connection	net/ornithemc/osl/networking/impl/access/ConnectionAccess
+inject-interface	net/minecraft/network/RemoteConnection	net/ornithemc/osl/networking/impl/access/ConnectionAccess
