@@ -35,31 +35,14 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 				PacketAccessor.register(Constants.CUSTOM_PAYLOAD_PACKET_ID, CustomPayloadPacket.class);
 			}
 		}
-		if (LOCAL_SERVER_EXISTS) {
-			this.setupServer();
-		}
-	}
-
-	public void setupServer() {
-		MinecraftServerEvents.START.register(ServerPlayNetworkingImpl::setUp);
-		MinecraftServerEvents.STOP.register(ServerPlayNetworkingImpl::destroy);
-		ServerPlayNetworkingImpl.setUpPacketFactory(Networking::newCustomPayloadPacket);
-		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
-			if (CUSTOM_PAYLOAD_EXISTS) {
-				// send channel registration data as a response to receiving client channel registration data
-				ServerPlayNetworkingImpl.sendNoCheck(context.player(), HandshakePayload.CHANNEL, HandshakePayload.server());
-			}
-
-			ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) context.networkHandler();
-			ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
-
-			networkHandler.osl$networking$registerChannels(payload.channels);
-			ServerConnectionEvents.PLAY_READY.invoker().accept(connectionContext);
-		});
 	}
 
 	@Override
 	public void initClient() {
+		if (LOCAL_SERVER_EXISTS) {
+			this.initServer();
+		}
+
 		MinecraftClientEvents.START.register(ClientPlayNetworkingImpl::setUp);
 		MinecraftClientEvents.STOP.register(ClientPlayNetworkingImpl::destroy);
 		ClientPlayNetworkingImpl.setUpPacketFactory(Networking::newCustomPayloadPacket);
@@ -83,7 +66,21 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 
 	@Override
 	public void initServer() {
-		this.setupServer();
+		MinecraftServerEvents.START.register(ServerPlayNetworkingImpl::setUp);
+		MinecraftServerEvents.STOP.register(ServerPlayNetworkingImpl::destroy);
+		ServerPlayNetworkingImpl.setUpPacketFactory(Networking::newCustomPayloadPacket);
+		ServerPlayNetworkingImpl.registerListener(HandshakePayload.CHANNEL, HandshakePayload::new, (context, payload) -> {
+			if (CUSTOM_PAYLOAD_EXISTS) {
+				// send channel registration data as a response to receiving client channel registration data
+				ServerPlayNetworkingImpl.sendNoCheck(context.player(), HandshakePayload.CHANNEL, HandshakePayload.server());
+			}
+
+			ServerNetworkHandlerAccess networkHandler = (ServerNetworkHandlerAccess) context.networkHandler();
+			ServerConnectionContext connectionContext = networkHandler.osl$networking$connectionContext();
+
+			networkHandler.osl$networking$registerChannels(payload.channels);
+			ServerConnectionEvents.PLAY_READY.invoker().accept(connectionContext);
+		});
 	}
 
 	private static Packet newCustomPayloadPacket(NamespacedIdentifier channel, byte[] data) {
