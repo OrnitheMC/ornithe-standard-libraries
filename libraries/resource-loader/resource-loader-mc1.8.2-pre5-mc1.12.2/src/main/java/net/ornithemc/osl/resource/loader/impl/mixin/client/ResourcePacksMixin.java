@@ -68,7 +68,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 		this.packRepository.setCallbacks(null, this::selectionChanged);
 
 		this.packRepository.addSource(new ClientResourcePacks((ResourcePacks) (Object) this));
-		this.packRepository.addSource(new BundledModResourcePacks());
+		this.packRepository.addSource(BundledModResourcePacks.client());
 		this.packRepository.addSource(this); // resourcepacks/ directory source
 
 		this.packRepository.init();

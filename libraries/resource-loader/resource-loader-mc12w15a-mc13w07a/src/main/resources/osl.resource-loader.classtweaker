@@ -1,3 +1,7 @@
 classTweaker	v1	named
 
+accessible	method	net/minecraft/world/storage/AlphaWorldStorage	getDirectory	()Ljava/io/File;
+
 transitive-inject-interface	net/minecraft/client/Minecraft	net/ornithemc/osl/resource/loader/impl/client/MinecraftExtensionImpl
+transitive-inject-interface	net/minecraft/world/WorldData	net/ornithemc/osl/resource/loader/impl/world/WorldDataExtensionImpl
+transitive-inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/resource/loader/impl/server/MinecraftServerExtensionImpl

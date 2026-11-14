@@ -1,0 +1,11 @@
+classTweaker	v1	named
+
+transitive-inject-interface	net/minecraft/world/WorldData	net/ornithemc/osl/resource/loader/impl/world/WorldDataExtensionImpl
+transitive-inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/resource/loader/impl/server/MinecraftServerExtensionImpl
+
+accessible	field	net/minecraft/nbt/NbtString	value	Ljava/lang/String;
+accessible	method	net/minecraft/world/storage/AlphaWorldStorage	getDirectory	()Ljava/io/File;
+
+inject-interface	net/minecraft/world/storage/WorldStorage	net/ornithemc/osl/resource/loader/impl/world/WorldStorageExtensionImpl
+inject-interface	net/minecraft/nbt/NbtCompound	net/ornithemc/osl/resource/loader/impl/nbt/NbtCompoundExtensionImpl
+inject-interface	net/minecraft/nbt/NbtList	net/ornithemc/osl/resource/loader/impl/nbt/NbtListExtensionImpl
