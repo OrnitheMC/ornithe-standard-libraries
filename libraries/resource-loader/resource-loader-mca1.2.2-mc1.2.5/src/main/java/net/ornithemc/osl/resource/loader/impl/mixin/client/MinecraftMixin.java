@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.texture.TextureManager;
 import net.minecraft.client.render.world.WorldRenderer;
+import net.minecraft.world.World;
 
 import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
@@ -28,6 +29,8 @@ public class MinecraftMixin implements MinecraftExtension {
 	private TextureManager textureManager;
 	@Shadow
 	private WorldRenderer worldRenderer;
+	@Shadow
+	private World world;
 
 	@Unique
 	private SimpleResourcePackRepository packRepository;
@@ -105,7 +108,7 @@ public class MinecraftMixin implements MinecraftExtension {
 			ResourceLoader.LOGGER.warn("Error while reloading resources", e);
 		}
 
-		if (this.worldRenderer != null) {
+		if (this.worldRenderer != null && this.world != null) {
 			this.worldRenderer.reload();
 		}
 	}
