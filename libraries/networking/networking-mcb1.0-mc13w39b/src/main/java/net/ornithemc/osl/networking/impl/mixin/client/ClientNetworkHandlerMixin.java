@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.Connection;
 import net.minecraft.network.RemoteConnection;
 import net.minecraft.network.packet.CustomPayloadPacket;
 import net.minecraft.network.packet.DisconnectPacket;
@@ -46,6 +47,9 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 	@Conditional(minecraftVersion = @Version("<12w21a"))
 	@Shadow @Final
 	private RemoteConnection f_62887500;
+	@Conditional(minecraftVersion = @Version(">=12w21a"))
+	@Shadow @Final
+	private Connection connection;
 
 	@Unique
 	private ClientConnectionContext connectionContext;
@@ -68,7 +72,9 @@ public class ClientNetworkHandlerMixin implements ClientNetworkHandlerAccess, Pa
 
 			this.connectionContext = new ClientConnectionContext(this.minecraft, worldName);
 		} else {
-			SocketAddress address = this.f_62887500.getAddress();
+			SocketAddress address = Networking.INTEGRATED_SERVER_EXISTS
+				? this.connection.getAddress()
+				: this.f_62887500.getAddress();
 
 			String serverAddress = AddressParser.getAddress(address);
 			int serverPort = AddressParser.getPort(address);
