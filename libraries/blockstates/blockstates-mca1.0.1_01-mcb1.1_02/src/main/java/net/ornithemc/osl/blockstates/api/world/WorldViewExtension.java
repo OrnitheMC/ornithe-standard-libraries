@@ -16,6 +16,8 @@ public interface WorldViewExtension {
 
 	BlockEntity getBlockEntity(BlockPos pos);
 
+	BlockEntity getBlockEntity(int x, int y, int z);
+
 	static boolean isInsideWorldHeight(BlockPos pos) {
 		return isInsideWorldHeight(pos.y());
 	}
