@@ -40,7 +40,7 @@ public class IntegratedServerMixin extends MinecraftServerMixin {
 		)
 	)
 	private void osl$resource_loader$loadDataPacks(CallbackInfo ci, @Local WorldStorage storage) {
-		this.onLoadWorldBeforeCreateServerWorlds(storage, storage.loadData());
+		this.onLoadWorldBeforeCreateServerWorlds(storage);
 	}
 
 	@Inject(

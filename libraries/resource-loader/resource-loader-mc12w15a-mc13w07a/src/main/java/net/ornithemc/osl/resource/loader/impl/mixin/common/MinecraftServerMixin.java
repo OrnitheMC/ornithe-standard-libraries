@@ -144,8 +144,17 @@ public class MinecraftServerMixin implements MainThreadExecutor, MinecraftServer
 	}
 
 	@Unique
+	protected void onLoadWorldBeforeCreateServerWorlds(WorldStorage storage) {
+		this.onLoadWorldBeforeCreateServerWorlds(storage, null);
+	}
+
+	@Unique
 	protected void onLoadWorldBeforeCreateServerWorlds(WorldStorage storage, WorldData data) {
 		if (storage instanceof AlphaWorldStorage) {
+			if (data == null) {
+				data = storage.loadData();
+			}
+
 			AlphaWorldStorage strg = (AlphaWorldStorage) storage;
 			Path dir = strg.getDirectory().toPath();
 
