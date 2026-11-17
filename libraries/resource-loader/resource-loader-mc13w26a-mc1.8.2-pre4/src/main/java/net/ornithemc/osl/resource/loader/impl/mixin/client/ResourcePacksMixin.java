@@ -20,6 +20,7 @@ import net.minecraft.client.resource.pack.ResourcePacks;
 import net.ornithemc.osl.resource.loader.api.resource.pack.PackPosition;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
@@ -65,7 +66,7 @@ public class ResourcePacksMixin implements ResourcePackRepository.Source {
 		this.packRepository.reset();
 		this.packRepository.setCallbacks(null, this::selectionChanged);
 
-		this.packRepository.addSource(new ClientResourcePacks((ResourcePacks) (Object) this));
+		this.packRepository.addSource(new ClientResourcePacks((ResourcePacks) (Object) this), PackSourcePosition.FIRST);
 		this.packRepository.addSource(BundledModResourcePacks.client());
 		this.packRepository.addSource(this); // resourcepacks/ directory source
 

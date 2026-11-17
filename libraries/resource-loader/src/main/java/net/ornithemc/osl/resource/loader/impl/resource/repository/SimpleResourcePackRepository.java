@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.ornithemc.osl.resource.loader.api.client.ClientResourceLoaderEvents;
 import net.ornithemc.osl.resource.loader.api.resource.ResourceType;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ClientPackSource;
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ServerPackSource;
@@ -49,7 +48,7 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 	}
 
 	private final ResourceType type;
-	private final Set<Source> sources;
+	private final List<Source> sources;
 	private final Map<String, ResourcePackSummary> packs;
 	private final List<ResourcePackSummary> available;
 	private final List<ResourcePackSummary> selected;
@@ -58,9 +57,13 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 	private Runnable discoveryCallback;
 	private Runnable selectionCallback;
 
+	// keep track of how many sources have preferred ordering FIRST
+	// this way those pack sources can be ordered FIFO
+	private int sourcesAtFirst;
+
 	public SimpleResourcePackRepository(ResourceType type) {
 		this.type = type;
-		this.sources = new LinkedHashSet<>();
+		this.sources = new ArrayList<>();
 		this.packs = new LinkedHashMap<>();
 		this.available = new ArrayList<>();
 		this.selected = new ArrayList<>();
@@ -89,11 +92,22 @@ public class SimpleResourcePackRepository implements ResourcePackRepository {
 
 		this.discoveryCallback = null;
 		this.selectionCallback = null;
+
+		this.sourcesAtFirst = 0;
 	}
 
 	@Override
 	public void addSource(Source source) {
-		this.sources.add(source);
+		this.addSource(source, PackSourcePosition.LAST);
+	}
+
+	@Override
+	public void addSource(Source source, PackSourcePosition position) {
+		if (position == PackSourcePosition.LAST) {
+			this.sources.add(source);
+		} else {
+			this.sources.add(this.sourcesAtFirst++, source);
+		}
 	}
 
 	@Override

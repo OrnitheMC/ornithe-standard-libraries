@@ -34,6 +34,7 @@ import net.ornithemc.conditionalmixin.annotations.Version;
 import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.api.server.MinecraftServerExtension;
 import net.ornithemc.osl.resource.loader.api.server.resource.reload.DataReloaders;
@@ -193,7 +194,7 @@ public class MinecraftServerMixin implements MainThreadExecutor, MinecraftServer
 		this.packRepository.reset();
 		this.packRepository.setCallbacks(null, null);
 
-		this.packRepository.addSource(new ServerResourcePacks());
+		this.packRepository.addSource(new ServerResourcePacks(), PackSourcePosition.FIRST);
 		this.packRepository.addSource(BundledModResourcePacks.server());
 		this.packRepository.addSource(new DirectoryPackSource(dir.resolve("datapacks")));
 
