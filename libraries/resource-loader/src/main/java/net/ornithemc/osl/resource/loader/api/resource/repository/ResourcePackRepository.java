@@ -57,9 +57,40 @@ public interface ResourcePackRepository extends AutoCloseable {
 	}
 
 	/**
-	 * Adds a source from which resource packs are loaded.
+	 * Adds a source from which resource packs are loaded, with the
+	 * preferred ordering {@linkplain PackSourcePosition#LAST}. See
+	 * {@linkplain #addSource(Source, PackSourcePosition)} for more
+	 * details on pack source ordering.
+	 * 
+	 * @see #addSource(Source, PackSourcePosition)
 	 */
 	void addSource(Source source);
+
+	/**
+	 * Adds a source from which resource packs are loaded, with the
+	 * given preferred ordering. Any pack source added through
+	 * {@linkplain #addSource(Source)} will have preferred ordering
+	 * {@linkplain PackSourcePosition#LAST}.
+	 * <P>
+	 * Pack sources at position {@linkplain PackSourcePosition#FIRST}
+	 * will be sorted before pack sources at position {@linkplain
+	 * PackSourcePosition#LAST}. All pack sources at the same position
+	 * will be ordered FIFO (i.e. in the order they were added.
+	 * <p>
+	 * Vanilla's pack source has preferred ordering {@linkplain
+	 * PackSourcePosition#FIRST} while OSL's bundled mod resources have
+	 * preferred ordering {@linkplain PackSourcePosition#LAST}.
+	 * <p>
+	 * The order of pack sources determines the order in which resource
+	 * packs are listed. While this order is configurable by the user,
+	 * it can be useful to have some control over the <i>default</i>
+	 * ordering, for example for mods that add Vanilla-like content
+	 * that other mods are expected to override. In such a case, a pack
+	 * source can be added with preferred ordering {@linkplain
+	 * PackSourcePosition#FIRST} to ensure it is sorted before OSL's
+	 * bundled mod resources.
+	 */
+	void addSource(Source source, PackSourcePosition position);
 
 	/**
 	 * Reloads this resource pack repository. All sources will be

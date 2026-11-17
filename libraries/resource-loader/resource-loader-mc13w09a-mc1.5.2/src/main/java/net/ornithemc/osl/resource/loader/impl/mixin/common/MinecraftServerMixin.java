@@ -24,6 +24,7 @@ import net.minecraft.world.WorldData;
 import net.minecraft.world.storage.WorldStorage;
 
 import net.ornithemc.osl.executors.api.MainThreadExecutor;
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.api.server.MinecraftServerExtension;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
@@ -127,7 +128,7 @@ public class MinecraftServerMixin implements MainThreadExecutor, MinecraftServer
 		this.packRepository.reset();
 		this.packRepository.setCallbacks(null, null);
 
-		this.packRepository.addSource(new ServerResourcePacks());
+		this.packRepository.addSource(new ServerResourcePacks(), PackSourcePosition.FIRST);
 		this.packRepository.addSource(BundledModResourcePacks.server());
 		this.packRepository.addSource(new DirectoryPackSource(dir.resolve("datapacks")));
 

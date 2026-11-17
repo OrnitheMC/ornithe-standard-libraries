@@ -12,8 +12,10 @@ import net.minecraft.resource.pack.repository.RepositorySource;
 import net.minecraft.resource.pack.repository.UnopenedPack;
 import net.minecraft.resource.pack.repository.UnopenedPack.Factory;
 
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackRepository;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
+import net.ornithemc.osl.resource.loader.impl.access.VanillaPackSource;
 
 public class ResourcePackRepositoryAdapter<T extends UnopenedPack> extends PackRepository<T> {
 
@@ -68,7 +70,13 @@ public class ResourcePackRepositoryAdapter<T extends UnopenedPack> extends PackR
 
 	@Override
 	public void addSource(RepositorySource source) {
-		this.packRepository.addSource(new WrappedRepositorySource(source));
+		ResourcePackRepository.Source wrapped = new WrappedRepositorySource(source);
+
+		if (source instanceof VanillaPackSource) {
+			this.packRepository.addSource(wrapped, PackSourcePosition.FIRST);
+		} else {
+			this.packRepository.addSource(wrapped);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
