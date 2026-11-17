@@ -22,6 +22,7 @@ import net.ornithemc.osl.resource.loader.api.client.MinecraftExtension;
 import net.ornithemc.osl.resource.loader.api.resource.pack.ResourcePack;
 import net.ornithemc.osl.resource.loader.api.client.resource.reload.AssetsReloaders;
 import net.ornithemc.osl.resource.loader.api.resource.reload.ResourceReloader;
+import net.ornithemc.osl.resource.loader.api.resource.repository.PackSourcePosition;
 import net.ornithemc.osl.resource.loader.api.resource.repository.ResourcePackSummary;
 import net.ornithemc.osl.resource.loader.impl.ClientResourcePacks;
 import net.ornithemc.osl.resource.loader.impl.ResourceLoader;
@@ -90,7 +91,7 @@ public class MinecraftMixin implements MinecraftExtension {
 		this.packRepository.reset();
 		this.packRepository.setCallbacks(null, null);
 
-		this.packRepository.addSource(new ClientResourcePacks());
+		this.packRepository.addSource(new ClientResourcePacks(), PackSourcePosition.FIRST);
 		this.packRepository.addSource(BundledModResourcePacks.client());
 		this.packRepository.addSource(new DirectoryPackSource(dir.resolve("texturepacks"), new TexturePackDetector()));
 
