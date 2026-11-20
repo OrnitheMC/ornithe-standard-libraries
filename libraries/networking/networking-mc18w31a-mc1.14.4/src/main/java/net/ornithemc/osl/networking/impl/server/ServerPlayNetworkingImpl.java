@@ -332,7 +332,7 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	private static Iterable<ServerPlayerEntity> allPlayers() {
-		return server.getPlayerManager().getAll();
+		return server.getPlayerManager().players;
 	}
 
 	private static Iterable<ServerPlayerEntity> collectPlayers(Predicate<ServerPlayerEntity> filter) {

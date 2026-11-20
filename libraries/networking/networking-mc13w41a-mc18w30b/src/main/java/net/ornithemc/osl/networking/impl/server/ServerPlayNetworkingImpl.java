@@ -29,7 +29,6 @@ import net.ornithemc.osl.networking.impl.NotOnMainThreadException;
 import net.ornithemc.osl.networking.impl.PacketFactory;
 import net.ornithemc.osl.networking.impl.access.CustomPayloadPacketAccess;
 import net.ornithemc.osl.networking.impl.access.NetworkHandlerAccess;
-import net.ornithemc.osl.networking.impl.access.PlayerManagerAccess;
 
 public final class ServerPlayNetworkingImpl {
 
@@ -343,7 +342,7 @@ public final class ServerPlayNetworkingImpl {
 	}
 
 	private static Iterable<ServerPlayerEntity> allPlayers() {
-		return ((PlayerManagerAccess) server.getPlayerManager()).osl$networking$getAll();
+		return server.getPlayerManager().players;
 	}
 
 	private static Iterable<ServerPlayerEntity> collectPlayers(Predicate<ServerPlayerEntity> filter) {
