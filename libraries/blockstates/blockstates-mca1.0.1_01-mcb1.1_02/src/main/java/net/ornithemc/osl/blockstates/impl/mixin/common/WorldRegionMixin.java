@@ -3,6 +3,9 @@ package net.ornithemc.osl.blockstates.impl.mixin.common;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.WorldRegion;
 import net.minecraft.world.chunk.WorldChunk;
@@ -21,9 +24,6 @@ public class WorldRegionMixin implements WorldViewExtension {
 	private int chunkZ;
 	@Shadow
 	private WorldChunk[][] chunks;
-
-	@Shadow
-	private BlockEntity getBlockEntity(int x, int y, int z) { return null; }
 
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
@@ -51,5 +51,14 @@ public class WorldRegionMixin implements WorldViewExtension {
 	@Override
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		return this.getBlockEntity(pos.x(), pos.y(), pos.z());
+	}
+
+	@Environment(EnvType.SERVER)
+	@Override
+	public BlockEntity getBlockEntity(int x, int y, int z) {
+		int indexX = (x >> 4) - this.chunkX;
+		int indexZ = (z >> 4) - this.chunkZ;
+
+		return this.chunks[indexX][indexZ].getBlockEntityAt(x & 15, y, z & 15);
 	}
 }

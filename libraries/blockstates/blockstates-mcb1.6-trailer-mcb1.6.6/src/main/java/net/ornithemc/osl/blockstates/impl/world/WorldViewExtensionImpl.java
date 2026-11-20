@@ -22,4 +22,9 @@ public interface WorldViewExtensionImpl extends WorldViewExtension {
 	default BlockEntity getBlockEntity(BlockPos pos) {
 		throw new AbstractMethodError();
 	}
+
+	@Override
+	default BlockEntity getBlockEntity(int x, int y, int z) {
+		throw new AbstractMethodError();
+	}
 }

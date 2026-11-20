@@ -16,7 +16,7 @@ import net.ornithemc.osl.blockstates.api.world.WorldExtension;
 import net.ornithemc.osl.core.api.util.math.BlockPos;
 
 @Mixin(World.class)
-public class WorldMixin implements WorldExtension {
+public abstract class WorldMixin implements WorldExtension {
 
 	@Shadow
 	private boolean isMultiplayer;
@@ -27,8 +27,6 @@ public class WorldMixin implements WorldExtension {
 	private void onBlockChanged(int x, int y, int z, int block) { }
 	@Shadow
 	private void updateNeighbors(int x, int y, int z, int block) { }
-	@Shadow
-	private BlockEntity getBlockEntity(int x, int y, int z) { return null; }
 	@Shadow
 	private void setBlockEntity(int x, int y, int z, BlockEntity blockEntity) { }
 
