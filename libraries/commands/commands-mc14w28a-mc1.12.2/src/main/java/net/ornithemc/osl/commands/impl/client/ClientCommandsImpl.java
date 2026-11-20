@@ -15,9 +15,9 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import net.ornithemc.osl.commands.api.client.ClientCommandEvents;
 import net.ornithemc.osl.commands.api.client.ClientCommands;
 import net.ornithemc.osl.commands.api.client.command.ClientCommandSource;
-import net.ornithemc.osl.commands.api.client.command.HelpCommand;
 import net.ornithemc.osl.commands.api.command.SharedSuggestionProvider;
 import net.ornithemc.osl.commands.impl.BrigadierCommandsImpl;
+import net.ornithemc.osl.commands.impl.client.command.HelpCommand;
 
 public final class ClientCommandsImpl {
 

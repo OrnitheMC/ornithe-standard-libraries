@@ -1,4 +1,4 @@
-package net.ornithemc.osl.commands.api.client.command;
+package net.ornithemc.osl.commands.impl.client.command;
 
 import java.util.Map;
 
@@ -15,6 +15,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.CommandNode;
 
 import net.ornithemc.osl.commands.api.client.ClientCommands;
+import net.ornithemc.osl.commands.api.client.command.ClientCommandSource;
 import net.ornithemc.osl.text.api.TextComponents;
 
 public final class HelpCommand {
@@ -22,14 +23,20 @@ public final class HelpCommand {
 	private static final SimpleCommandExceptionType ERROR_FAILED = new SimpleCommandExceptionType(TextComponents.translatable("commands.help.failed"));
 
 	public static void register(CommandDispatcher<ClientCommandSource> dispatcher) {
-		LiteralArgumentBuilder<ClientCommandSource> command = ClientCommands
+		LiteralArgumentBuilder<ClientCommandSource> mainCommand = ClientCommands
+			.literal("osl-client-commands");
+		LiteralArgumentBuilder<ClientCommandSource> shortCommand = ClientCommands
+			.literal("occ");
+
+		LiteralArgumentBuilder<ClientCommandSource> help = ClientCommands
 			.literal("help")
 			.executes(HelpCommand::giveHelp)
 			.then(ClientCommands
 				.argument("command", StringArgumentType.greedyString())
 				.executes(HelpCommand::giveCommandHelp));
 
-		dispatcher.register(command);
+		CommandNode<ClientCommandSource> command = dispatcher.register(mainCommand.then(help));
+		dispatcher.register(shortCommand.redirect(command));
 	}
 
 	private static int giveHelp(CommandContext<ClientCommandSource> ctx) {

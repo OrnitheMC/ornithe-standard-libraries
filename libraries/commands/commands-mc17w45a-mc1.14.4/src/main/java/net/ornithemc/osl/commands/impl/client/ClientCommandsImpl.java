@@ -18,7 +18,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import net.ornithemc.osl.commands.api.client.ClientCommandEvents;
 import net.ornithemc.osl.commands.api.client.ClientCommands;
 import net.ornithemc.osl.commands.api.client.command.ClientCommandSource;
-import net.ornithemc.osl.commands.api.client.command.HelpCommand;
+import net.ornithemc.osl.commands.impl.client.command.HelpCommand;
 import net.ornithemc.osl.text.api.ClickEvent;
 import net.ornithemc.osl.text.api.HoverEvent;
 import net.ornithemc.osl.text.api.TextColor;
