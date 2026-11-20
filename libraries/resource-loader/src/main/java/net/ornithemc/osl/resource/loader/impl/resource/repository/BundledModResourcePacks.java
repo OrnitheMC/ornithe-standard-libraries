@@ -31,6 +31,20 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 		CUSTOM_MOD_RESOURCES.put(id, new CustomModResources(id, name, mod, directory));
 	}
 
+	public static BundledModResourcePacks client() {
+		return new BundledModResourcePacks(true);
+	}
+
+	public static BundledModResourcePacks server() {
+		return new BundledModResourcePacks(false);
+	}
+
+	private final boolean required;
+
+	private BundledModResourcePacks(boolean required) {
+		this.required = required;
+	}
+
 	@Override
 	public void loadResourcePacks(Consumer<ResourcePackSummary> consumer) {
 		List<ResourcePack> packs = new ArrayList<>();
@@ -47,7 +61,7 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 		ResourcePackSummary compositeSummary = ResourcePackSummary.create(
 			compositePack,
 			BUILT_IN_MOD_RESOURCES_ID,
-			true,
+			this.required,
 			false,
 			PackPosition.BOTTOM
 		);
@@ -59,7 +73,7 @@ public class BundledModResourcePacks implements ResourcePackRepository.Source {
 			ResourcePackSummary summary = ResourcePackSummary.create(
 				pack,
 				customResources.id,
-				true,
+				this.required,
 				false,
 				PackPosition.BOTTOM
 			);

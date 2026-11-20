@@ -91,7 +91,7 @@ public class MinecraftMixin implements MinecraftExtension {
 		this.packRepository.setCallbacks(null, null);
 
 		this.packRepository.addSource(new ClientResourcePacks());
-		this.packRepository.addSource(new BundledModResourcePacks());
+		this.packRepository.addSource(BundledModResourcePacks.client());
 		this.packRepository.addSource(new DirectoryPackSource(dir.resolve("texturepacks"), new TexturePackDetector()));
 
 		this.packRepository.init();

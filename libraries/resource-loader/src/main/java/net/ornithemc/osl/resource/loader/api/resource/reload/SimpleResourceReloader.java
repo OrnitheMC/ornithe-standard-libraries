@@ -9,6 +9,8 @@ import net.ornithemc.osl.resource.loader.api.resource.manager.ResourceManager;
  * A simple, two-stage resource reloader.
  * 
  * @param <T> the type of resources to be reloaded.
+ * 
+ * @see SimpleJsonResourceReloader
  */
 public interface SimpleResourceReloader<T> extends ResourceReloader {
 
@@ -30,17 +32,17 @@ public interface SimpleResourceReloader<T> extends ResourceReloader {
 	 * This stage may not run on the main game thread, so it is
 	 * imperative that the world or render state is not modified.
 	 * 
-	 * @param manager
+	 * @param resourceManager
 	 * @return the reloaded resources.
 	 */
-	T reloadResources(ResourceManager manager);
+	T reloadResources(ResourceManager resourceManager);
 
 	/**
 	 * Performs the application stage for this resource reloader.
 	 * 
 	 * @param resources the resources to apply.
-	 * @param manager 
+	 * @param resourceManager 
 	 */
-	void applyResources(T resources, ResourceManager manager);
+	void applyResources(T resources, ResourceManager resourceManager);
 
 }

@@ -33,6 +33,7 @@ import net.minecraft.client.sound.system.SoundEngine;
 import net.minecraft.client.sound.system.SoundManager;
 import net.minecraft.client.world.color.FoliageColorReloader;
 import net.minecraft.client.world.color.GrassColorReloader;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Version;
@@ -68,6 +69,9 @@ public class MinecraftMixin {
 	private BuiltInResourcePack defaultResourcePack;
 	@Shadow
 	private ReloadableResourceManager resourceManager;
+
+	@Shadow
+	private IntegratedServer server;
 
 	@Shadow
 	private LanguageManager languageManager;
@@ -183,11 +187,41 @@ public class MinecraftMixin {
 	@Inject(
 		method = "reloadResources",
 		at = @At(
+			value = "HEAD"
+		)
+	)
+	private void osl$resource_loader$reloadServerResources(CallbackInfo ci) {
+		if (this.server != null) {
+			this.server.reloadResources();
+		}
+	}
+
+	@Conditional(minecraftVersion = @Version("<13w49a"))
+	@Inject(
+		method = "reloadResources",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/resource/language/LanguageManager;reload(Ljava/util/List;)V"
+		)
+	)
+	private void osl$resource_loader$fixSelection1(CallbackInfo ci, @Local ArrayList<ResourcePack> selection) {
+		this.fixPackSelection(selection);
+	}
+
+	@Conditional(minecraftVersion = @Version(">=13w49a"))
+	@Inject(
+		method = "reloadResources",
+		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/resource/manager/ReloadableResourceManager;reload(Ljava/util/List;)V"
 		)
 	)
-	private void osl$resource_loader$fixSelection(CallbackInfo ci, @Local ArrayList<ResourcePack> selection) {
+	private void osl$resource_loader$fixSelection2(CallbackInfo ci, @Local ArrayList<ResourcePack> selection) {
+		this.fixPackSelection(selection);
+	}
+
+	@Unique
+	private void fixPackSelection(List<ResourcePack> selection) {
 		// ResourcePacks.getSelectedPacks only contains directory or zip packs
 		// The default pack and server pack are added in the target method, so
 		// we must add any other required packs manually as well
@@ -195,6 +229,7 @@ public class MinecraftMixin {
 		ResourcePackLists.fixSelection(selection, false);
 	}
 
+	@Unique
 	private NamespacedIdentifier identifyReloadListener(ResourceReloadListener listener) {
 		if (listener == this.languageManager) {
 			return AssetsReloaders.LANGUAGE_MANAGER;

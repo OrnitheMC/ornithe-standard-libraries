@@ -22,6 +22,6 @@ public interface ResourceReloadListener extends ResourceReloader {
 		}, applyExecutor);
 	}
 
-	void resourcesReloaded(ResourceManager manager);
+	void resourcesReloaded(ResourceManager resourceManager);
 
 }

@@ -5,10 +5,17 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
+		"common.AlphaWorldStorageMixin",
+		"common.MinecraftServerMixin",
+		"common.NbtCompoundMixin",
+		"common.NbtListMixin",
+		"common.WorldDataMixin",
+		"common.WorldStorageMixin"
 	],
 	"client": [
 		"client.BuiltInResourcePackMixin",
 		"client.CustomResourcePackAccess",
+		"client.IntegratedServerMixin",
 		"client.MinecraftMixin",
 		"client.ResourcePacksMixin",
 		"client.ResourcePacksScreenMixin",
@@ -17,6 +24,7 @@
 	"server": [
 	],
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 1,
+		"maxShiftBy": 2
 	}
 }

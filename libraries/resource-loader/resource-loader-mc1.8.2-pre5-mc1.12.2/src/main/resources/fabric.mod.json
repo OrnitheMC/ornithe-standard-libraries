@@ -2,10 +2,11 @@
   "schemaVersion": 1,
   "id": "osl-resource-loader",
   "version": "0.10.0+mc1.8.2-pre5-mc1.12.2",
-  "environment": "client",
+  "environment": "*",
   "mixins": [
     "osl.resource-loader.mixins.json"
   ],
+  "accessWidener": "osl.resource-loader.classtweaker",
   "depends": {
     "fabricloader": "\u003e\u003d0.18.0",
     "minecraft": "\u003e\u003d1.8.2-rc.5 \u003c\u003d1.12.2",
