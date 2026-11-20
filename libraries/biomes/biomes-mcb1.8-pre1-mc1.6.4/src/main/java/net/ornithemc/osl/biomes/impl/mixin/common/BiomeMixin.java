@@ -21,7 +21,6 @@ import net.ornithemc.osl.localization.api.L10n;
 import net.ornithemc.osl.biomes.api.BiomeRegistry;
 import net.ornithemc.osl.biomes.api.biome.BiomeExtension;
 import net.ornithemc.osl.biomes.impl.BiomeRegistryImpl;
-import net.ornithemc.osl.biomes.impl.BiomesMixinPlugin;
 import net.ornithemc.osl.biomes.impl.VanillaBiomes;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
@@ -80,12 +79,12 @@ public class BiomeMixin implements BiomeExtension {
 			id = DynamicArray.length(BY_ID);
 
 			// keep 0-255 free for all Vanilla biomes
-			if (BiomesMixinPlugin.BIOME_IDS_BEYOND_255_SUPPORTED && id <= VanillaBiomes.MAX_ID) {
+			if (VanillaBiomes.IDS_ABOVE_255_SUPPORTED && id <= VanillaBiomes.MAX_ID) {
 				id = VanillaBiomes.MAX_ID + 1;
 			}
 		}
 
-		if (!BiomesMixinPlugin.BIOME_IDS_BEYOND_255_SUPPORTED && id > VanillaBiomes.MAX_ID) {
+		if (!VanillaBiomes.IDS_ABOVE_255_SUPPORTED && id > VanillaBiomes.MAX_ID) {
 			throw new IllegalStateException("Biome IDs above 255 are not supported at this time!"
 					+ " Biome IDs should be limited to the range 0-255"
 					+ " unless the save format has been modified to support IDs beyond 255.");

@@ -3,13 +3,14 @@
 	"minVersion": "0.8",
 	"package": "net.ornithemc.osl.biomes.impl.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"plugin": "net.ornithemc.osl.biomes.impl.BiomesMixinPlugin",
+	"plugin": "net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin",
 	"mixins": [
-		"common.BiomeMixin",
-		"common.BiomeMixinNew",
-		"common.BiomeMixinOld"
+		"common.BiomeMixin"
 	],
 	"client": [
+		"client.CustomizeWorldScreenMixin",
+		"client.DebugOverlayMixin",
+		"client.GameGuiMixin"
 	],
 	"server": [
 	],

@@ -9,6 +9,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screen.world.CustomizeWorldScreen;
 import net.minecraft.world.biome.Biome;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+@Conditional(minecraftVersion = @Version(">=14w17a"))
 @Mixin(CustomizeWorldScreen.class)
 public class CustomizeWorldScreenMixin {
 

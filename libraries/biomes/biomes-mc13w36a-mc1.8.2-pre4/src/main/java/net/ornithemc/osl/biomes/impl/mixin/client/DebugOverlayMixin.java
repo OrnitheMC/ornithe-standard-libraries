@@ -9,6 +9,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.overlay.DebugOverlay;
 import net.minecraft.world.biome.Biome;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+@Conditional(minecraftVersion = @Version(">=14w05a"))
 @Mixin(DebugOverlay.class)
 public class DebugOverlayMixin {
 
