@@ -17,6 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
+import net.ornithemc.osl.core.impl.util.MinecraftVersion;
 import net.ornithemc.osl.crashreports.api.crash.CrashReport;
 import net.ornithemc.osl.crashreports.api.crash.CrashReportSection;
 import net.ornithemc.osl.crashreports.impl.CrashReports;
@@ -25,8 +29,14 @@ import net.ornithemc.osl.crashreports.impl.crash.CrashReportSectionImpl;
 @Mixin(net.minecraft.util.crash.CrashReport.class)
 public class CrashReportMixin implements CrashReport {
 
+	private static final boolean ERROR_IS_THROWABLE = MinecraftVersion.resolve().compareTo("a1.0.4") >= 0;
+
 	@Shadow
 	private String description;
+	@Conditional(minecraftVersion = @Version("<a1.0.4"))
+	@Shadow
+	private Exception f_55253361;
+	@Conditional(minecraftVersion = @Version(">=a1.0.4"))
 	@Shadow
 	private Throwable exception;
 
@@ -63,7 +73,7 @@ public class CrashReportMixin implements CrashReport {
 
 	@Override
 	public Throwable getError() {
-		return this.exception;
+		return ERROR_IS_THROWABLE ? this.exception : this.f_55253361;
 	}
 
 	@Override
@@ -84,7 +94,7 @@ public class CrashReportMixin implements CrashReport {
 		if (this.trackingStackTrace) {
 			int length = section.fillStackTrace(stackTraceOffset);
 
-			StackTraceElement[] fullTrace = this.exception.getStackTrace();
+			StackTraceElement[] fullTrace = this.getError().getStackTrace();
 			StackTraceElement source = null;
 			StackTraceElement next = null;
 
@@ -113,7 +123,7 @@ public class CrashReportMixin implements CrashReport {
 
 	@Override
 	public String getErrorMessage() {
-		Throwable exception = this.exception;
+		Throwable exception = this.getError();
 
 		if (exception.getMessage() == null) {
 			if (exception instanceof NullPointerException) {

@@ -42,6 +42,25 @@ public class MinecraftMixin implements CrashReportPopulator {
 		this.crashListeners.add(listener);
 	}
 
+	@Conditional(minecraftVersion = @Version("<a1.0.4"))
+	@WrapOperation(
+		method = "run",
+		at = @At(
+			value = "NEW",
+			target = "net/minecraft/util/crash/CrashReport"
+		)
+	)
+	private CrashReport osl$crashreports$initCrashReport(String title, Exception error, Operation<CrashReport> op) {
+		CrashReport report = this.extractCrashReport(error);
+
+		if (report == null) {
+			return op.call(title, error);
+		} else {
+			return report;
+		}
+	}
+
+	@Conditional(minecraftVersion = @Version(">=a1.0.3"))
 	@WrapOperation(
 		method = "run",
 		at = @At(
