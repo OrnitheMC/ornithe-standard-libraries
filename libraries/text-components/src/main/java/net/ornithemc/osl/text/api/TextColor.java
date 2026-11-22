@@ -89,8 +89,12 @@ public class TextColor {
 				return null;
 			}
 		} else {
-			Formatting formatting = Formatting.valueOf(s.toUpperCase(Locale.ROOT));
-			return formatting == null ? null : BY_FORMATTING.get(formatting);
+			try {
+				Formatting formatting = Formatting.valueOf(s.toUpperCase(Locale.ROOT));
+				return BY_FORMATTING.get(formatting);
+			} catch (IllegalArgumentException e) {
+				return null;
+			}
 		}
 	}
 }
