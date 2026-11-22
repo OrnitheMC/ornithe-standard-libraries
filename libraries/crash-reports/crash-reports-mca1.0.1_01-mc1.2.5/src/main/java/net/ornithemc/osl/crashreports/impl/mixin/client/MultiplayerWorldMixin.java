@@ -1,20 +1,20 @@
 package net.ornithemc.osl.crashreports.impl.mixin.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.client.world.MultiplayerWorld;
 
-import net.ornithemc.osl.crashreports.api.crash.CrashListener;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Version;
+
 import net.ornithemc.osl.crashreports.api.crash.CrashReport;
 import net.ornithemc.osl.crashreports.api.crash.CrashReportSection;
 import net.ornithemc.osl.crashreports.impl.mixin.common.WorldMixin;
 
+@Conditional(minecraftVersion = @Version(">=a1.0.13"))
 @Mixin(MultiplayerWorld.class)
 public class MultiplayerWorldMixin extends WorldMixin {
 
@@ -22,14 +22,6 @@ public class MultiplayerWorldMixin extends WorldMixin {
 	private Set<?> forcedEntities;
 	@Shadow
 	private Set<?> pendingEntities;
-
-	@Unique
-	private final List<CrashListener> crashListeners = new ArrayList<>();
-
-	@Override
-	public void addCrashListener(CrashListener listener) {
-		this.crashListeners.add(listener);
-	}
 
 	@Override
 	public CrashReportSection populateCrashReport(CrashReport report) {
