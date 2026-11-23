@@ -16,7 +16,7 @@ public final class Connections {
 		if (!(listener instanceof NetworkHandlerAccess)) {
 			return false;
 		}
-		if (!!((NetworkHandlerAccess) listener).osl$networking$canRunOffMainThread()) {
+		if (!((NetworkHandlerAccess) listener).osl$networking$canRunOffMainThread()) {
 			return false;
 		}
 
