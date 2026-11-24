@@ -7,6 +7,8 @@ public interface CustomPayloadPacketAccess {
 
 	NamespacedIdentifier osl$networking$getChannel();
 
-	PacketBuffer osl$networking$getData();
+	byte[] osl$networking$getDataAsBytes();
+
+	PacketBuffer osl$networking$getDataAsBuffer();
 
 }

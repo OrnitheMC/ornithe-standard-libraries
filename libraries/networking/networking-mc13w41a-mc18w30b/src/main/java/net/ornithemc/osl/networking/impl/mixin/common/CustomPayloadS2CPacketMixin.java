@@ -56,12 +56,15 @@ public class CustomPayloadS2CPacketMixin implements CustomPayloadPacketAccess {
 		}
 	}
 
+	@Conditional(minecraftVersion = @Version("<14w31a"))
 	@Override
-	public PacketBuffer osl$networking$getData() {
-		if (Networking.CLIENTBOUND_BYTE_ARRAY_DATA) {
-			return PacketBuffers.wrap(this.f_15231323);
-		} else {
-			return PacketBuffers.wrapped(this.data.copy());
-		}
+	public byte[] osl$networking$getDataAsBytes() {
+		return this.f_15231323;
+	}
+
+	@Conditional(minecraftVersion = @Version(">=14w31a"))
+	@Override
+	public PacketBuffer osl$networking$getDataAsBuffer() {
+		return PacketBuffers.wrapped(this.data.copy());
 	}
 }
