@@ -28,6 +28,7 @@ import net.ornithemc.osl.networking.impl.server.ServerPlayNetworkingImpl;
 
 public class Networking implements ModInitializer, ClientModInitializer, ServerModInitializer {
 
+	public static final boolean USE_EVENT_LOOP_FOR_ASYNC_HANDLING = MinecraftVersion.resolve().compareTo("14w21a") >= 0;
 	public static final boolean CLIENTBOUND_STRING_CHANNELS = MinecraftVersion.resolve().compareTo("1.13-pre3") < 0;
 	public static final boolean SERVERBOUND_STRING_CHANNELS = MinecraftVersion.resolve().compareTo("1.13-pre4") < 0;
 	public static final boolean CLIENTBOUND_BYTE_ARRAY_DATA = MinecraftVersion.resolve().compareTo("14w31a") < 0;
@@ -69,23 +70,23 @@ public class Networking implements ModInitializer, ClientModInitializer, ServerM
 		// no-op
 	}
 
-	private static Packet newCustomPayloadS2CPacket(NamespacedIdentifier channel, PacketBuffer data) {
+	private static <T> Packet newCustomPayloadS2CPacket(NamespacedIdentifier channel, T data) {
 		if (!CLIENTBOUND_STRING_CHANNELS) {
-			return new CustomPayloadS2CPacket(IdentifierChannelIdentifierParser.toIdentifier(channel), PacketBuffers.unwrapped(data));
+			return new CustomPayloadS2CPacket(IdentifierChannelIdentifierParser.toIdentifier(channel), PacketBuffers.unwrapped((PacketBuffer) data));
 		} else if (!CLIENTBOUND_BYTE_ARRAY_DATA) {
-			return CustomPayloadS2CPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrapped(data));
+			return CustomPayloadS2CPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrapped((PacketBuffer) data));
 		} else {
-			return CustomPayloadS2CPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrap(data));
+			return CustomPayloadS2CPacketAccess.of(StringChannelIdentifierParser.toString(channel), (byte[]) data);
 		}
 	}
 
-	private static Packet newCustomPayloadC2SPacket(NamespacedIdentifier channel, PacketBuffer data) {
+	private static <T> Packet newCustomPayloadC2SPacket(NamespacedIdentifier channel, T data) {
 		if (!SERVERBOUND_STRING_CHANNELS) {
-			return new CustomPayloadC2SPacket(IdentifierChannelIdentifierParser.toIdentifier(channel), PacketBuffers.unwrapped(data));
+			return new CustomPayloadC2SPacket(IdentifierChannelIdentifierParser.toIdentifier(channel), PacketBuffers.unwrapped((PacketBuffer) data));
 		} else if (!SERVERBOUND_BYTE_ARRAY_DATA) {
-			return CustomPayloadC2SPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrapped(data));
+			return CustomPayloadC2SPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrapped((PacketBuffer) data));
 		} else {
-			return CustomPayloadC2SPacketAccess.of(StringChannelIdentifierParser.toString(channel), PacketBuffers.unwrap(data));
+			return CustomPayloadC2SPacketAccess.of(StringChannelIdentifierParser.toString(channel), (byte[]) data);
 		}
 	}
 }

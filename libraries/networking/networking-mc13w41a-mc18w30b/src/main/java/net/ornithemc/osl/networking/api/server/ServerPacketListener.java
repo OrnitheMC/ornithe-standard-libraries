@@ -18,6 +18,10 @@ public interface ServerPacketListener<T> {
 
 	@FunctionalInterface
 	interface Payload<T extends PacketPayload> extends ServerPacketListener<T> {
+
+		@Override
+		void handle(Context ctx, T payload);
+
 	}
 
 	@FunctionalInterface

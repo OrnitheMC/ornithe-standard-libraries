@@ -63,53 +63,51 @@ public final class ClientPlayNetworkingImpl {
 		ClientPlayNetworkingImpl.thread = null;
 	}
 
-	public static final Map<NamespacedIdentifier, ChannelListener> CHANNEL_LISTENERS = new LinkedHashMap<>();
+	public static final Map<NamespacedIdentifier, ChannelListener<?>> CHANNEL_LISTENERS = new LinkedHashMap<>();
 
 	public static <T extends PacketPayload> void registerListener(NamespacedIdentifier channel, Supplier<T> initializer, ClientPacketListener.Payload<T> listener) {
-		registerListenerInternal(channel, (context, bytes) -> {
-			PacketBuffer data = PacketBuffers.wrap(bytes);
+		registerListenerInternal(channel, listener, bytes -> {
+			PacketBuffer buffer = PacketBuffers.wrap(bytes);
 
 			try {
 				T payload = initializer.get();
-				payload.read(data);
+				payload.read(buffer);
 
-				listener.handle(context, payload);
+				return payload;
 			} finally {
-				data.release();
+				buffer.release();
 			}
 		});
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Buffer listener) {
-		registerListenerInternal(channel, (context, bytes) -> {
-			PacketBuffer data = PacketBuffers.wrap(bytes);
-
+		registerListenerInternal(channel, (ctx, buffer) -> {
 			try {
-				listener.handle(context, data);
+				listener.handle(ctx, buffer);
+			} catch (NotOnMainThreadException e) {
+				buffer.retain();
+				throw e;
 			} finally {
-				data.release();
+				buffer.release();
 			}
-		});
+		}, PacketBuffers::wrap);
 	}
 
 	public static void registerListener(NamespacedIdentifier channel, ClientPacketListener.Bytes listener) {
-		registerListenerInternal(channel, listener::handle);
+		registerListenerInternal(channel, listener, bytes -> bytes);
 	}
 
-	private static void registerListenerInternal(NamespacedIdentifier channel, ChannelListener listener) {
+	private static <T> void registerListenerInternal(NamespacedIdentifier channel, ClientPacketListener<T> listener, PacketParser<T> parser) {
 		ChannelSettings settings = ChannelRegistryImpl.getSettings(channel);
 
 		if (settings == null || !settings.isClientbound()) {
 			throw new IllegalArgumentException("channel \'" + channel + "\' is not client-bound - did you register it with the wrong settings?");
 		}
+		if (CHANNEL_LISTENERS.containsKey(channel)) {
+			throw new IllegalArgumentException("there is already a listener on channel \'" + channel + "\'");
+		}
 
-		CHANNEL_LISTENERS.compute(channel, (key, value) -> {
-			if (value != null) {
-				throw new IllegalArgumentException("there is already a listener on channel \'" + channel + "\'");
-			}
-
-			return listener;
-		});
+		CHANNEL_LISTENERS.put(channel, new ChannelListener<>(listener, parser));
 	}
 
 	public static void unregisterListener(NamespacedIdentifier channel) {
@@ -120,22 +118,34 @@ public final class ClientPlayNetworkingImpl {
 		CustomPayloadPacketAccess p = (CustomPayloadPacketAccess)packet;
 
 		NamespacedIdentifier channel = p.osl$networking$getChannel();
-		ChannelListener listener = CHANNEL_LISTENERS.get(channel);
+		ChannelListener<?> listener = CHANNEL_LISTENERS.get(channel);
 
-		if (listener != null) {
-			ChannelListener.Context ctx = new ChannelListener.Context();
-			byte[] data = p.osl$networking$getData();
+		return listener != null && handlePayload(channel, listener, p.osl$networking$getData());
+	}
 
-			try {
-				listener.handle(ctx, data);
-			} catch (IOException e) {
-				LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
-			}
+	private static <T> boolean handlePayload(NamespacedIdentifier channel, ChannelListener<T> listener, byte[] bytes) {
+		T data;
+		ChannelListenerContext ctx;
 
-			return true;
+		try {
+			data = listener.parse(bytes);
+			ctx = new ChannelListenerContext();
+		} catch (IOException e) {
+			LOGGER.warn("error reading custom payload on channel \'" + channel + "\'", e);
+			return false;
 		}
 
-		return false;
+		return handlePayload(channel, listener, ctx, data);
+	}
+
+	private static <T> boolean handlePayload(NamespacedIdentifier channel, ChannelListener<T> listener, ChannelListenerContext ctx, T data) {
+		try {
+			listener.handle(ctx, data);
+		} catch (IOException e) {
+			LOGGER.warn("error handling custom payload on channel \'" + channel + "\'", e);
+		}
+
+		return true;
 	}
 
 	private static ClientNetworkHandler networkHandler() {
@@ -226,27 +236,48 @@ public final class ClientPlayNetworkingImpl {
 	}
 
 	@FunctionalInterface
-	private interface ChannelListener {
+	private interface PacketParser<T> {
 
-		void handle(Context context, byte[] bytes) throws IOException;
+		T parse(byte[] bytes) throws IOException;
 
-		class Context implements ClientPacketListener.Context {
+	}
 
-			@Override
-			public Minecraft minecraft() {
-				return minecraft;
-			}
+	private static class ChannelListener<T> implements ClientPacketListener<T> {
 
-			@Override
-			public ClientNetworkHandler networkHandler() {
-				return ClientPlayNetworkingImpl.networkHandler();
-			}
+		private final ClientPacketListener<T> listener;
+		private final PacketParser<T> parser;
 
-			@Override
-			public void ensureOnMainThread() {
-				if (Thread.currentThread() != thread) {
-					throw NotOnMainThreadException.INSTANCE;
-				}
+		public ChannelListener(ClientPacketListener<T> listener, PacketParser<T> parser) {
+			this.listener = listener;
+			this.parser = parser;
+		}
+
+		public T parse(byte[] bytes) throws IOException {
+			return this.parser.parse(bytes);
+		}
+
+		@Override
+		public void handle(Context context, T data) throws IOException {
+			this.listener.handle(context, data);
+		}
+	}
+
+	private static class ChannelListenerContext implements ClientPacketListener.Context {
+
+		@Override
+		public Minecraft minecraft() {
+			return minecraft;
+		}
+
+		@Override
+		public ClientNetworkHandler networkHandler() {
+			return ClientPlayNetworkingImpl.networkHandler();
+		}
+
+		@Override
+		public void ensureOnMainThread() {
+			if (Thread.currentThread() != thread) {
+				throw NotOnMainThreadException.INSTANCE;
 			}
 		}
 	}
