@@ -37,10 +37,11 @@ public class CustomPayloadPacket extends Packet implements CustomPayloadPacketAc
 	public void read(DataInputStream input) throws IOException {
 		this.channel = _readString(input, StringChannelIdentifierParser.MAX_LENGTH);
 		this.size = input.readShort();
-		if (this.size > 0 && this.size < Short.MAX_VALUE) {
-			this.data = new byte[this.size];
-			input.readFully(this.data);
+		if (this.size < 0) {
+			throw new IOException("Received payload size is less than zero!");
 		}
+		this.data = new byte[this.size];
+		input.readFully(this.data);
 	}
 
 	@Override
