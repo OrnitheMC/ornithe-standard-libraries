@@ -24,8 +24,7 @@ import net.ornithemc.osl.networking.impl.server.ServerConnectionContext;
 public class MinecraftServerMixin {
 
 	@Shadow
-	private
-	PlayerManager playerManager;
+	private PlayerManager playerManager;
 
 	@Inject(
 		method = "stop",

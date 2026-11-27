@@ -5,3 +5,4 @@ accessible	field	net/minecraft/server/network/handler/ServerPlayNetworkHandler	p
 
 inject-interface	net/minecraft/network/Connection	net/ornithemc/osl/networking/impl/access/ConnectionAccess
 inject-interface	net/minecraft/network/RemoteConnection	net/ornithemc/osl/networking/impl/access/ConnectionAccess
+inject-interface	net/minecraft/server/MinecraftServer	net/ornithemc/osl/networking/impl/access/MinecraftServerAccess

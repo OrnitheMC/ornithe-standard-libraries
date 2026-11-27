@@ -21,6 +21,7 @@
 		"client.MinecraftMixin"
 	],
 	"server": [
+		"server.MinecraftServerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
