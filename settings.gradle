@@ -119,6 +119,8 @@ include ':libraries:executors:executors-mc14w07a-mc14w20b'
 include ':libraries:executors:executors-mc14w21a-mc1.13.2'
 include ':libraries:executors:executors-mc18w43a-mc1.14.4'
 
+include ':libraries:gui'
+
 include ':libraries:items'
 include ':libraries:items:items-mca1.0.1_01-mc1.6.4'
 include ':libraries:items:items-mc13w36a-mc14w25b'
