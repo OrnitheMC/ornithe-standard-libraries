@@ -92,6 +92,13 @@ include ':libraries:crash-reports:crash-reports-mca1.0.1_01-mc1.2.5'
 include ':libraries:crash-reports:crash-reports-mc12w15a-mc1.4.2'
 include ':libraries:crash-reports:crash-reports-mc1.4.3-mc1.14.4'
 
+include ':libraries:enchantments'
+include ':libraries:enchantments:enchantments-mcb1.9-pre4-mc14w27b'
+include ':libraries:enchantments:enchantments-mc14w28a-mc1.8.9'
+include ':libraries:enchantments:enchantments-mc15w31a-mc18w31a'
+include ':libraries:enchantments:enchantments-mc18w32a-mc1.13.2'
+include ':libraries:enchantments:enchantments-mc18w43a-mc1.14.4'
+
 include ':libraries:entities'
 include ':libraries:entities:entities-mca1.0.1_01-mc11w48a'
 include ':libraries:entities:entities-mc12w01a-mc1.8.2-pre4'
