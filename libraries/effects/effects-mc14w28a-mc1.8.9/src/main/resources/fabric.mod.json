@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "osl-effects",
+  "version": "0.1.0-alpha.1+mc14w28a-mc1.8.9",
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "net.ornithemc.osl.effects.impl.EffectsInit::init"
+    ]
+  },
+  "mixins": [
+    "osl.effects.mixins.json"
+  ],
+  "accessWidener": "osl.effects.classtweaker",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.0",
+    "minecraft": "\u003e\u003d1.8-alpha.14.28.a \u003c\u003d1.8.9",
+    "osl-core": "\u003e\u003d0.11.0",
+    "osl-entrypoints": "\u003e\u003d0.5.0",
+    "osl-lifecycle-events": "\u003e\u003d0.6.0",
+    "osl-executors": "\u003e\u003d0.1.0",
+    "osl-text-components": "\u003e\u003d0.1.0",
+    "osl-networking": "\u003e\u003d0.12.1",
+    "osl-registries": "\u003e\u003d0.4.0"
+  },
+  "name": "OSL Effects",
+  "description": "Effects API and events.",
+  "authors": [
+    "OrnitheMC"
+  ],
+  "contact": {
+    "homepage": "https://ornithemc.net/",
+    "issues": "https://github.com/OrnitheMC/ornithe-standard-libraries/issues",
+    "sources": "https://github.com/OrnitheMC/ornithe-standard-libraries"
+  },
+  "license": "Apache-2.0"
+}
